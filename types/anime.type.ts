@@ -1,0 +1,52 @@
+export type Anime = {
+  id: number;
+  name: string;
+  rus_name?: string;
+  slug: string;
+  model: string;
+  slug_url: string;
+  cover: {
+    thumbnail: string;
+    default: string;
+  };
+  ageRestriction: {
+    id: number;
+    label: string;
+  };
+  items_count: {
+    uploaded: number;
+  };
+  site: number;
+  type: {
+    id: number;
+    label: string;
+  };
+  rating: {
+    averageFormated: string;
+    votesFormated: string;
+  };
+  metadata: {
+    last_item: {
+      id: number;
+      type: string;
+      name: string;
+      number: string;
+      season: string;
+      status: {
+        label: string;
+      };
+    };
+  };
+  background: {
+    url: string;
+  };
+  summary: string | null;
+  episodes_schedule: {
+    airing_at: Date;
+    number: string;
+  }[];
+  genres: {
+    id: number;
+    name: string;
+  }[];
+};

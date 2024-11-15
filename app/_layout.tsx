@@ -1,39 +1,232 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { DarkTheme, ThemeProvider } from "@react-navigation/native";
+import { Stack, Tabs } from "expo-router";
+import { useEffect, useState } from "react";
+import "react-native-reanimated";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { api } from "@/lib/axios";
+import { store } from "@/hooks/useStore";
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { DevToolsBubble } from "react-native-react-query-devtools";
+import { Alert, LogBox, StatusBar } from "react-native";
+
+import * as Notifications from "expo-notifications";
+import * as BackgroundFetch from "expo-background-fetch";
+import * as TaskManager from "expo-task-manager";
+import * as Updates from "expo-updates";
+import { LOG, LOG_LEVEL } from "@/lib/logger";
+
+import ErrorBoundary from "react-native-error-boundary";
+import { ErrorBoundaryComponent } from "@/components/error-boundary-component";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 10,
+      refetchOnMount: false,
+    },
+  },
+});
+
+const notificationTask = "background-fetch-notifications";
+
+TaskManager.defineTask(notificationTask, async () => {
+  Notifications.scheduleNotificationAsync({
+    content: {
+      title: "Уведомление",
+      body: "Тестовое уведомление",
+    },
+    trigger: { seconds: 2 },
+  });
+  api
+    .get("/notifications/count", {
+      withCredentials: true,
+    })
+    .then((response) => {
+      if (response.data.data.unread.all) {
+        return BackgroundFetch.BackgroundFetchResult.NewData;
+      }
+    })
+    .catch(() => {
+      return BackgroundFetch.BackgroundFetchResult.Failed;
+    });
+
+  return BackgroundFetch.BackgroundFetchResult.NoData;
+});
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+  const [updating, setUpdating] = useState<boolean>(false);
+  const {
+    videoServers,
+    setVideoServers,
+    imageServers,
+    setImageServers,
+    setImageServerIndex,
+  } = store();
+
+  LogBox.ignoreAllLogs();
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
+    setApiLoggers();
+    if (videoServers.length !== 0) return;
 
-  if (!loaded) {
-    return null;
+    api.get("/constants?fields[]=videoServers").then((response) => {
+      LOG(
+        LOG_LEVEL.VERBOSE,
+        `Got ${response.data.data.videoServers.length} video servers.`
+      );
+      setVideoServers(response.data.data.videoServers);
+    });
+
+    if (imageServers.length !== 0) return;
+
+    api.get("/constants?fields[]=imageServers").then((response) => {
+      LOG(
+        LOG_LEVEL.VERBOSE,
+        `Got ${response.data.data.imageServers.length} image servers.`
+      );
+      setImageServers(response.data.data.imageServers);
+    });
+  }, []);
+
+  useEffect(() => {
+    Notifications.setBadgeCountAsync(31);
+
+    BackgroundFetch.registerTaskAsync(notificationTask, {
+      minimumInterval: 10,
+    });
+  }, []);
+
+  // #region Image Server Handling
+  useEffect(() => {
+    AsyncStorage.getItem("image-server").then((res) => {
+      if (!res) return;
+
+      setImageServerIndex(parseInt(res));
+    });
+  }, []);
+  // #endregion
+
+  // #region Updates Handling
+  useEffect(() => {
+    Updates.addUpdatesStateChangeListener((listener) => {
+      if (listener.context.isUpdatePending && !updating) {
+        Alert.alert(
+          "Установлено обновление",
+          "Перезапустите приложение, чтобы применить его",
+          [
+            {
+              text: "Перезапустить",
+              onPress: () => {
+                setUpdating(true);
+                Updates.reloadAsync();
+              },
+            },
+          ]
+        );
+      }
+    });
+
+    return () => {
+      setUpdating(false);
+    };
+  }, []);
+  // #endregion
+
+  // #region Request Logging
+  function setApiLoggers() {
+    api.interceptors.request.clear();
+
+    if (__DEV__) {
+      api.interceptors.request.use(
+        (request) => {
+          console.log(
+            `${request.method?.toUpperCase()} ${request.baseURL}${request.url}`
+          );
+          return request;
+        },
+        (error) => {
+          console.log(`Request rejected ${error}`);
+        }
+      );
+    }
+  }
+  // #endregion
+
+  if (__DEV__) {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider value={DarkTheme}>
+          <Stack>
+            <Stack.Screen
+              name="(tabs)"
+              options={{ title: "Главная", headerShown: false }}
+            />
+            <Stack.Screen
+              name="image-server-select"
+              options={{
+                headerShown: false,
+                title: "Выбор сервера",
+                presentation: "modal",
+              }}
+            />
+            <Stack.Screen
+              name="title-details"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen name="anime-watch" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="manga-reader"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="ranobe-reader"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+          <DevToolsBubble />
+        </ThemeProvider>
+        <StatusBar barStyle="light-content" />
+      </QueryClientProvider>
+    );
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider value={DarkTheme}>
+        <StatusBar backgroundColor="#000000" barStyle="dark-content" />
+        <ErrorBoundary FallbackComponent={ErrorBoundaryComponent}>
+          <Stack>
+            <Stack.Screen
+              name="(tabs)"
+              options={{ title: "Главная", headerShown: false }}
+            />
+            <Stack.Screen
+              name="image-server-select"
+              options={{
+                headerShown: false,
+                title: "Выбор сервера",
+                presentation: "modal",
+              }}
+            />
+            <Stack.Screen
+              name="title-details"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="manga-reader"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="ranobe-reader"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+        </ErrorBoundary>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
