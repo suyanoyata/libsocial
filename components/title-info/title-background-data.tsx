@@ -9,7 +9,8 @@ import { useNavigation } from "expo-router";
 import { TitleColors } from "@/hooks/useStore";
 import { BookmarkIcon, Play } from "lucide-react-native";
 import { useAsyncStorage } from "@react-native-async-storage/async-storage";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { AddToBookmarksButton } from "../add-to-bookmarks-button";
 
 export const TitleBackgroundData = ({
   data,
@@ -44,7 +45,7 @@ export const TitleBackgroundData = ({
   };
 
   const storage = useAsyncStorage(
-    `${data.site != 5 ? `manga/${data.slug_url}` : `anime/${data.slug_url}`}`,
+    `${data.site != 5 ? `manga/${data.slug_url}` : `anime/${data.slug_url}`}`
   );
 
   useEffect(() => {
@@ -104,7 +105,7 @@ export const TitleBackgroundData = ({
         >
           {data.rus_name ?? data.name}
         </Text>
-        {data.rus_name &&
+        {data.rus_name && (
           <Text
             selectable
             style={{
@@ -117,34 +118,48 @@ export const TitleBackgroundData = ({
           >
             {data.name}
           </Text>
-        }
-        <Button
-          icon={
-            data.site == 5 ? (
-              <Play color="white" fill="white" size={18} />
-            ) : (
-              <BookmarkIcon color="white" strokeWidth={3} size={18} />
-            )
-          }
-          onPress={() => {
-            if (data.site == 5) {
-              navigation.navigate("anime-watch", {
-                slug_url: data.slug_url,
-              });
-            } else {
-              setSelectedTab("Главы");
-            }
-          }}
+        )}
+        <View
           style={{
+            flexDirection: "row",
             marginTop: 14,
-            backgroundColor: accent.primary,
             marginBottom: 24,
+            gap: 12,
+            marginHorizontal: 14,
           }}
         >
-          {data.site != 5
-            ? `Начать читать ${count} / ${data.items_count.uploaded}`
-            : `Начать смотреть ${count} / ${data.items_count.uploaded}`}
-        </Button>
+          <AddToBookmarksButton
+            type={data.model}
+            slug_url={data.slug_url}
+            status={2}
+          />
+          <Button
+            icon={
+              data.site == 5 ? (
+                <Play color="white" fill="white" size={18} />
+              ) : (
+                <BookmarkIcon color="white" strokeWidth={3} size={18} />
+              )
+            }
+            onPress={() => {
+              if (data.site == 5) {
+                navigation.navigate("anime-watch", {
+                  slug_url: data.slug_url,
+                });
+              } else {
+                setSelectedTab("Главы");
+              }
+            }}
+            style={{
+              flex: 1,
+              backgroundColor: accent.primary,
+            }}
+          >
+            {data.site != 5
+              ? `Начать читать ${count} / ${data.items_count.uploaded}`
+              : `Начать смотреть ${count} / ${data.items_count.uploaded}`}
+          </Button>
+        </View>
       </View>
     </ImageBackground>
   );

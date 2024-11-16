@@ -17,51 +17,6 @@ import { siteUrls } from "@/constants/app.constants";
 import { Button } from "@/components/button";
 import { LucideRefreshCcw } from "lucide-react-native";
 
-const ranobeobj = {
-  metadata: {
-    last_item: {
-      number: 12,
-    },
-  },
-  id: 62340,
-  name: "Otonari no tenshi-sama ni itsunomanika dame ningen ni sa rete ita kudan (Web-Novel) (Novel)",
-  rus_name: "Ангел по соседству (Веб-Новелла) (Новелла)",
-  eng_name: "The Angel Next Door Spoils Me Rotten (Web-Novel)",
-  slug: "the-angel-next-door-spoils-me-rotten",
-  slug_url: "62340--the-angel-next-door-spoils-me-rotten",
-  cover: {
-    filename: "5iZl7GQ19AUw",
-    thumbnail:
-      "https://cover.imgslib.link/uploads/cover/the-angel-next-door-spoils-me-rotten/cover/5iZl7GQ19AUw_thumb.jpg",
-    default:
-      "https://cover.imgslib.link/uploads/cover/the-angel-next-door-spoils-me-rotten/cover/5iZl7GQ19AUw_250x350.jpg",
-    md: "https://cover.imgslib.link/uploads/cover/the-angel-next-door-spoils-me-rotten/cover/5iZl7GQ19AUw_250x350.jpg",
-  },
-  ageRestriction: {
-    id: 3,
-    label: "16+",
-  },
-  site: 3,
-  type: {
-    id: 10,
-    label: "Япония",
-  },
-  releaseDate: "2018",
-  rating: {
-    average: "9.72",
-    averageFormated: "9.7",
-    votes: 1407,
-    votesFormated: "1.4 K",
-    user: 0,
-  },
-  model: "manga",
-  status: {
-    id: 4,
-    label: "Приостановлен",
-  },
-  releaseDateString: "2018 г.",
-};
-
 export default function HomeScreen() {
   const { isPending, error, data, refetch } = useQuery<{
     popular: Anime[];

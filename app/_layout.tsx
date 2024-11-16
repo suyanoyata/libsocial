@@ -11,14 +11,16 @@ import { DevToolsBubble } from "react-native-react-query-devtools";
 import { Alert, LogBox, StatusBar } from "react-native";
 
 import * as Notifications from "expo-notifications";
+import * as Updates from "expo-updates";
 import * as BackgroundFetch from "expo-background-fetch";
 import * as TaskManager from "expo-task-manager";
-import * as Updates from "expo-updates";
+
 import { LOG, LOG_LEVEL } from "@/lib/logger";
 
 import ErrorBoundary from "react-native-error-boundary";
 import { ErrorBoundaryComponent } from "@/components/error-boundary-component";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNotificationsCountStore } from "@/hooks/useNotificationsCountStore";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -29,33 +31,10 @@ const queryClient = new QueryClient({
   },
 });
 
-const notificationTask = "background-fetch-notifications";
-
-TaskManager.defineTask(notificationTask, async () => {
-  Notifications.scheduleNotificationAsync({
-    content: {
-      title: "Уведомление",
-      body: "Тестовое уведомление",
-    },
-    trigger: { seconds: 2 },
-  });
-  api
-    .get("/notifications/count", {
-      withCredentials: true,
-    })
-    .then((response) => {
-      if (response.data.data.unread.all) {
-        return BackgroundFetch.BackgroundFetchResult.NewData;
-      }
-    })
-    .catch(() => {
-      return BackgroundFetch.BackgroundFetchResult.Failed;
-    });
-
-  return BackgroundFetch.BackgroundFetchResult.NoData;
-});
+const BACKGROUND_FETCH_TASK = "background-fetch-notifications";
 
 export default function RootLayout() {
+  const { setNotificationsCount } = useNotificationsCountStore();
   const [updating, setUpdating] = useState<boolean>(false);
   const {
     videoServers,
@@ -64,6 +43,19 @@ export default function RootLayout() {
     setImageServers,
     setImageServerIndex,
   } = store();
+
+  TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
+    await api.get("/notifications/count").then((response) => {
+      const count = response.data.data.unread.all;
+
+      setNotificationsCount(count);
+      Notifications.setBadgeCountAsync(count);
+    });
+
+    Alert.alert("Фоновая загрузка", "Фоновая загрузка завершена");
+
+    return BackgroundFetch.BackgroundFetchResult.NewData;
+  });
 
   LogBox.ignoreAllLogs();
 
@@ -91,10 +83,17 @@ export default function RootLayout() {
   }, []);
 
   useEffect(() => {
-    Notifications.setBadgeCountAsync(31);
+    BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
+      minimumInterval: 60 * 15,
+      stopOnTerminate: false,
+      startOnBoot: true,
+    });
 
-    BackgroundFetch.registerTaskAsync(notificationTask, {
-      minimumInterval: 10,
+    api.get("/notifications/count").then((response) => {
+      const count = response.data.data.unread.all;
+
+      setNotificationsCount(count);
+      Notifications.setBadgeCountAsync(count);
     });
   }, []);
 

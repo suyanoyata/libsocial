@@ -48,5 +48,6 @@ export type Anime = {
   genres: {
     id: number;
     name: string;
+    adult: boolean;
   }[];
 };

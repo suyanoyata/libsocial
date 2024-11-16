@@ -1,7 +1,7 @@
 import { Pressable, ViewStyle } from "react-native";
 import Animated, { useSharedValue, withTiming } from "react-native-reanimated";
 import { useEffect } from "react";
-import { store, TitleColors } from "@/hooks/useStore";
+import { TitleColors } from "@/hooks/useStore";
 
 type Props = {
   children: string;
@@ -13,8 +13,8 @@ type Props = {
 };
 
 export default function Tab(props: Props) {
-  const animated = useSharedValue(10);
-  const opacity = useSharedValue(0.8);
+  const animated = useSharedValue(0);
+  const opacity = useSharedValue(0);
   const active = props.selected ? props.selected == props.children : false;
 
   useEffect(() => {

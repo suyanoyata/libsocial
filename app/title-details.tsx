@@ -42,7 +42,7 @@ export default function index() {
 
     queryFn: async () => {
       const response = await api.get(
-        `/${slug_url}?${siteUrls[type as keyof typeof siteUrls].fields}`,
+        `/${slug_url}?${siteUrls[type as keyof typeof siteUrls].fields}`
       );
       return response.data.data;
     },
@@ -52,12 +52,10 @@ export default function index() {
   const [accent, setAccent] = useState<TitleColors>(colors[0]);
 
   useEffect(() => {
-    if (data) {
-      setAccent(colors[data.site - 1]);
-    }
+    setAccent(colors[type - 1]);
   }, [data]);
 
-  if (isLoading) {
+  if (isLoading || !data) {
     return <Loader />;
   }
 
@@ -104,7 +102,7 @@ export default function index() {
           setCount={setCount}
           count={count}
           setSelectedTab={setSelectedTab}
-          data={data!}
+          data={data}
           accent={accent}
         />
         <View
@@ -133,18 +131,20 @@ export default function index() {
               </Tab>
             ))}
           </View>
-          <View style={{ minHeight: "100%", backgroundColor: "black" }}>
-            <AboutTitle accent={accent} selected={selectedTab} data={data!} />
+          <View
+            style={{ minHeight: "100%", backgroundColor: "black", flex: 1 }}
+          >
+            <AboutTitle accent={accent} selected={selectedTab} data={data} />
             <MangaChapters
               setCount={setCount}
-              type={data!.site}
+              type={data?.site}
               selected={selectedTab}
               count={count}
               slug_url={slug_url}
             />
             <Comments
-              post_id={data!.id}
-              model={data!.model}
+              post_id={data.id}
+              model={data.model}
               selected={selectedTab}
               slug_url={slug_url}
             />

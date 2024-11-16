@@ -39,6 +39,7 @@ export const Button = ({
         borderRadius: 6,
         flexDirection: "row",
         alignItems: "center",
+        justifyContent: "center",
         gap: 6,
         ...style,
       }}

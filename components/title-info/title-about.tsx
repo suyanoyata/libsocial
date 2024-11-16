@@ -1,9 +1,10 @@
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import Summary from "./title-summary";
 import { Anime } from "@/types/anime.type";
 import { TitleSimilar } from "./title-similar";
 import { TitleRelations } from "./title-relations";
 import { TitleColors } from "@/hooks/useStore";
+import { Genres } from "./title-genres";
 
 export const AboutTitle = ({
   selected,
@@ -22,6 +23,7 @@ export const AboutTitle = ({
   return (
     <View>
       <Summary accent={accent}>{data.summary}</Summary>
+      <Genres genres={data.genres} />
       <TitleRelations slug_url={slug_url} />
       <TitleSimilar slug_url={slug_url} />
     </View>

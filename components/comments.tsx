@@ -1,21 +1,18 @@
-// TODO: add support for replies
-
 import { api } from "@/lib/axios";
-import { Anime } from "@/types/anime.type";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { FlashList } from "@shopify/flash-list";
+import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
-import { FlatList, Text, useWindowDimensions, View } from "react-native";
+import { ScrollView, Text, useWindowDimensions, View } from "react-native";
 import RenderHtml from "react-native-render-html";
-
-type CommentsResponse = {
-  root: Comment[];
-  replies: Comment[];
-};
+import { Button } from "./button";
+import moment from "moment";
+import "moment/locale/ru";
 
 type Comment = {
   id: number;
   comment: string;
-  createdAt: Date;
+  created_at: Date;
+  created_at_ts: number;
   parent_comment: number | null;
   user: {
     avatar: {
@@ -24,6 +21,67 @@ type Comment = {
     id: string;
     username: string;
   };
+};
+
+const tagsStyles = {
+  p: {
+    color: "rgba(255,255,255,0.7)",
+    margin: 0,
+    marginTop: 2,
+    marginBottom: 2,
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  span: {
+    color: "rgba(255,255,255,0.7)",
+    margin: 0,
+    marginTop: 6,
+    marginBottom: 6,
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  blockquote: {
+    color: "rgba(255,255,255,0.7)",
+    margin: 0,
+    marginTop: 2,
+    marginBottom: 2,
+    fontSize: 14,
+    lineHeight: 20,
+  },
+};
+
+const Parser = ({ comment, width }: { comment: string; width: number }) => {
+  let content_array = comment.split("");
+
+  if (content_array.includes("<") || content_array.includes(">")) {
+    return (
+      <RenderHtml
+        contentWidth={width}
+        defaultTextProps={{
+          style: {
+            color: "rgba(255,255,255,0.7)",
+          },
+        }}
+        source={{
+          // FIXME: not all comments are getting rendered due to \u symbols or sum??
+          html: `<p>${comment.toString()}</p>`,
+        }}
+        tagsStyles={tagsStyles}
+      />
+    );
+  } else {
+    <Text
+      style={{
+        color: "rgba(255,255,255,0.7)",
+        marginTop: 6,
+        marginBottom: 6,
+        fontSize: 14,
+        lineHeight: 20,
+      }}
+    >
+      {comment}
+    </Text>;
+  }
 };
 
 export const Comments = ({
@@ -37,87 +95,49 @@ export const Comments = ({
   model: string;
   post_id: number;
 }) => {
-  const [page, setPage] = useState<number>(1);
+  // #region data handling
 
-  const { data: commentsData, isLoading } = useQuery<CommentsResponse>({
-    queryKey: [`title-comments`, slug_url, page, model],
-    queryFn: async () => {
+  const {
+    data: commentsData,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery({
+    queryKey: [`title-comments`, slug_url, post_id],
+    queryFn: async ({ pageParam }) => {
       const res = await api.get(
-        `/comments?page=${page}&post_id=${post_id}&post_type=${model}&sort_by=id&sort_type=desc`
+        `/comments?page=${pageParam}&post_id=${post_id}&post_type=${model}&sort_by=id&sort_type=desc`
       );
 
-      return res.data.data;
+      return res.data;
     },
+
+    getNextPageParam: (lastPage) => {
+      if (lastPage.meta.has_next_page == false) return undefined;
+      return lastPage.meta.page + 1;
+    },
+    initialPageParam: 1,
     enabled: !!slug_url,
     placeholderData: keepPreviousData,
   });
 
-  const Parser = ({ comment }: { comment: string }) => {
-    let content_array = comment.split("");
-
-    if (content_array.includes("<") || content_array.includes(">")) {
-      return (
-        <RenderHtml
-          contentWidth={width}
-          source={{
-            html: `<p>${comment}</p>`,
-          }}
-          tagsStyles={tagsStyles}
-        />
-      );
-    } else {
-      <Text
-        style={{
-          color: "rgba(255,255,255,0.7)",
-          marginTop: 6,
-          marginBottom: 6,
-          fontSize: 14,
-          lineHeight: 20,
-        }}
-      >
-        {comment}
-      </Text>;
-    }
-  };
+  // #endregion
 
   const { width } = useWindowDimensions();
-
-  const tagsStyles = {
-    p: {
-      color: "rgba(255,255,255,0.7)",
-      margin: 0,
-      marginTop: 2,
-      marginBottom: 2,
-      fontSize: 14,
-      lineHeight: 20,
-    },
-    span: {
-      color: "rgba(255,255,255,0.7)",
-      margin: 0,
-      marginTop: 6,
-      marginBottom: 6,
-      fontSize: 14,
-      lineHeight: 20,
-    },
-    blockquote: {
-      color: "rgba(255,255,255,0.7)",
-      margin: 0,
-      marginTop: 6,
-      marginBottom: 6,
-      fontSize: 14,
-      lineHeight: 20,
-    },
-  };
 
   const Reply = ({ comment_id }: { comment_id: number | null }) => {
     const [comment, setComment] = useState<Comment>();
 
     useEffect(() => {
-      commentsData!.replies.forEach((reply) => {
-        if (reply.parent_comment === comment_id) {
-          setComment(reply);
-        }
-      });
+      if (commentsData) {
+        commentsData.pages.forEach((page) => {
+          page.data.replies.forEach((reply: Comment) => {
+            if (reply.parent_comment === comment_id) {
+              setComment(reply);
+            }
+          });
+        });
+      }
     }, [comment_id]);
 
     if (!comment) return;
@@ -147,47 +167,57 @@ export const Comments = ({
             marginLeft: reply ? 16 : 0,
           }}
         >
-          <Text
-            numberOfLines={2}
-            style={{ color: "white", fontSize: 18, fontWeight: "600" }}
-          >
-            {comment.user.username}
-          </Text>
-          {/* <Text
-            style={{
-              color: "rgba(255,255,255,0.7)",
-              marginTop: 6,
-              marginBottom: 6,
-              fontSize: 14,
-              lineHeight: 20,
-            }}
-          >
-            {comment.comment}
-          </Text> */}
-          <Parser comment={comment.comment} />
+          <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
+            <Text
+              numberOfLines={2}
+              style={{ color: "white", fontSize: 18, fontWeight: "600" }}
+            >
+              {comment.user.username}
+            </Text>
+            <Text
+              style={{
+                color: "rgba(255,255,255,0.6)",
+                fontWeight: "600",
+                marginTop: 2,
+              }}
+            >
+              {moment(comment.created_at).fromNow()}
+            </Text>
+          </View>
+          <Parser width={width} comment={comment.comment} />
         </View>
         <Reply comment_id={comment.id} />
       </View>
     );
   };
 
+  useEffect(() => {
+    moment.locale("ru");
+  }, []);
+
   if (selected != "Комментарии") return;
+  if (isLoading || !commentsData) return null;
 
   return (
-    !isLoading && (
-      <FlatList
-        onEndReached={() => {
-          console.log("hit end");
-        }}
-        onEndReachedThreshold={1}
-        // add pagination, for now setting onEndReached page + 1 makes spamming request
-        data={commentsData!.root}
-        renderItem={({ item, index }) => <Comment key={index} comment={item} />}
-        style={{
-          gap: 8,
-          marginBottom: 24,
-        }}
-      />
-    )
+    <ScrollView>
+      {commentsData.pages.map((page) => (
+        <FlashList
+          scrollEnabled={false}
+          estimatedItemSize={200}
+          data={page.data.root}
+          renderItem={({ item }: { item: Comment }) => (
+            <Comment comment={item} />
+          )}
+        />
+      ))}
+      {hasNextPage && (
+        <Button
+          style={{ flex: 1, marginHorizontal: 18, marginVertical: 12 }}
+          onPress={() => fetchNextPage()}
+        >
+          Загрузить ещё
+        </Button>
+      )}
+    </ScrollView>
   );
 };

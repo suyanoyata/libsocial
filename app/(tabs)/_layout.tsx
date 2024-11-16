@@ -4,8 +4,10 @@ import React from "react";
 import { Bell, Bookmark, Home, LayoutGrid, Menu } from "lucide-react-native";
 import ErrorBoundary from "react-native-error-boundary";
 import { ErrorBoundaryComponent } from "@/components/error-boundary-component";
+import { useNotificationsCountStore } from "@/hooks/useNotificationsCountStore";
 
 export default function TabLayout() {
+  const { notificationsCount } = useNotificationsCountStore();
   return (
     <ErrorBoundary FallbackComponent={ErrorBoundaryComponent}>
       <Tabs
@@ -39,7 +41,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="notifications"
           options={{
-            tabBarBadge: 31,
+            tabBarBadge: notificationsCount,
             title: "Уведомления",
             tabBarIcon: ({ color }) => <Bell color={color} />,
           }}
