@@ -1,0 +1,64 @@
+{
+  "tabs": {
+    "bookmarks": "Закладки",
+    "search": "Каталог",
+    "index": "Главная",
+    "notifications": "Уведомления",
+    "menu": "Меню"
+  },
+  "error": {
+    "loading": {
+      "text": "Ошибка при попытке загрузки.",
+      "retry": "Попробовать ещё раз"
+    }
+  },
+  "content": {
+    "bookmark": {
+      "add": "Добавить в закладки"
+    },
+    "tabs": {
+      "about": "О тайтле",
+      "chapters": "Главы",
+      "comments": "Комментарии",
+      "reviews": "Отзывы"
+    },
+    "start": {
+      "reading": "Начать читать {{count}} / {{total}}",
+      "watching": "Начать смотреть {{count}} / {{total}}"
+    },
+    "description": {
+      "show_more": "Подробнее...",
+      "show_less": "Показать меньше"
+    },
+    "chapter": "Глава {{chapter}}",
+    "episode": "Эпизод {{episode}}",
+    "reader": "Том {{volume}} Глава {{chapter}}"
+  },
+  "settings": {
+    "show_text_error": {
+      "text": "Показывать текст ошибки",
+      "button": "Вызвать ошибку",
+      "perform": "Выполнить"
+    }
+  },
+  "updates": {
+    "not_available": "Обновления недоступны",
+    "channel": "Канал обновлений",
+    "enabled": "Обновления включены",
+    "version": "Версия expo",
+    "manifest": "Версия в манифесте",
+    "number": "Номер обновления",
+    "check": "Проверка обновлений",
+    "yes": "Да",
+    "no": "Нет"
+  },
+  "search": {
+    "selected": "Выбрано {{count}}",
+    "genres": "Жанры",
+    "clear": "Очистить всё",
+    "placeholder": "Поиск по названию",
+    "filters": "Фильтры",
+    "sort": "Сортирование",
+    "not_found": "Ничего не удалось найти по вашему запросу. Попробуйте убрать несколько фильтров или проверьте поле ввода"
+  }
+}

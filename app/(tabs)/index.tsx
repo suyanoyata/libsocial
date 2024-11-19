@@ -7,15 +7,17 @@ import {
   RefreshControl,
   SafeAreaView,
   ScrollView,
-  Text,
   View,
+  Text,
 } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import { Image } from "expo-image";
 import { useNavigation } from "expo-router";
-import { siteUrls } from "@/constants/app.constants";
+import { siteUrls, useRussianTitle } from "@/constants/app.constants";
 import { Button } from "@/components/button";
 import { LucideRefreshCcw } from "lucide-react-native";
+import i18n from "@/lib/intl";
+import { TitleCard } from "@/components/title-card";
 
 export default function HomeScreen() {
   const { isPending, error, data, refetch } = useQuery<{
@@ -57,7 +59,7 @@ export default function HomeScreen() {
             textAlign: "center",
           }}
         >
-          Ошибка при попытке загрузки.
+          {i18n.t("error.loading.text")}
         </Text>
         <Button
           onPress={() => {
@@ -66,67 +68,11 @@ export default function HomeScreen() {
           icon={<LucideRefreshCcw color="white" size={18} strokeWidth={2.4} />}
           style={{ marginTop: 12 }}
         >
-          Попробовать ещё раз
+          {i18n.t("error.loading.retry")}
         </Button>
       </Animated.View>
     );
   }
-
-  const MainPageTitleCard = ({ title }: { title: Anime }) => {
-    return (
-      <Pressable
-        onPress={() => {
-          router.navigate("title-details", {
-            type: title.site,
-            slug_url: `${siteUrls[title.site as keyof typeof siteUrls].url}/${title.slug_url}`,
-          });
-        }}
-        style={{ width: 140 }}
-        key={title.id}
-      >
-        <View style={{ position: "relative" }}>
-          <Image
-            source={{ uri: title.cover.default }}
-            style={{
-              height: 189,
-              width: 140,
-              borderRadius: 6,
-              zIndex: 1,
-            }}
-            contentFit="cover"
-          />
-          <View
-            style={{
-              zIndex: 2,
-              position: "absolute",
-              bottom: 4,
-              left: 4,
-              backgroundColor: "rgba(0,0,0,0.7)",
-              paddingHorizontal: 8,
-              paddingVertical: 4,
-              borderRadius: 6,
-            }}
-          >
-            <Text
-              style={{
-                color: "white",
-                fontWeight: "500",
-              }}
-            >
-              {title.site != 5 ? "Глава" : "Эпизод"}{" "}
-              {title.metadata.last_item.number}
-            </Text>
-          </View>
-        </View>
-        <Text
-          numberOfLines={2}
-          style={{ color: "white", marginTop: 4, fontWeight: "500" }}
-        >
-          {title.rus_name != "" ? title.rus_name : title.name}
-        </Text>
-      </Pressable>
-    );
-  };
 
   return (
     <SafeAreaView>
@@ -147,9 +93,8 @@ export default function HomeScreen() {
           }}
           showsHorizontalScrollIndicator={false}
         >
-          {/* <MainPageTitleCard title={ranobeobj as any} /> */}
           {data!.popular.map((title) => (
-            <MainPageTitleCard key={title.id} title={title} />
+            <TitleCard key={title.id} item={title} width={140} />
           ))}
         </ScrollView>
       </Animated.ScrollView>

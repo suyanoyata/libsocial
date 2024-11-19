@@ -12,18 +12,25 @@ import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { useEffect } from "react";
 import { AddToBookmarksButton } from "../add-to-bookmarks-button";
 
+import VisibilitySensor from "@svanboxel/visibility-sensor-react-native";
+import { useRussianTitle } from "@/constants/app.constants";
+import { clearOtherNames } from "@/lib/clearOtherNames";
+import i18n from "@/lib/intl";
+
 export const TitleBackgroundData = ({
   data,
   accent,
   setCount,
   count,
   setSelectedTab,
+  setPosterVisible,
 }: {
   data: Anime;
   count: number;
   setCount: (n: number) => void;
   setSelectedTab: (s: string) => void;
   accent: TitleColors;
+  setPosterVisible: (b: boolean) => void;
 }) => {
   const navigation: any = useNavigation();
 
@@ -92,20 +99,40 @@ export const TitleBackgroundData = ({
           }}
           contentFit="cover"
         />
-        <Text
-          selectable
-          style={{
-            color: "#bfbfbf",
-            fontSize: 20,
-            fontWeight: "600",
-            marginTop: 12,
-            textAlign: "center",
-            marginHorizontal: 12,
-          }}
-        >
-          {data.rus_name ?? data.name}
-        </Text>
-        {data.rus_name && (
+        <VisibilitySensor onChange={(event) => setPosterVisible(event)}>
+          <Text
+            selectable
+            style={{
+              color: "#bfbfbf",
+              fontSize: 20,
+              fontWeight: "600",
+              marginTop: 12,
+              textAlign: "center",
+              marginHorizontal: 12,
+            }}
+          >
+            {useRussianTitle()
+              ? data.rus_name == "" || data.rus_name == null
+                ? data.name
+                : data.rus_name
+              : data.name}
+          </Text>
+        </VisibilitySensor>
+        {!useRussianTitle() && (
+          <Text
+            selectable
+            style={{
+              color: "#bfbfbf",
+              fontSize: 16,
+              marginTop: 4,
+              textAlign: "center",
+              marginHorizontal: 12,
+            }}
+          >
+            {clearOtherNames(data.otherNames)[0]}
+          </Text>
+        )}
+        {!!useRussianTitle() && data.rus_name && (
           <Text
             selectable
             style={{
@@ -141,13 +168,14 @@ export const TitleBackgroundData = ({
                 <BookmarkIcon color="white" strokeWidth={3} size={18} />
               )
             }
+            withoutTransition
             onPress={() => {
               if (data.site == 5) {
                 navigation.navigate("anime-watch", {
                   slug_url: data.slug_url,
                 });
               } else {
-                setSelectedTab("Главы");
+                setSelectedTab("chapters");
               }
             }}
             style={{
@@ -156,8 +184,14 @@ export const TitleBackgroundData = ({
             }}
           >
             {data.site != 5
-              ? `Начать читать ${count} / ${data.items_count.uploaded}`
-              : `Начать смотреть ${count} / ${data.items_count.uploaded}`}
+              ? i18n.t("content.start.reading", {
+                  count,
+                  total: data.items_count.uploaded,
+                })
+              : i18n.t("content.start.watching", {
+                  count,
+                  total: data.items_count.uploaded,
+                })}
           </Button>
         </View>
       </View>

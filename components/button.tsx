@@ -1,3 +1,4 @@
+import { PointerInteractionView } from "@thefunbots/react-native-pointer-interactions";
 import { Pressable, Text, ViewStyle } from "react-native";
 import Animated, { useSharedValue, withTiming } from "react-native-reanimated";
 
@@ -6,17 +7,52 @@ export const Button = ({
   style,
   onPress,
   icon,
+  asChild = false,
+  withoutTransition = false,
   iconPosition = "left",
 }: {
+  asChild?: boolean;
   children: React.ReactNode;
   style?: ViewStyle;
   onPress?: () => void;
   icon?: React.ReactNode;
+  withoutTransition?: boolean;
   iconPosition?: "left" | "right";
 }) => {
   const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
   const scale = useSharedValue(1);
+
+  if (asChild) {
+    return (
+      <AnimatedPressable
+        onPressIn={() => {
+          scale.value = withTiming(0.95, {
+            duration: 150,
+          });
+        }}
+        onPressOut={() => {
+          if (!withoutTransition) {
+            onPress && onPress();
+            scale.value = withTiming(1, {
+              duration: 150,
+            });
+          } else {
+            onPress && onPress();
+            scale.value = withTiming(1, {
+              duration: 150,
+            });
+          }
+        }}
+        style={{
+          transform: [{ scale: scale }],
+          ...style,
+        }}
+      >
+        {children}
+      </AnimatedPressable>
+    );
+  }
 
   return (
     <AnimatedPressable

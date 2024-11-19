@@ -4,45 +4,52 @@ import { Pressable, Switch, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { SettingsItem, SettingsWrapper } from "@/components/settings-component";
+import i18n from "@/lib/intl";
 
 const UpdatesSection = () => {
-  if (!Updates.isEnabled){
+  if (!Updates.isEnabled) {
     return (
-      <View style={{
-        alignItems: 'center'
-      }}>
-        <Text style={{
-          color: "white"
-        }}>Обновления недоступны</Text>
+      <View
+        style={{
+          alignItems: "center",
+        }}
+      >
+        <Text
+          style={{
+            color: "white",
+          }}
+        >
+          {i18n.t("updates.not_available")}
+        </Text>
       </View>
-    )
+    );
   }
 
   return (
     <SettingsWrapper>
-      <SettingsItem title={"Канал обновлений"}>
+      <SettingsItem title={i18n.t("updates.channel")}>
         {Updates.channel ? Updates.channel : "Нет"}
       </SettingsItem>
-      <SettingsItem title={"Обновления включены"}>
-        {Updates.isEnabled ? "Да" : "Нет"}
+      <SettingsItem title={i18n.t("updates.enabled")}>
+        {Updates.isEnabled ? i18n.t("updates.yes") : i18n.t("updates.no")}
       </SettingsItem>
-      <SettingsItem title={"Версия expo"}>
+      <SettingsItem title={i18n.t("updates.version")}>
         {Updates.runtimeVersion ? Updates.runtimeVersion : "-"}
       </SettingsItem>
-      <SettingsItem title="Версия в манифесте">
+      <SettingsItem title={i18n.t("updates.manifest")}>
         {Updates.manifest.extra?.expoClient?.version
           ? Updates.manifest.extra.expoClient.version
-          : "Нет"}
+          : i18n.t("updates.no")}
       </SettingsItem>
-      <SettingsItem title={"Номер обновления"}>
+      <SettingsItem title={i18n.t("updates.number")}>
         {Updates.updateId ? Updates.updateId : "-"}
       </SettingsItem>
-      <SettingsItem title="Проверка обновлений">
+      <SettingsItem title={i18n.t("updates.check")}>
         {Updates.checkAutomatically}
       </SettingsItem>
     </SettingsWrapper>
-  )
-}
+  );
+};
 
 export default function Menu() {
   const [checked, setChecked] = useState<boolean>(false);
@@ -63,7 +70,7 @@ export default function Menu() {
     <SafeAreaView>
       <UpdatesSection />
       <SettingsWrapper>
-        <SettingsItem title="Показывать текст ошибки">
+        <SettingsItem title={i18n.t("settings.show_text_error.text")}>
           <Switch
             value={checked}
             onValueChange={(value) => {
@@ -72,14 +79,14 @@ export default function Menu() {
             }}
           />
         </SettingsItem>
-        <SettingsItem title="Вызвать ошибку">
+        <SettingsItem title={i18n.t("settings.show_text_error.button")}>
           <Pressable
             onPress={() => {
               throw "Error was initiated by user";
             }}
           >
             <Text style={{ color: "rgb(255,70,70)", fontSize: 16 }}>
-              Сделать
+              {i18n.t("settings.show_text_error.perform")}
             </Text>
           </Pressable>
         </SettingsItem>

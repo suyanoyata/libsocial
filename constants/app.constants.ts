@@ -1,4 +1,5 @@
 import { TitleColors } from "@/hooks/useStore";
+import * as Localization from "expo-localization";
 
 export const siteUrls = {
   1: {
@@ -74,4 +75,20 @@ export const title_kinds = {
   3: "Новелла",
   4: "Манга",
   5: "Аниме",
+};
+
+export const exclude_filters = [
+  "этти",
+  "юри",
+  "яой",
+  "гарем",
+  "безумие",
+  "гендерная интрига",
+];
+
+export const presentation_mode = false;
+
+export const useRussianTitle = () => {
+  if (!presentation_mode) return true;
+  return Localization.getLocales()[0].languageCode === "ru";
 };

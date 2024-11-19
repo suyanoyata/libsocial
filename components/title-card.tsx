@@ -2,11 +2,18 @@ import { Anime } from "@/types/anime.type";
 import { useNavigation } from "@react-navigation/native";
 import { Pressable, Text, View } from "react-native";
 import { Image } from "expo-image";
-import { siteUrls } from "@/constants/app.constants";
+import { siteUrls, useRussianTitle } from "@/constants/app.constants";
 import { Skeleton } from "./skeleton";
 import Animated, { FadeIn } from "react-native-reanimated";
 
-export const TitleCard = ({ item }: { item?: Anime }) => {
+export const TitleCard = ({
+  item,
+  width = 130,
+}: {
+  item?: Anime;
+  width?: number;
+}) => {
+  const dimensions = { width, height: 189 };
   const router: any = useNavigation();
   const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -18,18 +25,32 @@ export const TitleCard = ({ item }: { item?: Anime }) => {
           height: 240,
         }}
       >
-        <Skeleton width={140} height={189} />
-        <Skeleton width={140} height={16} style={{ marginTop: 6 }} />
-        <Skeleton width={110} height={16} style={{ marginTop: 6 }} />
+        <Skeleton width={dimensions.width} height={dimensions.height} />
+        <Skeleton
+          width={dimensions.width}
+          height={16}
+          style={{ marginTop: 6 }}
+        />
+        <Skeleton
+          width={dimensions.width}
+          height={16}
+          style={{ marginTop: 6 }}
+        />
       </View>
     );
   }
+
+  const name = useRussianTitle()
+    ? item.rus_name != ""
+      ? item.rus_name
+      : item.name
+    : item.name;
 
   return (
     <AnimatedPressable
       entering={FadeIn}
       style={{
-        width: 140,
+        width: 130,
         height: 235,
       }}
       onPress={() => {
@@ -42,8 +63,8 @@ export const TitleCard = ({ item }: { item?: Anime }) => {
       <Image
         source={{ uri: item.cover.default }}
         style={{
-          height: 189,
-          width: 140,
+          height: dimensions.height,
+          width: dimensions.width,
           borderRadius: 6,
           zIndex: 1,
         }}
@@ -57,7 +78,7 @@ export const TitleCard = ({ item }: { item?: Anime }) => {
           fontWeight: "500",
         }}
       >
-        {item.rus_name != "" ? item.rus_name : item.name}
+        {name}
       </Text>
     </AnimatedPressable>
   );

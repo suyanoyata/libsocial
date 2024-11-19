@@ -195,7 +195,7 @@ export const Comments = ({
     moment.locale("ru");
   }, []);
 
-  if (selected != "Комментарии") return;
+  if (selected != "comments") return;
   if (isLoading || !commentsData) return null;
 
   return (
@@ -212,7 +212,7 @@ export const Comments = ({
       ))}
       {hasNextPage && (
         <Button
-          style={{ flex: 1, marginHorizontal: 18, marginVertical: 12 }}
+          style={{ flex: 1, marginHorizontal: 6, marginVertical: 12 }}
           onPress={() => fetchNextPage()}
         >
           Загрузить ещё

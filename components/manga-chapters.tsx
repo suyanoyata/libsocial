@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { Button } from "./button";
 import { RefreshCcw } from "lucide-react-native";
+import i18n from "@/lib/intl";
 
 export type Chapter = {
   id: string;
@@ -106,8 +107,8 @@ export const MangaChapters = ({
 
                     storage.setItem(
                       JSON.stringify(
-                        list.filter((item: number) => item !== index + 1),
-                      ),
+                        list.filter((item: number) => item !== index + 1)
+                      )
                     );
                   });
                 },
@@ -115,7 +116,7 @@ export const MangaChapters = ({
               {
                 text: "Отмена",
               },
-            ],
+            ]
           );
         }}
         onPress={() => {
@@ -148,8 +149,11 @@ export const MangaChapters = ({
           numberOfLines={1}
           style={{ color: "white", lineHeight: 24, flex: 1, marginRight: 24 }}
         >
-          Том {chapter.volume} Глава {chapter.number}{" "}
-          {chapter.name && `- ${chapter.name}`}
+          {i18n.t("content.reader", {
+            volume: chapter.volume,
+            chapter: chapter.number,
+          })}
+          {chapter.name && ` - ${chapter.name}`}
         </Text>
         <Text
           style={{
@@ -163,7 +167,7 @@ export const MangaChapters = ({
     );
   };
 
-  if (selected == "Главы") {
+  if (selected == "chapters") {
     if (isLoading) {
       return <Loader />;
     }

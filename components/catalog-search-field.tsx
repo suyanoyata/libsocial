@@ -1,61 +1,41 @@
-import useDebounce from "@/hooks/useDebounce";
-import { api, site_id } from "@/lib/axios";
-import { Anime } from "@/types/anime.type";
-import { useQuery } from "@tanstack/react-query";
-import { TextInput } from "react-native";
+import i18n from "@/lib/intl";
+import { SearchIcon } from "lucide-react-native";
+import { TextInput, View } from "react-native";
 
 export const CatalogSearch = ({
-  search,
   setSearch,
 }: {
-  search: string;
   setSearch: (s: string) => void;
 }) => {
-  const value = useDebounce(search.trim(), 500);
-
-  useQuery<Anime[]>({
-    queryKey: ["search-anime-data", value],
-
-    queryFn: async () => {
-      if (value == "") return;
-      const response = await api.get(
-        `/anime?q=${value}&fields[]=rate_avg&fields[]=rate&fields[]=releaseDate&`,
-      );
-      return response.data.data;
-    },
-    staleTime: 1000 * 60 * 1,
-    enabled: !!value,
-    refetchOnMount: false,
-  });
-
-  useQuery<Anime[]>({
-    queryKey: ["search-manga-data", value],
-
-    queryFn: async () => {
-      if (value == "") return;
-      const response = await api.get(
-        `/manga?q=${value}&fields[]=rate_avg&fields[]=rate&fields[]=releaseDate&site_id[]=3&site_id[]=${site_id}`,
-      );
-      return response.data.data;
-    },
-    staleTime: 1000 * 60 * 5,
-    enabled: !!value,
-  });
-
   return (
-    <TextInput
-      onChangeText={setSearch}
-      value={search}
-      placeholderTextColor="rgba(255,255,255,0.6)"
+    <View
       style={{
-        backgroundColor: "rgba(255,255,255,0.1)",
-        paddingVertical: 10,
-        paddingHorizontal: 12,
-        marginHorizontal: 12,
-        borderRadius: 6,
-        color: "rgba(255,255,255,0.6)",
+        position: "relative",
+        justifyContent: "center",
+        marginBottom: 8,
       }}
-      placeholder="Искать"
-    />
+    >
+      <SearchIcon
+        style={{ position: "absolute", left: 8 }}
+        size={20}
+        strokeWidth={3}
+        color="rgb(70,70,70)"
+      />
+      <TextInput
+        onChangeText={(text) => setSearch(text)}
+        placeholder={i18n.t("search.placeholder")}
+        placeholderTextColor="rgb(70,70,70)"
+        style={{
+          backgroundColor: "rgba(255,255,255,0.06)",
+          paddingVertical: 8,
+          paddingLeft: 36,
+          fontWeight: "500",
+          color: "rgb(70,70,70)",
+          paddingHorizontal: 12,
+          borderRadius: 6,
+          width: "100%",
+        }}
+      />
+    </View>
   );
 };

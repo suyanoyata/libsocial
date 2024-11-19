@@ -1,5 +1,5 @@
 import { DarkTheme, ThemeProvider } from "@react-navigation/native";
-import { Stack, Tabs } from "expo-router";
+import { Stack } from "expo-router";
 import { useEffect, useState } from "react";
 import "react-native-reanimated";
 
@@ -8,7 +8,8 @@ import { store } from "@/hooks/useStore";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DevToolsBubble } from "react-native-react-query-devtools";
-import { Alert, LogBox, StatusBar } from "react-native";
+import { Alert, LogBox, Text } from "react-native";
+import { StatusBar } from "expo-status-bar";
 
 import * as Notifications from "expo-notifications";
 import * as Updates from "expo-updates";
@@ -21,12 +22,12 @@ import ErrorBoundary from "react-native-error-boundary";
 import { ErrorBoundaryComponent } from "@/components/error-boundary-component";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNotificationsCountStore } from "@/hooks/useNotificationsCountStore";
+import Preloader from "@/components/preloader";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 1000 * 60 * 10,
-      refetchOnMount: false,
     },
   },
 });
@@ -52,13 +53,12 @@ export default function RootLayout() {
       Notifications.setBadgeCountAsync(count);
     });
 
-    Alert.alert("Фоновая загрузка", "Фоновая загрузка завершена");
-
     return BackgroundFetch.BackgroundFetchResult.NewData;
   });
 
   LogBox.ignoreAllLogs();
 
+  // videoServers
   useEffect(() => {
     setApiLoggers();
     if (videoServers.length !== 0) return;
@@ -70,7 +70,10 @@ export default function RootLayout() {
       );
       setVideoServers(response.data.data.videoServers);
     });
+  }, []);
 
+  // imageServers
+  useEffect(() => {
     if (imageServers.length !== 0) return;
 
     api.get("/constants?fields[]=imageServers").then((response) => {
@@ -153,51 +156,54 @@ export default function RootLayout() {
   }
   // #endregion
 
-  if (__DEV__) {
-    return (
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider value={DarkTheme}>
-          <Stack>
-            <Stack.Screen
-              name="(tabs)"
-              options={{ title: "Главная", headerShown: false }}
-            />
-            <Stack.Screen
-              name="image-server-select"
-              options={{
-                headerShown: false,
-                title: "Выбор сервера",
-                presentation: "modal",
-              }}
-            />
-            <Stack.Screen
-              name="title-details"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen name="anime-watch" options={{ headerShown: false }} />
-            <Stack.Screen
-              name="manga-reader"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="ranobe-reader"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen name="+not-found" />
-          </Stack>
-          <DevToolsBubble />
-        </ThemeProvider>
-        <StatusBar barStyle="light-content" />
-      </QueryClientProvider>
-    );
-  }
+  // if (__DEV__) {
+  //   return (
+  //     <QueryClientProvider client={queryClient}>
+  //       <ThemeProvider value={DarkTheme}>
+  //         <Stack>
+  //           <Stack.Screen
+  //             name="(tabs)"
+  //             options={{ title: "Главная", headerShown: false }}
+  //           />
+  //           <Stack.Screen
+  //             name="image-server-select"
+  //             options={{
+  //               headerShown: false,
+  //               title: "Выбор сервера",
+  //               presentation: "modal",
+  //             }}
+  //           />
+  //           <Stack.Screen
+  //             name="title-details"
+  //             options={{ headerShown: false }}
+  //           />
+  //           <Stack.Screen name="anime-watch" options={{ headerShown: false }} />
+  //           <Stack.Screen
+  //             name="manga-reader"
+  //             options={{ headerShown: false }}
+  //           />
+  //           <Stack.Screen
+  //             name="ranobe-reader"
+  //             options={{ headerShown: false }}
+  //           />
+  //         </Stack>
+  //         <DevToolsBubble />
+  //       </ThemeProvider>
+  //       <StatusBar />
+  //     </QueryClientProvider>
+  //   );
+  // }
 
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider value={DarkTheme}>
-        <StatusBar backgroundColor="#000000" barStyle="dark-content" />
         <ErrorBoundary FallbackComponent={ErrorBoundaryComponent}>
-          <Stack>
+          <Preloader />
+          <Stack
+            screenOptions={{
+              headerShown: false,
+            }}
+          >
             <Stack.Screen
               name="(tabs)"
               options={{ title: "Главная", headerShown: false }}
@@ -210,6 +216,12 @@ export default function RootLayout() {
                 presentation: "modal",
               }}
             />
+            {/* <Stack.Screen
+              name="search-filters"
+              options={{
+                presentation: "modal",
+              }}
+            /> */}
             <Stack.Screen
               name="title-details"
               options={{ headerShown: false }}
@@ -222,9 +234,10 @@ export default function RootLayout() {
               name="ranobe-reader"
               options={{ headerShown: false }}
             />
-            <Stack.Screen name="+not-found" />
           </Stack>
+          {__DEV__ && <DevToolsBubble />}
         </ErrorBoundary>
+        <StatusBar />
       </ThemeProvider>
     </QueryClientProvider>
   );

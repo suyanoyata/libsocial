@@ -5,6 +5,7 @@ import { Alert, Text, View } from "react-native";
 import RNRestart from "react-native-restart";
 import { Button } from "./button";
 import { Construction } from "lucide-react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export const ErrorBoundaryComponent = ({ error }: { error: Error }) => {
   const storage = useAsyncStorage("show-production-error");
@@ -14,7 +15,7 @@ export const ErrorBoundaryComponent = ({ error }: { error: Error }) => {
   useEffect(() => {
     storage.getItem().then((res) => {
       setShowError(res == "true" ? true : false);
-      if (res !== "true") {
+      if (res !== "true" && !__DEV__) {
         Alert.alert(
           "Ошибка приложения",
           "В приложении произошла ошибка и оно должно быть перезапущено.",
@@ -25,14 +26,14 @@ export const ErrorBoundaryComponent = ({ error }: { error: Error }) => {
                 RNRestart.restart();
               },
             },
-          ],
+          ]
         );
       }
     });
   }, []);
 
   return (
-    <View
+    <SafeAreaView
       style={{
         backgroundColor: "black",
         height: "100%",
@@ -53,6 +54,6 @@ export const ErrorBoundaryComponent = ({ error }: { error: Error }) => {
       >
         Перезапустить
       </Button>
-    </View>
+    </SafeAreaView>
   );
 };

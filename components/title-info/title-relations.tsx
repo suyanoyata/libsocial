@@ -12,6 +12,7 @@ import { useNavigation } from "expo-router";
 import { SimilarPlaceholder } from "../similar-placeholder";
 import { Button } from "../button";
 import { RefreshCcw } from "lucide-react-native";
+import { useRussianTitle } from "@/constants/app.constants";
 
 type SimilarTitle = {
   media: {
@@ -94,7 +95,7 @@ export const TitleRelations = ({ slug_url }: { slug_url: string }) => {
     }
   };
 
-  if (data?.length == 0) return null
+  if (data?.length == 0) return null;
 
   return (
     <View
@@ -164,8 +165,10 @@ export const TitleRelations = ({ slug_url }: { slug_url: string }) => {
                     color: "white",
                   }}
                 >
-                  {title.media.rus_name != ""
-                    ? title.media.rus_name
+                  {useRussianTitle()
+                    ? title.media.rus_name != ""
+                      ? title.media.rus_name
+                      : title.media.name
                     : title.media.name}
                 </Text>
                 <Text

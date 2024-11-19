@@ -21,6 +21,6 @@ export const Skeleton = ({
         borderRadius: 6,
         ...style,
       }}
-    ></Animated.View>
+    />
   );
 };

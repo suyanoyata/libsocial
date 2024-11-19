@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import Summary from "./title-summary";
 import { Anime } from "@/types/anime.type";
 import { TitleSimilar } from "./title-similar";
@@ -15,7 +15,7 @@ export const AboutTitle = ({
   data: Anime;
   accent: TitleColors;
 }) => {
-  if (selected != "О тайтле") return;
+  if (selected != "about") return;
 
   const slug_url =
     data.site == 5 ? `anime/${data.slug_url}` : `manga/${data.slug_url}`;

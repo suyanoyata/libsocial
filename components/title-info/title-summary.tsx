@@ -1,6 +1,8 @@
 import { TitleColors } from "@/hooks/useStore";
+import i18n from "@/lib/intl";
 import { useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, Text, useWindowDimensions, View } from "react-native";
+import Animated, { FadeIn } from "react-native-reanimated";
 
 export default function Summary({
   children,
@@ -9,7 +11,11 @@ export default function Summary({
   children: React.ReactNode;
   accent: TitleColors;
 }) {
+  const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
   const [open, setOpen] = useState<boolean>(false);
+  const [height, setHeight] = useState<number>(0);
+
+  const lineHeight = 20;
 
   if (!children) return;
 
@@ -21,23 +27,36 @@ export default function Summary({
       }}
     >
       <Text
+        onLayout={(event) => setHeight(event.nativeEvent.layout.height)}
+        style={{
+          position: "absolute",
+          opacity: 0,
+        }}
+      >
+        {children}
+      </Text>
+      <Text
         style={{
           color: "white",
-          lineHeight: 20,
+          lineHeight,
         }}
         numberOfLines={!open ? 4 : 2147483647}
       >
         {children}
       </Text>
-      <Pressable
-        onPress={() => {
-          setOpen((prev) => !prev);
-        }}
-      >
-        <Text style={{ color: accent.showMore, marginTop: 2 }}>
-          {open ? "Показать меньше" : "Подробнее..."}
-        </Text>
-      </Pressable>
+      {lineHeight * 4 < height && (
+        <AnimatedPressable
+          onPress={() => {
+            setOpen((prev) => !prev);
+          }}
+        >
+          <Text style={{ color: accent.showMore, marginTop: 2 }}>
+            {open
+              ? i18n.t("content.description.show_less")
+              : i18n.t("content.description.show_more")}
+          </Text>
+        </AnimatedPressable>
+      )}
     </View>
   );
 }

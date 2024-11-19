@@ -1,0 +1,64 @@
+{
+  "tabs": {
+    "bookmarks": "Bookmarks",
+    "search": "Catalog",
+    "index": "Home",
+    "notifications": "Notifications",
+    "menu": "Menu"
+  },
+  "error": {
+    "loading": {
+      "text": "Error while trying to load.",
+      "retry": "Try again"
+    }
+  },
+  "content": {
+    "bookmark": {
+      "add": "Add to bookmarks"
+    },
+    "tabs": {
+      "about": "About",
+      "chapters": "Chapters",
+      "comments": "Comments",
+      "reviews": "Reviews"
+    },
+    "start": {
+      "reading": "Start reading {{count}} / {{total}}",
+      "watching": "Start watching {{count}} / {{total}}"
+    },
+    "description": {
+      "show_more": "Show more...",
+      "show_less": "Show less"
+    },
+    "reader": "Volume {{volume}} Chapter {{chapter}}",
+    "chapter": "Chapter {{chapter}}",
+    "episode": "Episode {{episode}}"
+  },
+  "settings": {
+    "show_text_error": {
+      "text": "Show text error",
+      "button": "Call error",
+      "perform": "Execute"
+    }
+  },
+  "updates": {
+    "not_available": "Updates unavailable",
+    "channel": "Updates channel",
+    "enabled": "Updates enabled",
+    "version": "Expo version",
+    "manifest": "Manifest version",
+    "number": "Version number",
+    "check": "Check for updates",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "search": {
+    "selected": "Selected {{count}}",
+    "genres": "Genres",
+    "clear": "Clear all",
+    "placeholder": "Search by name",
+    "filters": "Filters",
+    "sort": "Sorting",
+    "not_found": "We didn't found anything. Try removing some filters or double-check the search field"
+  }
+}

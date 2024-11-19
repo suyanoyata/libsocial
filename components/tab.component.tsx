@@ -6,6 +6,7 @@ import { TitleColors } from "@/hooks/useStore";
 type Props = {
   children: string;
   selected: string;
+  value: string;
   style?: ViewStyle;
   accent: TitleColors;
   setSelected: (selected: string) => void;
@@ -15,7 +16,7 @@ type Props = {
 export default function Tab(props: Props) {
   const animated = useSharedValue(0);
   const opacity = useSharedValue(0);
-  const active = props.selected ? props.selected == props.children : false;
+  const active = props.selected ? props.selected == props.value : false;
 
   useEffect(() => {
     if (active) {
@@ -27,11 +28,9 @@ export default function Tab(props: Props) {
     if (active) {
       animated.value = withTiming(0);
       opacity.value = withTiming(1);
-      return;
     } else {
       animated.value = withTiming(10);
       opacity.value = withTiming(0.5);
-      return;
     }
   }, [props.selected]);
 
@@ -43,14 +42,13 @@ export default function Tab(props: Props) {
       }}
       onPress={() => {
         if (props.inactive) return;
-        props.setSelected(props.children);
+        props.setSelected(props.value);
       }}
     >
       <Animated.Text
         numberOfLines={1}
         style={{
           paddingVertical: 12,
-          // color: active ? "white" : "gray",
           color: "white",
           opacity: !props.inactive ? opacity : 0.2,
           fontWeight: "600",
@@ -63,7 +61,6 @@ export default function Tab(props: Props) {
           alignSelf: "flex-end",
           width: "100%",
           height: 4,
-          // transform: [{ translateY: active ? 0 : 10 }],
           transform: [{ translateY: animated }],
           backgroundColor: props.accent.tabSelector,
           borderTopEndRadius: 4,

@@ -5,6 +5,7 @@ import { Bell, Bookmark, Home, LayoutGrid, Menu } from "lucide-react-native";
 import ErrorBoundary from "react-native-error-boundary";
 import { ErrorBoundaryComponent } from "@/components/error-boundary-component";
 import { useNotificationsCountStore } from "@/hooks/useNotificationsCountStore";
+import i18n from "@/lib/intl";
 
 export default function TabLayout() {
   const { notificationsCount } = useNotificationsCountStore();
@@ -20,21 +21,21 @@ export default function TabLayout() {
         <Tabs.Screen
           name="bookmarks"
           options={{
-            title: "Закладки",
+            title: i18n.t("tabs.bookmarks"),
             tabBarIcon: ({ color }) => <Bookmark color={color} />,
           }}
         />
         <Tabs.Screen
           name="search"
           options={{
-            title: "Каталог",
+            title: i18n.t("tabs.search"),
             tabBarIcon: ({ color }) => <LayoutGrid color={color} />,
           }}
         />
         <Tabs.Screen
           name="index"
           options={{
-            title: "Главная",
+            title: i18n.t("tabs.index"),
             tabBarIcon: ({ color }) => <Home color={color} />,
           }}
         />
@@ -42,14 +43,14 @@ export default function TabLayout() {
           name="notifications"
           options={{
             tabBarBadge: notificationsCount,
-            title: "Уведомления",
+            title: i18n.t("tabs.notifications"),
             tabBarIcon: ({ color }) => <Bell color={color} />,
           }}
         />
         <Tabs.Screen
           name="menu"
           options={{
-            title: "Меню",
+            title: i18n.t("tabs.menu"),
             tabBarIcon: ({ color }) => <Menu color={color} />,
           }}
         />

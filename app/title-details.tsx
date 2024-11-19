@@ -8,28 +8,63 @@ import { Anime } from "@/types/anime.type";
 import Tab from "@/components/tab.component";
 import { TitleBackgroundData } from "@/components/title-info/title-background-data";
 import { useEffect, useState } from "react";
-import { colors, siteUrls } from "@/constants/app.constants";
+import { colors, presentation_mode, siteUrls } from "@/constants/app.constants";
 import { MangaChapters } from "@/components/manga-chapters";
 import { AboutTitle } from "@/components/title-info/title-about";
 import { store, TitleColors } from "@/hooks/useStore";
 import { Comments } from "@/components/comments";
 import { Button } from "@/components/button";
 import { RefreshCcw } from "lucide-react-native";
+import { BackButton } from "@/components/back-button";
+import i18n from "@/lib/intl";
+
+const chapter = [
+  {
+    title: i18n.t("content.tabs.about"),
+    key: "about",
+  },
+  {
+    title: i18n.t("content.tabs.chapters"),
+    key: "chapters",
+  },
+  {
+    title: i18n.t("content.tabs.comments"),
+    key: "comments",
+  },
+  {
+    title: i18n.t("content.tabs.reviews"),
+    key: "reviews",
+  },
+];
 
 const tabs = {
-  1: ["О тайтле", "Главы", "Комментарии", "Отзывы"],
-  3: ["О тайтле", "Главы", "Комментарии", "Отзывы"],
-  4: ["О тайтле", "Главы", "Комментарии", "Отзывы"],
-  5: ["О тайтле", "Комментарии", "Отзывы"],
+  1: chapter,
+  3: chapter,
+  4: chapter,
+  5: [
+    {
+      title: i18n.t("content.tabs.about"),
+      key: "about",
+    },
+    {
+      title: i18n.t("content.tabs.comments"),
+      key: "comments",
+    },
+    {
+      title: i18n.t("content.tabs.reviews"),
+      key: "reviews",
+    },
+  ],
 };
 
 export default function index() {
   const router = useRoute();
   const { slug_url, type } = router.params as any;
 
-  const [selectedTab, setSelectedTab] = useState<string>("О тайтле");
-
+  const [selectedTab, setSelectedTab] = useState<string>("about");
   const [count, setCount] = useState<number>(0);
+
+  const [posterVisible, setPosterVisible] = useState(true);
 
   const { setCurrentTitleSlug } = store();
 
@@ -91,7 +126,13 @@ export default function index() {
   }
 
   return (
-    <Animated.View entering={FadeIn}>
+    <Animated.View
+      style={{
+        position: "relative",
+      }}
+      entering={FadeIn}
+    >
+      <BackButton posterVisible={posterVisible} />
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{
@@ -99,6 +140,7 @@ export default function index() {
         }}
       >
         <TitleBackgroundData
+          setPosterVisible={setPosterVisible}
           setCount={setCount}
           count={count}
           setSelectedTab={setSelectedTab}
@@ -120,14 +162,18 @@ export default function index() {
             {tabs[type as keyof typeof tabs].map((tab) => (
               <Tab
                 accent={accent}
-                key={tab}
-                inactive={tab == "Отзывы"}
+                key={tab.key}
+                value={tab.key}
+                inactive={
+                  tab.key == "reviews" ||
+                  (tab.key == "comments" && presentation_mode)
+                }
                 selected={selectedTab}
                 setSelected={() => {
-                  setSelectedTab(tab);
+                  setSelectedTab(tab.key);
                 }}
               >
-                {tab}
+                {tab.title}
               </Tab>
             ))}
           </View>

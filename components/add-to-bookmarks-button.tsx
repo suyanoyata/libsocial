@@ -3,6 +3,7 @@ import { Button } from "./button";
 import { ActivityIndicator, Alert } from "react-native";
 import { Bookmark } from "lucide-react-native";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import i18n from "@/lib/intl";
 
 export const AddToBookmarksButton = ({
   color,
@@ -62,7 +63,7 @@ export const AddToBookmarksButton = ({
       onPress={pushBookmark}
     >
       {!isFetching ? (
-        "Добавить в закладки"
+        i18n.t("content.bookmark.add")
       ) : (
         <ActivityIndicator color="white" />
       )}
