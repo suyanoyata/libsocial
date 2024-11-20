@@ -1,28 +1,29 @@
 import { DarkTheme, ThemeProvider } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Stack } from "expo-router";
+
 import { useEffect, useState } from "react";
-import "react-native-reanimated";
+import { useNotificationsCountStore } from "@/hooks/useNotificationsCountStore";
 
 import { api } from "@/lib/axios";
 import { store } from "@/hooks/useStore";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DevToolsBubble } from "react-native-react-query-devtools";
-import { Alert, LogBox, Text } from "react-native";
+import { Alert, LogBox } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import RNRestart from "react-native-restart";
 
 import * as Notifications from "expo-notifications";
 import * as Updates from "expo-updates";
 import * as BackgroundFetch from "expo-background-fetch";
 import * as TaskManager from "expo-task-manager";
 
-import { LOG, LOG_LEVEL } from "@/lib/logger";
+import { logger } from "@/lib/logger";
 
 import ErrorBoundary from "react-native-error-boundary";
-import { ErrorBoundaryComponent } from "@/components/error-boundary-component";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNotificationsCountStore } from "@/hooks/useNotificationsCountStore";
 import Preloader from "@/components/preloader";
+import { ErrorBoundaryComponent } from "@/components/error-boundary-component";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -64,8 +65,7 @@ export default function RootLayout() {
     if (videoServers.length !== 0) return;
 
     api.get("/constants?fields[]=videoServers").then((response) => {
-      LOG(
-        LOG_LEVEL.VERBOSE,
+      logger.info(
         `Got ${response.data.data.videoServers.length} video servers.`
       );
       setVideoServers(response.data.data.videoServers);
@@ -77,8 +77,7 @@ export default function RootLayout() {
     if (imageServers.length !== 0) return;
 
     api.get("/constants?fields[]=imageServers").then((response) => {
-      LOG(
-        LOG_LEVEL.VERBOSE,
+      logger.info(
         `Got ${response.data.data.imageServers.length} image servers.`
       );
       setImageServers(response.data.data.imageServers);
@@ -114,19 +113,21 @@ export default function RootLayout() {
   useEffect(() => {
     Updates.addUpdatesStateChangeListener((listener) => {
       if (listener.context.isUpdatePending && !updating) {
-        Alert.alert(
-          "Установлено обновление",
-          "Перезапустите приложение, чтобы применить его",
-          [
-            {
-              text: "Перезапустить",
-              onPress: () => {
-                setUpdating(true);
-                Updates.reloadAsync();
-              },
-            },
-          ]
-        );
+        setUpdating(true);
+        RNRestart.restart();
+        // Alert.alert(
+        //   "Установлено обновление",
+        //   "Перезапустите приложение, чтобы применить его",
+        //   [
+        //     {
+        //       text: "Перезапустить",
+        //       onPress: () => {
+
+        //         // Updates.reloadAsync();
+        //       },
+        //     },
+        //   ]
+        // );
       }
     });
 
@@ -143,7 +144,7 @@ export default function RootLayout() {
     if (__DEV__) {
       api.interceptors.request.use(
         (request) => {
-          console.log(
+          logger.request(
             `${request.method?.toUpperCase()} ${request.baseURL}${request.url}`
           );
           return request;
@@ -155,44 +156,6 @@ export default function RootLayout() {
     }
   }
   // #endregion
-
-  // if (__DEV__) {
-  //   return (
-  //     <QueryClientProvider client={queryClient}>
-  //       <ThemeProvider value={DarkTheme}>
-  //         <Stack>
-  //           <Stack.Screen
-  //             name="(tabs)"
-  //             options={{ title: "Главная", headerShown: false }}
-  //           />
-  //           <Stack.Screen
-  //             name="image-server-select"
-  //             options={{
-  //               headerShown: false,
-  //               title: "Выбор сервера",
-  //               presentation: "modal",
-  //             }}
-  //           />
-  //           <Stack.Screen
-  //             name="title-details"
-  //             options={{ headerShown: false }}
-  //           />
-  //           <Stack.Screen name="anime-watch" options={{ headerShown: false }} />
-  //           <Stack.Screen
-  //             name="manga-reader"
-  //             options={{ headerShown: false }}
-  //           />
-  //           <Stack.Screen
-  //             name="ranobe-reader"
-  //             options={{ headerShown: false }}
-  //           />
-  //         </Stack>
-  //         <DevToolsBubble />
-  //       </ThemeProvider>
-  //       <StatusBar />
-  //     </QueryClientProvider>
-  //   );
-  // }
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -209,6 +172,10 @@ export default function RootLayout() {
               options={{ title: "Главная", headerShown: false }}
             />
             <Stack.Screen
+              name="(modals)"
+              options={{ headerShown: false, presentation: "modal" }}
+            />
+            <Stack.Screen
               name="image-server-select"
               options={{
                 headerShown: false,
@@ -217,7 +184,7 @@ export default function RootLayout() {
               }}
             />
             {/* <Stack.Screen
-              name="search-filters"
+              name="/(modals)/filter-picker-modal"
               options={{
                 presentation: "modal",
               }}

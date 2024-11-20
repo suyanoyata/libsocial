@@ -3,16 +3,11 @@ import { useNavigation } from "@react-navigation/native";
 import { Pressable, Text, View } from "react-native";
 import { Image } from "expo-image";
 import { siteUrls, useRussianTitle } from "@/constants/app.constants";
-import { Skeleton } from "./skeleton";
+import { Skeleton } from "@/components/skeleton";
 import Animated, { FadeIn } from "react-native-reanimated";
+import { memo } from "react";
 
-export const TitleCard = ({
-  item,
-  width = 130,
-}: {
-  item?: Anime;
-  width?: number;
-}) => {
+const Card = ({ item, width = 130 }: { item?: Anime; width?: number }) => {
   const dimensions = { width, height: 189 };
   const router: any = useNavigation();
   const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -83,3 +78,9 @@ export const TitleCard = ({
     </AnimatedPressable>
   );
 };
+
+const areEqual = (prevProps: { item?: Anime }, nextProps: { item?: Anime }) => {
+  return prevProps.item?.id === nextProps.item?.id;
+};
+
+export const TitleCard = memo(Card, areEqual);

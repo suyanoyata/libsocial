@@ -1,4 +1,5 @@
 import { PointerInteractionView } from "@thefunbots/react-native-pointer-interactions";
+import { startTransition } from "react";
 import { Pressable, Text, ViewStyle } from "react-native";
 import Animated, { useSharedValue, withTiming } from "react-native-reanimated";
 
@@ -8,7 +9,7 @@ export const Button = ({
   onPress,
   icon,
   asChild = false,
-  withoutTransition = false,
+  animationDisabled = false,
   iconPosition = "left",
 }: {
   asChild?: boolean;
@@ -16,33 +17,45 @@ export const Button = ({
   style?: ViewStyle;
   onPress?: () => void;
   icon?: React.ReactNode;
-  withoutTransition?: boolean;
+  animationDisabled?: boolean;
   iconPosition?: "left" | "right";
 }) => {
-  const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+  const Component = Animated.createAnimatedComponent(Pressable);
 
   const scale = useSharedValue(1);
 
+  if (animationDisabled) {
+    return (
+      <Pressable
+        onPress={() => {
+          onPress && onPress();
+        }}
+        style={{
+          ...style,
+        }}
+      >
+        {children}
+      </Pressable>
+    );
+  }
+
   if (asChild) {
     return (
-      <AnimatedPressable
+      <Component
         onPressIn={() => {
           scale.value = withTiming(0.95, {
             duration: 150,
           });
         }}
+        onPress={() => {
+          onPress && onPress();
+        }}
         onPressOut={() => {
-          if (!withoutTransition) {
-            onPress && onPress();
+          startTransition(() => {
             scale.value = withTiming(1, {
               duration: 150,
             });
-          } else {
-            onPress && onPress();
-            scale.value = withTiming(1, {
-              duration: 150,
-            });
-          }
+          });
         }}
         style={{
           transform: [{ scale: scale }],
@@ -50,19 +63,21 @@ export const Button = ({
         }}
       >
         {children}
-      </AnimatedPressable>
+      </Component>
     );
   }
 
   return (
-    <AnimatedPressable
+    <Component
       onPressIn={() => {
         scale.value = withTiming(0.95, {
           duration: 150,
         });
       }}
-      onPressOut={() => {
+      onPress={() => {
         onPress && onPress();
+      }}
+      onPressOut={() => {
         scale.value = withTiming(1, {
           duration: 150,
         });
@@ -90,6 +105,6 @@ export const Button = ({
         {children}
       </Text>
       {iconPosition == "right" && icon}
-    </AnimatedPressable>
+    </Component>
   );
 };

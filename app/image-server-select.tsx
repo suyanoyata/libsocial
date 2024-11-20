@@ -1,26 +1,29 @@
 import { SettingsWrapper } from "@/components/settings-component";
 import { ImageServer, store } from "@/hooks/useStore";
 import { site_id } from "@/lib/axios";
-import { useAsyncStorage } from "@react-native-async-storage/async-storage";
+import { storage } from "@/lib/storage";
+import { Check } from "lucide-react-native";
 import { useEffect } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
 export default function ImageServerSelect() {
   const { imageServers, imageServerIndex, setImageServerIndex } = store();
 
-  const storage = useAsyncStorage("image-server");
+  useEffect(() => {
+    const server = storage.getNumber("image-server");
+
+    if (!server) {
+      storage.set("image-server", 0);
+
+      return;
+    }
+
+    setImageServerIndex(server);
+  }, []);
 
   useEffect(() => {
-    storage.getItem().then((res) => {
-      if (!res) {
-        storage.setItem("0");
-
-        return;
-      }
-
-      setImageServerIndex(parseInt(res));
-    });
-  }, []);
+    storage.set("image-server", imageServerIndex);
+  }, [imageServerIndex]);
 
   const ImageServerSelect = ({
     server,
@@ -30,22 +33,31 @@ export default function ImageServerSelect() {
     index: number;
   }) => {
     if (!server.site_ids.includes(site_id)) return;
+
     return (
       <View
         style={{
           paddingHorizontal: 12,
+          paddingLeft: 38,
           borderBottomWidth: 1,
           borderBottomColor: "rgba(255,255,255,0.2)",
           justifyContent: "space-between",
           flexDirection: "row",
+          position: "relative",
           alignItems: "center",
         }}
       >
+        {imageServers[imageServerIndex].label == server.label && (
+          <Check
+            color="white"
+            style={{ position: "absolute", left: 8 }}
+            size={22}
+            strokeWidth={2.8}
+          />
+        )}
         <TouchableOpacity
           onPress={() => {
             setImageServerIndex(index);
-
-            storage.setItem(index.toString());
           }}
           style={{
             height: 42,

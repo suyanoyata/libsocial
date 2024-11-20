@@ -5,17 +5,16 @@ import { useQuery } from "@tanstack/react-query";
 import { ScrollView, Text, View } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { Anime } from "@/types/anime.type";
-import Tab from "@/components/tab.component";
-import { TitleBackgroundData } from "@/components/title-info/title-background-data";
+import Tab from "@/components/title/tab.component";
+import { TitleBackgroundData } from "@/components/title/title-info/title-background-data";
 import { useEffect, useState } from "react";
 import { colors, presentation_mode, siteUrls } from "@/constants/app.constants";
 import { MangaChapters } from "@/components/manga-chapters";
-import { AboutTitle } from "@/components/title-info/title-about";
+import { AboutTitle } from "@/components/title/title-info/title-about";
 import { store, TitleColors } from "@/hooks/useStore";
-import { Comments } from "@/components/comments";
+import { Comments } from "@/components/title/comments";
 import { Button } from "@/components/button";
 import { RefreshCcw } from "lucide-react-native";
-import { BackButton } from "@/components/back-button";
 import i18n from "@/lib/intl";
 
 const chapter = [
@@ -63,8 +62,6 @@ export default function index() {
 
   const [selectedTab, setSelectedTab] = useState<string>("about");
   const [count, setCount] = useState<number>(0);
-
-  const [posterVisible, setPosterVisible] = useState(true);
 
   const { setCurrentTitleSlug } = store();
 
@@ -132,7 +129,6 @@ export default function index() {
       }}
       entering={FadeIn}
     >
-      <BackButton posterVisible={posterVisible} />
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{
@@ -140,7 +136,6 @@ export default function index() {
         }}
       >
         <TitleBackgroundData
-          setPosterVisible={setPosterVisible}
           setCount={setCount}
           count={count}
           setSelectedTab={setSelectedTab}

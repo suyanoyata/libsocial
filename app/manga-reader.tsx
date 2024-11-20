@@ -1,6 +1,7 @@
 import { Loader } from "@/components/fullscreen-loader";
 import { store } from "@/hooks/useStore";
 import { api, token } from "@/lib/axios";
+import i18n from "@/lib/intl";
 import { Anime } from "@/types/anime.type";
 import { useRoute } from "@react-navigation/native";
 import { useQuery } from "@tanstack/react-query";
@@ -29,7 +30,7 @@ export default function MangaReader() {
     queryKey: ["title-data", slug_url],
   });
 
-  const { data, isLoading, error } = useQuery<{
+  const { data, isLoading } = useQuery<{
     pages: {
       url: string;
       ratio: number;
@@ -42,7 +43,7 @@ export default function MangaReader() {
         `/${slug_url}/chapter?number=${number}&volume=${volume}`,
         {
           withCredentials: true,
-        },
+        }
       );
       return response.data.data;
     },
@@ -119,7 +120,7 @@ export default function MangaReader() {
                 lineHeight: 18,
               }}
             >
-              Том {volume} Глава {number}
+              {i18n.t("content.reader", { volume, chapter: number })}
             </Text>
           </View>
           <Pressable
@@ -145,17 +146,17 @@ export default function MangaReader() {
                 uri: imageServers[imageServerIndex].url + page.url,
                 cacheKey: imageServers[imageServerIndex].url + page.url,
                 headers: {
-                  Referer: "https://hentailib.me/",
+                  // Referer: "https://hentailib.me/",
                   Authorization: token,
                 },
               }}
               style={{ width: width, height: width / page.ratio }}
             />
-            {__DEV__ && 
+            {__DEV__ && (
               <Text style={{ color: "rgba(255,255,255,0.5)" }}>
                 Ссылка: {imageServers[imageServerIndex].url + page.url}
               </Text>
-            }
+            )}
           </>
         ))}
       </Animated.ScrollView>

@@ -1,17 +1,16 @@
 import { Button } from "@/components/button";
-import { Comments } from "@/components/comments";
+import { Comments } from "@/components/title/comments";
 import { Loader } from "@/components/fullscreen-loader";
-// import { store } from "@/hooks/useStore";
 import { api } from "@/lib/axios";
-import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { useRoute } from "@react-navigation/native";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigation } from "expo-router";
 import { ChevronLeft, ChevronRight } from "lucide-react-native";
-import React, { useEffect } from "react";
+import React from "react";
 import { SafeAreaView, Text, useWindowDimensions, View } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 import RenderHtml from "react-native-render-html";
+import { storage } from "@/lib/storage";
 
 type RanobeChapter = {
   content: string;
@@ -25,14 +24,12 @@ export default function RanobeReader() {
 
   const navigation: any = useNavigation();
 
-  const storage = useAsyncStorage(slug_url);
-
   const { data, isLoading } = useQuery<RanobeChapter>({
     queryKey: ["ranobe-reader", slug_url, volume, number],
 
     queryFn: async () => {
       const response = await api.get(
-        `/${slug_url}/chapter?number=${number}&volume=${volume}`,
+        `/${slug_url}/chapter?number=${number}&volume=${volume}`
       );
       console.log(response.data.data, null, 2);
       return response.data.data;
@@ -106,15 +103,16 @@ export default function RanobeReader() {
                   chapters: chapters,
                 });
 
-                storage.getItem().then((res) => {
-                  const prev = JSON.parse(res ?? "") ?? [];
+                const currentTitle = storage.getString(slug_url);
 
-                  if (!includes) {
-                    storage.setItem(
-                      JSON.stringify([...prev, chapterIndex - 1]),
-                    );
-                  }
-                });
+                const prev = JSON.parse(currentTitle ?? "") ?? [];
+
+                if (!includes) {
+                  storage.set(
+                    slug_url,
+                    JSON.stringify([...prev, chapterIndex - 1])
+                  );
+                }
               }}
               iconPosition="left"
               icon={
@@ -142,15 +140,16 @@ export default function RanobeReader() {
                   chapters: chapters,
                 });
 
-                storage.getItem().then((res) => {
-                  const prev = JSON.parse(res ?? "") ?? [];
+                const currentTitle = storage.getString(slug_url);
 
-                  if (!includes) {
-                    storage.setItem(
-                      JSON.stringify([...prev, chapterIndex + 1]),
-                    );
-                  }
-                });
+                const prev = JSON.parse(currentTitle ?? "") ?? [];
+
+                if (!includes) {
+                  storage.set(
+                    slug_url,
+                    JSON.stringify([...prev, chapterIndex - 1])
+                  );
+                }
               }}
               iconPosition="right"
               icon={

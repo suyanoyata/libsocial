@@ -10,7 +10,7 @@ import { Button } from "@/components/button";
 import SearchFilters from "@/components/filters/search-filters";
 import i18n from "@/lib/intl";
 
-export const SearchLayout = ({ children }: { children: React.ReactNode }) => {
+const SearchLayout = ({ children }: { children: React.ReactNode }) => {
   const [search, setSearch] = useState("");
   const value = useDebounce(search, 500);
 
@@ -59,3 +59,5 @@ export const SearchLayout = ({ children }: { children: React.ReactNode }) => {
     </SafeAreaView>
   );
 };
+
+export default SearchLayout;

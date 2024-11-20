@@ -10,7 +10,7 @@ import {
 import { Image } from "expo-image";
 import { useNavigation } from "expo-router";
 import { SimilarPlaceholder } from "../similar-placeholder";
-import { Button } from "../button";
+import { Button } from "../../button";
 import { RefreshCcw } from "lucide-react-native";
 
 type SimilarTitle = {

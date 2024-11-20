@@ -4,18 +4,18 @@ import { Anime } from "@/types/anime.type";
 import { View, Text } from "react-native";
 
 import { BlurView } from "expo-blur";
-import { Button } from "../button";
+import { Button } from "../../button";
 import { useNavigation } from "expo-router";
 import { TitleColors } from "@/hooks/useStore";
 import { BookmarkIcon, Play } from "lucide-react-native";
 import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { useEffect } from "react";
-import { AddToBookmarksButton } from "../add-to-bookmarks-button";
+import { AddToBookmarksButton } from "@/components/title/add-to-bookmarks-button";
 
-import VisibilitySensor from "@svanboxel/visibility-sensor-react-native";
 import { useRussianTitle } from "@/constants/app.constants";
 import { clearOtherNames } from "@/lib/clearOtherNames";
 import i18n from "@/lib/intl";
+import { BackButton } from "../back-button";
 
 export const TitleBackgroundData = ({
   data,
@@ -23,14 +23,12 @@ export const TitleBackgroundData = ({
   setCount,
   count,
   setSelectedTab,
-  setPosterVisible,
 }: {
   data: Anime;
   count: number;
   setCount: (n: number) => void;
   setSelectedTab: (s: string) => void;
   accent: TitleColors;
-  setPosterVisible: (b: boolean) => void;
 }) => {
   const navigation: any = useNavigation();
 
@@ -81,6 +79,7 @@ export const TitleBackgroundData = ({
         position: "relative",
       }}
     >
+      <BackButton />
       <BackgroundOverlay />
       <View
         style={{
@@ -99,25 +98,23 @@ export const TitleBackgroundData = ({
           }}
           contentFit="cover"
         />
-        <VisibilitySensor onChange={(event) => setPosterVisible(event)}>
-          <Text
-            selectable
-            style={{
-              color: "#bfbfbf",
-              fontSize: 20,
-              fontWeight: "600",
-              marginTop: 12,
-              textAlign: "center",
-              marginHorizontal: 12,
-            }}
-          >
-            {useRussianTitle()
-              ? data.rus_name == "" || data.rus_name == null
-                ? data.name
-                : data.rus_name
-              : data.name}
-          </Text>
-        </VisibilitySensor>
+        <Text
+          selectable
+          style={{
+            color: "#bfbfbf",
+            fontSize: 20,
+            fontWeight: "600",
+            marginTop: 12,
+            textAlign: "center",
+            marginHorizontal: 12,
+          }}
+        >
+          {useRussianTitle()
+            ? data.rus_name == "" || data.rus_name == null
+              ? data.name
+              : data.rus_name
+            : data.name}
+        </Text>
         {!useRussianTitle() && (
           <Text
             selectable
@@ -168,7 +165,6 @@ export const TitleBackgroundData = ({
                 <BookmarkIcon color="white" strokeWidth={3} size={18} />
               )
             }
-            withoutTransition
             onPress={() => {
               if (data.site == 5) {
                 navigation.navigate("anime-watch", {

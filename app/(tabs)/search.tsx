@@ -12,13 +12,14 @@ import { siteUrls } from "@/constants/app.constants";
 
 import { api, site_id } from "@/lib/axios";
 
-import { TitleCard } from "@/components/title-card";
+import { TitleCard } from "@/components/title/title-card";
 
 import { usePulseValue } from "@/hooks/usePulseValue";
-import { SearchLayout } from "../layouts/search-layout";
+import SearchLayout from "../layouts/search-layout";
 import { useCatalogSearchStore } from "@/hooks/useCatalogSearchStore";
 import { useFiltersStore } from "@/hooks/useFiltersStore";
 import i18n from "@/lib/intl";
+import { Conditional } from "@/components/misc/conditional";
 
 export default function Search() {
   const AnimatedFlashList = Animated.createAnimatedComponent(FlashList);
@@ -34,9 +35,10 @@ export default function Search() {
     queryFn: async ({ pageParam }) => {
       let call = `/${siteUrls[site_id].url}?fields[]=rate&fields[]=rate_avg&fields[]=userBookmark&site_id[]=${site_id}&page=${pageParam}`;
 
-      Object.keys(filters).forEach((filter) => {
-        if (filters[filter].length > 0) {
-          filters[filter].forEach((value) => {
+      // hold on, this typing is https://media.tenor.com/SeLBRCUiQaoAAAAe/absolute-cinema-cinema.png
+      Object.keys(filters).forEach((filter: string) => {
+        if ((filters as Record<string, any[]>)[filter].length > 0) {
+          (filters as Record<string, any[]>)[filter].forEach((value: any) => {
             call += `&${filter}[]=${value}`;
           });
         }
@@ -79,14 +81,19 @@ export default function Search() {
           renderItem={() => <TitleCard />}
         />
       )}
-      {data?.pages.length == 0 &&
-        (search != "" || filters.genres.length > 0) && (
-          <View style={{ justifyContent: "center", flex: 1 }}>
-            <Text style={{ color: "white", textAlign: "center" }}>
-              {i18n.t("search.not_found")}
-            </Text>
-          </View>
-        )}
+      <Conditional
+        conditions={[
+          data?.pages.length == 0,
+          search != "",
+          filters.genres.length > 0,
+        ]}
+      >
+        <View style={{ justifyContent: "center", flex: 1 }}>
+          <Text style={{ color: "white", textAlign: "center" }}>
+            {i18n.t("search.not_found")}
+          </Text>
+        </View>
+      </Conditional>
       {data && (
         <FlashList
           estimatedItemSize={1500}

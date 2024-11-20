@@ -1,6 +1,6 @@
 import { site_id } from "@/lib/axios";
 import { Text, View } from "react-native";
-import { Button } from "./button";
+import { Button } from "../button";
 import { Link, useNavigation } from "expo-router";
 import { useFiltersStore } from "@/hooks/useFiltersStore";
 

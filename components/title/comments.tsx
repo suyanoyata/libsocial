@@ -1,12 +1,15 @@
-import { api } from "@/lib/axios";
-import { FlashList } from "@shopify/flash-list";
 import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
+import { FlashList } from "@shopify/flash-list";
+
 import { ScrollView, Text, useWindowDimensions, View } from "react-native";
 import RenderHtml from "react-native-render-html";
-import { Button } from "./button";
+import { Button } from "@/components/button";
+
+import { api } from "@/lib/axios";
 import moment from "moment";
 import "moment/locale/ru";
+import { Conditional } from "../misc/conditional";
 
 type Comment = {
   id: number;
@@ -96,7 +99,6 @@ export const Comments = ({
   post_id: number;
 }) => {
   // #region data handling
-
   const {
     data: commentsData,
     isLoading,
@@ -124,6 +126,7 @@ export const Comments = ({
   // #endregion
 
   const { width } = useWindowDimensions();
+  const [displayButton, setDisplayButton] = useState(false);
 
   const Reply = ({ comment_id }: { comment_id: number | null }) => {
     const [comment, setComment] = useState<Comment>();
@@ -193,6 +196,14 @@ export const Comments = ({
 
   useEffect(() => {
     moment.locale("ru");
+
+    const timeout = setTimeout(() => {
+      setDisplayButton(true);
+    }, 250);
+
+    return () => {
+      clearTimeout(timeout);
+    };
   }, []);
 
   if (selected != "comments") return;
@@ -210,14 +221,14 @@ export const Comments = ({
           )}
         />
       ))}
-      {hasNextPage && (
+      <Conditional conditions={[!isLoading, hasNextPage, displayButton]}>
         <Button
           style={{ flex: 1, marginHorizontal: 6, marginVertical: 12 }}
           onPress={() => fetchNextPage()}
         >
           Загрузить ещё
         </Button>
-      )}
+      </Conditional>
     </ScrollView>
   );
 };

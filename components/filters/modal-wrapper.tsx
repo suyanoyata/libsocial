@@ -1,3 +1,4 @@
+import { useNavigation } from "expo-router";
 import { ChevronLeft } from "lucide-react-native";
 import {
   Text,
@@ -16,11 +17,12 @@ export const ModalWrapper = ({
   scrollable = false,
 }: {
   title: string;
-  setOpen: (b: boolean) => void;
+  setOpen?: (b: boolean) => void;
   children?: React.ReactNode;
   style?: ViewStyle;
   scrollable?: boolean;
 }) => {
+  const router: any = useNavigation();
   return (
     <View style={{ backgroundColor: "black", flex: 1 }}>
       <SafeAreaView
@@ -29,7 +31,7 @@ export const ModalWrapper = ({
         }}
       >
         <Pressable
-          onPress={() => setOpen(false)}
+          onPress={() => (setOpen ? setOpen(false) : router.goBack())}
           style={{
             flexDirection: "row",
             alignItems: "center",

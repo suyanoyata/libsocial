@@ -1,5 +1,5 @@
 import { api } from "@/lib/axios";
-import { Button } from "./button";
+import { Button } from "@/components/button";
 import { ActivityIndicator, Alert } from "react-native";
 import { Bookmark } from "lucide-react-native";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";

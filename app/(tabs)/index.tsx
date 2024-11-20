@@ -2,22 +2,12 @@ import { Loader } from "@/components/fullscreen-loader";
 import { api } from "@/lib/axios";
 import { Anime } from "@/types/anime.type";
 import { useQuery } from "@tanstack/react-query";
-import {
-  Pressable,
-  RefreshControl,
-  SafeAreaView,
-  ScrollView,
-  View,
-  Text,
-} from "react-native";
+import { RefreshControl, SafeAreaView, ScrollView, Text } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
-import { Image } from "expo-image";
-import { useNavigation } from "expo-router";
-import { siteUrls, useRussianTitle } from "@/constants/app.constants";
 import { Button } from "@/components/button";
 import { LucideRefreshCcw } from "lucide-react-native";
 import i18n from "@/lib/intl";
-import { TitleCard } from "@/components/title-card";
+import { TitleCard } from "@/components/title/title-card";
 
 export default function HomeScreen() {
   const { isPending, error, data, refetch } = useQuery<{
@@ -34,8 +24,6 @@ export default function HomeScreen() {
         .catch((error) => console.error(error));
     },
   });
-
-  const router: any = useNavigation();
 
   if (isPending) {
     return <Loader />;
