@@ -8,14 +8,15 @@ import { Button } from "../../button";
 import { useNavigation } from "expo-router";
 import { TitleColors } from "@/hooks/useStore";
 import { BookmarkIcon, Play } from "lucide-react-native";
-import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { useEffect } from "react";
 import { AddToBookmarksButton } from "@/components/title/add-to-bookmarks-button";
 
-import { useRussianTitle } from "@/constants/app.constants";
+import { getTitle, useRussianTitle } from "@/constants/app.constants";
 import { clearOtherNames } from "@/lib/clearOtherNames";
 import i18n from "@/lib/intl";
 import { BackButton } from "../back-button";
+import { storage } from "@/lib/storage";
+import { Conditional } from "@/components/misc/conditional";
 
 export const TitleBackgroundData = ({
   data,
@@ -49,21 +50,28 @@ export const TitleBackgroundData = ({
     );
   };
 
-  const storage = useAsyncStorage(
+  const title = storage.getString(
     `${data.site != 5 ? `manga/${data.slug_url}` : `anime/${data.slug_url}`}`
   );
 
+  const type = data.site != 5 ? "reading" : "watching";
+
   useEffect(() => {
-    storage.getItem().then((res) => {
-      const list: number[] = JSON.parse(res ?? "");
+    if (title == undefined) {
+      storage.set(
+        `${data.site != 5 ? `manga/${data.slug_url}` : `anime/${data.slug_url}`}`,
+        JSON.stringify([])
+      );
+      setCount(0);
 
-      const last = list.toReversed()[0];
+      return;
+    }
+    const last = JSON.parse(title ?? "").toReversed()[0];
 
-      if (typeof last == "number") {
-        setCount(last);
-      }
-    });
-  }, [storage]);
+    if (typeof last == "number") {
+      setCount(last);
+    }
+  }, [title]);
 
   return (
     <ImageBackground
@@ -109,13 +117,9 @@ export const TitleBackgroundData = ({
             marginHorizontal: 12,
           }}
         >
-          {useRussianTitle()
-            ? data.rus_name == "" || data.rus_name == null
-              ? data.name
-              : data.rus_name
-            : data.name}
+          {getTitle(data)}
         </Text>
-        {!useRussianTitle() && (
+        <Conditional conditions={[!useRussianTitle()]}>
           <Text
             selectable
             style={{
@@ -128,8 +132,8 @@ export const TitleBackgroundData = ({
           >
             {clearOtherNames(data.otherNames)[0]}
           </Text>
-        )}
-        {!!useRussianTitle() && data.rus_name && (
+        </Conditional>
+        <Conditional conditions={[!!useRussianTitle(), !!data.rus_name]}>
           <Text
             selectable
             style={{
@@ -142,7 +146,7 @@ export const TitleBackgroundData = ({
           >
             {data.name}
           </Text>
-        )}
+        </Conditional>
         <View
           style={{
             flexDirection: "row",
@@ -153,6 +157,7 @@ export const TitleBackgroundData = ({
           }}
         >
           <AddToBookmarksButton
+            title={getTitle(data)}
             type={data.model}
             slug_url={data.slug_url}
             status={2}
@@ -179,15 +184,10 @@ export const TitleBackgroundData = ({
               backgroundColor: accent.primary,
             }}
           >
-            {data.site != 5
-              ? i18n.t("content.start.reading", {
-                  count,
-                  total: data.items_count.uploaded,
-                })
-              : i18n.t("content.start.watching", {
-                  count,
-                  total: data.items_count.uploaded,
-                })}
+            {i18n.t(`content.start.${type}`, {
+              count,
+              total: data.items_count.uploaded,
+            })}
           </Button>
         </View>
       </View>

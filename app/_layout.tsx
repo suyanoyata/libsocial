@@ -1,39 +1,44 @@
 import { DarkTheme, ThemeProvider } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Stack } from "expo-router";
 
 import { useEffect, useState } from "react";
 import { useNotificationsCountStore } from "@/hooks/useNotificationsCountStore";
 
-import { api } from "@/lib/axios";
+import { api, initLoggers, site_id } from "@/lib/axios";
 import { store } from "@/hooks/useStore";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  onlineManager,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 import { DevToolsBubble } from "react-native-react-query-devtools";
-import { Alert, LogBox } from "react-native";
+import { LogBox } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import RNRestart from "react-native-restart";
 
 import * as Notifications from "expo-notifications";
 import * as Updates from "expo-updates";
-import * as BackgroundFetch from "expo-background-fetch";
-import * as TaskManager from "expo-task-manager";
+import * as Network from "expo-network";
 
 import { logger } from "@/lib/logger";
 
 import ErrorBoundary from "react-native-error-boundary";
 import Preloader from "@/components/preloader";
 import { ErrorBoundaryComponent } from "@/components/error-boundary-component";
+import { colors } from "@/constants/app.constants";
+import { storage } from "@/lib/storage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 1000 * 60 * 10,
+      refetchOnMount: true,
+      retry: 1,
+      refetchOnReconnect: true,
     },
   },
 });
-
-const BACKGROUND_FETCH_TASK = "background-fetch-notifications";
 
 export default function RootLayout() {
   const { setNotificationsCount } = useNotificationsCountStore();
@@ -44,22 +49,27 @@ export default function RootLayout() {
     imageServers,
     setImageServers,
     setImageServerIndex,
+    setAppTheme,
   } = store();
-
-  TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
-    await api.get("/notifications/count").then((response) => {
-      const count = response.data.data.unread.all;
-
-      setNotificationsCount(count);
-      Notifications.setBadgeCountAsync(count);
-    });
-
-    return BackgroundFetch.BackgroundFetchResult.NewData;
-  });
 
   LogBox.ignoreAllLogs();
 
-  // videoServers
+  // #region set app theme & set network state
+  useEffect(() => {
+    Network.addNetworkStateListener((state) => {
+      console.log({
+        connected: state.isConnected,
+        reachable: state.isInternetReachable,
+      });
+      onlineManager.setOnline(!!state.isConnected);
+    });
+
+    setAppTheme(colors[site_id - 1]);
+  }, []);
+
+  // #endregion
+
+  // #region videoServers
   useEffect(() => {
     setApiLoggers();
     if (videoServers.length !== 0) return;
@@ -71,8 +81,9 @@ export default function RootLayout() {
       setVideoServers(response.data.data.videoServers);
     });
   }, []);
+  // #endregion
 
-  // imageServers
+  // #region imageServers
   useEffect(() => {
     if (imageServers.length !== 0) return;
 
@@ -83,14 +94,10 @@ export default function RootLayout() {
       setImageServers(response.data.data.imageServers);
     });
   }, []);
+  // #endregion
 
+  // #region Notifications Badge Handler
   useEffect(() => {
-    BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
-      minimumInterval: 60 * 15,
-      stopOnTerminate: false,
-      startOnBoot: true,
-    });
-
     api.get("/notifications/count").then((response) => {
       const count = response.data.data.unread.all;
 
@@ -98,14 +105,17 @@ export default function RootLayout() {
       Notifications.setBadgeCountAsync(count);
     });
   }, []);
+  // #endregion
 
-  // #region Image Server Handling
+  // #region local image server value handling
   useEffect(() => {
-    AsyncStorage.getItem("image-server").then((res) => {
-      if (!res) return;
+    const server = storage.getNumber("image-server");
 
-      setImageServerIndex(parseInt(res));
-    });
+    if (!server) {
+      return storage.set("image-server", 0);
+    }
+
+    setImageServerIndex(server);
   }, []);
   // #endregion
 
@@ -115,19 +125,6 @@ export default function RootLayout() {
       if (listener.context.isUpdatePending && !updating) {
         setUpdating(true);
         RNRestart.restart();
-        // Alert.alert(
-        //   "Установлено обновление",
-        //   "Перезапустите приложение, чтобы применить его",
-        //   [
-        //     {
-        //       text: "Перезапустить",
-        //       onPress: () => {
-
-        //         // Updates.reloadAsync();
-        //       },
-        //     },
-        //   ]
-        // );
       }
     });
 
@@ -140,19 +137,10 @@ export default function RootLayout() {
   // #region Request Logging
   function setApiLoggers() {
     api.interceptors.request.clear();
+    api.interceptors.response.clear();
 
     if (__DEV__) {
-      api.interceptors.request.use(
-        (request) => {
-          logger.request(
-            `${request.method?.toUpperCase()} ${request.baseURL}${request.url}`
-          );
-          return request;
-        },
-        (error) => {
-          console.log(`Request rejected ${error}`);
-        }
-      );
+      initLoggers();
     }
   }
   // #endregion

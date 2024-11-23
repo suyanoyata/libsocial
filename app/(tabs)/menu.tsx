@@ -2,9 +2,9 @@ import * as Updates from "expo-updates";
 import { useEffect, useState } from "react";
 import { Pressable, Switch, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { SettingsItem, SettingsWrapper } from "@/components/settings-component";
 import i18n from "@/lib/intl";
+import { storage } from "@/lib/storage";
 
 const UpdatesSection = () => {
   if (!Updates.isEnabled) {
@@ -54,16 +54,14 @@ const UpdatesSection = () => {
 export default function Menu() {
   const [checked, setChecked] = useState<boolean>(false);
 
-  const storage = useAsyncStorage("show-production-error");
+  storage.set("show-production-error", false);
 
   useEffect(() => {
-    storage.getItem().then((res) => {
-      if (!res) {
-        storage.setItem("false");
-      }
+    const isChecked = storage.getBoolean("show-production-error");
 
-      setChecked(res == "true" ? true : false);
-    });
+    if (isChecked != undefined) {
+      setChecked(isChecked);
+    }
   }, [storage]);
 
   return (
@@ -75,7 +73,7 @@ export default function Menu() {
             value={checked}
             onValueChange={(value) => {
               setChecked(value);
-              storage.setItem(value == true ? "true" : "false");
+              storage.set("show-production-error", value);
             }}
           />
         </SettingsItem>

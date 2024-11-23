@@ -1,5 +1,4 @@
-import { Modal, Text, View } from "react-native";
-import { FiltersConstants } from "@/types/filters";
+import { Text, View } from "react-native";
 
 import { Button } from "@/components/button";
 import i18n from "@/lib/intl";

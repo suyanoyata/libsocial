@@ -9,6 +9,8 @@ export default function Layout() {
       }}
     >
       <Stack.Screen name="genres-picker-modal" />
+      <Stack.Screen name="quick-search" />
+      <Stack.Screen name="pick-bookmark-option" />
     </Stack>
   );
 }

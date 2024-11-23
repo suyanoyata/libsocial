@@ -12,34 +12,12 @@ import { useNavigation } from "expo-router";
 import { SimilarPlaceholder } from "../similar-placeholder";
 import { Button } from "../../button";
 import { RefreshCcw } from "lucide-react-native";
-import { useRussianTitle } from "@/constants/app.constants";
-
-type SimilarTitle = {
-  media: {
-    id: number;
-    name: string;
-    rus_name: string;
-    slug_url: string;
-    site: number;
-    cover: {
-      default: string;
-    };
-    status: {
-      label: string;
-    };
-    type: {
-      label: string;
-    };
-    model: string;
-  };
-  related_type: {
-    label: string;
-  };
-  id: number;
-};
+import { getTitle } from "@/constants/app.constants";
+import i18n from "@/lib/intl";
+import { RelatedTitle } from "@/types/similar.type";
 
 export const TitleRelations = ({ slug_url }: { slug_url: string }) => {
-  const { data, isLoading, error, refetch } = useQuery<SimilarTitle[]>({
+  const { data, isLoading, error, refetch } = useQuery<RelatedTitle[]>({
     queryKey: ["title-relations", slug_url],
 
     queryFn: async () => {
@@ -112,7 +90,7 @@ export const TitleRelations = ({ slug_url }: { slug_url: string }) => {
           marginBottom: 6,
         }}
       >
-        Связанное
+        {i18n.t("content.relations.title")}
       </Text>
       <ScrollView
         horizontal
@@ -155,7 +133,7 @@ export const TitleRelations = ({ slug_url }: { slug_url: string }) => {
                     lineHeight: 28,
                   }}
                 >
-                  {title.related_type.label}
+                  {i18n.t(`content.relations.${title.related_type.id}`)}
                 </Text>
                 <Text
                   numberOfLines={2}
@@ -165,11 +143,7 @@ export const TitleRelations = ({ slug_url }: { slug_url: string }) => {
                     color: "white",
                   }}
                 >
-                  {useRussianTitle()
-                    ? title.media.rus_name != ""
-                      ? title.media.rus_name
-                      : title.media.name
-                    : title.media.name}
+                  {getTitle(title.media)}
                 </Text>
                 <Text
                   style={{

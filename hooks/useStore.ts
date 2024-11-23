@@ -1,4 +1,5 @@
 import { Chapter } from "@/components/manga-chapters";
+import { colors } from "@/constants/app.constants";
 import { create } from "zustand";
 
 type VideoServer = {
@@ -20,6 +21,8 @@ export type ImageServer = {
 };
 
 interface StoreState {
+  appTheme: TitleColors;
+  setAppTheme: (colors: TitleColors) => void;
   currentTitleSlug: string;
   setCurrentTitleSlug: (s: string) => void;
   chapters: Chapter[];
@@ -37,6 +40,8 @@ interface StoreState {
 }
 
 export const store = create<StoreState>((set) => ({
+  appTheme: colors[0],
+  setAppTheme: (colors: TitleColors) => set({ appTheme: colors }),
   currentTitleSlug: "",
   setCurrentTitleSlug: (currentTitleSlug: string) => set({ currentTitleSlug }),
   chaptersCount: 0,

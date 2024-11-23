@@ -1,11 +1,6 @@
-export const Conditional = ({
-  conditions,
-  children,
-}: {
-  conditions: boolean[];
-  children: React.ReactNode;
-}) => {
-  if (!conditions.includes(false)) {
-    return children;
-  }
+// prettier-ignore
+export const Conditional = ({ conditions, children }: { conditions: boolean[]; children?: React.ReactNode }) => {
+  if (!conditions.includes(false)) return children;
+
+  return null;
 };

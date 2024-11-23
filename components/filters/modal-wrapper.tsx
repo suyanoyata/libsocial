@@ -8,26 +8,35 @@ import {
   ScrollView,
   ViewStyle,
 } from "react-native";
+import Animated, { FadeIn } from "react-native-reanimated";
 
 export const ModalWrapper = ({
   title,
   setOpen,
   children,
   style,
+  animated = false,
   scrollable = false,
+  horizontal = true,
 }: {
   title: string;
   setOpen?: (b: boolean) => void;
   children?: React.ReactNode;
   style?: ViewStyle;
+  animated?: boolean;
   scrollable?: boolean;
+  horizontal?: boolean;
 }) => {
   const router: any = useNavigation();
+
+  const Component = animated ? Animated.View : View;
+
   return (
-    <View style={{ backgroundColor: "black", flex: 1 }}>
+    <Component entering={FadeIn} style={{ backgroundColor: "black", flex: 1 }}>
       <SafeAreaView
         style={{
           margin: 8,
+          marginHorizontal: horizontal ? 8 : 0,
         }}
       >
         <Pressable
@@ -36,6 +45,7 @@ export const ModalWrapper = ({
             flexDirection: "row",
             alignItems: "center",
             paddingBottom: 8,
+            marginHorizontal: !horizontal ? 8 : 0,
           }}
         >
           <ChevronLeft color="gray" />
@@ -45,6 +55,6 @@ export const ModalWrapper = ({
           {scrollable ? <ScrollView>{children}</ScrollView> : children}
         </View>
       </SafeAreaView>
-    </View>
+    </Component>
   );
 };

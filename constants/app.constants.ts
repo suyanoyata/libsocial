@@ -9,9 +9,10 @@ export const siteUrls = {
       "fields[]=background&fields[]=eng_name&fields[]=otherNames&fields[]=summary&fields[]=releaseDate&fields[]=type_id&fields[]=caution&fields[]=views&fields[]=close_view&fields[]=rate_avg&fields[]=rate&fields[]=genres&fields[]=tags&fields[]=teams&fields[]=franchise&fields[]=authors&fields[]=publisher&fields[]=userRating&fields[]=moderated&fields[]=metadata&fields[]=metadata.count&fields[]=metadata.close_comments&fields[]=manga_status_id&fields[]=chap_count&fields[]=status_id&fields[]=artists&fields[]=format",
   },
   2: {
-    route: "",
-    url: "",
-    fields: "",
+    route: "manga",
+    url: "manga",
+    fields:
+      "fields[]=background&fields[]=eng_name&fields[]=otherNames&fields[]=summary&fields[]=releaseDate&fields[]=type_id&fields[]=caution&fields[]=views&fields[]=close_view&fields[]=rate_avg&fields[]=rate&fields[]=genres&fields[]=tags&fields[]=teams&fields[]=franchise&fields[]=authors&fields[]=publisher&fields[]=userRating&fields[]=moderated&fields[]=metadata&fields[]=metadata.count&fields[]=metadata.close_comments&fields[]=manga_status_id&fields[]=chap_count&fields[]=status_id&fields[]=artists&fields[]=format",
   },
   3: {
     route: "novel",
@@ -48,7 +49,7 @@ export const colors: TitleColors[] = [
     showMore: "#f29766",
   },
   {
-    primary: "white",
+    primary: "black",
     tabSelector: "white",
     showMore: "white",
   },
@@ -86,9 +87,22 @@ export const exclude_filters = [
   "гендерная интрига",
 ];
 
-export const presentation_mode = false;
+export const presentation_mode = true;
 
 export const useRussianTitle = () => {
   if (!presentation_mode) return true;
   return Localization.getLocales()[0].languageCode === "ru";
+};
+
+export const getTitle = (item: {
+  name: string;
+  rus_name?: string;
+  otherNames?: string[];
+  eng_name?: string;
+}) => {
+  if (useRussianTitle()) {
+    return item.rus_name ?? item.name;
+  } else {
+    return item.eng_name ?? item.name ?? item.otherNames?.[0];
+  }
 };

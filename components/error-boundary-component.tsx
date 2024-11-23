@@ -1,35 +1,31 @@
-import { LOG, LOG_LEVEL } from "@/lib/logger";
-import { useAsyncStorage } from "@react-native-async-storage/async-storage";
-import { useEffect, useState } from "react";
-import { Alert, Text, View } from "react-native";
+import { useEffect } from "react";
+import { Alert, Text } from "react-native";
 import RNRestart from "react-native-restart";
 import { Button } from "./button";
 import { Construction } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { storage } from "@/lib/storage";
+import { store } from "@/hooks/useStore";
 
 export const ErrorBoundaryComponent = ({ error }: { error: Error }) => {
-  const storage = useAsyncStorage("show-production-error");
-
-  const [showError, setShowError] = useState<boolean>(false);
+  const showError = storage.getBoolean("show-production-error");
+  const { appTheme } = store();
 
   useEffect(() => {
-    storage.getItem().then((res) => {
-      setShowError(res == "true" ? true : false);
-      if (res !== "true" && !__DEV__) {
-        Alert.alert(
-          "Ошибка приложения",
-          "В приложении произошла ошибка и оно должно быть перезапущено.",
-          [
-            {
-              text: "Понятно",
-              onPress: () => {
-                RNRestart.restart();
-              },
+    if (showError && !__DEV__) {
+      Alert.alert(
+        "Ошибка приложения",
+        "В приложении произошла ошибка и оно должно быть перезапущено.",
+        [
+          {
+            text: "Понятно",
+            onPress: () => {
+              RNRestart.restart();
             },
-          ]
-        );
-      }
-    });
+          },
+        ]
+      );
+    }
   }, []);
 
   return (
@@ -39,6 +35,8 @@ export const ErrorBoundaryComponent = ({ error }: { error: Error }) => {
         height: "100%",
         width: "100%",
         zIndex: 999,
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
       {showError && (
@@ -48,6 +46,9 @@ export const ErrorBoundaryComponent = ({ error }: { error: Error }) => {
       )}
       <Button
         icon={<Construction size={16} color="white" strokeWidth={3} />}
+        style={{
+          backgroundColor: appTheme.primary,
+        }}
         onPress={() => {
           RNRestart.restart();
         }}

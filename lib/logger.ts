@@ -6,6 +6,7 @@ export const LOG_LEVEL = {
   ERROR: "<Error>",
   VERBOSE: "<Debug>",
   REQUEST: "<Request>",
+  RESPONSE: "<Response>",
 };
 
 const DEFINE_LEVEL = (level: string) => {
@@ -17,7 +18,7 @@ const DEFINE_LEVEL = (level: string) => {
     return ["ff001d", "ff3236"];
   } else if (level === LOG_LEVEL.VERBOSE) {
     return ["ffffff", "e5e5e5"];
-  } else if (level === LOG_LEVEL.REQUEST) {
+  } else if (level === LOG_LEVEL.REQUEST || level === LOG_LEVEL.RESPONSE) {
     return ["c2c2c3", "ffffff"];
   }
 };
@@ -105,6 +106,9 @@ class Logger {
   }
   static request(message: string, error?: string) {
     this.log(LOG_LEVEL.REQUEST, message, error);
+  }
+  static response(message: string, error?: string) {
+    this.log(LOG_LEVEL.RESPONSE, message, error);
   }
 }
 

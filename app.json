@@ -2,13 +2,13 @@
   "expo": {
     "name": "libsocial",
     "slug": "libsocial",
-    "version": "1.0.4",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "mangalib",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "runtimeVersion": "1.0.4",
+    "runtimeVersion": "1.0.3",
     "ios": {
       "buildNumber": "3",
       "supportsTablet": true,

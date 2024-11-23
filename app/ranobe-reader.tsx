@@ -1,9 +1,7 @@
 import { Button } from "@/components/button";
 import { Comments } from "@/components/title/comments";
 import { Loader } from "@/components/fullscreen-loader";
-import { api } from "@/lib/axios";
 import { useRoute } from "@react-navigation/native";
-import { useQuery } from "@tanstack/react-query";
 import { useNavigation } from "expo-router";
 import { ChevronLeft, ChevronRight } from "lucide-react-native";
 import React from "react";
@@ -11,8 +9,9 @@ import { SafeAreaView, Text, useWindowDimensions, View } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 import RenderHtml from "react-native-render-html";
 import { storage } from "@/lib/storage";
+import { Queries } from "@/hooks/queries";
 
-type RanobeChapter = {
+export type RanobeChapter = {
   content: string;
   id: number;
 };
@@ -24,18 +23,10 @@ export default function RanobeReader() {
 
   const navigation: any = useNavigation();
 
-  const { data, isLoading } = useQuery<RanobeChapter>({
-    queryKey: ["ranobe-reader", slug_url, volume, number],
-
-    queryFn: async () => {
-      const response = await api.get(
-        `/${slug_url}/chapter?number=${number}&volume=${volume}`
-      );
-      console.log(response.data.data, null, 2);
-      return response.data.data;
-    },
-    staleTime: 1000 * 60 * 60,
-    enabled: !!slug_url,
+  const { data, isLoading } = Queries.ranobeChapter({
+    slug_url,
+    volume,
+    number,
   });
 
   const tagsStyles = {

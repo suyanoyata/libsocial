@@ -1,7 +1,9 @@
 import { Button } from "@/components/button";
 import { ModalWrapper } from "@/components/filters/modal-wrapper";
+import { Loader } from "@/components/fullscreen-loader";
 import { useFiltersStore } from "@/hooks/useFiltersStore";
 import i18n from "@/lib/intl";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "expo-router";
 import { ChevronRight } from "lucide-react-native";
 import { View, Text, SafeAreaView } from "react-native";
@@ -47,11 +49,24 @@ const FilterButton = ({ label, length }: { label: string; length: number }) => {
 };
 
 export default function CatalogFiltering() {
+  const { isFetching, isError } = useQuery({
+    queryKey: ["filters-constants"],
+  });
   const { filters } = useFiltersStore();
+
+  if (isFetching || isError) {
+    return (
+      <SafeAreaView style={{ flex: 1 }}>
+        <ModalWrapper title={i18n.t("search.filters")}>
+          <Loader />
+        </ModalWrapper>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <ModalWrapper scrollable title={i18n.t("search.filters")}>
+      <ModalWrapper animated title={i18n.t("search.filters")}>
         <FilterButton
           label={i18n.t("search.genres")}
           length={filters.genres.length}

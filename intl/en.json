@@ -8,13 +8,32 @@
   },
   "error": {
     "loading": {
+      "network": "You are not connected to network.",
       "text": "Error while trying to load.",
       "retry": "Try again"
     }
   },
   "content": {
+    "similar": {
+      "default": "Similar in genres",
+      "231270": "Similar by art style",
+      "231320": "Similar in plot",
+      "title": "Similar",
+      "error": "Couldn't load similar titles",
+      "try_again": "Try again"
+    },
+    "relations": {
+      "title": "Related",
+      "1": "Adaptation",
+      "2": "Source",
+      "3": "Prequel",
+      "4": "Sequel",
+      "10": "Other",
+      "11": "Summarization",
+      "12": "Same Universe"
+    },
     "bookmark": {
-      "add": "Add to bookmarks"
+      "add": "Add to"
     },
     "tabs": {
       "about": "About",
@@ -52,7 +71,21 @@
     "yes": "Yes",
     "no": "No"
   },
+  "quick_search": {
+    "tabs": {
+      "titles": "Titles",
+      "teams": "Team",
+      "characters": "Character"
+    },
+    "messages": {
+      "empty_search": {
+        "label": "Advanced search is located ",
+        "link": "here"
+      }
+    }
+  },
   "search": {
+    "quick": "Quick search",
     "selected": "Selected {{count}}",
     "genres": "Genres",
     "clear": "Clear all",

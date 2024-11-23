@@ -1,15 +1,15 @@
-import { api } from "@/lib/axios";
-import { useQuery } from "@tanstack/react-query";
 import { useNavigation } from "expo-router";
 import { Loader } from "@/components/fullscreen-loader";
 import { Alert, Pressable, Text, View } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { date } from "@/lib/date";
 import { useEffect, useState } from "react";
-import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { Button } from "./button";
 import { RefreshCcw } from "lucide-react-native";
 import i18n from "@/lib/intl";
+import { storage } from "@/lib/storage";
+import { Queries } from "@/hooks/queries";
+import { FlashList } from "@shopify/flash-list";
 
 export type Chapter = {
   id: string;
@@ -35,27 +35,18 @@ export const MangaChapters = ({
   count: number;
   setCount: (n: number) => void;
 }) => {
+  const AnimatedFlashList = Animated.createAnimatedComponent(FlashList);
+
   if (slug_url.startsWith("anime")) return;
 
-  const storage = useAsyncStorage(slug_url);
+  const slugStorage = storage.getString(slug_url);
 
-  const { data, isLoading, error, refetch } = useQuery<Chapter[]>({
-    queryKey: ["chapter-data", slug_url],
-
-    queryFn: async () => {
-      const response = await api.get(`/${slug_url}/chapters`);
-      return response.data.data;
-    },
-    staleTime: 1000 * 60 * 10,
-    enabled: !!slug_url,
-  });
+  const { data, isLoading, error, refetch } = Queries.chapters(slug_url);
 
   useEffect(() => {
-    storage.getItem().then((res) => {
-      if (!res) {
-        storage.setItem(JSON.stringify([]));
-      }
-    });
+    if (slugStorage == undefined) {
+      storage.set(slug_url, JSON.stringify([]));
+    }
   }, [slug_url]);
 
   const navigation: any = useNavigation();
@@ -70,11 +61,7 @@ export const MangaChapters = ({
     const [includes, setIncludes] = useState<boolean>(false);
 
     useEffect(() => {
-      storage.getItem().then((res) => {
-        const list = JSON.parse(res ?? "") ?? [];
-
-        setIncludes(list.includes(index + 1));
-      });
+      setIncludes(JSON.parse(slugStorage ?? "").includes(index + 1));
     }, [index, storage]);
 
     return (
@@ -86,6 +73,7 @@ export const MangaChapters = ({
           paddingVertical: 8,
           paddingHorizontal: 12,
           borderRadius: 8,
+          marginBottom: 12,
           flexDirection: "row",
           alignItems: "center",
           display: "flex",
@@ -102,15 +90,12 @@ export const MangaChapters = ({
                 onPress: () => {
                   setIncludes(false);
 
-                  storage.getItem().then((res) => {
-                    const list = JSON.parse(res ?? "") ?? [];
+                  // if (JSON.parse(slugStorage ?? "").length == 1) {
+                  //   return storage.set(slug_url, JSON.stringify([]));
+                  // }
 
-                    storage.setItem(
-                      JSON.stringify(
-                        list.filter((item: number) => item !== index + 1)
-                      )
-                    );
-                  });
+                  // prettier-ignore
+                  storage.set(slug_url, JSON.stringify(JSON.parse(slugStorage ?? "").filter((item: number) => item !== index + 1)))
                 },
               },
               {
@@ -132,17 +117,16 @@ export const MangaChapters = ({
             setCount: setCount,
             count: count,
           });
-          storage.getItem().then((res) => {
-            const prev = JSON.parse(res ?? "") ?? [];
 
-            if (!includes) {
-              storage.setItem(JSON.stringify([...prev, index + 1]));
-              setIncludes(true);
-              if (count < index + 1) {
-                setCount(index + 1);
-              }
+          const prev = JSON.parse(slugStorage ?? "") ?? [];
+
+          if (!includes) {
+            storage.set(slug_url, JSON.stringify([...prev, index + 1]));
+            setIncludes(true);
+            if (count < index + 1) {
+              setCount(index + 1);
             }
-          });
+          }
         }}
       >
         <Text
@@ -186,21 +170,23 @@ export const MangaChapters = ({
         </View>
       );
     }
+
     return (
-      <>
+      <View
+        style={{
+          marginVertical: 12,
+          marginHorizontal: 12,
+        }}
+      >
         <Animated.FlatList
+          scrollEnabled={false}
           entering={FadeIn}
           data={data}
-          contentContainerStyle={{
-            gap: 12,
-            marginVertical: 12,
-            marginHorizontal: 12,
-          }}
-          renderItem={({ item, index }) => (
-            <ChapterItem key={item.id} index={index} chapter={item} />
+          renderItem={({ item, index }: { item: Chapter; index: number }) => (
+            <ChapterItem index={index} chapter={item} />
           )}
         />
-      </>
+      </View>
     );
   }
 };

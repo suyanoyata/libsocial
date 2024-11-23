@@ -2,6 +2,8 @@ export type Anime = {
   id: number;
   name: string;
   rus_name?: string;
+  otherNames: string[];
+  releaseDateString: string;
   slug: string;
   model: string;
   slug_url: string;
@@ -17,6 +19,10 @@ export type Anime = {
     uploaded: number;
   };
   site: number;
+  status: {
+    id: number;
+    label: string;
+  };
   type: {
     id: number;
     label: string;

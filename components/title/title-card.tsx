@@ -2,7 +2,7 @@ import { Anime } from "@/types/anime.type";
 import { useNavigation } from "@react-navigation/native";
 import { Pressable, Text, View } from "react-native";
 import { Image } from "expo-image";
-import { siteUrls, useRussianTitle } from "@/constants/app.constants";
+import { getTitle, siteUrls } from "@/constants/app.constants";
 import { Skeleton } from "@/components/skeleton";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { memo } from "react";
@@ -35,11 +35,7 @@ const Card = ({ item, width = 130 }: { item?: Anime; width?: number }) => {
     );
   }
 
-  const name = useRussianTitle()
-    ? item.rus_name != ""
-      ? item.rus_name
-      : item.name
-    : item.name;
+  const name = getTitle(item);
 
   return (
     <AnimatedPressable
@@ -56,7 +52,9 @@ const Card = ({ item, width = 130 }: { item?: Anime; width?: number }) => {
       }}
     >
       <Image
-        source={{ uri: item.cover.default }}
+        recyclingKey={item.cover.default}
+        cachePolicy="disk"
+        source={{ uri: item.cover.default, cacheKey: item.cover.default }}
         style={{
           height: dimensions.height,
           width: dimensions.width,

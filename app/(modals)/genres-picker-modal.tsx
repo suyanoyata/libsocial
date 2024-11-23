@@ -4,18 +4,16 @@ import { Button } from "@/components/button";
 import { BasicFilter, FiltersConstants } from "@/types/filters";
 import { ModalWrapper } from "@/components/filters/modal-wrapper";
 import { useFiltersStore } from "@/hooks/useFiltersStore";
-import { useQuery } from "@tanstack/react-query";
 import { Check } from "lucide-react-native";
 import { exclude_filters, presentation_mode } from "@/constants/app.constants";
 import i18n from "@/lib/intl";
+import { Queries } from "@/hooks/queries";
 
 const GenresPicker = () => {
   const filterKey = "genres";
   const { filters: filtersStore, setFilters } = useFiltersStore();
 
-  const { data: filters } = useQuery<FiltersConstants>({
-    queryKey: ["filters-constants"],
-  });
+  const { data: filters } = Queries.filterConstants();
 
   // NOTE: in dev mode this takes significant time, but on prod build it's fine
   const addToFilter = (id: number) => {
@@ -56,7 +54,7 @@ const GenresPicker = () => {
         </Text>
       </Button>
       <View style={{ maxWidth: "100%", gap: 4 }}>
-        {filters!["genres"].map((filter) => {
+        {filters["genres"].map((filter: BasicFilter) => {
           if (presentationMode(filter) || excludedFilter(filter)) return;
 
           return (

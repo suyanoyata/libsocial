@@ -12,28 +12,10 @@ import { useNavigation } from "expo-router";
 import { SimilarPlaceholder } from "../similar-placeholder";
 import { Button } from "../../button";
 import { RefreshCcw } from "lucide-react-native";
-
-type SimilarTitle = {
-  media: {
-    id: number;
-    name: string;
-    rus_name: string;
-    slug_url: string;
-    site: number;
-    cover: {
-      default: string;
-    };
-    status: {
-      label: string;
-    };
-    type: {
-      label: string;
-    };
-    model: string;
-  };
-  similar: string;
-  id: number;
-};
+import { getTitle } from "@/constants/app.constants";
+import { SimilarTitle } from "@/types/similar.type";
+import i18n from "@/lib/intl";
+import { Conditional } from "@/components/misc/conditional";
 
 export const TitleSimilar = ({ slug_url }: { slug_url: string }) => {
   const { data, isLoading, error, refetch } = useQuery<SimilarTitle[]>({
@@ -76,7 +58,7 @@ export const TitleSimilar = ({ slug_url }: { slug_url: string }) => {
               color: "rgba(255,255,255,0.7)",
             }}
           >
-            Не удалось загрузить похожие тайтлы
+            {i18n.t("content.similar.error")}
           </Text>
           <Button
             onPress={refetch}
@@ -85,7 +67,7 @@ export const TitleSimilar = ({ slug_url }: { slug_url: string }) => {
             }}
             icon={<RefreshCcw color="white" size={18} strokeWidth={3} />}
           >
-            Попробовать ещё раз
+            {i18n.t("content.similar.try_again")}
           </Button>
         </View>
       );
@@ -107,7 +89,7 @@ export const TitleSimilar = ({ slug_url }: { slug_url: string }) => {
           marginBottom: 6,
         }}
       >
-        Похожее
+        {i18n.t("content.similar.title")}
       </Text>
       <ScrollView
         horizontal
@@ -150,7 +132,12 @@ export const TitleSimilar = ({ slug_url }: { slug_url: string }) => {
                     lineHeight: 28,
                   }}
                 >
-                  {title.similar}
+                  <Conditional conditions={[!!title.id]}>
+                    {i18n.t(`content.similar.${title.id}`)}
+                  </Conditional>
+                  <Conditional conditions={[!title.id]}>
+                    {i18n.t(`content.similar.default`)}
+                  </Conditional>
                 </Text>
                 <Text
                   numberOfLines={2}
@@ -160,9 +147,7 @@ export const TitleSimilar = ({ slug_url }: { slug_url: string }) => {
                     color: "white",
                   }}
                 >
-                  {title.media.rus_name != ""
-                    ? title.media.rus_name
-                    : title.media.name}
+                  {getTitle(title.media)}
                 </Text>
                 <Text
                   style={{

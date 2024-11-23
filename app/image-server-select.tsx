@@ -13,9 +13,7 @@ export default function ImageServerSelect() {
     const server = storage.getNumber("image-server");
 
     if (!server) {
-      storage.set("image-server", 0);
-
-      return;
+      return storage.set("image-server", 0);
     }
 
     setImageServerIndex(server);

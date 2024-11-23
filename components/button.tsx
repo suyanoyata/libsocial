@@ -1,26 +1,29 @@
-import { PointerInteractionView } from "@thefunbots/react-native-pointer-interactions";
-import { startTransition } from "react";
-import { Pressable, Text, ViewStyle } from "react-native";
+import { store } from "@/hooks/useStore";
+import { ActivityIndicator, Pressable, Text, ViewStyle } from "react-native";
 import Animated, { useSharedValue, withTiming } from "react-native-reanimated";
+import { Conditional } from "./misc/conditional";
 
 export const Button = ({
   children,
   style,
   onPress,
   icon,
+  isPending,
   asChild = false,
   animationDisabled = false,
   iconPosition = "left",
 }: {
-  asChild?: boolean;
   children: React.ReactNode;
   style?: ViewStyle;
   onPress?: () => void;
   icon?: React.ReactNode;
+  isPending?: boolean;
+  asChild?: boolean;
   animationDisabled?: boolean;
   iconPosition?: "left" | "right";
 }) => {
   const Component = Animated.createAnimatedComponent(Pressable);
+  const { appTheme } = store();
 
   const scale = useSharedValue(1);
 
@@ -48,13 +51,16 @@ export const Button = ({
           });
         }}
         onPress={() => {
-          onPress && onPress();
-        }}
-        onPressOut={() => {
-          startTransition(() => {
+          if (onPress) {
+            onPress();
             scale.value = withTiming(1, {
               duration: 150,
             });
+          }
+        }}
+        onPressOut={() => {
+          scale.value = withTiming(1, {
+            duration: 150,
           });
         }}
         style={{
@@ -75,7 +81,12 @@ export const Button = ({
         });
       }}
       onPress={() => {
-        onPress && onPress();
+        if (onPress) {
+          onPress();
+          scale.value = withTiming(1, {
+            duration: 150,
+          });
+        }
       }}
       onPressOut={() => {
         scale.value = withTiming(1, {
@@ -84,9 +95,9 @@ export const Button = ({
       }}
       style={{
         transform: [{ scale: scale }],
-        backgroundColor: "#5e35b1",
+        backgroundColor: appTheme.primary,
         paddingHorizontal: 12,
-        paddingVertical: 8,
+        paddingVertical: !!isPending ? 4 : 8,
         borderRadius: 6,
         flexDirection: "row",
         alignItems: "center",
@@ -95,16 +106,21 @@ export const Button = ({
         ...style,
       }}
     >
-      {iconPosition == "left" && icon}
-      <Text
-        style={{
-          color: "white",
-          fontWeight: "500",
-        }}
-      >
-        {children}
-      </Text>
-      {iconPosition == "right" && icon}
+      <Conditional conditions={[!isPending]}>
+        {iconPosition == "left" && icon}
+        <Text
+          style={{
+            color: "white",
+            fontWeight: "500",
+          }}
+        >
+          {children}
+        </Text>
+        {iconPosition == "right" && icon}
+      </Conditional>
+      <Conditional conditions={[!!isPending]}>
+        <ActivityIndicator size="small" color="white" />
+      </Conditional>
     </Component>
   );
 };

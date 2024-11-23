@@ -1,14 +1,14 @@
 import { Loader } from "@/components/fullscreen-loader";
+import { Queries } from "@/hooks/queries";
 import { store } from "@/hooks/useStore";
-import { api, token } from "@/lib/axios";
+import { token } from "@/lib/axios";
 import i18n from "@/lib/intl";
-import { Anime } from "@/types/anime.type";
+import { logger } from "@/lib/logger";
 import { useRoute } from "@react-navigation/native";
-import { useQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import { useNavigation } from "expo-router";
 import { ChevronLeft, Settings } from "lucide-react-native";
-import React from "react";
+import React, { useState } from "react";
 import {
   useWindowDimensions,
   Text,
@@ -18,38 +18,21 @@ import {
 } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 
-// import { ReactNativeZoomableView } from "@openspacelabs/react-native-zoomable-view";
-
 export default function MangaReader() {
   const route = useRoute();
   const { slug_url, volume, number } = route.params as any;
 
   const navigation: any = useNavigation();
 
-  const { data: titleData } = useQuery<Anime>({
-    queryKey: ["title-data", slug_url],
+  const { data: titleData } = Queries.titleData(slug_url);
+
+  const { data, isLoading } = Queries.mangaReader({
+    slug_url,
+    volume,
+    number,
   });
 
-  const { data, isLoading } = useQuery<{
-    pages: {
-      url: string;
-      ratio: number;
-    }[];
-  }>({
-    queryKey: ["manga-reader", slug_url, volume, number],
-
-    queryFn: async () => {
-      const response = await api.get(
-        `/${slug_url}/chapter?number=${number}&volume=${volume}`,
-        {
-          withCredentials: true,
-        }
-      );
-      return response.data.data;
-    },
-    staleTime: 1000 * 60 * 60,
-    enabled: !!slug_url,
-  });
+  const [loadLimit, setLoadLimit] = useState(3);
 
   const { imageServers, imageServerIndex } = store();
 
@@ -63,18 +46,6 @@ export default function MangaReader() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      {/* <ReactNativeZoomableView
-        maxZoom={2}
-        minZoom={1}
-        zoomStep={1}
-        initialZoom={1}
-        bindToBorders={true}
-        style={{
-          width: "100%",
-          height: "100%",
-          flex: 1,
-        }}
-      > */}
       <Animated.ScrollView
         entering={FadeIn}
         contentContainerStyle={{
@@ -139,9 +110,17 @@ export default function MangaReader() {
             />
           </Pressable>
         </View>
-        {data.pages.map((page) => (
-          <>
+        {data.pages.map((page, index) => {
+          if (index > loadLimit) return;
+          return (
             <Image
+              onLoad={() => {
+                console.log(`${index} loaded`);
+                if (index == loadLimit) {
+                  logger.verbose("last item loaded, increasing load limit");
+                  setLoadLimit(loadLimit + 3);
+                }
+              }}
               source={{
                 uri: imageServers[imageServerIndex].url + page.url,
                 cacheKey: imageServers[imageServerIndex].url + page.url,
@@ -152,15 +131,9 @@ export default function MangaReader() {
               }}
               style={{ width: width, height: width / page.ratio }}
             />
-            {__DEV__ && (
-              <Text style={{ color: "rgba(255,255,255,0.5)" }}>
-                Ссылка: {imageServers[imageServerIndex].url + page.url}
-              </Text>
-            )}
-          </>
-        ))}
+          );
+        })}
       </Animated.ScrollView>
-      {/* </ReactNativeZoomableView> */}
     </SafeAreaView>
   );
 }

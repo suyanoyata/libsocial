@@ -3,8 +3,9 @@ import {
   ActivityIndicator,
   View,
   Text,
+  FlatList,
 } from "react-native";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { FlashList } from "@shopify/flash-list";
 import Animated from "react-native-reanimated";
 
@@ -14,16 +15,15 @@ import { api, site_id } from "@/lib/axios";
 
 import { TitleCard } from "@/components/title/title-card";
 
-import { usePulseValue } from "@/hooks/usePulseValue";
 import SearchLayout from "../layouts/search-layout";
 import { useCatalogSearchStore } from "@/hooks/useCatalogSearchStore";
 import { useFiltersStore } from "@/hooks/useFiltersStore";
 import i18n from "@/lib/intl";
 import { Conditional } from "@/components/misc/conditional";
+import { PlaceholderFlashingComponent } from "@/components/misc/placeholder-flashing-component";
 
 export default function Search() {
   const AnimatedFlashList = Animated.createAnimatedComponent(FlashList);
-  const opacity = usePulseValue();
 
   const { width } = useWindowDimensions();
   const { search } = useCatalogSearchStore();
@@ -50,37 +50,25 @@ export default function Search() {
       return await api.get(call).then((res) => res.data);
     },
     getNextPageParam: (lastPage) => {
-      if (lastPage.meta.has_next_page == false) return undefined;
-      return lastPage.meta.page + 1;
+      if (lastPage.links.next == null) return undefined;
+      return lastPage.meta.current_page + 1;
     },
     initialPageParam: 1,
   });
   // #endregion
 
-  // #region filters fetch
-  useQuery({
-    queryKey: ["filters-constants"],
-    queryFn: async () => {
-      return await api
-        .get(
-          "/constants?fields[]=genres&fields[]=tags&fields[]=types&fields[]=scanlateStatus&fields[]=status&fields[]=format&fields[]=ageRestriction"
-        )
-        .then((res) => res.data.data);
-    },
-  });
-  // #endregion
-
   return (
     <SearchLayout>
-      {!data && (
-        <AnimatedFlashList
-          style={{ opacity }}
-          estimatedItemSize={150}
-          numColumns={Math.floor(width / 140)}
-          data={Array.from({ length: width / 36 })}
-          renderItem={() => <TitleCard />}
-        />
-      )}
+      <Conditional conditions={[!data]}>
+        <PlaceholderFlashingComponent>
+          <AnimatedFlashList
+            estimatedItemSize={150}
+            numColumns={Math.floor(width / 140)}
+            data={Array.from({ length: width / 36 })}
+            renderItem={() => <TitleCard />}
+          />
+        </PlaceholderFlashingComponent>
+      </Conditional>
       <Conditional
         conditions={[
           data?.pages.length == 0,
@@ -95,8 +83,9 @@ export default function Search() {
         </View>
       </Conditional>
       {data && (
-        <FlashList
-          estimatedItemSize={1500}
+        <FlatList
+          removeClippedSubviews
+          keyExtractor={(item) => item.meta.current_page.toString()}
           onEndReachedThreshold={0.8}
           onEndReached={() => fetchNextPage()}
           data={data.pages}
@@ -115,7 +104,8 @@ export default function Search() {
           }}
           renderItem={({ item }: { item: any }) => (
             <FlashList
-              estimatedItemSize={Math.floor(width / 2.41)}
+              removeClippedSubviews
+              estimatedItemSize={235}
               numColumns={Math.floor(width / 140)}
               data={item.data}
               renderItem={({ item }: { item: any }) => (

@@ -7,10 +7,11 @@ type Props = {
   children: string;
   selected: string;
   value: string;
-  style?: ViewStyle;
   accent: TitleColors;
   setSelected: (selected: string) => void;
   inactive?: boolean;
+  style?: ViewStyle;
+  noFlex?: boolean;
 };
 
 export default function Tab(props: Props) {
@@ -37,7 +38,7 @@ export default function Tab(props: Props) {
   return (
     <Pressable
       style={{
-        flex: 1,
+        flex: !props.noFlex ? 1 : 0,
         alignItems: "center",
       }}
       onPress={() => {
@@ -49,7 +50,8 @@ export default function Tab(props: Props) {
         numberOfLines={1}
         style={{
           paddingVertical: 12,
-          color: "white",
+          paddingHorizontal: 12,
+          color: "rgb(225,225,225)",
           opacity: !props.inactive ? opacity : 0.2,
           fontWeight: "600",
         }}
