@@ -31,7 +31,7 @@ export const MangaChapters = ({
 }: {
   selected: string;
   slug_url: string;
-  type: number;
+  type: string;
   count: number;
   setCount: (n: number) => void;
 }) => {
@@ -105,17 +105,17 @@ export const MangaChapters = ({
           );
         }}
         onPress={() => {
-          navigation.navigate(type == 3 ? "ranobe-reader" : "manga-reader", {
-            slug_url: slug_url,
+          navigation.navigate(type == "3" ? "ranobe-reader" : "manga-reader", {
+            slug_url,
             volume: chapter.volume,
             number: chapter.number,
             name: chapter.name,
             chapterIndex: index,
             chapters: data,
-            setIncludes: setIncludes,
-            includes: includes,
-            setCount: setCount,
-            count: count,
+            setIncludes,
+            includes,
+            setCount,
+            count,
           });
 
           const prev = JSON.parse(slugStorage ?? "") ?? [];

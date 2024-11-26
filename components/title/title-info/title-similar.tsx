@@ -15,7 +15,6 @@ import { RefreshCcw } from "lucide-react-native";
 import { getTitle } from "@/constants/app.constants";
 import { SimilarTitle } from "@/types/similar.type";
 import i18n from "@/lib/intl";
-import { Conditional } from "@/components/misc/conditional";
 
 export const TitleSimilar = ({ slug_url }: { slug_url: string }) => {
   const { data, isLoading, error, refetch } = useQuery<SimilarTitle[]>({
@@ -132,12 +131,7 @@ export const TitleSimilar = ({ slug_url }: { slug_url: string }) => {
                     lineHeight: 28,
                   }}
                 >
-                  <Conditional conditions={[!!title.id]}>
-                    {i18n.t(`content.similar.${title.id}`)}
-                  </Conditional>
-                  <Conditional conditions={[!title.id]}>
-                    {i18n.t(`content.similar.default`)}
-                  </Conditional>
+                  {i18n.t(`content.similar.default`)}
                 </Text>
                 <Text
                   numberOfLines={2}

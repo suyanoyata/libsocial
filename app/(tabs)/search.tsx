@@ -4,6 +4,9 @@ import {
   View,
   Text,
   FlatList,
+  SafeAreaView,
+  Pressable,
+  Alert,
 } from "react-native";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { FlashList } from "@shopify/flash-list";
@@ -28,6 +31,20 @@ export default function Search() {
   const { width } = useWindowDimensions();
   const { search } = useCatalogSearchStore();
   const { filters } = useFiltersStore();
+
+  const getItemStyle = (index: number, numColumns: number) => {
+    const alignItems = (() => {
+      if (numColumns < 2 || index % numColumns === 0) return "flex-start";
+      if ((index + 1) % numColumns === 0) return "flex-end";
+
+      return "center";
+    })();
+
+    return {
+      alignItems,
+      width: "100%",
+    } as const;
+  };
 
   // #region catalog infinite fetching
   const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
@@ -58,63 +75,76 @@ export default function Search() {
   // #endregion
 
   return (
-    <SearchLayout>
-      <Conditional conditions={[!data]}>
-        <PlaceholderFlashingComponent>
-          <AnimatedFlashList
-            estimatedItemSize={150}
-            numColumns={Math.floor(width / 140)}
-            data={Array.from({ length: width / 36 })}
-            renderItem={() => <TitleCard />}
-          />
-        </PlaceholderFlashingComponent>
-      </Conditional>
-      <Conditional
-        conditions={[
-          data?.pages.length == 0,
-          search != "",
-          filters.genres.length > 0,
-        ]}
-      >
-        <View style={{ justifyContent: "center", flex: 1 }}>
-          <Text style={{ color: "white", textAlign: "center" }}>
-            {i18n.t("search.not_found")}
-          </Text>
-        </View>
-      </Conditional>
-      {data && (
-        <FlatList
-          removeClippedSubviews
-          keyExtractor={(item) => item.meta.current_page.toString()}
-          onEndReachedThreshold={0.8}
-          onEndReached={() => fetchNextPage()}
-          data={data.pages}
-          ListFooterComponent={() => {
-            if (isFetchingNextPage) {
-              return (
-                <View
-                  style={{
-                    alignItems: "center",
-                  }}
-                >
-                  <ActivityIndicator color="white" />
-                </View>
-              );
-            }
-          }}
-          renderItem={({ item }: { item: any }) => (
-            <FlashList
-              removeClippedSubviews
-              estimatedItemSize={235}
-              numColumns={Math.floor(width / 140)}
-              data={item.data}
-              renderItem={({ item }: { item: any }) => (
-                <TitleCard item={item} />
-              )}
+    <SafeAreaView style={{ flex: 1 }}>
+      <SearchLayout>
+        <Conditional conditions={[!data]}>
+          <PlaceholderFlashingComponent>
+            <AnimatedFlashList
+              estimatedItemSize={150}
+              numColumns={Math.floor(width / 125)}
+              data={Array.from({ length: width / 36 })}
+              renderItem={() => <TitleCard width={125} />}
             />
-          )}
-        />
-      )}
-    </SearchLayout>
+          </PlaceholderFlashingComponent>
+        </Conditional>
+        <Conditional
+          conditions={[
+            data?.pages[0].data.length == 0,
+            search != "" || filters.genres.length > 0,
+          ]}
+        >
+          <View style={{ justifyContent: "center", flex: 1, minHeight: "80%" }}>
+            <Text
+              style={{
+                color: "rgb(171,171,171)",
+                textAlign: "center",
+                fontWeight: "500",
+              }}
+            >
+              {i18n.t("search.not_found")}
+            </Text>
+          </View>
+        </Conditional>
+        {data && (
+          <FlatList
+            removeClippedSubviews
+            keyExtractor={(item) => item.meta.current_page.toString()}
+            onEndReachedThreshold={0.8}
+            onEndReached={() => fetchNextPage()}
+            data={data.pages}
+            ListFooterComponent={() => {
+              if (isFetchingNextPage) {
+                return (
+                  <View
+                    style={{
+                      alignItems: "center",
+                    }}
+                  >
+                    <ActivityIndicator color="white" />
+                  </View>
+                );
+              }
+            }}
+            renderItem={({ item }: { item: any }) => (
+              <FlashList
+                removeClippedSubviews
+                estimatedItemSize={235}
+                numColumns={Math.floor(width / 125)}
+                data={item.data}
+                renderItem={({ item, index }: { item: any; index: number }) => (
+                  <View
+                    style={{
+                      ...getItemStyle(index, Math.floor(width / 125)),
+                    }}
+                  >
+                    <TitleCard width={125} item={item} />
+                  </View>
+                )}
+              />
+            )}
+          />
+        )}
+      </SearchLayout>
+    </SafeAreaView>
   );
 }

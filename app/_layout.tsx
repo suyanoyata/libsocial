@@ -34,8 +34,9 @@ const queryClient = new QueryClient({
     queries: {
       staleTime: 1000 * 60 * 10,
       refetchOnMount: true,
-      retry: 1,
+      refetchInterval: 1000 * 60 * 5,
       refetchOnReconnect: true,
+      retry: 1,
     },
   },
 });
@@ -124,6 +125,7 @@ export default function RootLayout() {
     Updates.addUpdatesStateChangeListener((listener) => {
       if (listener.context.isUpdatePending && !updating) {
         setUpdating(true);
+        queryClient.clear();
         RNRestart.restart();
       }
     });
@@ -192,7 +194,7 @@ export default function RootLayout() {
           </Stack>
           {__DEV__ && <DevToolsBubble />}
         </ErrorBoundary>
-        <StatusBar />
+        <StatusBar backgroundColor="#000000" style="light" />
       </ThemeProvider>
     </QueryClientProvider>
   );

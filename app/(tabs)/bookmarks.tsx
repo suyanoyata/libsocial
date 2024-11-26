@@ -1,9 +1,9 @@
-import { Text, View } from "react-native";
+import { SafeAreaView, Text, View } from "react-native";
 
 export default function Bookmarks() {
   return (
-    <View>
+    <SafeAreaView>
       <Text style={{ color: "white" }}>bookmarks</Text>
-    </View>
+    </SafeAreaView>
   );
 }

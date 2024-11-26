@@ -7,23 +7,23 @@ import i18n from "@/lib/intl";
 import { storage } from "@/lib/storage";
 
 const UpdatesSection = () => {
-  if (!Updates.isEnabled) {
-    return (
-      <View
+  return (
+    <View
+      style={{
+        alignItems: "center",
+      }}
+    >
+      <Text
         style={{
-          alignItems: "center",
+          color: "rgba(255,255,255,0.4)",
         }}
       >
-        <Text
-          style={{
-            color: "white",
-          }}
-        >
-          {i18n.t("updates.not_available")}
-        </Text>
-      </View>
-    );
-  }
+        {__DEV__ && i18n.t("updates.app", { version: "development" })}
+        {!__DEV__ &&
+          i18n.t("updates.app", { version: String(Updates.runtimeVersion) })}
+      </Text>
+    </View>
+  );
 
   return (
     <SettingsWrapper>
@@ -66,7 +66,6 @@ export default function Menu() {
 
   return (
     <SafeAreaView>
-      <UpdatesSection />
       <SettingsWrapper>
         <SettingsItem title={i18n.t("settings.show_text_error.text")}>
           <Switch
@@ -89,6 +88,7 @@ export default function Menu() {
           </Pressable>
         </SettingsItem>
       </SettingsWrapper>
+      <UpdatesSection />
     </SafeAreaView>
   );
 }

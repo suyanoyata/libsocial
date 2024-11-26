@@ -2,31 +2,31 @@ import { TitleColors } from "@/hooks/useStore";
 import * as Localization from "expo-localization";
 
 export const siteUrls = {
-  1: {
+  "1": {
     route: "manga",
     url: "manga",
     fields:
       "fields[]=background&fields[]=eng_name&fields[]=otherNames&fields[]=summary&fields[]=releaseDate&fields[]=type_id&fields[]=caution&fields[]=views&fields[]=close_view&fields[]=rate_avg&fields[]=rate&fields[]=genres&fields[]=tags&fields[]=teams&fields[]=franchise&fields[]=authors&fields[]=publisher&fields[]=userRating&fields[]=moderated&fields[]=metadata&fields[]=metadata.count&fields[]=metadata.close_comments&fields[]=manga_status_id&fields[]=chap_count&fields[]=status_id&fields[]=artists&fields[]=format",
   },
-  2: {
+  "2": {
     route: "manga",
     url: "manga",
     fields:
       "fields[]=background&fields[]=eng_name&fields[]=otherNames&fields[]=summary&fields[]=releaseDate&fields[]=type_id&fields[]=caution&fields[]=views&fields[]=close_view&fields[]=rate_avg&fields[]=rate&fields[]=genres&fields[]=tags&fields[]=teams&fields[]=franchise&fields[]=authors&fields[]=publisher&fields[]=userRating&fields[]=moderated&fields[]=metadata&fields[]=metadata.count&fields[]=metadata.close_comments&fields[]=manga_status_id&fields[]=chap_count&fields[]=status_id&fields[]=artists&fields[]=format",
   },
-  3: {
+  "3": {
     route: "novel",
     url: "manga",
     fields:
       "fields[]=background&fields[]=eng_name&fields[]=otherNames&fields[]=summary&fields[]=releaseDate&fields[]=type_id&fields[]=caution&fields[]=views&fields[]=close_view&fields[]=rate_avg&fields[]=rate&fields[]=genres&fields[]=tags&fields[]=teams&fields[]=franchise&fields[]=authors&fields[]=publisher&fields[]=userRating&fields[]=moderated&fields[]=metadata&fields[]=metadata.count&fields[]=metadata.close_comments&fields[]=manga_status_id&fields[]=chap_count&fields[]=status_id&fields[]=artists&fields[]=format",
   },
-  4: {
+  "4": {
     route: "manga",
     url: "manga",
     fields:
       "fields[]=background&fields[]=eng_name&fields[]=otherNames&fields[]=summary&fields[]=releaseDate&fields[]=type_id&fields[]=caution&fields[]=views&fields[]=close_view&fields[]=rate_avg&fields[]=rate&fields[]=genres&fields[]=tags&fields[]=teams&fields[]=franchise&fields[]=authors&fields[]=publisher&fields[]=userRating&fields[]=moderated&fields[]=metadata&fields[]=metadata.count&fields[]=metadata.close_comments&fields[]=manga_status_id&fields[]=chap_count&fields[]=status_id&fields[]=artists&fields[]=format",
   },
-  5: {
+  "5": {
     route: "anime",
     url: "anime",
     fields:
@@ -87,7 +87,7 @@ export const exclude_filters = [
   "гендерная интрига",
 ];
 
-export const presentation_mode = true;
+export const presentation_mode = !true;
 
 export const useRussianTitle = () => {
   if (!presentation_mode) return true;
@@ -103,6 +103,17 @@ export const getTitle = (item: {
   if (useRussianTitle()) {
     return item.rus_name ?? item.name;
   } else {
-    return item.eng_name ?? item.name ?? item.otherNames?.[0];
+    if (item.eng_name !== "") {
+      return item.eng_name ?? item.name;
+    }
+    if (item.name !== "") {
+      return item.name;
+    }
   }
+
+  if (!item.otherNames?.[0]) {
+    return item.name;
+  }
+
+  return item.otherNames?.[0];
 };

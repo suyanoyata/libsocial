@@ -1,37 +1,46 @@
 import { Image, ImageBackground } from "expo-image";
+import { BookmarkIcon, Play } from "lucide-react-native";
+import { View, Text, DeviceEventEmitter } from "react-native";
+import { BlurView } from "expo-blur";
+
+import { AddToBookmarksButton } from "@/components/title/add-to-bookmarks-button";
+import { Conditional } from "@/components/misc/conditional";
+import { BackButton } from "@/components/title/back-button";
+import { Button } from "@/components/button";
 
 import { Anime } from "@/types/anime.type";
-import { View, Text } from "react-native";
 
-import { BlurView } from "expo-blur";
-import { Button } from "../../button";
-import { useNavigation } from "expo-router";
 import { TitleColors } from "@/hooks/useStore";
-import { BookmarkIcon, Play } from "lucide-react-native";
-import { useEffect } from "react";
-import { AddToBookmarksButton } from "@/components/title/add-to-bookmarks-button";
+
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useNavigation } from "expo-router";
+import { useEffect, useState } from "react";
 
 import { getTitle, useRussianTitle } from "@/constants/app.constants";
+
 import { clearOtherNames } from "@/lib/clearOtherNames";
 import i18n from "@/lib/intl";
-import { BackButton } from "../back-button";
 import { storage } from "@/lib/storage";
-import { Conditional } from "@/components/misc/conditional";
 
 export const TitleBackgroundData = ({
   data,
   accent,
-  setCount,
-  count,
-  setSelectedTab,
 }: {
   data: Anime;
-  count: number;
-  setCount: (n: number) => void;
-  setSelectedTab: (s: string) => void;
   accent: TitleColors;
 }) => {
+  const [count, setCount] = useState(0);
   const navigation: any = useNavigation();
+
+  useEffect(() => {
+    DeviceEventEmitter.addListener("title-counter-value", (count: number) => {
+      setCount(count);
+    });
+
+    return () => {
+      DeviceEventEmitter.removeAllListeners("title-counter-value");
+    };
+  }, []);
 
   const BackgroundOverlay = () => {
     return (
@@ -50,28 +59,31 @@ export const TitleBackgroundData = ({
     );
   };
 
-  const title = storage.getString(
-    `${data.site != 5 ? `manga/${data.slug_url}` : `anime/${data.slug_url}`}`
-  );
+  const storageName = `${data.site != "5" ? `manga/${data.slug_url}` : `anime/${data.slug_url}`}`;
 
-  const type = data.site != 5 ? "reading" : "watching";
+  const title = storage.getString(storageName);
+
+  const type = data.site != "5" ? "reading" : "watching";
+
+  const emitCounter = (count: number) => {
+    DeviceEventEmitter.emit("title-counter-change", count);
+  };
 
   useEffect(() => {
     if (title == undefined) {
-      storage.set(
-        `${data.site != 5 ? `manga/${data.slug_url}` : `anime/${data.slug_url}`}`,
-        JSON.stringify([])
-      );
-      setCount(0);
+      storage.set(storageName, JSON.stringify([]));
+      emitCounter(0);
 
       return;
     }
     const last = JSON.parse(title ?? "").toReversed()[0];
 
     if (typeof last == "number") {
-      setCount(last);
+      emitCounter(last);
     }
   }, [title]);
+
+  const insets = useSafeAreaInsets();
 
   return (
     <ImageBackground
@@ -87,7 +99,9 @@ export const TitleBackgroundData = ({
         position: "relative",
       }}
     >
+      {/* <View style={{ paddingTop: insets.top }}> */}
       <BackButton />
+      {/* </View> */}
       <BackgroundOverlay />
       <View
         style={{
@@ -103,6 +117,7 @@ export const TitleBackgroundData = ({
             width: 195,
             height: 260,
             borderRadius: 6,
+            marginTop: insets.top - 10,
           }}
           contentFit="cover"
         />
@@ -159,24 +174,24 @@ export const TitleBackgroundData = ({
           <AddToBookmarksButton
             title={getTitle(data)}
             type={data.model}
+            siteId={data.site}
             slug_url={data.slug_url}
-            status={2}
           />
           <Button
             icon={
-              data.site == 5 ? (
+              data.site == "5" ? (
                 <Play color="white" fill="white" size={18} />
               ) : (
                 <BookmarkIcon color="white" strokeWidth={3} size={18} />
               )
             }
             onPress={() => {
-              if (data.site == 5) {
+              if (data.site == "5") {
                 navigation.navigate("anime-watch", {
                   slug_url: data.slug_url,
                 });
               } else {
-                setSelectedTab("chapters");
+                DeviceEventEmitter.emit("tab-value-change", "chapters");
               }
             }}
             style={{

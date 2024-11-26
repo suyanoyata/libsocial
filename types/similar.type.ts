@@ -17,13 +17,13 @@ export type RelatedTitle = {
     model: string;
   };
   related_type: {
-    id: 2 | 3 | 4 | 10 | 11 | 12;
+    id: 2 | 3 | 4 | 6 | 10 | 11 | 12;
     label: string;
   };
   id: number;
 };
 
 export type SimilarTitle = {
-  id: 231270 | 231320 | "default";
+  id: "default";
   similar: string;
 } & RelatedTitle;

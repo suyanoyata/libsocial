@@ -1,23 +1,21 @@
-import { api } from "@/lib/axios";
 import { Button } from "@/components/button";
-import { Alert } from "react-native";
-import { Bookmark, Plus } from "lucide-react-native";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Plus } from "lucide-react-native";
 import i18n from "@/lib/intl";
 import { Link } from "expo-router";
 import { Queries } from "@/hooks/queries";
+import { Conditional } from "../misc/conditional";
 
 export const AddToBookmarksButton = ({
   title,
   color,
-  status,
   type,
+  siteId,
   slug_url,
 }: {
   title: string;
   color?: string;
-  status: number;
   type: string;
+  siteId: string;
   slug_url: string;
 }) => {
   const { data: bookmark, isFetching } = Queries.getBookmark(type, slug_url);
@@ -29,6 +27,7 @@ export const AddToBookmarksButton = ({
         params: {
           title,
           type,
+          siteId,
           media_slug: slug_url,
         },
       }}
@@ -40,17 +39,23 @@ export const AddToBookmarksButton = ({
           flex: 1,
         }}
         icon={
-          <Plus
-            strokeWidth={3}
-            size={18}
-            color="white"
-            fill={!!bookmark ? "white" : "transparent"}
-          />
+          bookmark == null && (
+            <Plus
+              strokeWidth={3}
+              size={18}
+              color="white"
+              fill={!!bookmark ? "white" : "transparent"}
+            />
+          )
         }
         isPending={isFetching}
-        // onPress={pushBookmark}
       >
-        {i18n.t("content.bookmark.add")}
+        <Conditional conditions={[bookmark == null]}>
+          {i18n.t("content.bookmark.add")}
+        </Conditional>
+        <Conditional conditions={[!!bookmark?.status]}>
+          {i18n.t(`bookmarks.${bookmark?.status}`)}
+        </Conditional>
       </Button>
     </Link>
   );

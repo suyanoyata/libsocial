@@ -67,7 +67,7 @@ const GenresPicker = () => {
                   ? "rgba(255,255,255,0.2)"
                   : "rgba(255,255,255,0.1)",
                 marginBottom: 4,
-                padding: 8,
+                padding: 11,
                 borderRadius: 6,
                 flexDirection: "row",
                 alignItems: "center",
@@ -84,12 +84,18 @@ const GenresPicker = () => {
                   strokeWidth={3}
                 />
               )}
-              <Text style={{ color: "white" }}>{filter.name}</Text>
+              {/* <Text style={{ color: "white" }}>{filter.name}</Text> */}
+              <Text style={{ color: "white" }}>
+                {i18n.exists(`genres.${filter.id}`) &&
+                  i18n.t(`genres.${filter.id}`)}
+                {!i18n.exists(`genres.${filter.id}`) &&
+                  `${filter.name} (${filter.id})`}
+              </Text>
             </Button>
           );
         })}
       </View>
-      <View style={{ height: 60 }}></View>
+      <View style={{ height: 60 }} />
     </ModalWrapper>
   );
 };

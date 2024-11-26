@@ -1,12 +1,17 @@
 import { useNavigation } from "expo-router";
 import { ChevronLeft } from "lucide-react-native";
 import { Pressable, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export const BackButton = () => {
   const router: any = useNavigation();
 
+  const insets = useSafeAreaInsets();
+
   return (
-    <View style={{ position: "absolute", top: 0, left: 0, zIndex: 99 }}>
+    <View
+      style={{ position: "absolute", top: insets.top - 6, left: 0, zIndex: 99 }}
+    >
       <Pressable
         style={{
           margin: 12,

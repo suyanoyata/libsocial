@@ -46,6 +46,7 @@ export default function Summary({
       </Text>
       {lineHeight * 4 < height && (
         <AnimatedPressable
+          style={{ width: 120 }}
           onPress={() => {
             setOpen((prev) => !prev);
           }}

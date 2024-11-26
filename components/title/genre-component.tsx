@@ -1,8 +1,9 @@
-import { site_id } from "@/lib/axios";
 import { Text, View } from "react-native";
 import { Button } from "../button";
 import { Link, useNavigation } from "expo-router";
 import { useFiltersStore } from "@/hooks/useFiltersStore";
+import i18n from "@/lib/intl";
+import { presentation_mode } from "@/constants/app.constants";
 
 export type IGenre = {
   id: number;
@@ -11,10 +12,13 @@ export type IGenre = {
 };
 
 export const GenreComponent = ({ genre }: { genre: IGenre }) => {
-  const router: any = useNavigation();
   const { filters, setFilters } = useFiltersStore();
   // TODO: add toggle for presentation mode to hide adult genres?
   // if (genre.adult && Number(site_id) !== 4) return null;
+
+  if (presentation_mode && !__DEV__ && !i18n.exists(`genres.${genre.id}`))
+    return null;
+
   return (
     <Link href="/(tabs)/search" asChild>
       <Button
@@ -37,7 +41,9 @@ export const GenreComponent = ({ genre }: { genre: IGenre }) => {
           }}
         >
           <Text style={{ color: "rgb(191,191,191)", fontWeight: "500" }}>
-            {genre.name}
+            {i18n.exists(`genres.${genre.id}`) && i18n.t(`genres.${genre.id}`)}
+            {!i18n.exists(`genres.${genre.id}`) &&
+              `${genre.name} (${genre.id})`}
           </Text>
         </View>
       </Button>

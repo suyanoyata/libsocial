@@ -1,4 +1,4 @@
-import { Pressable, ViewStyle } from "react-native";
+import { Pressable, View, ViewStyle, Text } from "react-native";
 import Animated, { useSharedValue, withTiming } from "react-native-reanimated";
 import { useEffect } from "react";
 import { TitleColors } from "@/hooks/useStore";
@@ -34,6 +34,30 @@ export default function Tab(props: Props) {
       opacity.value = withTiming(0.5);
     }
   }, [props.selected]);
+
+  if (props.inactive) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+        }}
+      >
+        <Text
+          numberOfLines={1}
+          style={{
+            opacity: 0.2,
+            paddingVertical: 12,
+            paddingHorizontal: 12,
+            color: "rgb(225,225,225)",
+            fontWeight: "600",
+          }}
+        >
+          {props.children}
+        </Text>
+      </View>
+    );
+  }
 
   return (
     <Pressable

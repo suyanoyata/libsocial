@@ -2,7 +2,7 @@ import { Loader } from "@/components/fullscreen-loader";
 import { api } from "@/lib/axios";
 import { useRoute } from "@react-navigation/native";
 import { useQuery } from "@tanstack/react-query";
-import { ScrollView, Text, View } from "react-native";
+import { DeviceEventEmitter, ScrollView, Text, View } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { Anime } from "@/types/anime.type";
 import Tab from "@/components/title/tab.component";
@@ -37,11 +37,11 @@ const chapter = [
 ];
 
 const tabs = {
-  1: chapter,
-  2: chapter,
-  3: chapter,
-  4: chapter,
-  5: [
+  "1": chapter,
+  "2": chapter,
+  "3": chapter,
+  "4": chapter,
+  "5": [
     {
       title: i18n.t("content.tabs.about"),
       key: "about",
@@ -57,12 +57,106 @@ const tabs = {
   ],
 };
 
+const RenderBottomContent = ({
+  slug_url,
+  type,
+  accent,
+}: {
+  slug_url: string;
+  type: string;
+  accent: TitleColors;
+}) => {
+  const [selectedTab, setSelectedTab] = useState("about");
+  const [count, setCount] = useState(0);
+
+  const { data } = useQuery<Anime>({
+    queryKey: ["title-data", slug_url],
+
+    queryFn: async () => {
+      const response = await api.get(
+        `/${slug_url}?${siteUrls[type as keyof typeof siteUrls].fields}`
+      );
+      return response.data.data;
+    },
+    enabled: !!slug_url,
+  });
+
+  // subscribe for count change & tab change
+  useEffect(() => {
+    DeviceEventEmitter.addListener("title-counter-change", (count: number) => {
+      setCount(count);
+    });
+
+    DeviceEventEmitter.addListener("tab-value-change", (tab: string) => {
+      setSelectedTab(tab);
+    });
+
+    return () => {
+      DeviceEventEmitter.removeAllListeners("tab-value-change");
+      DeviceEventEmitter.removeAllListeners("title-counter-change");
+    };
+  }, []);
+
+  useEffect(() => {
+    DeviceEventEmitter.emit("title-counter-value", count);
+  }, [count]);
+
+  if (!data) return <Loader />;
+
+  return (
+    <View
+      style={{
+        backgroundColor: "black",
+        minHeight: "100%",
+        borderTopLeftRadius: 6,
+        borderTopRightRadius: 6,
+        marginTop: -8,
+        zIndex: 5,
+        overflow: "hidden",
+      }}
+    >
+      <View style={{ flexDirection: "row" }}>
+        {tabs[type as keyof typeof tabs].map((tab) => (
+          <Tab
+            accent={accent}
+            key={tab.key}
+            value={tab.key}
+            inactive={
+              tab.key == "reviews" ||
+              (tab.key == "comments" && presentation_mode)
+            }
+            selected={selectedTab}
+            setSelected={() => {
+              setSelectedTab(tab.key);
+            }}
+          >
+            {tab.title}
+          </Tab>
+        ))}
+      </View>
+      <View style={{ minHeight: "100%", backgroundColor: "black", flex: 1 }}>
+        <AboutTitle accent={accent} selected={selectedTab} data={data} />
+        <MangaChapters
+          setCount={setCount}
+          type={data?.site}
+          selected={selectedTab}
+          count={count}
+          slug_url={slug_url}
+        />
+        <Comments
+          post_id={data.id}
+          model={data.model}
+          selected={selectedTab}
+          slug_url={slug_url}
+        />
+      </View>
+    </View>
+  );
+};
+
 export default function index() {
   const router = useRoute();
   const { slug_url, type } = router.params as any;
-
-  const [selectedTab, setSelectedTab] = useState<string>("about");
-  const [count, setCount] = useState<number>(0);
 
   const { setCurrentTitleSlug } = store();
 
@@ -136,62 +230,12 @@ export default function index() {
           minHeight: "100%",
         }}
       >
-        <TitleBackgroundData
-          setCount={setCount}
-          count={count}
-          setSelectedTab={setSelectedTab}
-          data={data}
+        <TitleBackgroundData data={data} accent={accent} />
+        <RenderBottomContent
+          slug_url={slug_url}
+          type={data.site}
           accent={accent}
         />
-        <View
-          style={{
-            backgroundColor: "black",
-            minHeight: "100%",
-            borderTopLeftRadius: 6,
-            borderTopRightRadius: 6,
-            marginTop: -8,
-            zIndex: 5,
-            overflow: "hidden",
-          }}
-        >
-          <View style={{ flexDirection: "row" }}>
-            {tabs[type as keyof typeof tabs].map((tab) => (
-              <Tab
-                accent={accent}
-                key={tab.key}
-                value={tab.key}
-                inactive={
-                  tab.key == "reviews" ||
-                  (tab.key == "comments" && presentation_mode)
-                }
-                selected={selectedTab}
-                setSelected={() => {
-                  setSelectedTab(tab.key);
-                }}
-              >
-                {tab.title}
-              </Tab>
-            ))}
-          </View>
-          <View
-            style={{ minHeight: "100%", backgroundColor: "black", flex: 1 }}
-          >
-            <AboutTitle accent={accent} selected={selectedTab} data={data} />
-            <MangaChapters
-              setCount={setCount}
-              type={data?.site}
-              selected={selectedTab}
-              count={count}
-              slug_url={slug_url}
-            />
-            <Comments
-              post_id={data.id}
-              model={data.model}
-              selected={selectedTab}
-              slug_url={slug_url}
-            />
-          </View>
-        </View>
       </ScrollView>
     </Animated.View>
   );

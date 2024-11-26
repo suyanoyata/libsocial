@@ -133,7 +133,10 @@ export const TitleRelations = ({ slug_url }: { slug_url: string }) => {
                     lineHeight: 28,
                   }}
                 >
-                  {i18n.t(`content.relations.${title.related_type.id}`)}
+                  {i18n.exists(`content.relations.${title.related_type.id}`) &&
+                    i18n.t(`content.relations.${title.related_type.id}`)}
+                  {!i18n.exists(`content.relations.${title.related_type.id}`) &&
+                    `${title.related_type.label} ${title.related_type.id}`}
                 </Text>
                 <Text
                   numberOfLines={2}

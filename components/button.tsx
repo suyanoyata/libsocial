@@ -9,6 +9,7 @@ export const Button = ({
   onPress,
   icon,
   isPending,
+  disabled = false,
   asChild = false,
   animationDisabled = false,
   iconPosition = "left",
@@ -18,6 +19,7 @@ export const Button = ({
   onPress?: () => void;
   icon?: React.ReactNode;
   isPending?: boolean;
+  disabled?: boolean;
   asChild?: boolean;
   animationDisabled?: boolean;
   iconPosition?: "left" | "right";
@@ -46,12 +48,13 @@ export const Button = ({
     return (
       <Component
         onPressIn={() => {
+          if (disabled) return;
           scale.value = withTiming(0.95, {
             duration: 150,
           });
         }}
         onPress={() => {
-          if (onPress) {
+          if (onPress && !disabled) {
             onPress();
             scale.value = withTiming(1, {
               duration: 150,
@@ -65,6 +68,7 @@ export const Button = ({
         }}
         style={{
           transform: [{ scale: scale }],
+          opacity: disabled ? 0.5 : 1,
           ...style,
         }}
       >
@@ -76,12 +80,13 @@ export const Button = ({
   return (
     <Component
       onPressIn={() => {
+        if (disabled) return;
         scale.value = withTiming(0.95, {
           duration: 150,
         });
       }}
       onPress={() => {
-        if (onPress) {
+        if (onPress && !disabled) {
           onPress();
           scale.value = withTiming(1, {
             duration: 150,
@@ -97,18 +102,20 @@ export const Button = ({
         transform: [{ scale: scale }],
         backgroundColor: appTheme.primary,
         paddingHorizontal: 12,
-        paddingVertical: !!isPending ? 4 : 8,
+        paddingVertical: !!isPending ? 5 : 9,
         borderRadius: 6,
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
         gap: 6,
+        opacity: disabled ? 0.5 : 1,
         ...style,
       }}
     >
       <Conditional conditions={[!isPending]}>
         {iconPosition == "left" && icon}
         <Text
+          numberOfLines={1}
           style={{
             color: "white",
             fontWeight: "500",

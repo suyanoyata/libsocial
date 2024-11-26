@@ -49,7 +49,12 @@ export const ModalWrapper = ({
           }}
         >
           <ChevronLeft color="gray" />
-          <Text style={{ color: "gray", fontWeight: "600" }}>{title}</Text>
+          <Text
+            numberOfLines={1}
+            style={{ color: "gray", fontWeight: "600", paddingRight: 36 }}
+          >
+            {title}
+          </Text>
         </Pressable>
         <View style={{ ...style }}>
           {scrollable ? <ScrollView>{children}</ScrollView> : children}

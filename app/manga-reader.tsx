@@ -1,13 +1,16 @@
+import { Button } from "@/components/button";
 import { Loader } from "@/components/fullscreen-loader";
+import { colors } from "@/constants/app.constants";
 import { Queries } from "@/hooks/queries";
 import { store } from "@/hooks/useStore";
 import { token } from "@/lib/axios";
 import i18n from "@/lib/intl";
 import { logger } from "@/lib/logger";
+import { storage } from "@/lib/storage";
 import { useRoute } from "@react-navigation/native";
 import { Image } from "expo-image";
 import { useNavigation } from "expo-router";
-import { ChevronLeft, Settings } from "lucide-react-native";
+import { ChevronLeft, ChevronRight, Settings } from "lucide-react-native";
 import React, { useState } from "react";
 import {
   useWindowDimensions,
@@ -20,7 +23,8 @@ import Animated, { FadeIn } from "react-native-reanimated";
 
 export default function MangaReader() {
   const route = useRoute();
-  const { slug_url, volume, number } = route.params as any;
+  const { slug_url, volume, number, chapterIndex, chapters, includes } =
+    route.params as any;
 
   const navigation: any = useNavigation();
 
@@ -32,11 +36,13 @@ export default function MangaReader() {
     number,
   });
 
-  const [loadLimit, setLoadLimit] = useState(3);
+  const [loadLimit, setLoadLimit] = useState(6);
 
   const { imageServers, imageServerIndex } = store();
 
   const { width } = useWindowDimensions();
+
+  const imageWidth = width >= 600 ? 600 : width;
 
   if (isLoading) {
     return <Loader />;
@@ -96,7 +102,9 @@ export default function MangaReader() {
           </View>
           <Pressable
             onPress={() => {
-              navigation.navigate("image-server-select");
+              navigation.navigate("image-server-select", {
+                slug_url,
+              });
             }}
           >
             <Settings
@@ -110,29 +118,116 @@ export default function MangaReader() {
             />
           </Pressable>
         </View>
-        {data.pages.map((page, index) => {
-          if (index > loadLimit) return;
-          return (
-            <Image
-              onLoad={() => {
-                console.log(`${index} loaded`);
-                if (index == loadLimit) {
-                  logger.verbose("last item loaded, increasing load limit");
-                  setLoadLimit(loadLimit + 3);
+        <View style={{ alignItems: "center" }}>
+          {data.pages.map((page, index) => {
+            if (index > loadLimit) return;
+            return (
+              <Image
+                onLoad={() => {
+                  if (index == loadLimit) {
+                    logger.verbose("last item loaded, increasing load limit");
+                    setLoadLimit(loadLimit + 3);
+                  }
+                }}
+                source={{
+                  uri: imageServers[imageServerIndex].url + page.url,
+                  cacheKey: imageServers[imageServerIndex].url + page.url,
+                  headers: {
+                    // Referer: "https://hentailib.me/",
+                    Authorization: token,
+                  },
+                }}
+                style={{
+                  width: imageWidth,
+                  height: imageWidth / page.ratio,
+                }}
+              />
+            );
+          })}
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            marginBottom: 24,
+            marginTop: 12,
+            gap: 12,
+          }}
+        >
+          {chapters[chapterIndex - 1] != null && (
+            <Button
+              onPress={() => {
+                const chapter = chapters[chapterIndex - 1];
+                navigation.replace("manga-reader", {
+                  slug_url: slug_url,
+                  volume: chapter.volume,
+                  number: chapter.number,
+                  name: chapter.name,
+                  chapterIndex: chapterIndex - 1,
+                  chapters: chapters,
+                });
+
+                const currentTitle = storage.getString(slug_url);
+
+                const prev = JSON.parse(currentTitle ?? "") ?? [];
+
+                if (!includes) {
+                  storage.set(
+                    slug_url,
+                    JSON.stringify([...prev, chapterIndex - 1])
+                  );
                 }
               }}
-              source={{
-                uri: imageServers[imageServerIndex].url + page.url,
-                cacheKey: imageServers[imageServerIndex].url + page.url,
-                headers: {
-                  // Referer: "https://hentailib.me/",
-                  Authorization: token,
-                },
+              iconPosition="left"
+              icon={
+                <ChevronLeft
+                  size={20}
+                  color="white"
+                  style={{ marginRight: "auto" }}
+                />
+              }
+              style={{ flex: 1, backgroundColor: colors[0].primary }}
+            >
+              К {chapters[chapterIndex - 1].number} главе
+            </Button>
+          )}
+          {chapters[chapterIndex + 1] != null && (
+            <Button
+              onPress={() => {
+                const chapter = chapters[chapterIndex + 1];
+                navigation.replace("manga-reader", {
+                  slug_url: slug_url,
+                  volume: chapter.volume,
+                  number: chapter.number,
+                  name: chapter.name,
+                  chapterIndex: chapterIndex + 1,
+                  chapters: chapters,
+                });
+
+                const currentTitle = storage.getString(slug_url);
+
+                const prev = JSON.parse(currentTitle ?? "") ?? [];
+
+                if (!includes) {
+                  storage.set(
+                    slug_url,
+                    JSON.stringify([...prev, chapterIndex - 1])
+                  );
+                }
               }}
-              style={{ width: width, height: width / page.ratio }}
-            />
-          );
-        })}
+              iconPosition="right"
+              icon={
+                <ChevronRight
+                  size={20}
+                  color="white"
+                  style={{ marginLeft: "auto" }}
+                />
+              }
+              style={{ flex: 1, backgroundColor: colors[0].primary }}
+            >
+              К {chapters[chapterIndex + 1].number} главе
+            </Button>
+          )}
+        </View>
       </Animated.ScrollView>
     </SafeAreaView>
   );

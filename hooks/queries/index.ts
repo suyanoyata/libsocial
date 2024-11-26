@@ -2,8 +2,10 @@ import { Episode } from "@/app/anime-watch";
 import { RanobeChapter } from "@/app/ranobe-reader";
 import { Chapter } from "@/components/manga-chapters";
 import { api } from "@/lib/axios";
+import { logger } from "@/lib/logger";
 import { Anime } from "@/types/anime.type";
 import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 const titleData = (slug_url: string, type?: "manga" | "anime") => {
   const titleType = type ? `${type}/` : "";
@@ -16,7 +18,6 @@ const animeEpisodes = (slug_url: string) => {
   return useQuery<Episode[]>({
     queryKey: ["anime-episodes", slug_url],
     queryFn: async () => {
-      console.log(slug_url);
       return await api
         .get(`/episodes?anime_id=${slug_url}`)
         .then((res) => res.data.data);
@@ -83,7 +84,6 @@ const ranobeChapter = ({
       const response = await api.get(
         `/${slug_url}/chapter?number=${number}&volume=${volume}`
       );
-      console.log(response.data.data, null, 2);
       return response.data.data;
     },
     staleTime: 1000 * 60 * 60,
@@ -125,7 +125,10 @@ const getBookmark = (type: string, slug_url: string) => {
     queryKey: ["bookmark", slug_url],
     queryFn: async () => {
       const response = await api.get(`/${type}/${slug_url}/bookmark`);
-      return response.data.data.id;
+      return {
+        id: response.data.data.id,
+        status: response.data.data.status,
+      };
     },
   });
 };

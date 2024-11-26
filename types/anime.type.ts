@@ -18,7 +18,7 @@ export type Anime = {
   items_count: {
     uploaded: number;
   };
-  site: number;
+  site: string;
   status: {
     id: number;
     label: string;
@@ -56,4 +56,24 @@ export type Anime = {
     name: string;
     adult: boolean;
   }[];
+};
+
+export type VideoPlayerData = {
+  player: "Kodik" | "Animelib";
+  team: {
+    id: number;
+    name: string;
+  };
+  subtitles: {
+    format: "vtt" | "ass";
+    src: string;
+  }[];
+  video: {
+    id: number;
+    quality: {
+      href: string;
+      quality: number;
+      bitrate: number;
+    }[];
+  };
 };

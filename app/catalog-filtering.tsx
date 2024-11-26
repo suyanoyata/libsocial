@@ -17,7 +17,7 @@ const FilterButton = ({ label, length }: { label: string; length: number }) => {
           width: "100%",
           backgroundColor: "rgba(255,255,255,0.1)",
           flexDirection: "row",
-          padding: 10,
+          padding: 11,
           borderRadius: 6,
           justifyContent: "space-between",
           alignItems: "center",

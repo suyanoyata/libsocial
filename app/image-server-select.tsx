@@ -2,12 +2,24 @@ import { SettingsWrapper } from "@/components/settings-component";
 import { ImageServer, store } from "@/hooks/useStore";
 import { site_id } from "@/lib/axios";
 import { storage } from "@/lib/storage";
+import { Anime } from "@/types/anime.type";
+import { useRoute } from "@react-navigation/native";
+import { useQuery } from "@tanstack/react-query";
 import { Check } from "lucide-react-native";
 import { useEffect } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
 export default function ImageServerSelect() {
   const { imageServers, imageServerIndex, setImageServerIndex } = store();
+  const router = useRoute();
+
+  const { slug_url } = router.params as {
+    slug_url: string;
+  };
+
+  const { data: titleData } = useQuery<Anime>({
+    queryKey: ["title-data", slug_url],
+  });
 
   useEffect(() => {
     const server = storage.getNumber("image-server");
@@ -30,7 +42,8 @@ export default function ImageServerSelect() {
     server: ImageServer;
     index: number;
   }) => {
-    if (!server.site_ids.includes(site_id)) return;
+    if (!titleData) return;
+    if (!server.site_ids.includes(Number(titleData.site))) return;
 
     return (
       <View

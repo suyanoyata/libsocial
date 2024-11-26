@@ -16,8 +16,6 @@
   "content": {
     "similar": {
       "default": "Similar in genres",
-      "231270": "Similar by art style",
-      "231320": "Similar in plot",
       "title": "Similar",
       "error": "Couldn't load similar titles",
       "try_again": "Try again"
@@ -28,6 +26,8 @@
       "2": "Source",
       "3": "Prequel",
       "4": "Sequel",
+      "5": "Alternative history",
+      "6": "Spin-off",
       "10": "Other",
       "11": "Summarization",
       "12": "Same Universe"
@@ -61,6 +61,7 @@
     }
   },
   "updates": {
+    "app": "client version: {{version}}",
     "not_available": "Updates unavailable",
     "channel": "Updates channel",
     "enabled": "Updates enabled",
@@ -93,5 +94,45 @@
     "filters": "Filters",
     "sort": "Sorting",
     "not_found": "We didn't found anything. Try removing some filters or double-check the search field"
+  },
+  "bookmarks": {
+    "1": "Reading",
+    "2": "Planned",
+    "3": "Dropped",
+    "4": "Read",
+    "5": "Love it",
+    "21": "Watching",
+    "22": "Planned",
+    "23": "Dropped",
+    "24": "Watched",
+    "25": "Love it",
+    "26": "Watching again",
+    "27": "Postponed"
+  },
+  "genres": {
+    "32": "Drama",
+    "37": "Harem",
+    "43": "Drama",
+    "44": "Game",
+    "45": "History",
+    "47": "Comedy",
+    "49": "Mecha",
+    "52": "Slice of Life",
+    "54": "Adventure",
+    "55": "Psychological",
+    "56": "Romance",
+    "61": "Shounen",
+    "63": "Sports",
+    "64": "Seinen",
+    "66": "Thriller",
+    "68": "Fiction",
+    "69": "Fantasy",
+    "70": "School",
+    "72": "Ecchi",
+    "80": "Music",
+    "81": "Demons",
+    "82": "Полиция",
+    "85": "Magic",
+    "89": "Military"
   }
 }

@@ -2,13 +2,15 @@ import i18n from "@/lib/intl";
 import { Link } from "expo-router";
 import { Search } from "lucide-react-native";
 import { Pressable, View, Text } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export const QuickSearchNavigationComponent = () => {
+  const insets = useSafeAreaInsets();
   return (
-    <Link asChild href="/quick-search">
+    <Link asChild href="/quick-search" style={{ paddingTop: insets.top + 2 }}>
       <Pressable
         style={{
-          backgroundColor: "rgba(255,255,255,0.04)",
+          backgroundColor: "rgba(255,255,255,0.06)",
           padding: 10,
           paddingHorizontal: 12,
         }}

@@ -21,7 +21,6 @@ import { getTitle, siteUrls } from "@/constants/app.constants";
 const quickSearchTabs = [
   {
     label: i18n.t("quick_search.tabs.titles"),
-    // @ts-ignore
     value: site_id != 5 ? "manga" : "anime",
   },
   {
@@ -93,6 +92,7 @@ const TabSwitcher = ({
       >
         {quickSearchTabs.map((tab) => (
           <Tab
+            key={tab.value}
             noFlex
             accent={appTheme}
             value={tab.value}
@@ -193,7 +193,7 @@ export default function QuickSearch() {
               style={{
                 flexDirection: "row",
                 gap: 8,
-                backgroundColor: "rgba(250,250,250,0.1)",
+                backgroundColor: "rgba(250,250,250,0.06)",
                 overflow: "hidden",
                 borderRadius: 6,
                 paddingRight: 8,
