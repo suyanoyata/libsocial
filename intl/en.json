@@ -134,5 +134,14 @@
     "82": "Полиция",
     "85": "Magic",
     "89": "Military"
+  },
+  "imageServer": {
+    "title": "Image Server",
+    "selected": "Selected server: {{title}}"
+  },
+  "imageServerLabel": {
+    "main": "Main",
+    "secondary": "Secondary",
+    "compress": "Compress"
   }
 }

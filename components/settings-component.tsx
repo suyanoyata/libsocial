@@ -3,9 +3,11 @@ import { View, Text } from "react-native";
 export const SettingsItem = ({
   title,
   children,
+  last = false,
 }: {
   title: string;
   children: React.ReactNode;
+  last?: boolean;
 }) => {
   return (
     <View
@@ -13,7 +15,7 @@ export const SettingsItem = ({
         paddingVertical: 12,
         paddingHorizontal: 12,
         borderBottomWidth: 1,
-        borderBottomColor: "rgba(255,255,255,0.2)",
+        borderBottomColor: !last ? "rgba(255,255,255,0.2)" : "#00000000",
         justifyContent: "space-between",
         flexDirection: "row",
         alignItems: "center",
@@ -40,20 +42,38 @@ export const SettingsItem = ({
 
 export const SettingsWrapper = ({
   children,
+  note,
 }: {
   children: React.ReactNode;
+  note?: string;
 }) => {
   return (
     <View
       style={{
-        backgroundColor: "rgba(255,255,255,0.08)",
-        marginHorizontal: 8,
-        borderRadius: 6,
-        overflow: "hidden",
         marginVertical: 12,
       }}
     >
-      {children}
+      <View
+        style={{
+          backgroundColor: "rgba(255,255,255,0.08)",
+          marginHorizontal: 8,
+          borderRadius: 6,
+          overflow: "hidden",
+        }}
+      >
+        {children}
+      </View>
+      {note && (
+        <Text
+          style={{
+            color: "rgb(171,171,171)",
+            marginHorizontal: 8,
+            marginTop: 4,
+          }}
+        >
+          {note}
+        </Text>
+      )}
     </View>
   );
 };

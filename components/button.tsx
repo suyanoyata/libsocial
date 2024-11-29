@@ -1,7 +1,7 @@
-import { store } from "@/hooks/useStore";
 import { ActivityIndicator, Pressable, Text, ViewStyle } from "react-native";
 import Animated, { useSharedValue, withTiming } from "react-native-reanimated";
 import { Conditional } from "./misc/conditional";
+import { app } from "@/hooks/useSettings";
 
 export const Button = ({
   children,
@@ -25,7 +25,7 @@ export const Button = ({
   iconPosition?: "left" | "right";
 }) => {
   const Component = Animated.createAnimatedComponent(Pressable);
-  const { appTheme } = store();
+  const { settings } = app();
 
   const scale = useSharedValue(1);
 
@@ -100,7 +100,7 @@ export const Button = ({
       }}
       style={{
         transform: [{ scale: scale }],
-        backgroundColor: appTheme.primary,
+        backgroundColor: settings.appTheme.primary,
         paddingHorizontal: 12,
         paddingVertical: !!isPending ? 5 : 9,
         borderRadius: 6,

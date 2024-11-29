@@ -2,15 +2,15 @@
   "expo": {
     "name": "libsocial",
     "slug": "libsocial",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "mangalib",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "runtimeVersion": "1.0.3",
+    "runtimeVersion": "1.0.4",
     "ios": {
-      "buildNumber": "3",
+      "buildNumber": "4",
       "supportsTablet": true,
       "bundleIdentifier": "rory.libsocial"
     },

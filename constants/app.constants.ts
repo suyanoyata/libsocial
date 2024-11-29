@@ -87,7 +87,7 @@ export const exclude_filters = [
   "гендерная интрига",
 ];
 
-export const presentation_mode = !true;
+export const presentation_mode = true;
 
 export const useRussianTitle = () => {
   if (!presentation_mode) return true;

@@ -19,7 +19,7 @@ import RNRestart from "react-native-restart";
 
 import * as Notifications from "expo-notifications";
 import * as Updates from "expo-updates";
-import * as Network from "expo-network";
+import * as Network from "@react-native-community/netinfo";
 
 import { logger } from "@/lib/logger";
 
@@ -28,6 +28,7 @@ import Preloader from "@/components/preloader";
 import { ErrorBoundaryComponent } from "@/components/error-boundary-component";
 import { colors } from "@/constants/app.constants";
 import { storage } from "@/lib/storage";
+import { app } from "@/hooks/useSettings";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -50,29 +51,34 @@ export default function RootLayout() {
     imageServers,
     setImageServers,
     setImageServerIndex,
-    setAppTheme,
   } = store();
+
+  const { settings, setSettings } = app();
 
   LogBox.ignoreAllLogs();
 
   // #region set app theme & set network state
   useEffect(() => {
-    Network.addNetworkStateListener((state) => {
-      console.log({
-        connected: state.isConnected,
-        reachable: state.isInternetReachable,
+    setApiLoggers();
+    Network.addEventListener((state) => {
+      setSettings({
+        ...settings,
+        connectionType: state.type,
       });
-      onlineManager.setOnline(!!state.isConnected);
+
+      onlineManager.setOnline(!!state.isInternetReachable);
     });
 
-    setAppTheme(colors[site_id - 1]);
+    setSettings({
+      ...settings,
+      appTheme: colors[site_id - 1],
+    });
   }, []);
 
   // #endregion
 
   // #region videoServers
   useEffect(() => {
-    setApiLoggers();
     if (videoServers.length !== 0) return;
 
     api.get("/constants?fields[]=videoServers").then((response) => {

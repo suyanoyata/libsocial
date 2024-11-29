@@ -1,15 +1,14 @@
-import { useNavigation } from "expo-router";
+import { useFocusEffect, useNavigation } from "expo-router";
 import { Loader } from "@/components/fullscreen-loader";
-import { Alert, Pressable, Text, View } from "react-native";
+import { Alert, DeviceEventEmitter, Pressable, Text, View } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { date } from "@/lib/date";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button } from "./button";
 import { RefreshCcw } from "lucide-react-native";
 import i18n from "@/lib/intl";
 import { storage } from "@/lib/storage";
 import { Queries } from "@/hooks/queries";
-import { FlashList } from "@shopify/flash-list";
 
 export type Chapter = {
   id: string;
@@ -26,22 +25,18 @@ export const MangaChapters = ({
   selected,
   slug_url,
   type,
-  count,
-  setCount,
 }: {
   selected: string;
   slug_url: string;
   type: string;
-  count: number;
-  setCount: (n: number) => void;
 }) => {
-  const AnimatedFlashList = Animated.createAnimatedComponent(FlashList);
-
   if (slug_url.startsWith("anime")) return;
 
-  const slugStorage = storage.getString(slug_url);
-
   const { data, isLoading, error, refetch } = Queries.chapters(slug_url);
+  const navigation: any = useNavigation();
+
+  const slugStorage = storage.getString(slug_url);
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     if (slugStorage == undefined) {
@@ -49,7 +44,15 @@ export const MangaChapters = ({
     }
   }, [slug_url]);
 
-  const navigation: any = useNavigation();
+  useEffect(() => {
+    DeviceEventEmitter.addListener("title-counter-value", (count: number) => {
+      setCount(count);
+    });
+
+    return () => {
+      DeviceEventEmitter.removeAllListeners("title-counter-value");
+    };
+  }, []);
 
   const ChapterItem = ({
     chapter,
@@ -61,8 +64,13 @@ export const MangaChapters = ({
     const [includes, setIncludes] = useState<boolean>(false);
 
     useEffect(() => {
-      setIncludes(JSON.parse(slugStorage ?? "").includes(index + 1));
-    }, [index, storage]);
+      if (slugStorage) {
+        const storage: number[] = JSON.parse(slugStorage);
+        if (storage.includes(index)) {
+          setIncludes(true);
+        }
+      }
+    }, [index, slugStorage]);
 
     return (
       <Pressable
@@ -84,22 +92,20 @@ export const MangaChapters = ({
             `Вы действительно хотите удалить Том ${chapter.volume} Глава ${chapter.number} ${chapter.name && "(" + chapter.name + ")"} из прочитанных?`,
             [
               {
+                text: "Отмена",
+              },
+              {
                 text: "Удалить",
                 style: "destructive",
                 isPreferred: true,
                 onPress: () => {
-                  setIncludes(false);
+                  if (slugStorage) {
+                    setIncludes(false);
 
-                  // if (JSON.parse(slugStorage ?? "").length == 1) {
-                  //   return storage.set(slug_url, JSON.stringify([]));
-                  // }
-
-                  // prettier-ignore
-                  storage.set(slug_url, JSON.stringify(JSON.parse(slugStorage ?? "").filter((item: number) => item !== index + 1)))
+                    // prettier-ignore
+                    storage.set(slug_url, JSON.stringify(JSON.parse(slugStorage).filter((item: number) => item !== index)))
+                  }
                 },
-              },
-              {
-                text: "Отмена",
               },
             ]
           );
@@ -110,21 +116,19 @@ export const MangaChapters = ({
             volume: chapter.volume,
             number: chapter.number,
             name: chapter.name,
-            chapterIndex: index,
             chapters: data,
-            setIncludes,
-            includes,
-            setCount,
-            count,
+            chapterIndex: index,
           });
 
-          const prev = JSON.parse(slugStorage ?? "") ?? [];
-
-          if (!includes) {
-            storage.set(slug_url, JSON.stringify([...prev, index + 1]));
+          if (!includes && slugStorage) {
             setIncludes(true);
+
+            const prev: number[] = JSON.parse(slugStorage);
+            console.log("click ev", prev);
+            storage.set(slug_url, JSON.stringify([...prev, index]));
+
             if (count < index + 1) {
-              setCount(index + 1);
+              DeviceEventEmitter.emit("title-counter-value", index + 1);
             }
           }
         }}

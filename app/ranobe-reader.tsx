@@ -5,11 +5,18 @@ import { useRoute } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import { ChevronLeft, ChevronRight } from "lucide-react-native";
 import React from "react";
-import { SafeAreaView, Text, useWindowDimensions, View } from "react-native";
+import {
+  DeviceEventEmitter,
+  SafeAreaView,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 import RenderHtml from "react-native-render-html";
 import { storage } from "@/lib/storage";
 import { Queries } from "@/hooks/queries";
+import { Chapter } from "@/components/manga-chapters";
 
 export type RanobeChapter = {
   content: string;
@@ -18,8 +25,15 @@ export type RanobeChapter = {
 
 export default function RanobeReader() {
   const route = useRoute();
-  const { slug_url, volume, number, name, chapterIndex, chapters, includes } =
-    route.params as any;
+  const { slug_url, volume, number, chapterIndex, chapters, name } =
+    route.params as {
+      slug_url: string;
+      volume: number;
+      number: number;
+      chapterIndex: number;
+      chapters: Chapter[];
+      name: string;
+    };
 
   const navigation: any = useNavigation();
 
@@ -96,13 +110,15 @@ export default function RanobeReader() {
 
                 const currentTitle = storage.getString(slug_url);
 
-                const prev = JSON.parse(currentTitle ?? "") ?? [];
+                if (currentTitle) {
+                  const prev = JSON.parse(currentTitle);
 
-                if (!includes) {
-                  storage.set(
-                    slug_url,
-                    JSON.stringify([...prev, chapterIndex - 1])
-                  );
+                  if (!prev.includes(chapterIndex - 1)) {
+                    storage.set(
+                      slug_url,
+                      JSON.stringify([...prev, chapterIndex - 1])
+                    );
+                  }
                 }
               }}
               iconPosition="left"
@@ -133,13 +149,17 @@ export default function RanobeReader() {
 
                 const currentTitle = storage.getString(slug_url);
 
-                const prev = JSON.parse(currentTitle ?? "") ?? [];
+                if (currentTitle) {
+                  const prev = JSON.parse(currentTitle);
 
-                if (!includes) {
-                  storage.set(
-                    slug_url,
-                    JSON.stringify([...prev, chapterIndex - 1])
-                  );
+                  if (!prev.includes(chapterIndex + 1)) {
+                    // prettier-ignore
+                    DeviceEventEmitter.emit("title-counter-value", chapterIndex + 1);
+                    storage.set(
+                      slug_url,
+                      JSON.stringify([...prev, chapterIndex + 1])
+                    );
+                  }
                 }
               }}
               iconPosition="right"
@@ -157,7 +177,7 @@ export default function RanobeReader() {
           )}
         </View>
         <Comments
-          selected="Комментарии"
+          selected="comments"
           slug_url={slug_url}
           model="chapter"
           post_id={data!.id}

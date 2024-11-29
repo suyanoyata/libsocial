@@ -67,7 +67,6 @@ const RenderBottomContent = ({
   accent: TitleColors;
 }) => {
   const [selectedTab, setSelectedTab] = useState("about");
-  const [count, setCount] = useState(0);
 
   const { data } = useQuery<Anime>({
     queryKey: ["title-data", slug_url],
@@ -83,23 +82,14 @@ const RenderBottomContent = ({
 
   // subscribe for count change & tab change
   useEffect(() => {
-    DeviceEventEmitter.addListener("title-counter-change", (count: number) => {
-      setCount(count);
-    });
-
     DeviceEventEmitter.addListener("tab-value-change", (tab: string) => {
       setSelectedTab(tab);
     });
 
     return () => {
       DeviceEventEmitter.removeAllListeners("tab-value-change");
-      DeviceEventEmitter.removeAllListeners("title-counter-change");
     };
   }, []);
-
-  useEffect(() => {
-    DeviceEventEmitter.emit("title-counter-value", count);
-  }, [count]);
 
   if (!data) return <Loader />;
 
@@ -137,10 +127,8 @@ const RenderBottomContent = ({
       <View style={{ minHeight: "100%", backgroundColor: "black", flex: 1 }}>
         <AboutTitle accent={accent} selected={selectedTab} data={data} />
         <MangaChapters
-          setCount={setCount}
           type={data?.site}
           selected={selectedTab}
-          count={count}
           slug_url={slug_url}
         />
         <Comments
@@ -157,12 +145,6 @@ const RenderBottomContent = ({
 export default function index() {
   const router = useRoute();
   const { slug_url, type } = router.params as any;
-
-  const { setCurrentTitleSlug } = store();
-
-  useEffect(() => {
-    setCurrentTitleSlug(slug_url);
-  }, [slug_url]);
 
   const { data, isLoading, error, refetch } = useQuery<Anime>({
     queryKey: ["title-data", slug_url],

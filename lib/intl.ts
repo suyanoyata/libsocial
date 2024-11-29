@@ -12,7 +12,7 @@ const initI18n = async () => {
   i18n.use(initReactI18next).init({
     compatibilityJSON: "v3",
     resources,
-    fallbackLng: "ru",
+    fallbackLng: "en",
     interpolation: {
       escapeValue: false,
     },

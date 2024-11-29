@@ -17,6 +17,7 @@ import Animated, { FadeOut } from "react-native-reanimated";
 import { Anime } from "@/types/anime.type";
 import { Image } from "expo-image";
 import { getTitle, siteUrls } from "@/constants/app.constants";
+import { app } from "@/hooks/useSettings";
 
 const quickSearchTabs = [
   {
@@ -108,7 +109,7 @@ const TabSwitcher = ({
 };
 
 export default function QuickSearch() {
-  const { appTheme } = store();
+  const { settings } = app();
   const router: any = useNavigation();
 
   const [selectedTab, setSelectedTab] = useState(quickSearchTabs[0].value);
@@ -129,7 +130,7 @@ export default function QuickSearch() {
     <ModalWrapper scrollable={false} title={i18n.t("search.quick")}>
       <Input setInput={setInput} />
       <TabSwitcher
-        appTheme={appTheme}
+        appTheme={settings.appTheme}
         selectedTab={selectedTab}
         setSelectedTab={setSelectedTab}
       />
@@ -150,7 +151,7 @@ export default function QuickSearch() {
                   router.goBack();
                 }}
               >
-                <Text style={{ color: appTheme.tabSelector }}>
+                <Text style={{ color: settings.appTheme.tabSelector }}>
                   {i18n.t("quick_search.messages.empty_search.link")}
                 </Text>
               </Pressable>

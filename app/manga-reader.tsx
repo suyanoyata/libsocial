@@ -1,5 +1,6 @@
 import { Button } from "@/components/button";
 import { Loader } from "@/components/fullscreen-loader";
+import { Chapter } from "@/components/manga-chapters";
 import { colors } from "@/constants/app.constants";
 import { Queries } from "@/hooks/queries";
 import { store } from "@/hooks/useStore";
@@ -18,13 +19,27 @@ import {
   View,
   SafeAreaView,
   Pressable,
+  DeviceEventEmitter,
 } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 
 export default function MangaReader() {
   const route = useRoute();
-  const { slug_url, volume, number, chapterIndex, chapters, includes } =
-    route.params as any;
+  const {
+    slug_url,
+    volume,
+    number,
+    chapterIndex,
+    chapters,
+    // name
+  } = route.params as {
+    slug_url: string;
+    volume: number;
+    number: number;
+    chapterIndex: number;
+    chapters: Chapter[];
+    // name: string;
+  };
 
   const navigation: any = useNavigation();
 
@@ -58,6 +73,7 @@ export default function MangaReader() {
           gap: 3,
         }}
       >
+        {/* #region back button */}
         <View
           style={{
             backgroundColor: "black",
@@ -118,6 +134,7 @@ export default function MangaReader() {
             />
           </Pressable>
         </View>
+        {/* #endregion */}
         <View style={{ alignItems: "center" }}>
           {data.pages.map((page, index) => {
             if (index > loadLimit) return;
@@ -168,13 +185,15 @@ export default function MangaReader() {
 
                 const currentTitle = storage.getString(slug_url);
 
-                const prev = JSON.parse(currentTitle ?? "") ?? [];
+                if (currentTitle) {
+                  const prev = JSON.parse(currentTitle);
 
-                if (!includes) {
-                  storage.set(
-                    slug_url,
-                    JSON.stringify([...prev, chapterIndex - 1])
-                  );
+                  if (!prev.includes(chapterIndex - 1)) {
+                    storage.set(
+                      slug_url,
+                      JSON.stringify([...prev, chapterIndex - 1])
+                    );
+                  }
                 }
               }}
               iconPosition="left"
@@ -205,13 +224,17 @@ export default function MangaReader() {
 
                 const currentTitle = storage.getString(slug_url);
 
-                const prev = JSON.parse(currentTitle ?? "") ?? [];
+                if (currentTitle) {
+                  const prev = JSON.parse(currentTitle);
 
-                if (!includes) {
-                  storage.set(
-                    slug_url,
-                    JSON.stringify([...prev, chapterIndex - 1])
-                  );
+                  if (!prev.includes(chapterIndex + 1)) {
+                    // prettier-ignore
+                    DeviceEventEmitter.emit("title-counter-value", chapterIndex + 1);
+                    storage.set(
+                      slug_url,
+                      JSON.stringify([...prev, chapterIndex + 1])
+                    );
+                  }
                 }
               }}
               iconPosition="right"

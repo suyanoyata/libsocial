@@ -65,22 +65,15 @@ export const TitleBackgroundData = ({
 
   const type = data.site != "5" ? "reading" : "watching";
 
-  const emitCounter = (count: number) => {
-    DeviceEventEmitter.emit("title-counter-change", count);
-  };
-
   useEffect(() => {
     if (title == undefined) {
-      storage.set(storageName, JSON.stringify([]));
-      emitCounter(0);
-
-      return;
+      return setCount(0);
     }
-    const last = JSON.parse(title ?? "").toReversed()[0];
 
-    if (typeof last == "number") {
-      emitCounter(last);
-    }
+    const chapters: number[] = JSON.parse(title);
+    const last = chapters.sort().toReversed()[0] + 1;
+
+    setCount(last);
   }, [title]);
 
   const insets = useSafeAreaInsets();
@@ -99,9 +92,7 @@ export const TitleBackgroundData = ({
         position: "relative",
       }}
     >
-      {/* <View style={{ paddingTop: insets.top }}> */}
       <BackButton />
-      {/* </View> */}
       <BackgroundOverlay />
       <View
         style={{

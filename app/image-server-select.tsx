@@ -1,6 +1,7 @@
+import { ModalWrapper } from "@/components/filters/modal-wrapper";
 import { SettingsWrapper } from "@/components/settings-component";
 import { ImageServer, store } from "@/hooks/useStore";
-import { site_id } from "@/lib/axios";
+import i18n from "@/lib/intl";
 import { storage } from "@/lib/storage";
 import { Anime } from "@/types/anime.type";
 import { useRoute } from "@react-navigation/native";
@@ -42,6 +43,7 @@ export default function ImageServerSelect() {
     server: ImageServer;
     index: number;
   }) => {
+    if (!i18n.exists(`imageServerLabel.${server.id}`)) return;
     if (!titleData) return;
     if (!server.site_ids.includes(Number(titleData.site))) return;
 
@@ -83,7 +85,7 @@ export default function ImageServerSelect() {
               lineHeight: 42,
             }}
           >
-            {server.label}
+            {i18n.t(`imageServerLabel.${server.id}`)}
           </Text>
         </TouchableOpacity>
       </View>
@@ -91,26 +93,19 @@ export default function ImageServerSelect() {
   };
 
   return (
-    <View>
-      <Text
-        style={{
-          fontSize: 32,
-          fontWeight: "700",
-          color: "white",
-          margin: 12,
-          marginBottom: 0,
-        }}
-      >
-        Выбор сервера
-      </Text>
+    <ModalWrapper title={i18n.t("imageServer.title")}>
       <SettingsWrapper>
         {imageServers.map((server, index) => (
           <ImageServerSelect server={server} index={index} />
         ))}
       </SettingsWrapper>
-      <Text style={{ color: "rgba(255,255,255,0.6)", marginHorizontal: 12 }}>
-        Выбранный сервер: {imageServers[imageServerIndex].label}
+      <Text style={{ color: "rgba(255,255,255,0.6)", marginHorizontal: 8 }}>
+        {i18n.t("imageServer.selected", {
+          title: i18n.t(
+            `imageServerLabel.${imageServers[imageServerIndex].id}`
+          ),
+        })}
       </Text>
-    </View>
+    </ModalWrapper>
   );
 }

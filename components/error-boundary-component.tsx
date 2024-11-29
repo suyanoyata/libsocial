@@ -5,11 +5,11 @@ import { Button } from "./button";
 import { Construction } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { storage } from "@/lib/storage";
-import { store } from "@/hooks/useStore";
+import { app } from "@/hooks/useSettings";
 
 export const ErrorBoundaryComponent = ({ error }: { error: Error }) => {
   const showError = storage.getBoolean("show-production-error");
-  const { appTheme } = store();
+  const { settings } = app();
 
   useEffect(() => {
     if (showError && !__DEV__) {
@@ -47,7 +47,7 @@ export const ErrorBoundaryComponent = ({ error }: { error: Error }) => {
       <Button
         icon={<Construction size={16} color="white" strokeWidth={3} />}
         style={{
-          backgroundColor: appTheme.primary,
+          backgroundColor: settings.appTheme.primary,
         }}
         onPress={() => {
           RNRestart.restart();
