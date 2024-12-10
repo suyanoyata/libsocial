@@ -14,6 +14,7 @@
     }
   },
   "content": {
+    "continue_reading": "Вы остановились на",
     "similar": {
       "default": "Схож по жанрам",
       "title": "Похожие",

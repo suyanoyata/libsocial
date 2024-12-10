@@ -2,6 +2,7 @@ import { Pressable, View, ViewStyle, Text } from "react-native";
 import Animated, { useSharedValue, withTiming } from "react-native-reanimated";
 import { useEffect } from "react";
 import { TitleColors } from "@/hooks/useStore";
+import * as Haptics from "expo-haptics";
 
 type Props = {
   children: string;
@@ -67,6 +68,7 @@ export default function Tab(props: Props) {
       }}
       onPress={() => {
         if (props.inactive) return;
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
         props.setSelected(props.value);
       }}
     >

@@ -133,6 +133,18 @@ const getBookmark = (type: string, slug_url: string) => {
   });
 };
 
+const getRecentViewedTitle = (slug_url: string, model: string) => {
+  return useQuery<Anime>({
+    queryKey: ["recent-read-title", slug_url, model],
+    queryFn: async () =>
+      api
+        .get(
+          `/${model}/${slug_url}?fields[]=eng_name&fields[]=metadata.count&fields[]=chap_count`
+        )
+        .then((res) => res.data.data),
+  });
+};
+
 export const Queries = {
   titleData,
   animeEpisodes,
@@ -143,4 +155,5 @@ export const Queries = {
   currentUser,
   firstLoadData,
   getBookmark,
+  getRecentViewedTitle,
 };

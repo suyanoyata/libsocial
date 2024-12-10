@@ -12,7 +12,7 @@ import { useRoute } from "@react-navigation/native";
 import { Image } from "expo-image";
 import { useNavigation } from "expo-router";
 import { ChevronLeft, ChevronRight, Settings } from "lucide-react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   useWindowDimensions,
   Text,
@@ -25,20 +25,12 @@ import Animated, { FadeIn } from "react-native-reanimated";
 
 export default function MangaReader() {
   const route = useRoute();
-  const {
-    slug_url,
-    volume,
-    number,
-    chapterIndex,
-    chapters,
-    // name
-  } = route.params as {
+  const { slug_url, volume, number, chapterIndex, chapters } = route.params as {
     slug_url: string;
     volume: number;
     number: number;
     chapterIndex: number;
     chapters: Chapter[];
-    // name: string;
   };
 
   const navigation: any = useNavigation();
@@ -50,6 +42,37 @@ export default function MangaReader() {
     volume,
     number,
   });
+
+  useEffect(() => {
+    const title = {
+      slug_url: titleData?.slug_url,
+      lastReadChapter: chapterIndex + 1,
+      cachedOverallChapters: chapters.length,
+      model: titleData?.model,
+    };
+    const titles = storage.getString("lastReadTitles");
+
+    if (titles == "" || titles == undefined) {
+      console.log("titles are empty, pushing this title with chapter");
+      storage.set("lastReadTitles", JSON.stringify([title]));
+    } else if (titles) {
+      console.log("titles are not empty, updating this title with chapter");
+      const parsedTitles = JSON.parse(titles);
+      const titleIndex = parsedTitles.findIndex(
+        (t: any) => t.slug_url === title.slug_url
+      );
+      if (
+        titleIndex != -1 &&
+        // if last read chapter in our storage is less than current chapter
+        parsedTitles[titleIndex].lastReadChapter < chapterIndex + 1
+      ) {
+        parsedTitles[titleIndex] = title;
+      } else {
+        parsedTitles.push(title);
+      }
+      storage.set("lastReadTitles", JSON.stringify(parsedTitles));
+    }
+  }, [titleData]);
 
   const [loadLimit, setLoadLimit] = useState(6);
 
@@ -140,6 +163,7 @@ export default function MangaReader() {
             if (index > loadLimit) return;
             return (
               <Image
+                key={index}
                 onLoad={() => {
                   if (index == loadLimit) {
                     logger.verbose("last item loaded, increasing load limit");

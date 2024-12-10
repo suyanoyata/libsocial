@@ -124,7 +124,6 @@ export const MangaChapters = ({
             setIncludes(true);
 
             const prev: number[] = JSON.parse(slugStorage);
-            console.log("click ev", prev);
             storage.set(slug_url, JSON.stringify([...prev, index]));
 
             if (count < index + 1) {

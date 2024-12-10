@@ -6,6 +6,7 @@ import { getTitle, siteUrls } from "@/constants/app.constants";
 import { Skeleton } from "@/components/skeleton";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { memo } from "react";
+import * as Haptics from "expo-haptics";
 
 const Card = ({ item, width = 130 }: { item?: Anime; width?: number }) => {
   const dimensions = { width, height: 189 };
@@ -45,6 +46,7 @@ const Card = ({ item, width = 130 }: { item?: Anime; width?: number }) => {
         height: 235,
       }}
       onPress={() => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
         router.navigate("title-details", {
           type: item.site,
           slug_url: `${siteUrls[item.site as keyof typeof siteUrls].url}/${item.slug_url}`,
