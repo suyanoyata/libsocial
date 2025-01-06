@@ -1,5 +1,4 @@
 import Animated, {
-  FadeIn,
   FadeOut,
   useSharedValue,
   withTiming,

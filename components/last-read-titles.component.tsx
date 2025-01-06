@@ -59,7 +59,7 @@ const LastReadTitleCard = ({ title }: { title: LastReadTitleProps }) => {
       if (!lastReadTitles) return;
 
       const filteredTitles = JSON.parse(lastReadTitles).filter(
-        (t: LastReadTitleProps) => t.slug_url !== title.slug_url
+        (title: LastReadTitleProps) => title.slug_url !== title.slug_url
       );
       const newTitlePayload = {
         ...title,
@@ -106,10 +106,16 @@ const LastReadTitleCard = ({ title }: { title: LastReadTitleProps }) => {
         }}
       />
       <Pressable
-        onPress={() =>
-          DeviceEventEmitter.emit("deleteTitleFromStorage", title.slug_url)
-        }
-        style={{ position: "absolute", right: 0, top: 0, padding: 8 }}
+        onPress={() => {
+          DeviceEventEmitter.emit("deleteTitleFromStorage", title.slug_url);
+        }}
+        style={{
+          position: "absolute",
+          right: 0,
+          top: 0,
+          padding: 8,
+          zIndex: 99,
+        }}
       >
         <X color="gray" size={20} />
       </Pressable>
@@ -153,11 +159,14 @@ export const LastReadTitles = () => {
   );
 
   const deleteTitleFromStorage = (slug_url: string) => {
-    if (lastReadTitles.length == 0) {
+    console.log(lastReadTitles.length);
+    if (lastReadTitles.length == 1) {
       setLastReadTitles([]);
       storage.delete("lastReadTitles");
     }
-    const newTitles = lastReadTitles.filter((t) => t.slug_url !== slug_url);
+    const newTitles = lastReadTitles.filter(
+      (title) => title.slug_url !== slug_url
+    );
     setLastReadTitles(newTitles);
     storage.set("lastReadTitles", JSON.stringify(newTitles));
   };

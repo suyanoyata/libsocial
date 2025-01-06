@@ -9,6 +9,7 @@ import { CatalogSearch } from "@/components/catalog-search-field";
 import { Button } from "@/components/button";
 import SearchFilters from "@/components/filters/search-filters";
 import i18n from "@/lib/intl";
+import { router } from "expo-router";
 
 const SearchLayout = ({ children }: { children: React.ReactNode }) => {
   const [search, setSearch] = useState("");
@@ -37,6 +38,7 @@ const SearchLayout = ({ children }: { children: React.ReactNode }) => {
             width: "auto",
             marginBottom: 8,
           }}
+          onPress={() => router.push("/sort-picker-modal")}
         >
           <Text
             style={{

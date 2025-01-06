@@ -57,7 +57,9 @@ export default function MangaReader() {
       storage.set("lastReadTitles", JSON.stringify([title]));
     } else if (titles) {
       console.log("titles are not empty, updating this title with chapter");
-      const parsedTitles = JSON.parse(titles);
+      const parsedTitles = Array.isArray(JSON.parse(titles))
+        ? JSON.parse(titles).toReversed()
+        : [];
       const titleIndex = parsedTitles.findIndex(
         (t: any) => t.slug_url === title.slug_url
       );
@@ -70,7 +72,7 @@ export default function MangaReader() {
       } else {
         parsedTitles.push(title);
       }
-      storage.set("lastReadTitles", JSON.stringify(parsedTitles));
+      storage.set("lastReadTitles", JSON.stringify(parsedTitles.toReversed()));
     }
   }, [titleData]);
 

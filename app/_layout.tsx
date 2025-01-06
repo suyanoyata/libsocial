@@ -179,12 +179,6 @@ export default function RootLayout() {
                 presentation: "modal",
               }}
             />
-            {/* <Stack.Screen
-              name="/(modals)/filter-picker-modal"
-              options={{
-                presentation: "modal",
-              }}
-            /> */}
             <Stack.Screen
               name="title-details"
               options={{ headerShown: false }}

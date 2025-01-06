@@ -24,6 +24,7 @@ import { useFiltersStore } from "@/hooks/useFiltersStore";
 import i18n from "@/lib/intl";
 import { Conditional } from "@/components/misc/conditional";
 import { PlaceholderFlashingComponent } from "@/components/misc/placeholder-flashing-component";
+import { useSortingStore } from "@/hooks/useSortingStore";
 
 export default function Search() {
   const AnimatedFlashList = Animated.createAnimatedComponent(FlashList);
@@ -31,6 +32,7 @@ export default function Search() {
   const { width } = useWindowDimensions();
   const { search } = useCatalogSearchStore();
   const { filters } = useFiltersStore();
+  const { sortBy } = useSortingStore();
 
   const getItemStyle = (index: number, numColumns: number) => {
     const alignItems = (() => {
@@ -48,9 +50,9 @@ export default function Search() {
 
   // #region catalog infinite fetching
   const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
-    queryKey: ["search-titles", search, filters],
+    queryKey: ["search-titles", search, filters, sortBy],
     queryFn: async ({ pageParam }) => {
-      let call = `/${siteUrls[site_id].url}?fields[]=rate&fields[]=rate_avg&fields[]=userBookmark&site_id[]=${site_id}&page=${pageParam}`;
+      let call = `/${siteUrls[site_id].url}?fields[]=rate&fields[]=rate_avg&fields[]=userBookmark&site_id[]=${site_id}&page=${pageParam}&sort_by=${sortBy}`;
 
       // hold on, this typing is https://media.tenor.com/SeLBRCUiQaoAAAAe/absolute-cinema-cinema.png
       Object.keys(filters).forEach((filter: string) => {
