@@ -1,26 +1,24 @@
 import { Image, ImageBackground } from "expo-image";
-import { BookmarkIcon, Play } from "lucide-react-native";
 import { View, Text, DeviceEventEmitter } from "react-native";
 import { BlurView } from "expo-blur";
 
-import { AddToBookmarksButton } from "@/components/title/add-to-bookmarks-button";
+import { AddToBookmarksButton } from "@/features/bookmarks/components/add-to-bookmarks";
 import { Conditional } from "@/components/misc/conditional";
-import { BackButton } from "@/components/title/back-button";
-import { Button } from "@/components/button";
+import { BackButton } from "@/components/ui/back-button";
 
 import { Anime } from "@/types/anime.type";
 
 import { TitleColors } from "@/hooks/useStore";
 
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 
 import { getTitle, useRussianTitle } from "@/constants/app.constants";
 
 import { clearOtherNames } from "@/lib/clearOtherNames";
-import i18n from "@/lib/intl";
-import { storage } from "@/lib/storage";
+import { storage } from "@/features/shared/lib/storage";
+import { StartButton } from "@/features/title/components/start-button";
+import { logger } from "@/lib/logger";
 
 export const TitleBackgroundData = ({
   data,
@@ -30,7 +28,6 @@ export const TitleBackgroundData = ({
   accent: TitleColors;
 }) => {
   const [count, setCount] = useState(0);
-  const navigation: any = useNavigation();
 
   useEffect(() => {
     DeviceEventEmitter.addListener("title-counter-value", (count: number) => {
@@ -62,8 +59,7 @@ export const TitleBackgroundData = ({
   const storageName = `${data.site != "5" ? `manga/${data.slug_url}` : `anime/${data.slug_url}`}`;
 
   const title = storage.getString(storageName);
-
-  const type = data.site != "5" ? "reading" : "watching";
+  const name = getTitle(data);
 
   useEffect(() => {
     if (title == undefined) {
@@ -123,36 +119,25 @@ export const TitleBackgroundData = ({
             marginHorizontal: 12,
           }}
         >
-          {getTitle(data)}
+          {name}
         </Text>
-        <Conditional conditions={[!useRussianTitle()]}>
-          <Text
-            selectable
-            style={{
-              color: "#bfbfbf",
-              fontSize: 16,
-              marginTop: 4,
-              textAlign: "center",
-              marginHorizontal: 12,
-            }}
-          >
+        <Text
+          selectable
+          style={{
+            color: "#bfbfbf",
+            fontSize: 16,
+            marginTop: 4,
+            textAlign: "center",
+            marginHorizontal: 12,
+          }}
+        >
+          <Conditional conditions={[!useRussianTitle()]}>
             {clearOtherNames(data.otherNames)[0]}
-          </Text>
-        </Conditional>
-        <Conditional conditions={[!!useRussianTitle(), !!data.rus_name]}>
-          <Text
-            selectable
-            style={{
-              color: "#bfbfbf",
-              fontSize: 16,
-              marginTop: 4,
-              textAlign: "center",
-              marginHorizontal: 12,
-            }}
-          >
+          </Conditional>
+          <Conditional conditions={[!!useRussianTitle(), !!data.rus_name]}>
             {data.name}
-          </Text>
-        </Conditional>
+          </Conditional>
+        </Text>
         <View
           style={{
             flexDirection: "row",
@@ -165,36 +150,10 @@ export const TitleBackgroundData = ({
           <AddToBookmarksButton
             title={getTitle(data)}
             type={data.model}
-            siteId={data.site}
+            siteId={String(data.site)}
             slug_url={data.slug_url}
           />
-          <Button
-            icon={
-              data.site == "5" ? (
-                <Play color="white" fill="white" size={18} />
-              ) : (
-                <BookmarkIcon color="white" strokeWidth={3} size={18} />
-              )
-            }
-            onPress={() => {
-              if (data.site == "5") {
-                navigation.navigate("anime-watch", {
-                  slug_url: data.slug_url,
-                });
-              } else {
-                DeviceEventEmitter.emit("tab-value-change", "chapters");
-              }
-            }}
-            style={{
-              flex: 1,
-              backgroundColor: accent.primary,
-            }}
-          >
-            {i18n.t(`content.start.${type}`, {
-              count,
-              total: data.items_count.uploaded,
-            })}
-          </Button>
+          <StartButton data={data} count={count} accent={accent} />
         </View>
       </View>
     </ImageBackground>

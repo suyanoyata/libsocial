@@ -1,4 +1,4 @@
-import { Chapter } from "@/components/manga-chapters";
+import { Chapter } from "@/features/chapters/ui/manga-chapters";
 import { colors } from "@/constants/app.constants";
 import { create } from "zustand";
 

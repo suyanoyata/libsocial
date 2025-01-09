@@ -1,17 +1,20 @@
 import { RefreshControl, ScrollView, View, Text } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
-import { TitleCard } from "@/components/title/title-card";
+import { TitleCard } from "@/features/shared/components/title-card";
 import { Queries } from "@/hooks/queries";
 import { QuickSearchNavigationComponent } from "@/components/quick-search-navigation-component";
 import { PlaceholderFlashingComponent } from "@/components/misc/placeholder-flashing-component";
 import { Conditional } from "@/components/misc/conditional";
 
-import { LastReadTitles } from "@/components/last-read-titles.component";
+import { LastReadTitles } from "@/features/last-read-tracking/ui/last-read-titles";
+// import { Storage, storage } from "@/features/shared/lib/storage";
 
 export default function HomeScreen() {
   const { isPending, data, refetch } = Queries.firstLoadData();
 
   Queries.filterConstants();
+
+  // storage.delete(Storage.lastReadTitles);
 
   return (
     <View style={{ flex: 1 }}>
@@ -53,5 +56,3 @@ export default function HomeScreen() {
     </View>
   );
 }
-
-// preview(<TitleCard width={140} />);

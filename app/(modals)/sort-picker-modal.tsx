@@ -1,9 +1,12 @@
 import { Text, View } from "react-native";
 
-import { ModalWrapper } from "@/components/filters/modal-wrapper";
+import { ModalWrapper } from "@/components/ui/modal-wrapper";
 import i18n from "@/lib/intl";
-import { AvailableSorting, useSortingStore } from "@/hooks/useSortingStore";
-import { Button } from "@/components/button";
+import {
+  AvailableSorting,
+  useSortingStore,
+} from "@/features/catalog/hooks/useSortingStore";
+import { Button } from "@/components/ui/button";
 
 const sortFields: {
   label: string;

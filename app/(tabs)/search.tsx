@@ -16,15 +16,15 @@ import { siteUrls } from "@/constants/app.constants";
 
 import { api, site_id } from "@/lib/axios";
 
-import { TitleCard } from "@/components/title/title-card";
+import { TitleCard } from "@/features/shared/components/title-card";
 
 import SearchLayout from "../layouts/search-layout";
-import { useCatalogSearchStore } from "@/hooks/useCatalogSearchStore";
-import { useFiltersStore } from "@/hooks/useFiltersStore";
+import { useCatalogSearchStore } from "@/features/catalog/hooks/useCatalogSearchStore";
+import { useFiltersStore } from "@/features/catalog/hooks/useFiltersStore";
 import i18n from "@/lib/intl";
 import { Conditional } from "@/components/misc/conditional";
 import { PlaceholderFlashingComponent } from "@/components/misc/placeholder-flashing-component";
-import { useSortingStore } from "@/hooks/useSortingStore";
+import { useSortingStore } from "@/features/catalog/hooks/useSortingStore";
 
 export default function Search() {
   const AnimatedFlashList = Animated.createAnimatedComponent(FlashList);
@@ -85,7 +85,15 @@ export default function Search() {
               estimatedItemSize={150}
               numColumns={Math.floor(width / 125)}
               data={Array.from({ length: width / 36 })}
-              renderItem={() => <TitleCard width={125} />}
+              renderItem={({ item, index }: { item: any; index: number }) => (
+                <View
+                  style={{
+                    ...getItemStyle(index, Math.floor(width / 125)),
+                  }}
+                >
+                  <TitleCard width={125} item={item} />
+                </View>
+              )}
             />
           </PlaceholderFlashingComponent>
         </Conditional>

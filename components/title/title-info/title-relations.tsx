@@ -9,12 +9,12 @@ import {
 } from "react-native";
 import { Image } from "expo-image";
 import { useNavigation } from "expo-router";
-import { SimilarPlaceholder } from "../similar-placeholder";
-import { Button } from "../../button";
+import { SimilarPlaceholder } from "../../../features/title/components/placeholders/similar-placeholder";
+import { Button } from "../../ui/button";
 import { RefreshCcw } from "lucide-react-native";
 import { getTitle } from "@/constants/app.constants";
 import i18n from "@/lib/intl";
-import { RelatedTitle } from "@/types/similar.type";
+import { RelatedTitle } from "@/features/title/types/similar";
 
 export const TitleRelations = ({ slug_url }: { slug_url: string }) => {
   const { data, isLoading, error, refetch } = useQuery<RelatedTitle[]>({

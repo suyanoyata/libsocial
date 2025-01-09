@@ -52,7 +52,17 @@
     },
     "chapter": "Глава {{chapter}}",
     "episode": "Эпизод {{episode}}",
-    "reader": "Том {{volume}} Глава {{chapter}}"
+    "reader": "Том {{volume}} Глава {{chapter}}",
+    "remove-chapter-alert": {
+      "title": "Удалить из прочитанных",
+      "text": "Вы действительно хотите удалить Том {{volume}} Глава {{chapter}} из прочитанных?",
+      "cancel": "Отмена",
+      "remove": "Удалить"
+    },
+    "chapter-load-error": {
+      "title": "Ошибка загрузки глав",
+      "retry": "Попробовать ещё раз"
+    }
   },
   "settings": {
     "show_text_error": {

@@ -4,7 +4,7 @@ import { Pressable, Switch, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SettingsItem, SettingsWrapper } from "@/components/settings-component";
 import i18n from "@/lib/intl";
-import { storage } from "@/lib/storage";
+import { Storage, storage } from "@/features/shared/lib/storage";
 
 const UpdatesSection = () => {
   return (
@@ -54,10 +54,10 @@ const UpdatesSection = () => {
 export default function Menu() {
   const [checked, setChecked] = useState<boolean>(false);
 
-  storage.set("show-production-error", false);
+  storage.set(Storage.productionError, false);
 
   useEffect(() => {
-    const isChecked = storage.getBoolean("show-production-error");
+    const isChecked = storage.getBoolean(Storage.productionError);
 
     if (isChecked != undefined) {
       setChecked(isChecked);
@@ -72,7 +72,7 @@ export default function Menu() {
             value={checked}
             onValueChange={(value) => {
               setChecked(value);
-              storage.set("show-production-error", value);
+              storage.set(Storage.productionError, value);
             }}
           />
         </SettingsItem>

@@ -23,7 +23,7 @@ const DEFINE_LEVEL = (level: string) => {
   }
 };
 
-export const LOG = (level: string, message: string, error?: string) => {
+export const LOG = (level: string, message: string, data?: string) => {
   if (typeof __DEV__ === "undefined" || __DEV__ === false) return;
   const ctx = new chalk.Instance({ level: 3 });
   const color = DEFINE_LEVEL(level);
@@ -45,9 +45,9 @@ export const LOG = (level: string, message: string, error?: string) => {
     `- [${ctx.gray(dateString)}] ${ctx.bold.hex(color[0])(level)}: ${ctx.hex(
       color[1]
     )(message)} ${
-      error
+      data
         ? ctx.hex(color[1])(
-            `${ctx.white("(")}error code: ${ctx.gray(error)}${ctx.white(")")}`
+            `${ctx.white("(")}data code: ${ctx.gray(data)}${ctx.white(")")}`
           )
         : ""
     }`
@@ -55,7 +55,7 @@ export const LOG = (level: string, message: string, error?: string) => {
 };
 
 class Logger {
-  private static log(level: string, message: string, error?: string) {
+  private static log(level: string, message: string, data?: any) {
     if (typeof __DEV__ === "undefined" || __DEV__ === false) return;
     const ctx = new chalk.Instance({ level: 3 });
     const color = DEFINE_LEVEL(level);
@@ -75,40 +75,39 @@ class Logger {
     const day = date.getDate() >= 10 ? date.getDate() : `0${date.getDate()}`;
 
     const dateString = `${day}/${month}/${date.getFullYear()} ${hours}:${minutes}:${seconds}`;
+    const isObject = typeof data == "object";
+    const out = isObject ? JSON.stringify(data, null, 2) : data;
+    const display = isObject
+      ? `${ctx.white("(")}${ctx.gray(out)}${ctx.white(")")}`
+      : ctx.gray(out);
 
     console.log(
       `- [${ctx.gray(dateString)}] ${ctx.bold.hex(color[0])(level)}: ${ctx.hex(
         color[1]
-      )(message)} ${
-        error
-          ? ctx.hex(color[1])(
-              `${ctx.white("(")}error code: ${ctx.gray(error)}${ctx.white(")")}`
-            )
-          : ""
-      }`
+      )(message)} ${data ? ctx.hex(color[1])(display) : ""}`
     );
   }
 
-  static info(message: string, error?: string) {
-    this.log(LOG_LEVEL.INFO, message, error);
+  static info(message: string, data?: any) {
+    this.log(LOG_LEVEL.INFO, message, data);
   }
 
-  static warn(message: string, error?: string) {
-    this.log(LOG_LEVEL.WARNING, message, error);
+  static warn(message: string, data?: any) {
+    this.log(LOG_LEVEL.WARNING, message, data);
   }
 
-  static error(message: string, error?: string) {
-    this.log(LOG_LEVEL.ERROR, message, error);
+  static error(message: string, data?: any) {
+    this.log(LOG_LEVEL.ERROR, message, data);
   }
 
-  static verbose(message: string, error?: string) {
-    this.log(LOG_LEVEL.VERBOSE, message, error);
+  static verbose(message: string, data?: any) {
+    this.log(LOG_LEVEL.VERBOSE, message, data);
   }
-  static request(message: string, error?: string) {
-    this.log(LOG_LEVEL.REQUEST, message, error);
+  static request(message: string, data?: any) {
+    this.log(LOG_LEVEL.REQUEST, message, data);
   }
-  static response(message: string, error?: string) {
-    this.log(LOG_LEVEL.RESPONSE, message, error);
+  static response(message: string, data?: any) {
+    this.log(LOG_LEVEL.RESPONSE, message, data);
   }
 }
 

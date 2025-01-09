@@ -24,11 +24,14 @@ import * as Network from "@react-native-community/netinfo";
 import { logger } from "@/lib/logger";
 
 import ErrorBoundary from "react-native-error-boundary";
-import Preloader from "@/components/preloader";
 import { ErrorBoundaryComponent } from "@/components/error-boundary-component";
+
+import Preloader from "@/components/preloader";
+
 import { colors } from "@/constants/app.constants";
-import { storage } from "@/lib/storage";
 import { app } from "@/hooks/useSettings";
+
+import { Storage, storage } from "@/features/shared/lib/storage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -116,10 +119,10 @@ export default function RootLayout() {
 
   // #region local image server value handling
   useEffect(() => {
-    const server = storage.getNumber("image-server");
+    const server = storage.getNumber(Storage.imageServer);
 
     if (!server) {
-      return storage.set("image-server", 0);
+      return storage.set(Storage.imageServer, 0);
     }
 
     setImageServerIndex(server);

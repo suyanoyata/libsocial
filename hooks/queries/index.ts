@@ -1,11 +1,9 @@
-import { Episode } from "@/app/anime-watch";
-import { RanobeChapter } from "@/app/ranobe-reader";
-import { Chapter } from "@/components/manga-chapters";
-import { api } from "@/lib/axios";
-import { logger } from "@/lib/logger";
+import { Episode } from "@/features/anime-player/types/Episode";
 import { Anime } from "@/types/anime.type";
+
+import { api } from "@/lib/axios";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { MangaImageResponse } from "@/features/reader/types/manga-image";
 
 const titleData = (slug_url: string, type?: "manga" | "anime") => {
   const titleType = type ? `${type}/` : "";
@@ -25,19 +23,6 @@ const animeEpisodes = (slug_url: string) => {
   });
 };
 
-const chapters = (slug_url: string) => {
-  return useQuery<Chapter[]>({
-    queryKey: ["chapter-data", slug_url],
-
-    queryFn: async () => {
-      const response = await api.get(`/${slug_url}/chapters`);
-      return response.data.data;
-    },
-    staleTime: 1000 * 60 * 10,
-    enabled: !!slug_url,
-  });
-};
-
 const mangaReader = ({
   slug_url,
   volume,
@@ -47,12 +32,7 @@ const mangaReader = ({
   volume: number;
   number: number;
 }) => {
-  return useQuery<{
-    pages: {
-      url: string;
-      ratio: number;
-    }[];
-  }>({
+  return useQuery<MangaImageResponse>({
     queryKey: ["manga-reader", slug_url, volume, number],
     queryFn: async () => {
       const response = await api.get(
@@ -60,29 +40,6 @@ const mangaReader = ({
         {
           withCredentials: true,
         }
-      );
-      return response.data.data;
-    },
-    staleTime: 1000 * 60 * 60,
-    enabled: !!slug_url,
-  });
-};
-
-const ranobeChapter = ({
-  slug_url,
-  volume,
-  number,
-}: {
-  slug_url: string;
-  volume: number;
-  number: number;
-}) => {
-  return useQuery<RanobeChapter>({
-    queryKey: ["ranobe-reader", slug_url, volume, number],
-
-    queryFn: async () => {
-      const response = await api.get(
-        `/${slug_url}/chapter?number=${number}&volume=${volume}`
       );
       return response.data.data;
     },
@@ -120,40 +77,29 @@ const firstLoadData = () => {
   });
 };
 
-const getBookmark = (type: string, slug_url: string) => {
-  return useQuery({
-    queryKey: ["bookmark", slug_url],
-    queryFn: async () => {
-      const response = await api.get(`/${type}/${slug_url}/bookmark`);
-      return {
-        id: response.data.data.id,
-        status: response.data.data.status,
-      };
-    },
-  });
-};
-
 const getRecentViewedTitle = (slug_url: string, model: string) => {
   return useQuery<Anime>({
     queryKey: ["recent-read-title", slug_url, model],
-    queryFn: async () =>
-      api
+    queryFn: async () => {
+      if (model == undefined || slug_url == undefined) {
+        return null;
+      }
+
+      return api
         .get(
           `/${model}/${slug_url}?fields[]=eng_name&fields[]=metadata.count&fields[]=chap_count`
         )
-        .then((res) => res.data.data),
+        .then((res) => res.data.data);
+    },
   });
 };
 
 export const Queries = {
   titleData,
   animeEpisodes,
-  chapters,
   mangaReader,
-  ranobeChapter,
   filterConstants,
   currentUser,
   firstLoadData,
-  getBookmark,
   getRecentViewedTitle,
 };

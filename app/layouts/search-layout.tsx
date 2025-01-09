@@ -1,15 +1,15 @@
-import { useCatalogSearchStore } from "@/hooks/useCatalogSearchStore";
+import { useCatalogSearchStore } from "@/features/catalog/hooks/useCatalogSearchStore";
 import { useEffect, useState } from "react";
 import useDebounce from "@/hooks/useDebounce";
 
 import { SafeAreaView, Text, View } from "react-native";
 
-import { CatalogSearch } from "@/components/catalog-search-field";
+import { CatalogSearch } from "@/features/catalog/components/search-field";
 
-import { Button } from "@/components/button";
-import SearchFilters from "@/components/filters/search-filters";
+import { Button } from "@/components/ui/button";
 import i18n from "@/lib/intl";
 import { router } from "expo-router";
+import SearchFiltersTrigger from "@/features/catalog/ui/filters-modal-trigger";
 
 const SearchLayout = ({ children }: { children: React.ReactNode }) => {
   const [search, setSearch] = useState("");
@@ -54,7 +54,7 @@ const SearchLayout = ({ children }: { children: React.ReactNode }) => {
             {i18n.t("search.sort")}
           </Text>
         </Button>
-        <SearchFilters />
+        <SearchFiltersTrigger />
       </View>
       <CatalogSearch setSearch={setSearch} />
       {children}

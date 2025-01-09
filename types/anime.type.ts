@@ -18,7 +18,7 @@ export type Anime = {
   items_count: {
     uploaded: number;
   };
-  site: string;
+  site: string | number;
   status: {
     id: number;
     label: string;

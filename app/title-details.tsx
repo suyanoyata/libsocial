@@ -5,15 +5,15 @@ import { useQuery } from "@tanstack/react-query";
 import { DeviceEventEmitter, ScrollView, Text, View } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { Anime } from "@/types/anime.type";
-import Tab from "@/components/title/tab.component";
+import Tab from "@/features/shared/components/tab";
 import { TitleBackgroundData } from "@/components/title/title-info/title-background-data";
 import { useEffect, useState } from "react";
 import { colors, presentation_mode, siteUrls } from "@/constants/app.constants";
-import { MangaChapters } from "@/components/manga-chapters";
-import { AboutTitle } from "@/components/title/title-info/title-about";
+import { MangaChapters } from "@/features/chapters/ui/manga-chapters";
+import { AboutTitle } from "@/features/title/ui/title-details";
 import { store, TitleColors } from "@/hooks/useStore";
-import { Comments } from "@/components/title/comments";
-import { Button } from "@/components/button";
+import { Comments } from "@/features/shared/components/comments";
+import { Button } from "@/components/ui/button";
 import { RefreshCcw } from "lucide-react-native";
 import i18n from "@/lib/intl";
 
@@ -127,7 +127,7 @@ const RenderBottomContent = ({
       <View style={{ minHeight: "100%", backgroundColor: "black", flex: 1 }}>
         <AboutTitle accent={accent} selected={selectedTab} data={data} />
         <MangaChapters
-          type={data?.site}
+          type={String(data?.site)}
           selected={selectedTab}
           slug_url={slug_url}
         />
@@ -215,7 +215,7 @@ export default function index() {
         <TitleBackgroundData data={data} accent={accent} />
         <RenderBottomContent
           slug_url={slug_url}
-          type={data.site}
+          type={String(data.site)}
           accent={accent}
         />
       </ScrollView>

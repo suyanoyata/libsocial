@@ -1,5 +1,5 @@
-import { Button } from "@/components/button";
-import { ModalWrapper } from "@/components/filters/modal-wrapper";
+import { Button } from "@/components/ui/button";
+import { ModalWrapper } from "@/components/ui/modal-wrapper";
 import { Loader } from "@/components/fullscreen-loader";
 import { api } from "@/lib/axios";
 import { VideoPlayerData } from "@/types/anime.type";

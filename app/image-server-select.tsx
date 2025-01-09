@@ -1,14 +1,15 @@
-import { ModalWrapper } from "@/components/filters/modal-wrapper";
+import { ModalWrapper } from "@/components/ui/modal-wrapper";
 import { SettingsWrapper } from "@/components/settings-component";
 import { ImageServer, store } from "@/hooks/useStore";
 import i18n from "@/lib/intl";
-import { storage } from "@/lib/storage";
+import { Storage, storage } from "@/features/shared/lib/storage";
 import { Anime } from "@/types/anime.type";
 import { useRoute } from "@react-navigation/native";
 import { useQuery } from "@tanstack/react-query";
 import { Check } from "lucide-react-native";
 import { useEffect } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
+import { Button } from "@/components/ui/button";
 
 export default function ImageServerSelect() {
   const { imageServers, imageServerIndex, setImageServerIndex } = store();
@@ -23,17 +24,17 @@ export default function ImageServerSelect() {
   });
 
   useEffect(() => {
-    const server = storage.getNumber("image-server");
+    const server = storage.getNumber(Storage.imageServer);
 
     if (!server) {
-      return storage.set("image-server", 0);
+      return storage.set(Storage.imageServer, 0);
     }
 
     setImageServerIndex(server);
   }, []);
 
   useEffect(() => {
-    storage.set("image-server", imageServerIndex);
+    storage.set(Storage.imageServer, imageServerIndex);
   }, [imageServerIndex]);
 
   const ImageServerSelect = ({
@@ -48,57 +49,43 @@ export default function ImageServerSelect() {
     if (!server.site_ids.includes(Number(titleData.site))) return;
 
     return (
-      <View
+      <Button
+        asChild
+        onPress={() => {
+          setImageServerIndex(index);
+        }}
         style={{
+          backgroundColor: "rgba(255,255,255,0.08)",
           paddingHorizontal: 12,
-          paddingLeft: 38,
-          borderBottomWidth: 1,
-          borderBottomColor: "rgba(255,255,255,0.2)",
-          justifyContent: "space-between",
-          flexDirection: "row",
-          position: "relative",
-          alignItems: "center",
+          paddingVertical: 10,
+          borderRadius: 6,
+          paddingLeft: 36,
+          justifyContent: "center",
+          marginBottom: 6,
         }}
       >
         {imageServers[imageServerIndex].label == server.label && (
           <Check
             color="white"
             style={{ position: "absolute", left: 8 }}
-            size={22}
+            size={20}
             strokeWidth={2.8}
           />
         )}
-        <TouchableOpacity
-          onPress={() => {
-            setImageServerIndex(index);
-          }}
-          style={{
-            height: 42,
-            width: "100%",
-          }}
-        >
-          <Text
-            style={{
-              color: "white",
-              fontSize: 16,
-              flex: 1,
-              lineHeight: 42,
-            }}
-          >
+        <View>
+          <Text style={{ color: "rgb(171,171,171)", fontWeight: "500" }}>
             {i18n.t(`imageServerLabel.${server.id}`)}
           </Text>
-        </TouchableOpacity>
-      </View>
+        </View>
+      </Button>
     );
   };
 
   return (
     <ModalWrapper title={i18n.t("imageServer.title")}>
-      <SettingsWrapper>
-        {imageServers.map((server, index) => (
-          <ImageServerSelect server={server} index={index} />
-        ))}
-      </SettingsWrapper>
+      {imageServers.map((server, index) => (
+        <ImageServerSelect server={server} index={index} />
+      ))}
       <Text style={{ color: "rgba(255,255,255,0.6)", marginHorizontal: 8 }}>
         {i18n.t("imageServer.selected", {
           title: i18n.t(

@@ -1,13 +1,16 @@
+import { logger } from "@/lib/logger";
 import axios from "axios";
-import { logger } from "./logger";
 
 export const token =
-  "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiOGNmOWEwZWZmMWYyYmJiZjQyYmQ1ZWI2Yjg5YWYzZGM1MTI1YWYxNDRiMzE0OTdjODg4Mjk2MDliNjVhMDNlZDc3YzE3ZGE3YTkwOTcwMzQiLCJpYXQiOjE3MzExOTUyOTYuMTY1Mzk0LCJuYmYiOjE3MzExOTUyOTYuMTY1Mzk1LCJleHAiOjE3MzM3ODcyOTYuMTYxNjk0LCJzdWIiOiI2ODIyOTYiLCJzY29wZXMiOltdfQ.f_AUQkLrBbNVHR_CXtdGZPgcnQnZY1bVhfbi8j7KGWBMfAovpQjns1XzD2LWMIY1XkEWva3YEVN1gx2ng_GeCSh6ps6avUyGhw12kiyBjE7upSF5XgyIYUPi3CNkt_OpOB4shT5knJzBpsXXJrFuTVaIm0XLRsYwKP_ZKrnmTbiG1s67CCRHJvdGSQSx9Q3moBfA2mQ04trFciKhUl2YQpi8soCfFNOzooCfd-Y24VIaGFDfnwKKDxQTAD9cOMerfuY-IEn0tuN5XUPop0YZh_9dqb-EvlpWNE0YzWUGB8TWjCpB4s7tJb7d-v4pt83tnBJstsfTtOtWV4gZzoe3CI6DtoKunszlGyjJabRMpB65lHZdMlv9JSTTxqxx8G4WEsEhpSTawkWYunNoWKnJK5-irzqhgiGXSLgxQ8KKeRbcJ2z4paUoyuxlHSOL6DlzwMHbexlb8RpZ2n1n-pCm9RnBhzAMexKTvvb3iBaeBSivOaqeP6QwQxWjw708Mtesd9uzkCACUUgxvn_PFzksmTXWSDlwbFBVj3xmb6AdptN_BFBqawid-ZgASqlOJoXfNYPT4eAxVA7qQzFt3qhkSOz1gy8eqM0fjRfx5QmOQw_tOvZyGdblga2NTcF-A_r6f4ovYLQy_heOlK6_d5ggnIlrtcM52d4txJixrCMSsys";
-export const site_id = 1;
+  "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiNzU3NzU4ZjZiNTAzY2JjOTkwZjgyNWJhMzRkOWEzYWMxYzQ0ZjgxYzAwMmIxNzc5MWQyZjQ4OTYyMzM0Njc2OGUyN2Y3ZmE5MDI2ZjZlZWUiLCJpYXQiOjE3MzYzNjc5MzkuMDcwMTg0LCJuYmYiOjE3MzYzNjc5MzkuMDcwMTg2LCJleHAiOjE3MzkwNDYzMzkuMDY2NDc0LCJzdWIiOiI2ODIyOTYiLCJzY29wZXMiOltdfQ.W1UhCQRJ0pnjG_yTY4W6ORyVLiOFYmBjn9pcLndhM93KFmgjxweXT7WALquwD5FULmIjQkf70t03H4jXq26EU9ZF_QDFoUOQK-Bl227KZBvxBed7hcXwOpOWV-soIrO8iOcRAXKA4VNMCGFd826A3c-ly3DJO0WYgy0368RvGdixcOfH2tkxrdUdF-PUcm9kqetlnqLOpusGs1hWkl8MDOP-8jlqgsrVUnaYVlCiFvhyL1yZoOuH5N3Qd9Lsn5UMtIuAbFOpvi-73JqKqwVRz_PGFUD7ZswU21KuX4SNPxx0AjPJ3S46WFjBlRPgOe5gtcO23D4iE8hM2aanPaqQgKR_4L3Vibr7AC_WN4lz0kT_G56G7R4HjpHqZvE0gKCXZ5JIXGLHCg1lMMRyc2lK9YqPdEcolRFnKOdNZIOKZ5VUZnulkrNuMVQBSRQslzSXxgfD2emCY1Ly1Y6L4kIfSKj2zA4aEMnBtJQZvQgQg0T_SI8Z95pj-z6COeTpkoDj69kTBYydP532seukbRO5jR9Q0gFfvA_Mz0QQQ_ryrWQhSJQup18cn0b4KbVRgbpfPyiTJG7x3psQYCtkcOLPLDvRZlMaeclN9ohxavFWx-rda0cKFhb0c8zIWS8B9hfUJzu1eooZ3eDMsU5m01xyLkL0JXlegAI9vM8PZPbD6Bg";
+export const site_id = 5;
 
 export const api = axios.create({
-  baseURL: "https://api.mangalib.me/api",
+  baseURL: "https://api2.mangalib.me/api",
   headers: {
+    Referer: "https://anilib.me/",
+    Origin: "https://anilib.me",
+    Dnt: "1",
     "Site-Id": site_id,
     Authorization: token,
     "Content-Type": "application/json",
@@ -30,9 +33,10 @@ export function initLoggers() {
       console.log(`Request rejected ${error}`);
     }
   );
-  // api.interceptors.response.use((response) => {
-  //   logger.response(JSON.stringify(response.data.data));
-
-  //   return response;
-  // });
+  api.interceptors.response.use((response) => {
+    if (response.status.toString().startsWith("4")) {
+      logger.response(JSON.stringify(response.data.data));
+    }
+    return response;
+  });
 }

@@ -52,7 +52,17 @@
     },
     "reader": "Volume {{volume}} Chapter {{chapter}}",
     "chapter": "Chapter {{chapter}}",
-    "episode": "Episode {{episode}}"
+    "episode": "Episode {{episode}}",
+    "remove-chapter-alert": {
+      "title": "Delete from read",
+      "text": "You're about to delete Volume {{volume}} Chapter {{chapter}} from your read chapters, are you sure?",
+      "cancel": "Cancel",
+      "remove": "Delete"
+    },
+    "chapter-load-error": {
+      "title": "Failed while loading chapters",
+      "retry": "Try again"
+    }
   },
   "settings": {
     "show_text_error": {

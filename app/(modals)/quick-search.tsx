@@ -1,8 +1,8 @@
-import { ModalWrapper } from "@/components/filters/modal-wrapper";
+import { ModalWrapper } from "@/components/ui/modal-wrapper";
 import { Search } from "lucide-react-native";
 import { useState } from "react";
 
-import Tab from "@/components/title/tab.component";
+import Tab from "@/features/shared/components/tab";
 import { ScrollView, TextInput, View, Text, Pressable } from "react-native";
 
 import i18n from "@/lib/intl";
