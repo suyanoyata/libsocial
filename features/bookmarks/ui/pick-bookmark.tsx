@@ -14,6 +14,7 @@ import { useCreateBookmark } from "@/features/bookmarks/hooks/useCreateBookmark"
 import { useDeleteBookmark } from "@/features/bookmarks/hooks/useDeleteBookmark";
 
 import { bookmarksConstants } from "@/features/bookmarks/constants/bookmarks-constants";
+import { useBookmark } from "@/features/bookmarks/api/useBookmark";
 
 export default function PickBookmarkUI() {
   const router = useRoute();
@@ -23,7 +24,7 @@ export default function PickBookmarkUI() {
     bookmark.site_ids.includes(Number(siteId))
   );
 
-  const { data: bookmark } = Queries.getBookmark(type, media_slug);
+  const { data: bookmark } = useBookmark(type, media_slug);
 
   const { mutate: pushBookmark } = useCreateBookmark(media_slug, siteId, type);
   const { mutate: removeBookmark } = useDeleteBookmark(
@@ -58,7 +59,7 @@ export default function PickBookmarkUI() {
           </Button>
         ))}
       </Conditional>
-      <Conditional conditions={[bookmark != null]}>
+      <Conditional conditions={[bookmark?.id != 0]}>
         <Button
           asChild
           onPress={() => {

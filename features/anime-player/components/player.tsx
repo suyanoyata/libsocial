@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useWindowDimensions, View } from "react-native";
 import { useVideoPlayer, VideoView } from "expo-video";
 import { Link, useFocusEffect } from "expo-router";
@@ -33,6 +33,10 @@ export const EpisodePlayer = ({ episodeId }: { episodeId: number }) => {
     player.play();
   });
 
+  useEffect(() => {
+    video.replace(source);
+  }, [source]);
+
   // useFocusEffect(
   //   useCallback(() => {
   //     // FIXME: quirk, player is not unloading on its own when closing screen, something is still using it?
@@ -45,24 +49,22 @@ export const EpisodePlayer = ({ episodeId }: { episodeId: number }) => {
 
   const { width } = useWindowDimensions();
 
-  if (!player) {
-    return <Loader />;
-  }
+  if (!player) return <Loader />;
 
   return (
     <View>
-      <View style={{ position: "relative", alignItems: "center" }}>
-        <VideoView
-          allowsPictureInPicture
-          style={{
-            width,
-            height: width / 1.7777,
-            backgroundColor: "gray",
-          }}
-          player={video}
-        />
-        <SubtitlesComponent player={player} video={video} />
-      </View>
+      {/* <View style={{ position: "relative", alignItems: "center" }}> */}
+      <VideoView
+        allowsPictureInPicture={false}
+        style={{
+          width,
+          height: width / 1.7777,
+          backgroundColor: "gray",
+        }}
+        player={video}
+      />
+      {/* <SubtitlesComponent player={player} video={video} />
+      </View> */}
       <Link
         style={{
           marginTop: 8,

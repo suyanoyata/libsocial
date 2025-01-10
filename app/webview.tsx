@@ -1,6 +1,9 @@
+import { EpisodePlayer } from "@/features/anime-player/components/player";
+import { Storage, storage } from "@/features/shared/lib/storage";
+import { logger } from "@/lib/logger";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert, SafeAreaView } from "react-native";
+import { SafeAreaView } from "react-native";
 
 import WebView, { WebViewMessageEvent } from "react-native-webview";
 
@@ -13,6 +16,7 @@ export default function Webview() {
     var open = XMLHttpRequest.prototype.open;
     XMLHttpRequest.prototype.open = function() {
         this.addEventListener("load", function() {
+            window.ReactNativeWebView.postMessage(JSON.stringify(this));
             var message = {"status" : this.status, "response" : this.response}
             window.ReactNativeWebView.postMessage(JSON.stringify(message));
         });
@@ -20,57 +24,45 @@ export default function Webview() {
     };})();
   `;
 
-  useEffect(() => {
-    // const id = setTimeout(() => {
-    //   router.replace("/(tabs)");
-    // }, 500);
-    // return () => {
-    //   clearTimeout(id);
-    // };
-  }, []);
-
   const onMessage = (event: WebViewMessageEvent) => {
     const raw = event.nativeEvent.data;
 
     if (raw && typeof raw === "string") {
       const content = JSON.parse(raw);
-      if (content.response.token_type) {
+      if (content.response?.token_type) {
         setSuccess(true);
-        Alert.alert("Authenticated", content.response.access_token);
-        console.log(`Bearer ${content.response.access_token}`);
-        // AsyncStorage.setItem(
-        //   'token',
-        //   `Bearer ${content.response.access_token}`,
-        // );
+        storage.set(Storage.token, `Bearer ${content.response.access_token}`);
+        router.replace("/(tabs)");
       }
     }
   };
 
-  return (
-    <SafeAreaView
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        width: "100%",
-      }}
-    >
-      {!success && (
-        <WebView
-          style={{
-            flex: 1,
-          }}
-          source={{
-            uri: "https://test-front.mangalib.me/ru/front/auth",
-          }}
-          webviewDebuggingEnabled
-          applicationNameForUserAgent="Mozilla"
-          incognito
-          injectedJavaScript={INJECTED_JAVASCRIPT}
-          onMessage={onMessage}
-          userAgent="Mozilla/5.0 (iPhone; CPU iPhone OS 17_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.3.1 Mobile/15E148 Safari/604.1"
-        />
-      )}
-    </SafeAreaView>
-  );
+  if (success || storage.getString(Storage.token) == undefined)
+    return (
+      <SafeAreaView
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+          width: "100%",
+        }}
+      >
+        {!success && (
+          <WebView
+            style={{
+              flex: 1,
+            }}
+            source={{
+              uri: "https://mangalib.me/ru/front/auth",
+            }}
+            userAgent="(Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36"
+            applicationNameForUserAgent="Mozilla/5.0"
+            incognito
+            thirdPartyCookiesEnabled
+            injectedJavaScript={INJECTED_JAVASCRIPT}
+            onMessage={onMessage}
+          />
+        )}
+      </SafeAreaView>
+    );
 }

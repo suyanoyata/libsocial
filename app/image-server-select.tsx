@@ -1,15 +1,19 @@
+import { useEffect } from "react";
+import { Text, View } from "react-native";
+import { Check } from "lucide-react-native";
+
 import { ModalWrapper } from "@/components/ui/modal-wrapper";
-import { SettingsWrapper } from "@/components/settings-component";
-import { ImageServer, store } from "@/hooks/useStore";
-import i18n from "@/lib/intl";
+import { Button } from "@/components/ui/button";
+
 import { Storage, storage } from "@/features/shared/lib/storage";
-import { Anime } from "@/types/anime.type";
+
+import i18n from "@/lib/intl";
+
+import { ImageServer, store } from "@/hooks/useStore";
 import { useRoute } from "@react-navigation/native";
 import { useQuery } from "@tanstack/react-query";
-import { Check } from "lucide-react-native";
-import { useEffect } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
-import { Button } from "@/components/ui/button";
+
+import { Anime } from "@/types/anime.type";
 
 export default function ImageServerSelect() {
   const { imageServers, imageServerIndex, setImageServerIndex } = store();
@@ -36,6 +40,10 @@ export default function ImageServerSelect() {
   useEffect(() => {
     storage.set(Storage.imageServer, imageServerIndex);
   }, [imageServerIndex]);
+
+  const selectedImageServer = i18n.t("imageServer.selected", {
+    title: i18n.t(`imageServerLabel.${imageServers[imageServerIndex].id}`),
+  });
 
   const ImageServerSelect = ({
     server,
@@ -87,11 +95,7 @@ export default function ImageServerSelect() {
         <ImageServerSelect server={server} index={index} />
       ))}
       <Text style={{ color: "rgba(255,255,255,0.6)", marginHorizontal: 8 }}>
-        {i18n.t("imageServer.selected", {
-          title: i18n.t(
-            `imageServerLabel.${imageServers[imageServerIndex].id}`
-          ),
-        })}
+        {selectedImageServer}
       </Text>
     </ModalWrapper>
   );

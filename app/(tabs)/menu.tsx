@@ -5,6 +5,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { SettingsItem, SettingsWrapper } from "@/components/settings-component";
 import i18n from "@/lib/intl";
 import { Storage, storage } from "@/features/shared/lib/storage";
+import { Link } from "expo-router";
+import { Button } from "@/components/ui/button";
+import { Queries } from "@/hooks/queries";
 
 const UpdatesSection = () => {
   return (
@@ -52,9 +55,11 @@ const UpdatesSection = () => {
 };
 
 export default function Menu() {
-  const [checked, setChecked] = useState<boolean>(false);
+  const [checked, setChecked] = useState(false);
 
   storage.set(Storage.productionError, false);
+
+  const { data, isPending } = Queries.currentUser();
 
   useEffect(() => {
     const isChecked = storage.getBoolean(Storage.productionError);
@@ -66,6 +71,16 @@ export default function Menu() {
 
   return (
     <SafeAreaView>
+      {!isPending && !data?.username ? (
+        <Link asChild href="/webview">
+          <Button>Authorize</Button>
+        </Link>
+      ) : (
+        <Button onPress={() => storage.delete(Storage.token)}>Log out</Button>
+      )}
+      {!isPending && data && (
+        <Text style={{ color: "white" }}>{data.username}</Text>
+      )}
       <SettingsWrapper>
         <SettingsItem title={i18n.t("settings.show_text_error.text")}>
           <Switch

@@ -4,6 +4,7 @@ export const Storage = {
   imageServer: "image-server",
   productionError: "show-production-error",
   lastReadTitles: "last-read-titles",
+  token: "access-token",
 };
 
 export const storage = new MMKV({

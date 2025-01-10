@@ -84,6 +84,7 @@ export const LastReadTitleCard = ({ title }: { title: LastReadTitle }) => {
             fontSize: 16,
             fontWeight: "600",
           }}
+          numberOfLines={2}
         >
           {getTitle(data)}
         </Text>

@@ -30,10 +30,10 @@ const chapter = [
     title: i18n.t("content.tabs.comments"),
     key: "comments",
   },
-  {
-    title: i18n.t("content.tabs.reviews"),
-    key: "reviews",
-  },
+  // {
+  //   title: i18n.t("content.tabs.reviews"),
+  //   key: "reviews",
+  // },
 ];
 
 const tabs = {
@@ -50,10 +50,10 @@ const tabs = {
       title: i18n.t("content.tabs.comments"),
       key: "comments",
     },
-    {
-      title: i18n.t("content.tabs.reviews"),
-      key: "reviews",
-    },
+    // {
+    //   title: i18n.t("content.tabs.reviews"),
+    //   key: "reviews",
+    // },
   ],
 };
 
