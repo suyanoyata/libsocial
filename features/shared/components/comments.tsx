@@ -81,11 +81,13 @@ export const Comments = ({
   selected,
   model,
   post_id,
+  scrollable = true,
 }: {
   slug_url: string;
   selected: string;
   model: string;
   post_id: number;
+  scrollable?: boolean;
 }) => {
   // #region data handling
   const {
@@ -199,7 +201,7 @@ export const Comments = ({
   if (isLoading || !commentsData) return null;
 
   return (
-    <ScrollView>
+    <ScrollView scrollEnabled={scrollable} style={{ minHeight: "100%" }}>
       {commentsData.pages.map((page) => (
         <FlashList
           scrollEnabled={false}

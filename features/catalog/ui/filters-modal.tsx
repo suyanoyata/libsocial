@@ -1,7 +1,7 @@
 import { ModalWrapper } from "@/components/ui/modal-wrapper";
 import { Loader } from "@/components/fullscreen-loader";
 import { FilterButton } from "@/features/catalog/components/filter-navigation-button";
-import { useFiltersStore } from "@/features/catalog/hooks/useFiltersStore";
+import { useFiltersStore } from "@/features/catalog/store/useFiltersStore";
 import i18n from "@/lib/intl";
 import { useQuery } from "@tanstack/react-query";
 import { SafeAreaView } from "react-native";

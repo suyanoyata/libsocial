@@ -19,12 +19,12 @@ import { api, site_id } from "@/lib/axios";
 import { TitleCard } from "@/features/shared/components/title-card";
 
 import SearchLayout from "../layouts/search-layout";
-import { useCatalogSearchStore } from "@/features/catalog/hooks/useCatalogSearchStore";
-import { useFiltersStore } from "@/features/catalog/hooks/useFiltersStore";
+import { useCatalogSearchStore } from "@/features/catalog/store/useCatalogSearchStore";
+import { useFiltersStore } from "@/features/catalog/store/useFiltersStore";
 import i18n from "@/lib/intl";
 import { Conditional } from "@/components/misc/conditional";
 import { PlaceholderFlashingComponent } from "@/components/misc/placeholder-flashing-component";
-import { useSortingStore } from "@/features/catalog/hooks/useSortingStore";
+import { useSortingStore } from "@/features/catalog/store/useSortingStore";
 
 export default function Search() {
   const AnimatedFlashList = Animated.createAnimatedComponent(FlashList);
@@ -52,7 +52,7 @@ export default function Search() {
   const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ["search-titles", search, filters, sortBy],
     queryFn: async ({ pageParam }) => {
-      let call = `/${siteUrls[site_id].url}?fields[]=rate&fields[]=rate_avg&fields[]=userBookmark&site_id[]=${site_id}&page=${pageParam}&sort_by=${sortBy}`;
+      let call = `/${siteUrls[site_id].url}?fields[]=rate&fields[]=rate_avg&fields[]=userBookmark&site_id[]=${site_id}&page=${pageParam}${sortBy !== "rate_avg" ? `&sort_by=${sortBy}` : ""}`;
 
       // hold on, this typing is https://media.tenor.com/SeLBRCUiQaoAAAAe/absolute-cinema-cinema.png
       Object.keys(filters).forEach((filter: string) => {

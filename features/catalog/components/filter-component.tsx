@@ -5,9 +5,9 @@ import { Button } from "@/components/ui/button";
 
 import { exclude_filters, presentation_mode } from "@/constants/app.constants";
 
-import { useFiltersStore } from "@/features/catalog/hooks/useFiltersStore";
+import { useFiltersStore } from "@/features/catalog/store/useFiltersStore";
 
-import { useAddToFilters } from "@/features/catalog-genre-picker/hooks/useAddToFilters";
+import { useAddToFilters } from "@/features/catalog/hooks/useAddToFilters";
 import i18n from "@/lib/intl";
 import { BasicFilter } from "@/types/filters";
 import { logger } from "@/lib/logger";

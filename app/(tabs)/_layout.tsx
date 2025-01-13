@@ -6,11 +6,11 @@ import ErrorBoundary from "react-native-error-boundary";
 import { ErrorBoundaryComponent } from "@/components/error-boundary-component";
 import { useNotificationsCountStore } from "@/hooks/useNotificationsCountStore";
 import i18n from "@/lib/intl";
-import { Queries } from "@/hooks/queries";
+import { useCurrentUser } from "@/features/users/api/useCurrentUser";
 
 export default function TabLayout() {
   const { notificationsCount } = useNotificationsCountStore();
-  Queries.currentUser();
+  useCurrentUser();
 
   return (
     <ErrorBoundary FallbackComponent={ErrorBoundaryComponent}>

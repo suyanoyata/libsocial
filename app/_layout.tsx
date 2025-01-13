@@ -13,7 +13,7 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query";
 import { DevToolsBubble } from "react-native-react-query-devtools";
-import { LogBox } from "react-native";
+import { DeviceEventEmitter, LogBox } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import RNRestart from "react-native-restart";
 
@@ -108,12 +108,25 @@ export default function RootLayout() {
 
   // #region Notifications Badge Handler
   useEffect(() => {
-    api.get("/notifications/count").then((response) => {
-      const count = response.data.data.unread.all;
+    DeviceEventEmitter.addListener("updateNotificationsCount", () => {
+      api
+        .get("/notifications/count")
+        .then((response) => {
+          const count = response.data.data.unread.all;
 
-      setNotificationsCount(count);
-      Notifications.setBadgeCountAsync(count);
+          setNotificationsCount(count);
+          Notifications.setBadgeCountAsync(count);
+        })
+        .catch(() => {
+          setNotificationsCount(undefined);
+          Notifications.setBadgeCountAsync(0);
+        });
+
+      return () =>
+        DeviceEventEmitter.removeAllListeners("updateNotificationsCount");
     });
+
+    DeviceEventEmitter.emit("updateNotificationsCount");
   }, []);
   // #endregion
 

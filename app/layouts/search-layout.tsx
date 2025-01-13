@@ -1,4 +1,4 @@
-import { useCatalogSearchStore } from "@/features/catalog/hooks/useCatalogSearchStore";
+import { useCatalogSearchStore } from "@/features/catalog/store/useCatalogSearchStore";
 import { useEffect, useState } from "react";
 import useDebounce from "@/hooks/useDebounce";
 

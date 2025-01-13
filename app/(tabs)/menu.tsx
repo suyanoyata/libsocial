@@ -1,87 +1,15 @@
 import * as Updates from "expo-updates";
-import { useEffect, useState } from "react";
-import { Pressable, Switch, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { SettingsItem, SettingsWrapper } from "@/components/settings-component";
 import i18n from "@/lib/intl";
-import { Storage, storage } from "@/features/shared/lib/storage";
-import { Link } from "expo-router";
-import { Button } from "@/components/ui/button";
-import { Queries } from "@/hooks/queries";
-
-const UpdatesSection = () => {
-  return (
-    <View
-      style={{
-        alignItems: "center",
-      }}
-    >
-      <Text
-        style={{
-          color: "rgba(255,255,255,0.4)",
-        }}
-      >
-        {__DEV__ && i18n.t("updates.app", { version: "development" })}
-        {!__DEV__ &&
-          i18n.t("updates.app", { version: String(Updates.runtimeVersion) })}
-      </Text>
-    </View>
-  );
-
-  return (
-    <SettingsWrapper>
-      <SettingsItem title={i18n.t("updates.channel")}>
-        {Updates.channel ? Updates.channel : "Нет"}
-      </SettingsItem>
-      <SettingsItem title={i18n.t("updates.enabled")}>
-        {Updates.isEnabled ? i18n.t("updates.yes") : i18n.t("updates.no")}
-      </SettingsItem>
-      <SettingsItem title={i18n.t("updates.version")}>
-        {Updates.runtimeVersion ? Updates.runtimeVersion : "-"}
-      </SettingsItem>
-      <SettingsItem title={i18n.t("updates.manifest")}>
-        {Updates.manifest.extra?.expoClient?.version
-          ? Updates.manifest.extra.expoClient.version
-          : i18n.t("updates.no")}
-      </SettingsItem>
-      <SettingsItem title={i18n.t("updates.number")}>
-        {Updates.updateId ? Updates.updateId : "-"}
-      </SettingsItem>
-      <SettingsItem title={i18n.t("updates.check")}>
-        {Updates.checkAutomatically}
-      </SettingsItem>
-    </SettingsWrapper>
-  );
-};
+import { MenuUserCard } from "@/features/users/widgets/menu-user-card";
+import { LogOut } from "@/features/users/components/logout";
+import { MenuLoginButton } from "@/features/users/components/menu-login-button";
 
 export default function Menu() {
-  const [checked, setChecked] = useState(false);
-
-  storage.set(Storage.productionError, false);
-
-  const { data, isPending } = Queries.currentUser();
-
-  useEffect(() => {
-    const isChecked = storage.getBoolean(Storage.productionError);
-
-    if (isChecked != undefined) {
-      setChecked(isChecked);
-    }
-  }, [storage]);
-
   return (
-    <SafeAreaView>
-      {!isPending && !data?.username ? (
-        <Link asChild href="/webview">
-          <Button>Authorize</Button>
-        </Link>
-      ) : (
-        <Button onPress={() => storage.delete(Storage.token)}>Log out</Button>
-      )}
-      {!isPending && data && (
-        <Text style={{ color: "white" }}>{data.username}</Text>
-      )}
-      <SettingsWrapper>
+    <SafeAreaView style={{ gap: 8 }}>
+      {/* <SettingsWrapper>
         <SettingsItem title={i18n.t("settings.show_text_error.text")}>
           <Switch
             value={checked}
@@ -102,8 +30,27 @@ export default function Menu() {
             </Text>
           </Pressable>
         </SettingsItem>
-      </SettingsWrapper>
-      <UpdatesSection />
+      </SettingsWrapper> */}
+      <MenuUserCard />
+      <MenuLoginButton />
+      <LogOut />
+      <View
+        style={{
+          alignItems: "center",
+          marginTop: 8,
+        }}
+      >
+        <Text
+          style={{
+            color: "rgba(255,255,255,0.4)",
+          }}
+        >
+          {__DEV__ &&
+            i18n.t("updates.app", { version: process.env.EXPO_PUBLIC_VERSION })}
+          {!__DEV__ &&
+            i18n.t("updates.app", { version: process.env.EXPO_PUBLIC_VERSION })}
+        </Text>
+      </View>
     </SafeAreaView>
   );
 }

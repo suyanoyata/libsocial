@@ -7,8 +7,8 @@ import { BasicFilter } from "@/types/filters";
 import i18n from "@/lib/intl";
 import { Queries } from "@/hooks/queries";
 
-import { useFiltersStore } from "@/features/catalog/hooks/useFiltersStore";
-import { FilterComponent } from "@/features/catalog-genre-picker/components/filter-component";
+import { useFiltersStore } from "@/features/catalog/store/useFiltersStore";
+import { FilterComponent } from "@/features/catalog/components/filter-component";
 
 export const FiltersGenrePicker = () => {
   const { filters: filtersStore, setFilters } = useFiltersStore();

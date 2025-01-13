@@ -23,7 +23,8 @@ export const SubtitlesComponent = ({
     if (player && player?.subtitle) {
       axios.get(player?.subtitle).then((res) => {
         const sub = parser.parse(res.data);
-        setSubtitle(parser.parse(res.data));
+
+        setSubtitle(sub);
       });
     }
   }, [player]);

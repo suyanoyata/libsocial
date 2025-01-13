@@ -12,17 +12,6 @@ const titleData = (slug_url: string, type?: "manga" | "anime") => {
   });
 };
 
-const animeEpisodes = (slug_url: string) => {
-  return useQuery<Episode[]>({
-    queryKey: ["anime-episodes", slug_url],
-    queryFn: async () => {
-      return await api
-        .get(`/episodes?anime_id=${slug_url}`)
-        .then((res) => res.data.data);
-    },
-  });
-};
-
 const mangaReader = ({
   slug_url,
   volume,
@@ -60,13 +49,6 @@ const filterConstants = () => {
   });
 };
 
-const currentUser = () => {
-  return useQuery({
-    queryKey: ["me"],
-    queryFn: async () => await api.get("/auth/me").then((res) => res.data.data),
-  });
-};
-
 const firstLoadData = () => {
   return useQuery<{
     popular: Anime[];
@@ -96,10 +78,8 @@ const getRecentViewedTitle = (slug_url: string, model: string) => {
 
 export const Queries = {
   titleData,
-  animeEpisodes,
   mangaReader,
   filterConstants,
-  currentUser,
   firstLoadData,
   getRecentViewedTitle,
 };

@@ -1,16 +1,19 @@
-import { EpisodePlayer } from "@/features/anime-player/components/player";
 import { Storage, storage } from "@/features/shared/lib/storage";
+import { api } from "@/lib/axios";
 import { logger } from "@/lib/logger";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
-import { SafeAreaView } from "react-native";
+import { useState } from "react";
+import { DeviceEventEmitter, SafeAreaView } from "react-native";
 
 import WebView, { WebViewMessageEvent } from "react-native-webview";
 
 export default function Webview() {
-  const [success, setSuccess] = useState<boolean>(false);
+  const [success, setSuccess] = useState(false);
 
   const router = useRouter();
+
+  const client = useQueryClient();
 
   const INJECTED_JAVASCRIPT = `(function() {
     var open = XMLHttpRequest.prototype.open;
@@ -32,6 +35,13 @@ export default function Webview() {
       if (content.response?.token_type) {
         setSuccess(true);
         storage.set(Storage.token, `Bearer ${content.response.access_token}`);
+        api.defaults.headers["Authorization"] =
+          `Bearer ${content.response.access_token}`;
+
+        client.refetchQueries({
+          queryKey: ["me"],
+        });
+        DeviceEventEmitter.emit("updateNotificationsCount");
         router.replace("/(tabs)");
       }
     }

@@ -1,12 +1,13 @@
 import { Button } from "@/components/ui/button";
-import { Conditional } from "@/components/misc/conditional";
 
-import { Plus } from "lucide-react-native";
+import { LogIn, Plus } from "lucide-react-native";
 import { Link } from "expo-router";
 import { memo } from "react";
 
 import i18n from "@/lib/intl";
+
 import { useBookmark } from "@/features/bookmarks/api/useBookmark";
+import { useCurrentUser } from "@/features/users/api/useCurrentUser";
 
 export const AddToBookmarksButton = memo(
   ({
@@ -22,7 +23,36 @@ export const AddToBookmarksButton = memo(
     siteId: string;
     slug_url: string;
   }) => {
-    const { data: bookmark, isFetching } = useBookmark(type, slug_url);
+    const { data: bookmark, isFetching, isError } = useBookmark(type, slug_url);
+    const { isError: isUserError, data } = useCurrentUser();
+
+    const authorized = !isUserError || (!!data && !!data.id);
+    const isBookmarkPresent = !!bookmark && bookmark.id !== 0 && !isError;
+
+    if (!authorized) {
+      return (
+        <Link
+          href={{
+            pathname: "/auth",
+          }}
+          asChild
+        >
+          <Button
+            style={{
+              backgroundColor: color ?? "gray",
+              flex: 1,
+              opacity: 1,
+            }}
+            icon={
+              !authorized && <LogIn strokeWidth={3} size={18} color="white" />
+            }
+            isPending={isFetching}
+          >
+            Log In
+          </Button>
+        </Link>
+      );
+    }
 
     return (
       <Link
@@ -41,9 +71,11 @@ export const AddToBookmarksButton = memo(
           style={{
             backgroundColor: color ?? "gray",
             flex: 1,
+            opacity: 1,
           }}
           icon={
-            bookmark?.id == 0 && (
+            !isBookmarkPresent &&
+            authorized && (
               <Plus
                 strokeWidth={3}
                 size={18}
@@ -54,12 +86,8 @@ export const AddToBookmarksButton = memo(
           }
           isPending={isFetching}
         >
-          <Conditional conditions={[bookmark?.id == 0]}>
-            {i18n.t("content.bookmark.add")}
-          </Conditional>
-          <Conditional conditions={[bookmark?.id != 0, !!bookmark]}>
-            {i18n.t(`bookmarks.${bookmark?.status}`)}
-          </Conditional>
+          {!isBookmarkPresent && authorized && i18n.t("content.bookmark.add")}
+          {isBookmarkPresent && i18n.t(`bookmarks.${bookmark?.status}`)}
         </Button>
       </Link>
     );

@@ -1,7 +1,7 @@
 import { Text, View } from "react-native";
 import { Button } from "../../../components/ui/button";
 import { Link, useNavigation } from "expo-router";
-import { useFiltersStore } from "@/features/catalog/hooks/useFiltersStore";
+import { useFiltersStore } from "@/features/catalog/store/useFiltersStore";
 import i18n from "@/lib/intl";
 import { presentation_mode } from "@/constants/app.constants";
 

@@ -5,7 +5,7 @@ import i18n from "@/lib/intl";
 import {
   AvailableSorting,
   useSortingStore,
-} from "@/features/catalog/hooks/useSortingStore";
+} from "@/features/catalog/store/useSortingStore";
 import { Button } from "@/components/ui/button";
 
 const sortFields: {

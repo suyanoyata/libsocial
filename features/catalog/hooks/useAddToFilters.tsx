@@ -1,4 +1,4 @@
-import { useFiltersStore } from "@/features/catalog/hooks/useFiltersStore";
+import { useFiltersStore } from "@/features/catalog/store/useFiltersStore";
 import { useEffect, useState } from "react";
 
 export const useAddToFilters = (filterKey: "genres") => {
