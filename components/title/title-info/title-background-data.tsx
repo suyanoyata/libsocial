@@ -67,6 +67,9 @@ export const TitleBackgroundData = ({
     }
 
     const chapters: number[] = JSON.parse(title);
+    if (chapters.length == 0) {
+      return setCount(0);
+    }
     const last = chapters.sort().toReversed()[0] + 1;
 
     setCount(last);

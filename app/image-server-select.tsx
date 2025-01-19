@@ -14,6 +14,7 @@ import { useRoute } from "@react-navigation/native";
 import { useQuery } from "@tanstack/react-query";
 
 import { Anime } from "@/types/anime.type";
+import { Queries } from "@/hooks/queries";
 
 export default function ImageServerSelect() {
   const { imageServers, imageServerIndex, setImageServerIndex } = store();
@@ -23,9 +24,7 @@ export default function ImageServerSelect() {
     slug_url: string;
   };
 
-  const { data: titleData } = useQuery<Anime>({
-    queryKey: ["title-data", slug_url],
-  });
+  const { data: titleData } = Queries.titleData(slug_url);
 
   useEffect(() => {
     const server = storage.getNumber(Storage.imageServer);
