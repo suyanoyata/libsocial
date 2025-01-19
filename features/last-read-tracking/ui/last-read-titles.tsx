@@ -8,9 +8,9 @@ import { LastReadTitleCard } from "@/features/last-read-tracking/components/last
 import i18n from "@/lib/intl";
 
 export const LastReadTitles = () => {
-  const { lastReadTitles } = useLastReadTitles();
+  const { titles } = useLastReadTitles();
 
-  if (lastReadTitles.length == 0) return null;
+  if (titles.length == 0) return null;
 
   return (
     <Animated.View entering={FadeIn} style={{ marginHorizontal: 12 }}>
@@ -25,7 +25,7 @@ export const LastReadTitles = () => {
         {i18n.t("content.continue_reading")}
       </Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {lastReadTitles.map((title, index) => (
+        {titles.map((title, index) => (
           <LastReadTitleCard title={title} key={index} />
         ))}
       </ScrollView>

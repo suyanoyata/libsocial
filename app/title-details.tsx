@@ -57,24 +57,14 @@ const tabs = {
   ],
 };
 
-const RenderBottomContent = ({
-  slug_url,
-  type,
-  accent,
-}: {
-  slug_url: string;
-  type: string;
-  accent: TitleColors;
-}) => {
+const RenderBottomContent = ({ slug_url, type, accent }: { slug_url: string; type: string; accent: TitleColors }) => {
   const [selectedTab, setSelectedTab] = useState("about");
 
   const { data } = useQuery<Anime>({
     queryKey: ["title-data", slug_url],
 
     queryFn: async () => {
-      const response = await api.get(
-        `/${slug_url}?${siteUrls[type as keyof typeof siteUrls].fields}`
-      );
+      const response = await api.get(`/${slug_url}?${siteUrls[type as keyof typeof siteUrls].fields}`);
       return response.data.data;
     },
     enabled: !!slug_url,
@@ -111,10 +101,7 @@ const RenderBottomContent = ({
             accent={accent}
             key={tab.key}
             value={tab.key}
-            inactive={
-              tab.key == "reviews" ||
-              (tab.key == "comments" && presentation_mode)
-            }
+            inactive={tab.key == "reviews" || (tab.key == "comments" && presentation_mode)}
             selected={selectedTab}
             setSelected={() => {
               setSelectedTab(tab.key);
@@ -126,17 +113,8 @@ const RenderBottomContent = ({
       </View>
       <View style={{ minHeight: "100%", backgroundColor: "black", flex: 1 }}>
         <AboutTitle accent={accent} selected={selectedTab} data={data} />
-        <MangaChapters
-          type={String(data?.site)}
-          selected={selectedTab}
-          slug_url={slug_url}
-        />
-        <Comments
-          post_id={data.id}
-          model={data.model}
-          selected={selectedTab}
-          slug_url={slug_url}
-        />
+        <MangaChapters type={String(data?.site)} selected={selectedTab} slug_url={slug_url} />
+        <Comments post_id={data.id} model={data.model} selected={selectedTab} slug_url={slug_url} />
       </View>
     </View>
   );
@@ -150,9 +128,7 @@ export default function index() {
     queryKey: ["title-data", slug_url],
 
     queryFn: async () => {
-      const response = await api.get(
-        `/${slug_url}?${siteUrls[type as keyof typeof siteUrls].fields}`
-      );
+      const response = await api.get(`/${slug_url}?${siteUrls[type as keyof typeof siteUrls].fields}`);
       return response.data.data;
     },
     enabled: !!slug_url,
@@ -213,11 +189,7 @@ export default function index() {
         }}
       >
         <TitleBackgroundData data={data} accent={accent} />
-        <RenderBottomContent
-          slug_url={slug_url}
-          type={String(data.site)}
-          accent={accent}
-        />
+        <RenderBottomContent slug_url={slug_url} type={String(data.site)} accent={accent} />
       </ScrollView>
     </Animated.View>
   );

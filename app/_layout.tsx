@@ -7,11 +7,7 @@ import { useNotificationsCountStore } from "@/hooks/useNotificationsCountStore";
 import { api, initLoggers, site_id } from "@/lib/axios";
 import { store } from "@/hooks/useStore";
 
-import {
-  onlineManager,
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query";
+import { onlineManager, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DevToolsBubble } from "react-native-react-query-devtools";
 import { DeviceEventEmitter, LogBox } from "react-native";
 import { StatusBar } from "expo-status-bar";
@@ -48,13 +44,7 @@ const queryClient = new QueryClient({
 export default function RootLayout() {
   const { setNotificationsCount } = useNotificationsCountStore();
   const [updating, setUpdating] = useState<boolean>(false);
-  const {
-    videoServers,
-    setVideoServers,
-    imageServers,
-    setImageServers,
-    setImageServerIndex,
-  } = store();
+  const { videoServers, setVideoServers, imageServers, setImageServers, setImageServerIndex } = store();
 
   const { settings, setSettings } = app();
 
@@ -85,9 +75,7 @@ export default function RootLayout() {
     if (videoServers.length !== 0) return;
 
     api.get("/constants?fields[]=videoServers").then((response) => {
-      logger.info(
-        `Got ${response.data.data.videoServers.length} video servers.`
-      );
+      logger.info(`Got ${response.data.data.videoServers.length} video servers.`);
       setVideoServers(response.data.data.videoServers);
     });
   }, []);
@@ -98,9 +86,7 @@ export default function RootLayout() {
     if (imageServers.length !== 0) return;
 
     api.get("/constants?fields[]=imageServers").then((response) => {
-      logger.info(
-        `Got ${response.data.data.imageServers.length} image servers.`
-      );
+      logger.info(`Got ${response.data.data.imageServers.length} image servers.`);
       setImageServers(response.data.data.imageServers);
     });
   }, []);
@@ -122,8 +108,7 @@ export default function RootLayout() {
           Notifications.setBadgeCountAsync(0);
         });
 
-      return () =>
-        DeviceEventEmitter.removeAllListeners("updateNotificationsCount");
+      return () => DeviceEventEmitter.removeAllListeners("updateNotificationsCount");
     });
 
     DeviceEventEmitter.emit("updateNotificationsCount");
@@ -179,14 +164,8 @@ export default function RootLayout() {
               headerShown: false,
             }}
           >
-            <Stack.Screen
-              name="(tabs)"
-              options={{ title: "Главная", headerShown: false }}
-            />
-            <Stack.Screen
-              name="(modals)"
-              options={{ headerShown: false, presentation: "modal" }}
-            />
+            <Stack.Screen name="(tabs)" options={{ title: "Главная", headerShown: false }} />
+            <Stack.Screen name="(modals)" options={{ headerShown: false, presentation: "modal" }} />
             <Stack.Screen
               name="image-server-select"
               options={{
@@ -195,18 +174,9 @@ export default function RootLayout() {
                 presentation: "modal",
               }}
             />
-            <Stack.Screen
-              name="title-details"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="manga-reader"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="ranobe-reader"
-              options={{ headerShown: false }}
-            />
+            <Stack.Screen name="title-details" options={{ headerShown: false }} />
+            <Stack.Screen name="manga-reader" options={{ headerShown: false }} />
+            <Stack.Screen name="ranobe-reader" options={{ headerShown: false }} />
           </Stack>
           {__DEV__ && <DevToolsBubble />}
         </ErrorBoundary>

@@ -21,9 +21,7 @@ export default function HomeScreen() {
       <QuickSearchNavigationComponent />
       <Animated.ScrollView
         style={{ minHeight: "100%", paddingTop: 12 }}
-        refreshControl={
-          <RefreshControl refreshing={isPending} onRefresh={refetch} />
-        }
+        refreshControl={<RefreshControl refreshing={isPending} onRefresh={refetch} />}
         entering={FadeIn}
       >
         <ScrollView
@@ -37,14 +35,10 @@ export default function HomeScreen() {
           showsHorizontalScrollIndicator={false}
         >
           <Conditional conditions={[!!data]}>
-            {data?.popular.map((title) => (
-              <TitleCard key={title.id} item={title} width={140} />
-            ))}
+            {data?.map((title) => <TitleCard key={title.id} item={title} width={140} />)}
           </Conditional>
           <Conditional conditions={[!data]}>
-            <PlaceholderFlashingComponent
-              style={{ flexDirection: "row", gap: 16 }}
-            >
+            <PlaceholderFlashingComponent style={{ flexDirection: "row", gap: 16 }}>
               {Array.from({ length: 10 }).map(() => (
                 <TitleCard width={140} />
               ))}

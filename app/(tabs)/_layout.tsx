@@ -20,6 +20,7 @@ export default function TabLayout() {
           tabBarActiveTintColor: "white",
           tabBarInactiveTintColor: "rgb(100,100,100)",
           headerShown: false,
+          tabBarShowLabel: false,
         }}
       >
         <Tabs.Screen
@@ -58,13 +59,6 @@ export default function TabLayout() {
             tabBarIcon: ({ color }) => <Menu color={color} />,
           }}
         />
-        {/* <Tabs.Screen
-        name="demohtml"
-        options={{
-          title: "demo html",
-          tabBarIcon: ({ color }) => <LucidePaperclip color={color} />,
-        }}
-      /> */}
       </Tabs>
     </ErrorBoundary>
   );

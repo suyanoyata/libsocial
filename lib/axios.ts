@@ -3,10 +3,11 @@ import { logger } from "@/lib/logger";
 import axios from "axios";
 
 export const token = storage.getString(Storage.token) || "";
-export const site_id = 5;
+export const site_id = 1;
 
 export const api = axios.create({
-  baseURL: "https://api2.mangalib.me/api",
+  // baseURL: "http://localhost:3000/api",
+  baseURL: "http://192.168.50.48:3000/api",
   headers: {
     Referer: "https://anilib.me/",
     Origin: "https://anilib.me",
@@ -23,9 +24,7 @@ export const api = axios.create({
 export function initLoggers() {
   api.interceptors.request.use(
     (request) => {
-      logger.request(
-        `${request.method?.toUpperCase()} ${request.baseURL}${request.url}`
-      );
+      logger.request(`${request.method?.toUpperCase()} ${request.baseURL}${request.url}`);
       return request;
     },
     (error) => {

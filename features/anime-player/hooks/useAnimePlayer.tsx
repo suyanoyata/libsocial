@@ -43,6 +43,6 @@ export const useAnimePlayer = (
 
   return {
     player,
-    source: videoServers[0].url + player?.video.quality[0].href,
+    source: videoServers[1].url + player?.video.quality[2].href,
   };
 };

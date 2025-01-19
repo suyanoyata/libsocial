@@ -13,6 +13,7 @@ import { TitleProgressBar } from "@/features/last-read-tracking/components/last-
 
 import { LastReadTitle } from "@/features/last-read-tracking/types/last-read-title";
 import { useTitleChaptersUpdater } from "@/features/last-read-tracking/hooks/useTitleChaptersUpdater";
+import Animated, { FadeIn } from "react-native-reanimated";
 
 export const LastReadTitleCard = ({ title }: { title: LastReadTitle }) => {
   const router = useRouter();
@@ -24,7 +25,8 @@ export const LastReadTitleCard = ({ title }: { title: LastReadTitle }) => {
   if (!data) return null;
 
   return (
-    <View
+    <Animated.View
+      entering={FadeIn}
       style={{
         height: 160,
         width: 380,
@@ -90,6 +92,6 @@ export const LastReadTitleCard = ({ title }: { title: LastReadTitle }) => {
         </Text>
         <TitleProgressBar title={title} />
       </View>
-    </View>
+    </Animated.View>
   );
 };

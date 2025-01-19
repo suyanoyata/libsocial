@@ -12,24 +12,13 @@ const titleData = (slug_url: string, type?: "manga" | "anime") => {
   });
 };
 
-const mangaReader = ({
-  slug_url,
-  volume,
-  number,
-}: {
-  slug_url: string;
-  volume: number;
-  number: number;
-}) => {
+const mangaReader = ({ slug_url, volume, number }: { slug_url: string; volume: number; number: number }) => {
   return useQuery<MangaImageResponse>({
     queryKey: ["manga-reader", slug_url, volume, number],
     queryFn: async () => {
-      const response = await api.get(
-        `/${slug_url}/chapter?number=${number}&volume=${volume}`,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await api.get(`/${slug_url}/chapter?number=${number}&volume=${volume}`, {
+        withCredentials: true,
+      });
       return response.data.data;
     },
     staleTime: 1000 * 60 * 60,
@@ -55,7 +44,7 @@ const firstLoadData = () => {
   }>({
     queryKey: ["app-initial-main-page-data"],
     retry: false,
-    queryFn: async () => (await api.get("/")).data.data,
+    queryFn: async () => (await api.get("/catalog")).data.data,
   });
 };
 
@@ -68,9 +57,7 @@ const getRecentViewedTitle = (slug_url: string, model: string) => {
       }
 
       return api
-        .get(
-          `/${model}/${slug_url}?fields[]=eng_name&fields[]=metadata.count&fields[]=chap_count`
-        )
+        .get(`/${model}/${slug_url}?fields[]=eng_name&fields[]=metadata.count&fields[]=chap_count`)
         .then((res) => res.data.data);
     },
   });

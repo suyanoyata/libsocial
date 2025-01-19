@@ -2,6 +2,7 @@ import { ActivityIndicator, Pressable, Text, ViewStyle } from "react-native";
 import Animated, { useSharedValue, withTiming } from "react-native-reanimated";
 import { Conditional } from "@/components/misc/conditional";
 import { app } from "@/hooks/useSettings";
+import * as Haptics from "expo-haptics";
 
 import React, { forwardRef } from "react";
 
@@ -42,6 +43,7 @@ export const Button = forwardRef(
           ref={ref}
           onPress={() => {
             onPress && onPress();
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
           }}
           style={{
             ...style,
@@ -59,6 +61,7 @@ export const Button = forwardRef(
           ref={ref}
           onPressIn={() => {
             if (disabled) return;
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
             scale.value = withTiming(0.95, {
               duration: 150,
             });
@@ -72,6 +75,7 @@ export const Button = forwardRef(
             }
           }}
           onPressOut={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
             scale.value = withTiming(1, {
               duration: 150,
             });
@@ -93,6 +97,7 @@ export const Button = forwardRef(
         ref={ref}
         onPressIn={() => {
           if (disabled) return;
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
           scale.value = withTiming(0.95, {
             duration: 150,
           });
@@ -106,6 +111,7 @@ export const Button = forwardRef(
           }
         }}
         onPressOut={() => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
           scale.value = withTiming(1, {
             duration: 150,
           });

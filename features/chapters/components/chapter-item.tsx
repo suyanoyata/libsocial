@@ -15,12 +15,7 @@ type ChapterItemProps = {
   type: string;
 };
 
-export const ChapterItem = ({
-  slug_url,
-  chapter,
-  index,
-  type,
-}: ChapterItemProps) => {
+export const ChapterItem = ({ slug_url, chapter, index, type }: ChapterItemProps) => {
   const { data } = useChapters(slug_url);
 
   const { count } = useTitleCounterValue();
@@ -42,9 +37,7 @@ export const ChapterItem = ({
   return (
     <Pressable
       style={{
-        backgroundColor: includes
-          ? "rgba(255,255,255,0.05)"
-          : "rgba(255,255,255,0.1)",
+        backgroundColor: includes ? "rgba(255,255,255,0.05)" : "rgba(255,255,255,0.1)",
         paddingVertical: 8,
         paddingHorizontal: 12,
         borderRadius: 8,
@@ -102,10 +95,7 @@ export const ChapterItem = ({
         }
       }}
     >
-      <Text
-        numberOfLines={1}
-        style={{ color: "white", lineHeight: 24, flex: 1, marginRight: 24 }}
-      >
+      <Text numberOfLines={1} style={{ color: "white", lineHeight: 24, flex: 1, marginRight: 24 }}>
         {i18n.t("content.reader", {
           volume: chapter.volume,
           chapter: chapter.number,
@@ -118,7 +108,8 @@ export const ChapterItem = ({
           marginLeft: "auto",
         }}
       >
-        {date(chapter.branches[0].created_at)}
+        {/* {date(chapter.branches[0].created_at)} */}
+        {date(chapter.created_at)}
       </Text>
     </Pressable>
   );

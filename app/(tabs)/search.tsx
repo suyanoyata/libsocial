@@ -52,7 +52,8 @@ export default function Search() {
   const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ["search-titles", search, filters, sortBy],
     queryFn: async ({ pageParam }) => {
-      let call = `/${siteUrls[site_id].url}?fields[]=rate&fields[]=rate_avg&fields[]=userBookmark&site_id[]=${site_id}&page=${pageParam}${sortBy !== "rate_avg" ? `&sort_by=${sortBy}` : ""}`;
+      // let call = `/${siteUrls[site_id].url}?fields[]=rate&fields[]=rate_avg&fields[]=userBookmark&site_id[]=${site_id}&page=${pageParam}${sortBy !== "rate_avg" ? `&sort_by=${sortBy}` : ""}`;
+      let call = "/catalog";
 
       // hold on, this typing is https://media.tenor.com/SeLBRCUiQaoAAAAe/absolute-cinema-cinema.png
       Object.keys(filters).forEach((filter: string) => {
@@ -97,12 +98,7 @@ export default function Search() {
             />
           </PlaceholderFlashingComponent>
         </Conditional>
-        <Conditional
-          conditions={[
-            data?.pages[0].data.length == 0,
-            search != "" || filters.genres.length > 0,
-          ]}
-        >
+        <Conditional conditions={[data?.pages[0].data.length == 0, search != "" || filters.genres.length > 0]}>
           <View style={{ justifyContent: "center", flex: 1, minHeight: "80%" }}>
             <Text
               style={{

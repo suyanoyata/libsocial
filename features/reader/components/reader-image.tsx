@@ -13,12 +13,7 @@ type MangaReaderImageProps = {
   setLoadLimit: (value: number) => void;
 };
 
-export const MangaReaderImage = ({
-  page,
-  index,
-  loadLimit,
-  setLoadLimit,
-}: MangaReaderImageProps) => {
+export const MangaReaderImage = ({ page, index, loadLimit, setLoadLimit }: MangaReaderImageProps) => {
   const { imageServers, imageServerIndex } = store();
 
   const { width } = useWindowDimensions();
@@ -36,8 +31,9 @@ export const MangaReaderImage = ({
         }
       }}
       source={{
-        uri: imageServers[imageServerIndex].url + page.url,
-        cacheKey: imageServers[imageServerIndex].url + page.url,
+        // uri: imageServers[imageServerIndex].url + page.url,
+        // cacheKey: imageServers[imageServerIndex].url + page.url,
+        uri: page.url,
         headers: {
           Authorization: token,
         },

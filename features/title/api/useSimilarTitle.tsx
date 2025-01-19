@@ -11,6 +11,7 @@ export const useSimilarTitle = (slug_url: string) => {
 
       return response.data.data;
     },
+    retry: 1,
     enabled: !!slug_url,
   });
 };
