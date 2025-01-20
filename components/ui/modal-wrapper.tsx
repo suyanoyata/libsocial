@@ -1,63 +1,17 @@
-import { useNavigation } from "expo-router";
+import { Link } from "expo-router";
 import { ChevronLeft } from "lucide-react-native";
-import {
-  Text,
-  Pressable,
-  SafeAreaView,
-  View,
-  ScrollView,
-  ViewStyle,
-} from "react-native";
-import Animated, { FadeIn } from "react-native-reanimated";
+import { View, Text } from "react-native";
 
-export const ModalWrapper = ({
-  title,
-  children,
-  style,
-  animated = false,
-  scrollable = false,
-  withHorizontalMargin = true,
-}: {
-  title: string;
-  children?: React.ReactNode;
-  style?: ViewStyle;
-  animated?: boolean;
-  scrollable?: boolean;
-  withHorizontalMargin?: boolean;
-}) => {
-  const router: any = useNavigation();
-
-  const Component = animated ? Animated.View : View;
-
+export const ModalWrapper = ({ children }: { children?: React.ReactNode }) => {
   return (
-    <Component entering={FadeIn} style={{ backgroundColor: "black", flex: 1 }}>
-      <SafeAreaView
-        style={{
-          margin: 8,
-          marginHorizontal: withHorizontalMargin ? 8 : 0,
-        }}
-      >
-        <Pressable
-          onPress={() => router.goBack()}
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            paddingBottom: 8,
-            marginHorizontal: !withHorizontalMargin ? 8 : 0,
-          }}
-        >
-          <ChevronLeft color="gray" />
-          <Text
-            numberOfLines={1}
-            style={{ color: "gray", fontWeight: "600", paddingRight: 36 }}
-          >
-            {title}
-          </Text>
-        </Pressable>
-        <View style={{ ...style }}>
-          {scrollable ? <ScrollView>{children}</ScrollView> : children}
+    <View className="flex-1 mt-3 mx-2">
+      <Link href="../">
+        <View className="flex-row gap-1 items-center">
+          <ChevronLeft color="#d4d4d8" strokeWidth={2.25} />
+          <Text className="text-zinc-300 text-lg font-medium">Back</Text>
         </View>
-      </SafeAreaView>
-    </Component>
+      </Link>
+      {children}
+    </View>
   );
 };

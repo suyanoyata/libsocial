@@ -1,18 +1,17 @@
-import { Storage, storage } from "@/features/shared/lib/storage";
+// import { Storage, storage } from "@/features/shared/lib/storage";
 import { logger } from "@/lib/logger";
 import axios from "axios";
 
-export const token = storage.getString(Storage.token) || "";
+// export const token = storage.getString(Storage.token) || "";
 export const site_id = 1;
 
 export const api = axios.create({
-  // baseURL: "http://localhost:3000/api",
-  baseURL: "http://192.168.50.48:3000/api",
+  baseURL: "http://api2.mangalib.me/api",
   headers: {
     Referer: "https://anilib.me/",
     Origin: "https://anilib.me",
     "Site-Id": site_id,
-    Authorization: token,
+    // Authorization: token,
     "Content-Type": "application/json",
     "User-Agent":
       "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36",

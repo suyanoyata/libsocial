@@ -1,152 +1,77 @@
-import { ActivityIndicator, Pressable, Text, ViewStyle } from "react-native";
-import Animated, { useSharedValue, withTiming } from "react-native-reanimated";
-import { Conditional } from "@/components/misc/conditional";
-import { app } from "@/hooks/useSettings";
+import * as React from "react";
+import { Pressable, PressableProps, Text } from "react-native";
 import * as Haptics from "expo-haptics";
 
-import React, { forwardRef } from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
 
-export const Button = forwardRef(
-  (
-    {
-      children,
-      style,
-      onPress,
-      icon,
-      isPending,
-      disabled = false,
-      asChild = false,
-      animationDisabled = false,
-      iconPosition = "left",
-    }: {
-      children: React.ReactNode;
-      style?: ViewStyle;
-      onPress?: () => void;
-      icon?: React.ReactNode;
-      isPending?: boolean;
-      disabled?: boolean;
-      asChild?: boolean;
-      animationDisabled?: boolean;
-      iconPosition?: "left" | "right";
+const buttonVariants = cva(
+  "p-2.5 px-4 rounded-lg items-center justify-center shadow-sm flex-row gap-1",
+  {
+    variants: {
+      variant: {
+        default: "bg-white shadow active:bg-white/80",
+        ghost: "bg-transparent active:bg-zinc-800/50 hover:bg-zinc-800",
+        destructive: "bg-red-500 hover:bg-red-600",
+      },
+      size: {
+        default: "px-4 py-2",
+        sm: "py-1.5 rounded-md px-3",
+      },
     },
-    ref
-  ) => {
-    const Component = Animated.createAnimatedComponent(Pressable);
-    const { settings } = app();
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+);
 
-    const scale = useSharedValue(1);
+const textVariants = cva("text-black", {
+  variants: {
+    variant: {
+      default: "text-black",
+      ghost: "text-white",
+      destructive: "text-white",
+    },
+    size: {
+      default: "text-base",
+      sm: "text-sm font-medium",
+    },
+  },
+  defaultVariants: {
+    variant: "default",
+    size: "default",
+  },
+});
 
-    if (animationDisabled) {
-      return (
-        <Pressable
-          // @ts-ignore
-          ref={ref}
-          onPress={() => {
-            onPress && onPress();
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-          }}
-          style={{
-            ...style,
-          }}
-        >
-          {children}
-        </Pressable>
-      );
-    }
+export interface ButtonProps extends PressableProps, VariantProps<typeof buttonVariants> {
+  iconLeft?: React.ReactNode;
+  iconRight?: React.ReactNode;
+  children?: React.ReactNode;
+  onPress?: () => void;
+}
 
-    if (asChild) {
-      return (
-        <Component
-          // @ts-ignore
-          ref={ref}
-          onPressIn={() => {
-            if (disabled) return;
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
-            scale.value = withTiming(0.95, {
-              duration: 150,
-            });
-          }}
-          onPress={() => {
-            if (onPress && !disabled) {
-              onPress();
-              scale.value = withTiming(1, {
-                duration: 150,
-              });
-            }
-          }}
-          onPressOut={() => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-            scale.value = withTiming(1, {
-              duration: 150,
-            });
-          }}
-          style={{
-            transform: [{ scale: scale }],
-            opacity: disabled ? 0.5 : 1,
-            ...style,
-          }}
-        >
-          {children}
-        </Component>
-      );
-    }
-
+// @ts-ignore
+const Button = React.forwardRef<Pressable, ButtonProps>(
+  ({ className, size, variant, children, iconLeft, iconRight, ...props }, ref) => {
     return (
-      <Component
-        // @ts-ignore
+      <Pressable
         ref={ref}
-        onPressIn={() => {
-          if (disabled) return;
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
-          scale.value = withTiming(0.95, {
-            duration: 150,
-          });
-        }}
+        className={cn(buttonVariants({ variant, size, className }))}
         onPress={() => {
-          if (onPress && !disabled) {
-            onPress();
-            scale.value = withTiming(1, {
-              duration: 150,
-            });
-          }
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+          props.onPress && props.onPress();
         }}
-        onPressOut={() => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-          scale.value = withTiming(1, {
-            duration: 150,
-          });
-        }}
-        style={{
-          transform: [{ scale: scale }],
-          backgroundColor: settings.appTheme.primary,
-          paddingHorizontal: 12,
-          paddingVertical: !!isPending ? 5 : 9,
-          borderRadius: 6,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 6,
-          opacity: disabled ? 0.5 : 1,
-          ...style,
-        }}
+        {...props}
       >
-        <Conditional conditions={[!isPending]}>
-          {iconPosition == "left" && icon}
-          <Text
-            numberOfLines={1}
-            style={{
-              color: "white",
-              fontWeight: "500",
-            }}
-          >
-            {children}
-          </Text>
-          {iconPosition == "right" && icon}
-        </Conditional>
-        <Conditional conditions={[!!isPending]}>
-          <ActivityIndicator size="small" color="white" />
-        </Conditional>
-      </Component>
+        {iconLeft}
+        <Text className={cn(textVariants({ variant, size }))}>{children}</Text>
+        {iconRight}
+      </Pressable>
     );
   }
 );
+
+Button.displayName = "Button";
+
+export { Button };

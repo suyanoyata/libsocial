@@ -1,33 +1,21 @@
-import { useNavigation } from "expo-router";
+import { Link } from "expo-router";
+import { ChevronLeft } from "lucide-react-native";
+import { Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { ChevronLeft } from "lucide-react-native";
-
-import { Pressable, View } from "react-native";
-
-export const BackButton = ({ absolute = true }: { absolute?: boolean }) => {
-  const router: any = useNavigation();
-
-  const insets = useSafeAreaInsets();
+export const BackButton = () => {
+  const { top } = useSafeAreaInsets();
 
   return (
-    <View
-      style={{
-        position: absolute ? "absolute" : undefined,
-        top: absolute ? insets.top - 6 : 0,
-        left: 0,
-        zIndex: 99,
-      }}
+    <Link
+      href="../"
+      className="absolute top-2 left-2"
+      style={{ marginTop: top, zIndex: 999 }}
     >
-      <Pressable
-        style={{
-          margin: 12,
-          marginTop: 16,
-        }}
-        onPress={() => router.goBack()}
-      >
-        <ChevronLeft size={28} color="white" strokeWidth={2.7} />
-      </Pressable>
-    </View>
+      <View className="flex-row gap-1 items-center">
+        <ChevronLeft color="white" strokeWidth={2.25} />
+        <Text className="text-white text-lg font-medium">Back</Text>
+      </View>
+    </Link>
   );
 };
