@@ -1,9 +1,11 @@
 import "../global.css";
 
 import { Stack } from "expo-router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { DarkTheme, ThemeProvider } from "@react-navigation/native";
 import { DevToolsBubble } from "react-native-react-query-devtools";
+import { clientPersister } from "@/lib/persistent-query-storage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -18,7 +20,10 @@ const queryClient = new QueryClient({
 
 export default function RootLayout() {
   return (
-    <QueryClientProvider client={queryClient}>
+    <PersistQueryClientProvider
+      persistOptions={{ persister: clientPersister }}
+      client={queryClient}
+    >
       <ThemeProvider value={DarkTheme}>
         <Stack
           screenOptions={{
@@ -30,6 +35,6 @@ export default function RootLayout() {
         </Stack>
         <DevToolsBubble />
       </ThemeProvider>
-    </QueryClientProvider>
+    </PersistQueryClientProvider>
   );
 }
