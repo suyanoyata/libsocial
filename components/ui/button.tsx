@@ -12,7 +12,7 @@ const buttonVariants = cva(
       variant: {
         default: "bg-white shadow active:bg-white/80",
         ghost: "bg-transparent active:bg-zinc-800/50 hover:bg-zinc-800",
-        destructive: "bg-red-500 hover:bg-red-600",
+        destructive: "bg-red-500 active:bg-red-400 hover:bg-red-400",
       },
       size: {
         default: "px-4 py-2",

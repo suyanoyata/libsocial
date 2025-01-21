@@ -1,4 +1,4 @@
-import { usePulseValue } from "@/hooks/usePulseValue";
+import { usePulseValue } from "@/hooks/use-pulse-value";
 import { ViewProps } from "react-native";
 import Animated from "react-native-reanimated";
 

@@ -1,7 +1,9 @@
 import { Stack, Tabs } from "expo-router";
 import { Home, LayoutGrid } from "lucide-react-native";
+import { useImageServers } from "@/features/shared/api/use-image-servers";
 
 export default function TabsLayout() {
+  useImageServers();
   return (
     <Tabs
       screenOptions={{

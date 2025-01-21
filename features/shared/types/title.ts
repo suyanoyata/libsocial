@@ -1,10 +1,18 @@
 export type BaseTitle = {
+  ageRestriction: {
+    id: number;
+    label: string;
+  };
   id: number;
   name: string;
   rus_name?: string;
   eng_name?: string;
   slug: string;
   slug_url: string;
+  rating: {
+    average: number;
+    votesFormated: string;
+  };
   cover: {
     default: string;
   };
@@ -15,12 +23,14 @@ export type BaseTitle = {
 export type Genre = {
   id: number;
   name: string;
+  adult: boolean;
 };
 
 export interface Title extends BaseTitle {
   background: {
     url: string;
   };
+  otherNames: string[];
   summary: string;
   genres: Genre[];
   tags: string[];

@@ -2,7 +2,7 @@ import { ScrollView } from "react-native";
 
 import { PulseView } from "@/components/ui/pulse-view";
 
-import { useHomeTitles } from "@/features/home/api/useHomeTitles";
+import { useHomeTitles } from "@/features/home/api/use-home-titles";
 
 import { TitleCard } from "@/features/home/components/title-card";
 import { TitleCardPlaceholder } from "@/features/home/components/title-card-placeholder";

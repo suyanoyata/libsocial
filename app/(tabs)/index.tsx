@@ -2,7 +2,7 @@ import { Text, View } from "react-native";
 
 import { Button } from "@/components/ui/button";
 
-import { useHomeTitles } from "@/features/home/api/useHomeTitles";
+import { useHomeTitles } from "@/features/home/api/use-home-titles";
 import { HomeLayout } from "@/layouts/home-layout";
 import { PopularTitles } from "@/features/home/ui/popular-titles";
 import { Trash2 } from "lucide-react-native";
