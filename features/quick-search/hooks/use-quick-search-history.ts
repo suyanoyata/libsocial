@@ -15,6 +15,7 @@ export const useQuickSearchHistory = () => {
   };
 
   const addToHistory = (search: string) => {
+    if (search.trim() == "") return;
     if (history.includes(search)) {
       const excluded = history.filter((item) => item !== search);
 

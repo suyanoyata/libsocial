@@ -53,6 +53,7 @@ export default function TitleInfo() {
             height: 320,
             paddingTop: top + 40,
             position: "relative",
+            overflow: "hidden",
           }}
         >
           <BlurView

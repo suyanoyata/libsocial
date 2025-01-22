@@ -19,20 +19,22 @@ export default function ReaderProperties() {
 
   return (
     <ModalWrapper>
-      <View className="flex-row items-center">
-        <Text className="text-zinc-200 flex-1">Select image server</Text>
-        <MenuView
-          onPressAction={({ nativeEvent }) => {
-            setCurrentImageServerIndex(Number(nativeEvent.event));
-            setServer(data[Number(nativeEvent.event)]);
-          }}
-          actions={data.map((item, index: number) => ({
-            id: index.toString(),
-            title: item.label,
-          }))}
-        >
-          <Button>{server.label}</Button>
-        </MenuView>
+      <View className="mx-2 flex-1">
+        <View className="flex-row items-center">
+          <Text className="text-zinc-200 flex-1">Select image server</Text>
+          <MenuView
+            onPressAction={({ nativeEvent }) => {
+              setCurrentImageServerIndex(Number(nativeEvent.event));
+              setServer(data[Number(nativeEvent.event)]);
+            }}
+            actions={data.map((item, index: number) => ({
+              id: index.toString(),
+              title: item.label,
+            }))}
+          >
+            <Button>{server.label}</Button>
+          </MenuView>
+        </View>
       </View>
     </ModalWrapper>
   );

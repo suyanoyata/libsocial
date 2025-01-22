@@ -18,15 +18,15 @@ export default function TabsLayout() {
       }}
     >
       <Tabs.Screen
-        name="catalog"
-        options={{
-          tabBarIcon: ({ color }) => <LayoutGrid color={color} />,
-        }}
-      />
-      <Tabs.Screen
         name="index"
         options={{
           tabBarIcon: ({ color }) => <Home color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="catalog"
+        options={{
+          tabBarIcon: ({ color }) => <LayoutGrid color={color} />,
         }}
       />
     </Tabs>

@@ -1,27 +1,23 @@
-import { Button } from "@/components/ui/button";
 import { FadeView } from "@/components/ui/fade-view";
+import { ReaderHeader } from "@/features/manga-reader/components/reader-header";
 
 import { useChapter } from "@/features/manga-reader/api/use-chapter";
 import { useChapters } from "@/features/title/api/use-chapters";
 
 import { Image } from "expo-image";
-import { router } from "expo-router";
 
 import { useRoute } from "@react-navigation/native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import {
-  ActivityIndicator,
-  FlatList,
-  Text,
-  useWindowDimensions,
-  View,
-} from "react-native";
+import { ActivityIndicator, FlatList, useWindowDimensions, View } from "react-native";
 import { useQueryClient } from "@tanstack/react-query";
+
 import { api } from "@/lib/axios";
-import { useTitleInfo } from "@/features/title/api/use-title-info";
-import { ChevronLeft, Cog } from "lucide-react-native";
+
 import { useProperties } from "@/store/use-properties";
+import { useTitleInfo } from "@/features/title/api/use-title-info";
 import { useImageServers } from "@/features/shared/api/use-image-servers";
+
+import { ReaderChapterNavigation } from "@/features/manga-reader/components/reader-chapter-navigation";
+import { ReaderChapter } from "@/features/manga-reader/types/reader-chapter";
 
 export const MangaReaderUI = () => {
   const route = useRoute();
@@ -68,7 +64,7 @@ export const MangaReaderUI = () => {
       ).data.data;
 
       await Promise.all([
-        queryClient.prefetchQuery({
+        queryClient.prefetchQuery<ReaderChapter>({
           queryKey: [
             "manga-chapter-reader",
             slug_url,
@@ -78,7 +74,9 @@ export const MangaReaderUI = () => {
           queryFn: response,
         }),
         Image.prefetch(
-          response.pages.map((page) => "https://img2.imglib.info" + page.url),
+          response.pages.map(
+            (page: { url: string }) => "https://img2.imglib.info" + page.url
+          ),
           "disk"
         ),
       ]);
@@ -101,8 +99,6 @@ export const MangaReaderUI = () => {
 
   if (!imageServers) return null;
 
-  const { top, bottom } = useSafeAreaInsets();
-
   return (
     data && (
       <FadeView withEnter className="flex-1 items-center justify-center">
@@ -110,51 +106,9 @@ export const MangaReaderUI = () => {
           initialNumToRender={5}
           onEndReached={() => preloadNextChapter()}
           onEndReachedThreshold={0.7}
-          ListHeaderComponent={() => (
-            <View
-              style={{ paddingTop: top, paddingBottom: 8 }}
-              className="mx-3 flex-row items-center gap-2"
-            >
-              <ChevronLeft
-                onPress={() => router.back()}
-                size={24}
-                strokeWidth={3}
-                color="#a1a1aa"
-              />
-              <View className="flex-1">
-                <Text className="text-zinc-200 font-medium text-base">
-                  Том {data.volume} Глава {data.number}
-                </Text>
-                <Text numberOfLines={1} className="text-zinc-400 font-medium text-sm">
-                  {title.eng_name ?? title.name}
-                </Text>
-              </View>
-              <Cog
-                onPress={() => router.navigate("/reader-properties")}
-                color="#a1a1aa"
-              />
-            </View>
-          )}
+          ListHeaderComponent={() => <ReaderHeader chapter={data} title={title} />}
           ListFooterComponent={() => (
-            <View className="flex-row m-2 gap-2" style={{ paddingBottom: bottom }}>
-              <Button className="flex-1">Previous Chapter</Button>
-              {nextChapter && (
-                <Button
-                  onPress={() =>
-                    router.replace({
-                      pathname: "/manga-reader",
-                      params: {
-                        slug_url,
-                        index: chapterIndex + 1,
-                      },
-                    })
-                  }
-                  className="flex-1"
-                >
-                  Next Chapter
-                </Button>
-              )}
-            </View>
+            <ReaderChapterNavigation chapterIndex={chapterIndex} chapters={chapters} />
           )}
           data={data.pages}
           renderItem={({ item }) => (

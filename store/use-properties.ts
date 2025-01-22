@@ -1,12 +1,22 @@
+import { zustandStorage } from "@/lib/persistent-zustand-storage";
 import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
 
-interface ApplicationProperties {
+export interface ApplicationProperties {
   currentImageServerIndex: number;
   setCurrentImageServerIndex: (value: number) => void;
 }
 
-export const useProperties = create<ApplicationProperties>((set) => ({
-  currentImageServerIndex: 0,
-  setCurrentImageServerIndex: (currentImageServerIndex) =>
-    set({ currentImageServerIndex }),
-}));
+export const useProperties = create<ApplicationProperties>()(
+  persist(
+    (set) => ({
+      currentImageServerIndex: 0,
+      setCurrentImageServerIndex: (currentImageServerIndex: number) =>
+        set({ currentImageServerIndex }),
+    }),
+    {
+      name: "properties-storage",
+      storage: createJSONStorage(() => zustandStorage),
+    }
+  )
+);

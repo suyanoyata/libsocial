@@ -65,10 +65,7 @@ export default function QuickSearchTitlePreview() {
                   {data.rus_name ?? data.name}
                 </Text>
                 <TitleSummary>{data.summary}</TitleSummary>
-                <Genres
-                  ageRestriction={data.ageRestriction}
-                  genres={data.genres}
-                />
+                <Genres ageRestriction={data.ageRestriction} genres={data.genres} />
               </View>
             </View>
             <Button
