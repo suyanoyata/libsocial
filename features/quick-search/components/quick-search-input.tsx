@@ -20,6 +20,7 @@ export const QuickSearchInput = ({
       <TextInput
         clearButtonMode="always"
         inputAccessoryViewID="quick-search"
+        placeholderTextColor="#52525b"
         className="bg-zinc-900 px-2 py-2.5 mt-2 rounded-md text-zinc-200 font-medium"
         placeholder="Start searching..."
         value={search}

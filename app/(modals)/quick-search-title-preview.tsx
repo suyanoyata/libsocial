@@ -9,16 +9,38 @@ import { TitleSummary } from "@/features/title/components/title-summary";
 import { Genres } from "@/features/title/components/genres";
 import { Button } from "@/components/ui/button";
 import { router } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function QuickSearchTitlePreview() {
   const route = useRoute();
   const { slug_url, site } = route.params as { slug_url: string; site: string };
 
   const { data } = useTitleInfo(slug_url, site);
+  const { bottom, top } = useSafeAreaInsets();
 
   return (
-    <ModalWrapper>
-      <View className="bg-black flex-1">
+    <ModalWrapper scrollable>
+      <View
+        className="bg-black flex-1"
+        style={{
+          paddingBottom: bottom + 8,
+        }}
+      >
+        <Button
+          onPress={() => {
+            router.replace({
+              pathname: "/title-info",
+              params: { slug_url, site },
+            });
+          }}
+          variant="ghost"
+          className="absolute right-4 z-30"
+          style={{
+            top: -top + 20,
+          }}
+        >
+          Перейти
+        </Button>
         {data && (
           <FadeView withEnter className="flex-1 -mt-11">
             <View className="flex-1">
@@ -68,17 +90,6 @@ export default function QuickSearchTitlePreview() {
                 <Genres ageRestriction={data.ageRestriction} genres={data.genres} />
               </View>
             </View>
-            <Button
-              onPress={() => {
-                router.replace({
-                  pathname: "/title-info",
-                  params: { slug_url, site },
-                });
-              }}
-              className="absolute right-6 bottom-12"
-            >
-              Перейти
-            </Button>
           </FadeView>
         )}
       </View>

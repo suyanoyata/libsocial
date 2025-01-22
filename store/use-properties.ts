@@ -15,7 +15,7 @@ export const useProperties = create<ApplicationProperties>()(
         set({ currentImageServerIndex }),
     }),
     {
-      name: "properties-storage",
+      name: "libsocial.client.properties",
       storage: createJSONStorage(() => zustandStorage),
     }
   )

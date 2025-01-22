@@ -1,10 +1,12 @@
 import { ModalWrapper } from "@/components/ui/modal-wrapper";
+import { Button } from "@/components/ui/button";
+
 import { useState } from "react";
+import { useProperties } from "@/store/use-properties";
+import { useImageServers } from "@/features/shared/api/use-image-servers";
+
 import { Text, View } from "react-native";
 import { MenuView } from "@react-native-menu/menu";
-import { Button } from "@/components/ui/button";
-import { useImageServers } from "@/features/shared/api/use-image-servers";
-import { useProperties } from "@/store/use-properties";
 
 export default function ReaderProperties() {
   const { data } = useImageServers();

@@ -18,6 +18,8 @@ import { useImageServers } from "@/features/shared/api/use-image-servers";
 
 import { ReaderChapterNavigation } from "@/features/manga-reader/components/reader-chapter-navigation";
 import { ReaderChapter } from "@/features/manga-reader/types/reader-chapter";
+import { useReadingTracker } from "@/store/use-reading-tracker";
+import { useEffect, useRef, useState } from "react";
 
 export const MangaReaderUI = () => {
   const route = useRoute();
@@ -50,6 +52,9 @@ export const MangaReaderUI = () => {
 
   const { currentImageServerIndex } = useProperties();
   const { data: imageServers } = useImageServers();
+
+  const { addItem, get } = useReadingTracker();
+  const [offset, setOffset] = useState(0);
 
   const nextChapter = chapters && chapters[chapterIndex + 1];
 
@@ -97,12 +102,44 @@ export const MangaReaderUI = () => {
     chapters[chapterIndex].number
   );
 
+  const flatListRef = useRef<FlatList>(null);
+
+  useEffect(() => {
+    const item = get(slug_url);
+
+    if (!data || !flatListRef || !item) return;
+
+    setTimeout(() => {
+      flatListRef.current?.scrollToOffset({
+        animated: false,
+        offset: item.scrollTo,
+      });
+    }, 250);
+  }, [data, flatListRef]);
+
+  useEffect(() => {
+    addItem({
+      slug_url,
+      title: title.eng_name ?? title.name,
+      lastReadChapter: chapterIndex,
+      overallChapters: chapters.length,
+      cover: {
+        default: title.cover.default,
+      },
+      site: title.site,
+      scrollTo: offset,
+    });
+  }, [slug_url, title, data, offset]);
+
   if (!imageServers) return null;
 
   return (
     data && (
       <FadeView withEnter className="flex-1 items-center justify-center">
         <FlatList
+          ref={flatListRef}
+          onScroll={(event) => setOffset(event.nativeEvent.contentOffset.y)}
+          onMomentumScrollEnd={(event) => setOffset(event.nativeEvent.contentOffset.y)}
           initialNumToRender={5}
           onEndReached={() => preloadNextChapter()}
           onEndReachedThreshold={0.7}

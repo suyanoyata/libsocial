@@ -30,7 +30,7 @@ export const ReaderHeader = ({
           Том {chapter.volume} Глава {chapter.number}
         </Text>
         <Text numberOfLines={1} className="text-zinc-400 font-medium text-sm">
-          {title.eng_name ?? title.name}
+          {title.eng_name != "" ? title.eng_name : title.name}
         </Text>
       </View>
       <Cog onPress={() => router.navigate("/reader-properties")} color="#a1a1aa" />

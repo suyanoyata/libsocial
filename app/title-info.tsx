@@ -11,7 +11,7 @@ import { BackButton } from "@/components/ui/back-button";
 import { FadeView } from "@/components/ui/fade-view";
 
 import { TabsSwitcher } from "@/features/title/components/tabs-switcher";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TitleContext } from "@/features/title/context/title-context";
 import { TitleAbout } from "@/features/title/ui/title-about";
 import { TitleChapters } from "@/features/title/ui/title-chapters";
@@ -19,7 +19,13 @@ import { TitleChapters } from "@/features/title/ui/title-chapters";
 export default function TitleInfo() {
   const router = useRoute();
 
-  const { slug_url, site } = router.params as { slug_url: string; site: string };
+  const [shouldRender, setShouldRender] = useState(false);
+
+  const { slug_url, site, withDelay } = router.params as {
+    slug_url: string;
+    site: string;
+    withDelay: string | undefined;
+  };
 
   if (!slug_url || typeof slug_url != "string") {
     throw new Error(`Slug url is required or its type is mismatched`);
@@ -35,6 +41,18 @@ export default function TitleInfo() {
 
   const [tab, setTab] = useState("about");
 
+  useEffect(() => {
+    if (!withDelay && data) {
+      setShouldRender(true);
+    }
+
+    if (withDelay && data) {
+      setTimeout(() => {
+        setShouldRender(true);
+      }, 500);
+    }
+  }, [withDelay, data]);
+
   if (!data) {
     return (
       <View className="items-center justify-center">
@@ -42,6 +60,8 @@ export default function TitleInfo() {
       </View>
     );
   }
+
+  if (!shouldRender) return null;
 
   return (
     <FadeView withEnter className="flex-1">
