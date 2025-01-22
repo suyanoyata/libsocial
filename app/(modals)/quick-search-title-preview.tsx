@@ -12,7 +12,6 @@ import { router } from "expo-router";
 import { Image } from "expo-image";
 
 import { ImageBackground, View } from "react-native";
-import { Platform } from "react-native";
 
 import { TitleSummary } from "@/features/title/components/title-summary";
 import { Genres } from "@/features/title/components/genres";
@@ -42,7 +41,7 @@ export default function QuickSearchTitlePreview() {
           variant="ghost"
           className="absolute right-4 z-30"
           style={{
-            top: Platform.OS == "ios" ? -top + 20 : -28,
+            top: -26,
           }}
         >
           Перейти

@@ -13,6 +13,7 @@ import { useFonts } from "expo-font";
 import { Platform, View } from "react-native";
 
 import { iconFix } from "@/lib/icons-fix";
+import { useProperties } from "@/store/use-properties";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -63,6 +64,8 @@ export default function RootLayout() {
     "SF-Heavy": require("../assets/fonts/SFUIText-Heavy.ttf"),
   });
 
+  const { showQueryDevTools } = useProperties();
+
   if (!loaded) return;
 
   // android needs extra view so it wont be flashing white color on navigation
@@ -106,7 +109,7 @@ export default function RootLayout() {
             <Stack.Screen name="(tabs)" />
             <Stack.Screen options={{ presentation: "modal" }} name="(modals)" />
           </Stack>
-          <DevToolsBubble />
+          {__DEV__ && showQueryDevTools && <DevToolsBubble />}
         </ThemeProvider>
       </TamaguiProvider>
     </PersistQueryClientProvider>

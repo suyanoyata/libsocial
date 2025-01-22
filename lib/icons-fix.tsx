@@ -1,4 +1,4 @@
-import { X, LucideIcon, Eye, EyeOff } from "lucide-react-native";
+import { X, LucideIcon, Eye, EyeOff, Search } from "lucide-react-native";
 import { cssInterop } from "nativewind";
 
 export function interopIcons(icons: LucideIcon[]) {
@@ -15,4 +15,4 @@ export function interopIcons(icons: LucideIcon[]) {
   );
 }
 
-export const iconFix = () => interopIcons([X, Eye, EyeOff]);
+export const iconFix = () => interopIcons([X, Eye, EyeOff, Search]);

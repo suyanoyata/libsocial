@@ -10,7 +10,7 @@ import { ActivityIndicator, FlatList, useWindowDimensions, View } from "react-na
 
 import { LastReadItem, useReadingTracker } from "@/store/use-reading-tracker";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { useTitleReadChapter } from "@/store/use-chapters-tracker";
@@ -24,6 +24,8 @@ import { useChapters } from "@/features/title/api/use-chapters";
 import { ReaderChapter } from "@/features/manga-reader/types/reader-chapter";
 
 import { api } from "@/lib/axios";
+import { Text } from "@/components/ui/text";
+import { MenuView } from "@react-native-menu/menu";
 
 export const MangaReaderUI = () => {
   const route = useRoute();
@@ -32,7 +34,8 @@ export const MangaReaderUI = () => {
   const [offset, setOffset] = useState(0);
 
   const queryClient = useQueryClient();
-  const { currentImageServerIndex, readerImagePadding } = useProperties();
+  const { currentImageServerIndex, readerImagePadding, readerDisplayCurrentPage } =
+    useProperties();
   const { data: imageServers } = useImageServers();
 
   const { addItem, get } = useReadingTracker();
@@ -73,10 +76,13 @@ export const MangaReaderUI = () => {
 
   const flatListRef = useRef<FlatList>(null);
 
+  const [currentPage, setCurrentPage] = useState(1);
+
   const { data } = useChapter(slug_url, chapters && chapters[chapterIndex]);
 
   useEffect(() => {
     if (!title || !chapters) return;
+
     addItem({
       slug_url,
       title: title.eng_name ?? title.name,
@@ -89,6 +95,15 @@ export const MangaReaderUI = () => {
       scrollTo: offset,
     });
   }, [slug_url, title, data, offset]);
+
+  const breakpoints = useMemo(() => {
+    return data?.pages.reduce((acc: number[], page) => {
+      const value = Math.round(width / page.ratio);
+      const lastValue = acc[acc.length - 1] || 0;
+      acc.push(lastValue + value);
+      return acc;
+    }, []);
+  }, [data?.pages]);
 
   useEffect(() => {
     const item = get(slug_url) as unknown as LastReadItem;
@@ -111,11 +126,45 @@ export const MangaReaderUI = () => {
     );
   }
 
+  useEffect(() => {
+    const filtered = breakpoints?.filter((value) => value <= offset);
+
+    if (filtered && filtered?.length != 0) {
+      setCurrentPage(filtered.length);
+    }
+  }, [offset]);
+
   if (!imageServers) return null;
 
   return (
     data && (
       <FadeView withEnter className="flex-1 items-center justify-center">
+        {readerDisplayCurrentPage && (
+          <MenuView
+            onPressAction={(event) =>
+              flatListRef.current?.scrollToIndex({
+                index: parseInt(event.nativeEvent.event),
+                animated: true,
+              })
+            }
+            style={{
+              position: "absolute",
+              left: 16,
+              bottom: 16,
+              zIndex: 20,
+            }}
+            actions={data.pages.map((_, index) => ({
+              id: index.toString(),
+              title: `${index + 1} / ${data.pages.length}`,
+            }))}
+          >
+            <View className="bg-zinc-900/70 p-3 py-1.5 rounded-full">
+              <Text className="text-zinc-200 font-semibold">
+                {currentPage}/{data.pages.length}
+              </Text>
+            </View>
+          </MenuView>
+        )}
         <FlatList
           ref={flatListRef}
           contentContainerStyle={{
@@ -134,8 +183,6 @@ export const MangaReaderUI = () => {
                 .then((res) => res.data.data)
                 .catch((err) => console.error(err));
 
-              console.log(response);
-
               queryClient.setQueryData<ReaderChapter>(
                 [
                   "manga-chapter-reader",
@@ -150,8 +197,7 @@ export const MangaReaderUI = () => {
                     (page: { url: string }) => "https://img2.imglib.info" + page.url
                   ),
                   "disk"
-                ),
-                console.log("preloaded next chapter");
+                );
             }
           }}
           onEndReachedThreshold={0.1}
@@ -159,12 +205,15 @@ export const MangaReaderUI = () => {
           ListFooterComponent={() => (
             <ReaderChapterNavigation chapterIndex={chapterIndex} chapters={chapters} />
           )}
+          style={{ width }}
           data={data.pages}
           renderItem={({ item }) => (
             <Image
+              contentFit="contain"
               style={{
-                width,
-                height: width / item.ratio,
+                marginHorizontal: "auto",
+                width: width > 800 ? 800 : width,
+                height: width > 800 ? 800 : width / item.ratio,
               }}
               source={{
                 uri: imageServers[currentImageServerIndex].url + item.url,

@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 import { Search } from "lucide-react-native";
-import { Pressable, ScrollView, View } from "react-native";
+import { Pressable, ScrollView, TextInput, View } from "react-native";
 
 import { Text } from "@/components/ui/text";
 
@@ -14,11 +14,16 @@ export const HomeLayout = ({ children }: { children?: React.ReactNode }) => {
       <Pressable
         style={{ paddingTop: top + 8, paddingBottom: 16 }}
         className="bg-zinc-950"
-        onPress={() => router.push("/quick-search")}
       >
-        <View className="flex-row items-center bg-zinc-900 mx-2 p-1.5 py-2 rounded-md gap-1.5">
-          <Search color="#a1a1aa" size={20} />
-          <Text className="text-zinc-400 text-base font-medium">Quick search</Text>
+        <View className="bg-zinc-900 px-4 py-2 h-10 items-center flex-row font-medium rounded-md mx-2">
+          <TextInput
+            onPress={() => router.push("/quick-search")}
+            editable={false}
+            placeholder="Search..."
+            placeholderTextColor="#52525b"
+            className="text-zinc-400 font-medium flex-1 pl-5"
+          />
+          <Search className="text-zinc-400 absolute left-1.5" size={20} />
         </View>
       </Pressable>
       <ScrollView className="flex-1 pt-2">{children}</ScrollView>

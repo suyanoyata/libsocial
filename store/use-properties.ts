@@ -5,8 +5,12 @@ import { createJSONStorage, persist } from "zustand/middleware";
 export interface ApplicationProperties {
   currentImageServerIndex: number;
   readerImagePadding: number;
-  setReaderImagePadding: (value: number) => void;
+  readerDisplayCurrentPage: boolean;
+  showQueryDevTools: boolean;
   setCurrentImageServerIndex: (value: number) => void;
+  setReaderImagePadding: (value: number) => void;
+  setReaderDisplayCurrentPage: (value: boolean) => void;
+  setShowQueryDevTools: (value: boolean) => void;
 }
 
 export const useProperties = create<ApplicationProperties>()(
@@ -14,9 +18,14 @@ export const useProperties = create<ApplicationProperties>()(
     (set) => ({
       currentImageServerIndex: 0,
       readerImagePadding: 0,
+      readerDisplayCurrentPage: false,
+      showQueryDevTools: true,
       setReaderImagePadding: (readerImagePadding) => set({ readerImagePadding }),
       setCurrentImageServerIndex: (currentImageServerIndex) =>
         set({ currentImageServerIndex }),
+      setReaderDisplayCurrentPage: (readerDisplayCurrentPage) =>
+        set({ readerDisplayCurrentPage }),
+      setShowQueryDevTools: (showQueryDevTools) => set({ showQueryDevTools }),
     }),
     {
       name: "libsocial.client.properties",

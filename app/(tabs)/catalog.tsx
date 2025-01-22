@@ -1,5 +1,5 @@
-import { SafeAreaView } from "react-native";
+import { Catalog } from "@/features/catalog/ui/catalog-ui";
 
-export default function Catalog() {
-  return <SafeAreaView></SafeAreaView>;
+export default function CatalogView() {
+  return <Catalog />;
 }
