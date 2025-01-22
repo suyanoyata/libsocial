@@ -1,0 +1,10 @@
+import { Text } from "@/components/ui/text";
+import { SafeAreaView } from "react-native";
+
+export default function Notifications() {
+  return (
+    <SafeAreaView>
+      <Text className="text-zinc-200">Notifications</Text>
+    </SafeAreaView>
+  );
+}

@@ -4,11 +4,17 @@ import { api } from "@/lib/axios";
 import { Chapter } from "@/features/shared/types/chapter";
 import { ReaderChapter } from "@/features/manga-reader/types/reader-chapter";
 
-export const useChapter = (slug_url: string, volume: string, number: string) => {
+export const useChapter = (slug_url: string, chapter?: Chapter) => {
   return useQuery<ReaderChapter>({
-    queryKey: ["manga-chapter-reader", slug_url, volume, number],
-    queryFn: async () =>
-      (await api.get(`/manga/${slug_url}/chapter?volume=${volume}&number=${number}`)).data
-        .data,
+    queryKey: ["manga-chapter-reader", slug_url, chapter?.volume, chapter?.number],
+    queryFn: async () => {
+      if (!chapter) throw new Error("No chapter is provided");
+      return (
+        await api.get(
+          `/manga/${slug_url}/chapter?volume=${chapter.volume}&number=${chapter.number}`
+        )
+      ).data.data;
+    },
+    enabled: !!chapter,
   });
 };

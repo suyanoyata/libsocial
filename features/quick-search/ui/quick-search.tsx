@@ -10,7 +10,9 @@ import { QuickSearchInput } from "@/features/quick-search/components/quick-searc
 import useDebounce from "@/hooks/use-debounce";
 import { useEffect, useState } from "react";
 
-import { InputAccessoryView, Keyboard, ScrollView, Text, View } from "react-native";
+import { Text } from "@/components/ui/text";
+
+import { InputAccessoryView, Keyboard, ScrollView, View } from "react-native";
 import { X } from "lucide-react-native";
 
 import { QuickSearchContent } from "@/features/quick-search/components/quick-search-content";

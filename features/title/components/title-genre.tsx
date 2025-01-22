@@ -1,4 +1,6 @@
-import { Pressable, Text } from "react-native";
+import { Pressable } from "react-native";
+
+import { Text } from "@/components/ui/text";
 
 import { Genre } from "@/features/shared/types/title";
 import { cn } from "@/lib/utils";

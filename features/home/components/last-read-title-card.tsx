@@ -1,9 +1,13 @@
 import { Image } from "expo-image";
-import { View, Text, Pressable, Alert } from "react-native";
+import { router } from "expo-router";
+
+import { View, Pressable } from "react-native";
+
+import { Text } from "@/components/ui/text";
 
 import { LastReadItem, useReadingTracker } from "@/store/use-reading-tracker";
-import { X } from "@/lib/icon-fix";
-import { router } from "expo-router";
+
+import { X } from "lucide-react-native";
 
 export const LastReadTitleCard = ({ item }: { item: LastReadItem }) => {
   const { removeItem } = useReadingTracker();
@@ -33,13 +37,14 @@ export const LastReadTitleCard = ({ item }: { item: LastReadItem }) => {
         onPress={() => {
           removeItem(item.slug_url);
         }}
+        hitSlop={8}
         className="absolute top-2 right-2 text-zinc-500 z-10"
       >
         <X className="text-zinc-400" strokeWidth={2.2} size={20} />
       </Pressable>
       <Image source={{ uri: item.cover.default }} style={{ width: 100, height: 140 }} />
       <View className="p-2 flex-1">
-        <Text className="text-zinc-200 text-base font-semibold" numberOfLines={2}>
+        <Text className="text-zinc-200 text-base font-semibold w-[90%]" numberOfLines={2}>
           {item.title}
         </Text>
         <View className="h-1.5 rounded-full bg-zinc-700 mt-auto overflow-hidden">

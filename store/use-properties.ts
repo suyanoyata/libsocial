@@ -4,6 +4,8 @@ import { createJSONStorage, persist } from "zustand/middleware";
 
 export interface ApplicationProperties {
   currentImageServerIndex: number;
+  readerImagePadding: number;
+  setReaderImagePadding: (value: number) => void;
   setCurrentImageServerIndex: (value: number) => void;
 }
 
@@ -11,7 +13,9 @@ export const useProperties = create<ApplicationProperties>()(
   persist(
     (set) => ({
       currentImageServerIndex: 0,
-      setCurrentImageServerIndex: (currentImageServerIndex: number) =>
+      readerImagePadding: 0,
+      setReaderImagePadding: (readerImagePadding) => set({ readerImagePadding }),
+      setCurrentImageServerIndex: (currentImageServerIndex) =>
         set({ currentImageServerIndex }),
     }),
     {

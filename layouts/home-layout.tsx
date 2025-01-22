@@ -1,6 +1,9 @@
 import { router } from "expo-router";
 import { Search } from "lucide-react-native";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, View } from "react-native";
+
+import { Text } from "@/components/ui/text";
+
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export const HomeLayout = ({ children }: { children?: React.ReactNode }) => {

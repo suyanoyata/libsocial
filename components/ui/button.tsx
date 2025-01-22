@@ -1,5 +1,6 @@
 import * as React from "react";
-import { Pressable, PressableProps, Text } from "react-native";
+import { Pressable, PressableProps } from "react-native";
+import { Text } from "@/components/ui/text";
 import * as Haptics from "expo-haptics";
 
 import { cva, type VariantProps } from "class-variance-authority";

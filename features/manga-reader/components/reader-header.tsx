@@ -1,10 +1,13 @@
 import { ReaderChapter } from "@/features/manga-reader/types/reader-chapter";
-import { Chapter } from "@/features/shared/types/chapter";
 import { Title } from "@/features/shared/types/title";
+
 import { router } from "expo-router";
-import { ChevronLeft, Cog } from "lucide-react-native";
-import { View, Text } from "react-native";
+import { View } from "react-native";
+
+import { Text } from "@/components/ui/text";
+
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { ChevronLeft, Cog } from "lucide-react-native";
 
 export const ReaderHeader = ({
   chapter,
@@ -16,7 +19,7 @@ export const ReaderHeader = ({
   const { top } = useSafeAreaInsets();
   return (
     <View
-      style={{ paddingTop: top, paddingBottom: 8 }}
+      style={{ paddingTop: top + 8, paddingBottom: 8 }}
       className="mx-3 flex-row items-center gap-2"
     >
       <ChevronLeft

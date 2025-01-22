@@ -1,5 +1,7 @@
 import { Trash2 } from "lucide-react-native";
-import { View, Text, ScrollView } from "react-native";
+import { View, ScrollView } from "react-native";
+
+import { Text } from "@/components/ui/text";
 
 import Animated, { FadeIn } from "react-native-reanimated";
 

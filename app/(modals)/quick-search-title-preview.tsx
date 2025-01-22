@@ -1,15 +1,21 @@
-import { FadeView } from "@/components/ui/fade-view";
 import { ModalWrapper } from "@/components/ui/modal-wrapper";
+import { FadeView } from "@/components/ui/fade-view";
+import { Button } from "@/components/ui/button";
+import { Text } from "@/components/ui/text";
+
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTitleInfo } from "@/features/title/api/use-title-info";
 import { useRoute } from "@react-navigation/native";
+
 import { BlurView } from "expo-blur";
-import { ImageBackground, ScrollView, Text, View } from "react-native";
+import { router } from "expo-router";
 import { Image } from "expo-image";
+
+import { ImageBackground, View } from "react-native";
+import { Platform } from "react-native";
+
 import { TitleSummary } from "@/features/title/components/title-summary";
 import { Genres } from "@/features/title/components/genres";
-import { Button } from "@/components/ui/button";
-import { router } from "expo-router";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function QuickSearchTitlePreview() {
   const route = useRoute();
@@ -36,7 +42,7 @@ export default function QuickSearchTitlePreview() {
           variant="ghost"
           className="absolute right-4 z-30"
           style={{
-            top: -top + 20,
+            top: Platform.OS == "ios" ? -top + 20 : -28,
           }}
         >
           Перейти
@@ -44,7 +50,6 @@ export default function QuickSearchTitlePreview() {
         {data && (
           <FadeView withEnter className="flex-1 -mt-11">
             <View className="flex-1">
-              {/* <BackButton /> */}
               <ImageBackground
                 source={{ uri: data.background.url }}
                 style={{

@@ -10,7 +10,7 @@ export const Genres = ({
   ageRestriction: { id: number; label: string };
 }) => {
   return (
-    <View className="flex-row flex-wrap gap-2">
+    <View className="flex-row flex-wrap gap-2 mt-1">
       {ageRestriction?.id > 2 && (
         <TitleGenre
           genre={{

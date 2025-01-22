@@ -1,7 +1,9 @@
 import { Link } from "expo-router";
 import { Image } from "expo-image";
 
-import { View, Text } from "react-native";
+import { View } from "react-native";
+
+import { Text } from "@/components/ui/text";
 
 import { BaseTitle } from "@/features/shared/types/title";
 import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";

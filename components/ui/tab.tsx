@@ -1,6 +1,6 @@
-import { cn } from "@/lib/utils";
 import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
-import { Pressable, PressableProps, Text, View } from "react-native";
+import { Pressable, PressableProps, View } from "react-native";
+import { Text } from "@/components/ui/text";
 
 type TabProps = PressableProps & {
   value: string;
@@ -20,6 +20,7 @@ export const Tab = ({
 }: TabProps) => {
   return (
     <Pressable
+      hitSlop={4}
       onPress={() => {
         impactAsync(ImpactFeedbackStyle.Soft);
         setSelected(value);

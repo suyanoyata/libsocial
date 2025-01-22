@@ -1,8 +1,9 @@
-import { ScrollView, TextInput, View, Text } from "react-native";
-
-import { X } from "lucide-react-native";
+import { ScrollView, TextInput, View } from "react-native";
 
 import { Button } from "@/components/ui/button";
+import { Text } from "@/components/ui/text";
+
+import { X } from "lucide-react-native";
 
 import { useQuickSearchHistory } from "@/features/quick-search/hooks/use-quick-search-history";
 

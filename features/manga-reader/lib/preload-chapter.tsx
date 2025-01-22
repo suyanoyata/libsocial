@@ -1,0 +1,35 @@
+import { useQueryClient } from "@tanstack/react-query";
+
+import { Image } from "expo-image";
+
+import { api } from "@/lib/axios";
+
+import { ReaderChapter } from "@/features/manga-reader/types/reader-chapter";
+import { Chapter } from "@/features/shared/types/chapter";
+
+export const preloadNextChapter = async (slug_url: string, nextChapter?: Chapter) => {
+  const queryClient = useQueryClient();
+
+  if (nextChapter) {
+    const response = await api
+      .get(
+        `/manga/${slug_url}/chapter?volume=${nextChapter.volume}&number=${nextChapter.number}`
+      )
+      .then((res) => res.data.data)
+      .catch((err) => console.error(err));
+
+    console.log(response);
+
+    queryClient.setQueryData<ReaderChapter>(
+      ["manga-chapter-reader", slug_url, nextChapter.volume, nextChapter.number],
+      response
+    ),
+      await Image.prefetch(
+        response.pages.map(
+          (page: { url: string }) => "https://img2.imglib.info" + page.url
+        ),
+        "disk"
+      ),
+      console.log("preloaded next chapter");
+  }
+};

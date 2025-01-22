@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { View, Text, Pressable } from "react-native";
+import { View, Pressable } from "react-native";
+
+import { Text } from "@/components/ui/text";
 
 export const TitleSummary = ({ children: summary }: { children: string }) => {
   const [lines, setLines] = useState(4);
@@ -16,7 +18,7 @@ export const TitleSummary = ({ children: summary }: { children: string }) => {
         {summary}
       </Text>
       {lineHeight * 4 < height && (
-        <Pressable onPress={() => setLines(lines == 4 ? Infinity : 4)}>
+        <Pressable onPress={() => setLines(lines == 4 ? 2000 : 4)} hitSlop={4}>
           <Text className="text-purple-300 text-sm">
             {lines == 4 ? "Show more..." : "Less"}
           </Text>

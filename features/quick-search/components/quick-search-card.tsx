@@ -1,4 +1,6 @@
-import { Pressable, Text, View } from "react-native";
+import { Pressable, View } from "react-native";
+
+import { Text } from "@/components/ui/text";
 
 import { BaseTitle } from "@/features/shared/types/title";
 import { Image } from "expo-image";
