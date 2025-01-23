@@ -14,6 +14,12 @@ import { Platform, View } from "react-native";
 
 import { iconFix } from "@/lib/icons-fix";
 import { useProperties } from "@/store/use-properties";
+import { initLoggers } from "@/lib/axios";
+import { useEffect } from "react";
+import { enableFreeze, enableScreens } from "react-native-screens";
+
+enableFreeze();
+enableScreens();
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -22,6 +28,7 @@ const queryClient = new QueryClient({
       refetchOnMount: true,
       refetchInterval: 1000 * 60 * 5,
       retry: 1,
+      gcTime: 1000 * 60 * 5,
     },
   },
 });
@@ -65,6 +72,10 @@ export default function RootLayout() {
   });
 
   const { showQueryDevTools } = useProperties();
+
+  useEffect(() => {
+    initLoggers();
+  }, []);
 
   if (!loaded) return;
 

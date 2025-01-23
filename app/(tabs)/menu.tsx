@@ -23,7 +23,9 @@ const SwitchMenuOption = ({
         <Text className="text-zinc-200 font-medium flex-1">{text}</Text>
         <Switch value={value} onValueChange={(value) => setValue(value)} />
       </View>
-      {note && value == true && <Text className="text-zinc-600 text-sm">{note}</Text>}
+      {note && value == true && (
+        <Text className="text-zinc-600 text-sm font-medium">{note}</Text>
+      )}
     </View>
   );
 };

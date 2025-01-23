@@ -7,10 +7,12 @@ export interface ApplicationProperties {
   readerImagePadding: number;
   readerDisplayCurrentPage: boolean;
   showQueryDevTools: boolean;
+  catalogColumns: number;
   setCurrentImageServerIndex: (value: number) => void;
   setReaderImagePadding: (value: number) => void;
   setReaderDisplayCurrentPage: (value: boolean) => void;
   setShowQueryDevTools: (value: boolean) => void;
+  setCatalogColumns: (value: number) => void;
 }
 
 export const useProperties = create<ApplicationProperties>()(
@@ -20,12 +22,14 @@ export const useProperties = create<ApplicationProperties>()(
       readerImagePadding: 0,
       readerDisplayCurrentPage: false,
       showQueryDevTools: true,
+      catalogColumns: 3,
       setReaderImagePadding: (readerImagePadding) => set({ readerImagePadding }),
       setCurrentImageServerIndex: (currentImageServerIndex) =>
         set({ currentImageServerIndex }),
       setReaderDisplayCurrentPage: (readerDisplayCurrentPage) =>
         set({ readerDisplayCurrentPage }),
       setShowQueryDevTools: (showQueryDevTools) => set({ showQueryDevTools }),
+      setCatalogColumns: (catalogColumns) => set({ catalogColumns }),
     }),
     {
       name: "libsocial.client.properties",

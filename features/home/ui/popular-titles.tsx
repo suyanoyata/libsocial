@@ -9,7 +9,9 @@ import { TitleCardPlaceholder } from "@/features/home/components/title-card-plac
 import { FadeView } from "@/components/ui/fade-view";
 
 export const PopularTitles = () => {
-  const { data, isPending } = useHomeTitles();
+  const { data } = useHomeTitles();
+
+  const shouldRenderItems = !!data;
 
   return (
     <ScrollView
@@ -20,14 +22,14 @@ export const PopularTitles = () => {
         gap: 8,
       }}
     >
-      {data && (
+      {shouldRenderItems && (
         <FadeView withEnter className="flex-row gap-2">
           {data.popular.map((title) => (
             <TitleCard key={title.id} title={title} />
           ))}
         </FadeView>
       )}
-      {isPending && (
+      {!shouldRenderItems && (
         <PulseView className="flex-row gap-2">
           {Array.from({ length: 20 }).map((_, index) => (
             <TitleCardPlaceholder key={index} />

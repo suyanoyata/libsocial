@@ -1,5 +1,5 @@
+import { SafeAreaView, View } from "react-native";
 import { Text } from "@/components/ui/text";
-import { SafeAreaView } from "react-native";
 
 export default function Notifications() {
   return (
