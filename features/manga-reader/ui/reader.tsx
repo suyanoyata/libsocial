@@ -106,6 +106,14 @@ export const MangaReaderUI = () => {
   }, [data?.pages]);
 
   useEffect(() => {
+    const filtered = breakpoints?.filter((value) => value <= offset);
+
+    if (filtered && filtered?.length != 0) {
+      setCurrentPage(filtered.length);
+    }
+  }, [offset]);
+
+  useEffect(() => {
     const item = get(slug_url) as unknown as LastReadItem;
 
     if (!data || !flatListRef || !item) return;
@@ -125,14 +133,6 @@ export const MangaReaderUI = () => {
       </View>
     );
   }
-
-  useEffect(() => {
-    const filtered = breakpoints?.filter((value) => value <= offset);
-
-    if (filtered && filtered?.length != 0) {
-      setCurrentPage(filtered.length);
-    }
-  }, [offset]);
 
   if (!imageServers) return null;
 
