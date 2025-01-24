@@ -79,7 +79,7 @@ export default function Menu() {
         value={readerDisplayCurrentPage}
         setValue={setReaderDisplayCurrentPage}
       >
-        Display current page in reader (experimental)
+        Display current page in reader (unstable)
       </SwitchMenuOption>
       <SwitchMenuOption
         debugOnly

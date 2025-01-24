@@ -5,18 +5,22 @@ import { QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { DarkTheme, ThemeProvider } from "@react-navigation/native";
 import { DevToolsBubble } from "react-native-react-query-devtools";
-import { clientPersister } from "@/lib/persistent-query-storage";
 
 import { createFont, createTamagui, TamaguiProvider } from "@tamagui/core";
 import { defaultConfig } from "@tamagui/config/v4";
-import { useFonts } from "expo-font";
-import { Platform, View } from "react-native";
 
-import { iconFix } from "@/lib/icons-fix";
 import { useProperties } from "@/store/use-properties";
-import { initLoggers } from "@/lib/axios";
-import { useEffect } from "react";
+import { useFonts } from "expo-font";
+import { addUpdatesStateChangeListener, reloadAsync } from "expo-updates";
+import { useEffect, useState } from "react";
+
+import { View } from "react-native";
+
 import { enableFreeze, enableScreens } from "react-native-screens";
+
+import { clientPersister } from "@/lib/persistent-query-storage";
+import { initLoggers } from "@/lib/axios";
+import { iconFix } from "@/lib/icons-fix";
 
 enableFreeze();
 enableScreens();
@@ -60,6 +64,7 @@ declare module "@tamagui/core" {
 }
 
 iconFix();
+initLoggers();
 
 export default function RootLayout() {
   const [loaded] = useFonts({
@@ -71,58 +76,46 @@ export default function RootLayout() {
     "SF-Heavy": require("../assets/fonts/SFUIText-Heavy.ttf"),
   });
 
+  const [updating, setUpdating] = useState(false);
+
   const { showQueryDevTools } = useProperties();
 
   useEffect(() => {
-    initLoggers();
+    addUpdatesStateChangeListener(async (listener) => {
+      if (listener.context.isUpdatePending && !updating) {
+        setUpdating(true);
+        queryClient.clear();
+        await reloadAsync();
+      }
+    });
+
+    return () => {
+      setUpdating(false);
+    };
   }, []);
 
   if (!loaded) return;
-
-  // android needs extra view so it wont be flashing white color on navigation
-  if (Platform.OS == "android") {
-    return (
-      <PersistQueryClientProvider
-        persistOptions={{ persister: clientPersister }}
-        client={queryClient}
-      >
-        <View className="bg-black flex-1">
-          <TamaguiProvider config={config}>
-            <ThemeProvider value={DarkTheme}>
-              <Stack
-                screenOptions={{
-                  headerShown: false,
-                }}
-              >
-                <Stack.Screen name="(tabs)" />
-                <Stack.Screen options={{ presentation: "modal" }} name="(modals)" />
-              </Stack>
-              <DevToolsBubble />
-            </ThemeProvider>
-          </TamaguiProvider>
-        </View>
-      </PersistQueryClientProvider>
-    );
-  }
 
   return (
     <PersistQueryClientProvider
       persistOptions={{ persister: clientPersister }}
       client={queryClient}
     >
-      <TamaguiProvider config={config}>
-        <ThemeProvider value={DarkTheme}>
-          <Stack
-            screenOptions={{
-              headerShown: false,
-            }}
-          >
-            <Stack.Screen name="(tabs)" />
-            <Stack.Screen options={{ presentation: "modal" }} name="(modals)" />
-          </Stack>
-          {__DEV__ && showQueryDevTools && <DevToolsBubble />}
-        </ThemeProvider>
-      </TamaguiProvider>
+      <View className="bg-black flex-1">
+        <TamaguiProvider config={config}>
+          <ThemeProvider value={DarkTheme}>
+            <Stack
+              screenOptions={{
+                headerShown: false,
+              }}
+            >
+              <Stack.Screen name="(tabs)" />
+              <Stack.Screen options={{ presentation: "modal" }} name="(modals)" />
+            </Stack>
+            {__DEV__ && showQueryDevTools && <DevToolsBubble />}
+          </ThemeProvider>
+        </TamaguiProvider>
+      </View>
     </PersistQueryClientProvider>
   );
 }
