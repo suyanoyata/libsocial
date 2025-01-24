@@ -72,6 +72,7 @@
     "react-i18next": "^15.1.1",
     "react-native": "0.76.6",
     "react-native-error-boundary": "^1.2.5",
+    "react-native-fast-image": "^8.6.3",
     "react-native-flextool": "^1.0.8",
     "react-native-gesture-handler": "~2.20.2",
     "react-native-global-props": "^1.1.5",

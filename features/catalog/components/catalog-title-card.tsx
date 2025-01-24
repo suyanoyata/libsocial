@@ -1,5 +1,4 @@
 import { Link } from "expo-router";
-import { Image } from "expo-image";
 
 import { View } from "react-native";
 
@@ -7,6 +6,7 @@ import { Text } from "@/components/ui/text";
 
 import { BaseTitle } from "@/features/shared/types/title";
 import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
+import FastImage from "react-native-fast-image";
 
 export const CatalogTitleCard = ({ title }: { title: BaseTitle }) => {
   return (
@@ -19,12 +19,10 @@ export const CatalogTitleCard = ({ title }: { title: BaseTitle }) => {
         },
       }}
       onPress={() => impactAsync(ImpactFeedbackStyle.Soft)}
-      className="w-[120px] mb-2"
+      className="w-[120px] my-1"
     >
       <View>
-        <Image
-          recyclingKey={title.cover.default}
-          cachePolicy="disk"
+        <FastImage
           source={{ uri: title.cover.default }}
           style={{ height: 190, width: 120, borderRadius: 4 }}
         />

@@ -10,7 +10,7 @@ import { ActivityIndicator, FlatList, useWindowDimensions, View } from "react-na
 
 import { LastReadItem, useReadingTracker } from "@/store/use-reading-tracker";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { useTitleReadChapter } from "@/store/use-chapters-tracker";
@@ -36,6 +36,7 @@ export const MangaReaderUI = () => {
   const queryClient = useQueryClient();
   const { currentImageServerIndex, readerImagePadding, readerDisplayCurrentPage } =
     useProperties();
+
   const { data: imageServers } = useImageServers();
 
   const { addItem, get } = useReadingTracker();
@@ -98,7 +99,8 @@ export const MangaReaderUI = () => {
 
   const breakpoints = useMemo(() => {
     return data?.pages.reduce((acc: number[], page) => {
-      const value = Math.round(width / page.ratio);
+      const value = Math.round(width / page.ratio) + readerImagePadding;
+
       const lastValue = acc[acc.length - 1] || 0;
       acc.push(lastValue + value);
       return acc;
@@ -125,6 +127,28 @@ export const MangaReaderUI = () => {
       });
     }, 250);
   }, [data, flatListRef]);
+
+  const preloadChapter = useCallback(async () => {
+    if (nextChapter) {
+      const response = await api
+        .get(
+          `/manga/${slug_url}/chapter?volume=${nextChapter.volume}&number=${nextChapter.number}`
+        )
+        .then((res) => res.data.data)
+        .catch((err) => console.error(err));
+
+      queryClient.setQueryData<ReaderChapter>(
+        ["manga-chapter-reader", slug_url, nextChapter.volume, nextChapter.number],
+        response
+      ),
+        await Image.prefetch(
+          response.pages.map(
+            (page: { url: string }) => "https://img2.imglib.info" + page.url
+          ),
+          "disk"
+        );
+    }
+  }, [nextChapter, slug_url]);
 
   if (!chapters || !title) {
     return (
@@ -172,35 +196,10 @@ export const MangaReaderUI = () => {
           }}
           onScroll={(event) => setOffset(event.nativeEvent.contentOffset.y)}
           onMomentumScrollEnd={(event) => setOffset(event.nativeEvent.contentOffset.y)}
+          maxToRenderPerBatch={6}
           initialNumToRender={20}
-          onEndReached={async () => {
-            // FIXME: for some reason if we put this in function it will be not called
-            if (nextChapter) {
-              const response = await api
-                .get(
-                  `/manga/${slug_url}/chapter?volume=${nextChapter.volume}&number=${nextChapter.number}`
-                )
-                .then((res) => res.data.data)
-                .catch((err) => console.error(err));
-
-              queryClient.setQueryData<ReaderChapter>(
-                [
-                  "manga-chapter-reader",
-                  slug_url,
-                  nextChapter.volume,
-                  nextChapter.number,
-                ],
-                response
-              ),
-                await Image.prefetch(
-                  response.pages.map(
-                    (page: { url: string }) => "https://img2.imglib.info" + page.url
-                  ),
-                  "disk"
-                );
-            }
-          }}
-          onEndReachedThreshold={0.1}
+          onEndReached={preloadChapter}
+          onEndReachedThreshold={0.5}
           ListHeaderComponent={() => <ReaderHeader chapter={data} title={title} />}
           ListFooterComponent={() => (
             <ReaderChapterNavigation chapterIndex={chapterIndex} chapters={chapters} />

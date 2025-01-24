@@ -1,5 +1,5 @@
 import { Link } from "expo-router";
-import { Image } from "expo-image";
+import FastImage from "react-native-fast-image";
 
 import { View } from "react-native";
 
@@ -22,9 +22,7 @@ export const TitleCard = ({ title }: { title: BaseTitle }) => {
       className="w-[120px]"
     >
       <View>
-        <Image
-          recyclingKey={title.cover.default}
-          cachePolicy="disk"
+        <FastImage
           source={{ uri: title.cover.default }}
           style={{ height: 180, width: 120, borderRadius: 4 }}
         />
