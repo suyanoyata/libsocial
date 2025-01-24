@@ -9,12 +9,11 @@ export const HomeLayout = ({ children }: { children?: React.ReactNode }) => {
 
   return (
     <View className="flex-1">
-      <Pressable
+      <View
         style={{ paddingTop: top + 8, paddingBottom: 16 }}
-        className="bg-zinc-950"
-        onPress={() => router.push("/quick-search")}
+        className="bg-zinc-950 relative"
       >
-        <View className="bg-zinc-900 px-4 py-2 h-10 items-center flex-row font-medium rounded-md mx-2">
+        <View className="bg-zinc-900 px-4 py-2 h-10 items-center flex-row font-medium rounded-md mx-2 z-10">
           <TextInput
             editable={false}
             placeholder="Search..."
@@ -23,7 +22,12 @@ export const HomeLayout = ({ children }: { children?: React.ReactNode }) => {
           />
           <Search className="text-zinc-400 absolute left-1.5" size={20} />
         </View>
-      </Pressable>
+        <Pressable
+          className="flex-1 absolute top-0 left-0 h-14 w-full z-30"
+          style={{ height: 64 + top }}
+          onPress={() => router.push("/quick-search")}
+        />
+      </View>
       <ScrollView className="flex-1 pt-2">{children}</ScrollView>
     </View>
   );
