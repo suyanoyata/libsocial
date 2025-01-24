@@ -6,7 +6,7 @@ import { Text } from "@/components/ui/text";
 
 import { BaseTitle } from "@/features/shared/types/title";
 import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
-import FastImage from "react-native-fast-image";
+import FastImage from "@d11/react-native-fast-image";
 
 export const CatalogTitleCard = ({ title }: { title: BaseTitle }) => {
   return (

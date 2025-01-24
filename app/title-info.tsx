@@ -3,8 +3,14 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 
-import { ActivityIndicator, Platform, ScrollView, View } from "react-native";
-import { Image, ImageBackground } from "expo-image";
+import {
+  ActivityIndicator,
+  ImageBackground,
+  Platform,
+  ScrollView,
+  View,
+} from "react-native";
+import FastImage from "@d11/react-native-fast-image";
 import { BlurView } from "expo-blur";
 
 import { BackButton } from "@/components/ui/back-button";
@@ -89,7 +95,7 @@ export default function TitleInfo() {
             }}
           />
           <View className="mx-2 flex-row z-10">
-            <Image
+            <FastImage
               source={{ uri: data.cover.default }}
               style={{
                 borderRadius: 8,

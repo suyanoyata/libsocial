@@ -9,7 +9,7 @@ import { useRoute } from "@react-navigation/native";
 
 import { BlurView } from "expo-blur";
 import { router } from "expo-router";
-import { Image } from "expo-image";
+import FastImage from "@d11/react-native-fast-image";
 
 import { ImageBackground, View } from "react-native";
 
@@ -69,7 +69,7 @@ export default function QuickSearchTitlePreview() {
                   }}
                 />
                 <View className="mx-2 flex-row">
-                  <Image
+                  <FastImage
                     source={{ uri: data.cover.default }}
                     style={{
                       borderRadius: 8,

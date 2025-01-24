@@ -1,8 +1,9 @@
-import { Tabs } from "expo-router";
 import { Bell, Home, LayoutGrid, MenuIcon } from "lucide-react-native";
+import { View } from "react-native";
+import { Tabs } from "expo-router";
+
 import { useImageServers } from "@/features/shared/api/use-image-servers";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { View } from "react-native";
 
 export default function TabsLayout() {
   useImageServers();
@@ -12,7 +13,7 @@ export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        lazy: false,
+        lazy: true,
         sceneStyle: {
           marginTop: top,
         },

@@ -1,4 +1,4 @@
-import { Image } from "expo-image";
+import FastImage from "@d11/react-native-fast-image";
 import { router } from "expo-router";
 
 import { View, Pressable } from "react-native";
@@ -42,7 +42,10 @@ export const LastReadTitleCard = ({ item }: { item: LastReadItem }) => {
       >
         <X className="text-zinc-400" strokeWidth={2.2} size={20} />
       </Pressable>
-      <Image source={{ uri: item.cover.default }} style={{ width: 100, height: 140 }} />
+      <FastImage
+        source={{ uri: item.cover.default }}
+        style={{ width: 100, height: 140 }}
+      />
       <View className="p-2 flex-1">
         <Text className="text-zinc-200 text-base font-semibold w-[90%]" numberOfLines={2}>
           {item.title}

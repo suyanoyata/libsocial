@@ -3,7 +3,7 @@ import { FadeView } from "@/components/ui/fade-view";
 import { ReaderChapterNavigation } from "@/features/manga-reader/components/reader-chapter-navigation";
 import { ReaderHeader } from "@/features/manga-reader/components/reader-header";
 
-import { Image } from "expo-image";
+import FastImage from "@d11/react-native-fast-image";
 
 import { useRoute } from "@react-navigation/native";
 import { ActivityIndicator, FlatList, useWindowDimensions, View } from "react-native";
@@ -141,11 +141,10 @@ export const MangaReaderUI = () => {
         ["manga-chapter-reader", slug_url, nextChapter.volume, nextChapter.number],
         response
       ),
-        await Image.prefetch(
+        FastImage.preload(
           response.pages.map(
             (page: { url: string }) => "https://img2.imglib.info" + page.url
-          ),
-          "disk"
+          )
         );
     }
   }, [nextChapter, slug_url]);
@@ -207,8 +206,8 @@ export const MangaReaderUI = () => {
           style={{ width }}
           data={data.pages}
           renderItem={({ item }) => (
-            <Image
-              contentFit="contain"
+            <FastImage
+              resizeMode="contain"
               style={{
                 marginHorizontal: "auto",
                 width: width > 800 ? 800 : width,
@@ -216,7 +215,6 @@ export const MangaReaderUI = () => {
               }}
               source={{
                 uri: imageServers[currentImageServerIndex].url + item.url,
-                recyclingKey: imageServers[currentImageServerIndex].url + item.url,
               }}
             />
           )}

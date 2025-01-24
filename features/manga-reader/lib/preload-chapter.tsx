@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 
-import { Image } from "expo-image";
+import FastImage from "@d11/react-native-fast-image";
 
 import { api } from "@/lib/axios";
 
@@ -24,11 +24,10 @@ export const preloadNextChapter = async (slug_url: string, nextChapter?: Chapter
       ["manga-chapter-reader", slug_url, nextChapter.volume, nextChapter.number],
       response
     ),
-      await Image.prefetch(
+      FastImage.preload(
         response.pages.map(
           (page: { url: string }) => "https://img2.imglib.info" + page.url
-        ),
-        "disk"
+        )
       ),
       console.log("preloaded next chapter");
   }
