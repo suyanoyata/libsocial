@@ -8,6 +8,7 @@ ENV['RCT_NEW_ARCH_ENABLED'] = podfile_properties['newArchEnabled'] == 'true' ? '
 ENV['EX_DEV_CLIENT_NETWORK_INSPECTOR'] = podfile_properties['EX_DEV_CLIENT_NETWORK_INSPECTOR']
 
 platform :ios, podfile_properties['ios.deploymentTarget'] || '15.1'
+
 install! 'cocoapods',
   :deterministic_uuids => false
 
@@ -15,6 +16,8 @@ prepare_react_native_project!
 
 target 'libsocial' do
   use_expo_modules!
+
+  pod 'FLEX', :configurations => ['Debug']
 
   if ENV['EXPO_USE_COMMUNITY_AUTOLINKING'] == '1'
     config_command = ['node', '-e', "process.argv=['', '', 'config'];require('@react-native-community/cli').run()"];
