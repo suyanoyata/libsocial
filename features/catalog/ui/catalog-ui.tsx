@@ -1,15 +1,21 @@
-import { FlatList, TextInput, useWindowDimensions, View } from "react-native";
-
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Search } from "lucide-react-native";
-import { useEffect, useRef, useState } from "react";
-import useDebounce from "@/hooks/use-debounce";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { api } from "@/lib/axios";
+import { TextInput, useWindowDimensions, View } from "react-native";
 import { FlashList } from "@shopify/flash-list";
-import { BaseTitle } from "@/features/shared/types/title";
-import { CatalogTitleCard } from "@/features/catalog/components/catalog-title-card";
+import { Search } from "lucide-react-native";
+
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useEffect, useMemo, useState } from "react";
+
+import useDebounce from "@/hooks/use-debounce";
 import { useProperties } from "@/store/use-properties";
+
+import { api } from "@/lib/axios";
+
+import { CatalogTitleCard } from "@/features/catalog/components/catalog-title-card";
+
+import { BaseTitle } from "@/features/shared/types/title";
+import { TitleCardPlaceholder } from "@/features/home/components/title-card-placeholder";
+import { PulseView } from "@/components/ui/pulse-view";
 
 export const Catalog = () => {
   const { top } = useSafeAreaInsets();
@@ -19,7 +25,7 @@ export const Catalog = () => {
 
   const [query] = useDebounce(search, 500);
 
-  const { data, fetchNextPage } = useInfiniteQuery<{
+  const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery<{
     data: BaseTitle[];
   }>({
     queryKey: ["catalog-search", query.trim()],
@@ -32,14 +38,12 @@ export const Catalog = () => {
       ).data,
     staleTime: 1000 * 60 * 1,
     getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.data.length != 0 && allPages.length < 20) {
+      if (lastPage.data?.length != 0 && allPages?.length < 10) {
         return allPages.length + 1;
       }
       return undefined;
     },
   });
-
-  const listRef = useRef<FlatList>(null);
 
   const { width, height } = useWindowDimensions();
   const { catalogColumns, setCatalogColumns } = useProperties();
@@ -67,6 +71,11 @@ export const Catalog = () => {
     setInitialRender(false);
   }, []);
 
+  const catalogItems = useMemo(
+    () => data?.pages.reduce<BaseTitle[]>((acc, page) => acc.concat(page.data), []),
+    [data]
+  );
+
   if (Math.floor(width / containerWidth) != catalogColumns && initialRender) return null;
 
   return (
@@ -87,38 +96,55 @@ export const Catalog = () => {
       </View>
       {data && (
         <View className="flex-1 mx-2">
-          <FlatList
-            ref={listRef}
-            data={data.pages}
-            keyExtractor={(item) => item.meta.current_page.toString()}
-            onLayout={(event) => {
-              setCatalogColumns(
-                Math.floor(event.nativeEvent.layout.width / containerWidth)
-              );
-            }}
+          <FlashList
+            removeClippedSubviews
+            data={catalogItems}
             onEndReachedThreshold={0.8}
             onEndReached={() => fetchNextPage()}
-            renderItem={({ item }) => (
-              <FlashList
-                scrollEnabled={false}
-                estimatedListSize={{
-                  width,
-                  height,
+            estimatedListSize={{
+              width,
+              height,
+            }}
+            drawDistance={height * 3}
+            numColumns={catalogColumns}
+            estimatedItemSize={190}
+            renderItem={({ item, index }: { item: BaseTitle; index: number }) => (
+              <View
+                style={{
+                  ...getItemStyle(index, catalogColumns),
                 }}
-                numColumns={catalogColumns}
-                estimatedItemSize={190}
-                data={item.data}
-                renderItem={({ item, index }: { item: BaseTitle; index: number }) => (
-                  <View
-                    style={{
-                      ...getItemStyle(index, catalogColumns),
-                    }}
-                  >
-                    <CatalogTitleCard title={item} />
-                  </View>
-                )}
-              />
+              >
+                <CatalogTitleCard title={item} />
+              </View>
             )}
+            ListFooterComponent={() =>
+              isFetchingNextPage && (
+                <PulseView className="flex-1 -mt-8">
+                  <FlashList
+                    removeClippedSubviews
+                    data={Array.from({ length: 60 })}
+                    onEndReachedThreshold={0.8}
+                    estimatedListSize={{
+                      width,
+                      height,
+                    }}
+                    drawDistance={height * 2}
+                    numColumns={catalogColumns}
+                    estimatedItemSize={190}
+                    renderItem={({ index }: { index: number }) => (
+                      <View
+                        className="mb-2"
+                        style={{
+                          ...getItemStyle(index, catalogColumns),
+                        }}
+                      >
+                        <TitleCardPlaceholder />
+                      </View>
+                    )}
+                  />
+                </PulseView>
+              )
+            }
           />
         </View>
       )}
