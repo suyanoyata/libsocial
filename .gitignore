@@ -12,6 +12,10 @@ web-build/
 app-example/
 .idea/
 
+# ignore native folders
+android/
+ios/
+
 # macOS
 .DS_Store
 
