@@ -69,14 +69,14 @@ export const Catalog = () => {
       setCatalogColumns(Math.floor(width / containerWidth));
     }
     setInitialRender(false);
-  }, []);
+  }, [width]);
 
   const catalogItems = useMemo(
     () => data?.pages.reduce<BaseTitle[]>((acc, page) => acc.concat(page.data), []),
     [data]
   );
 
-  if (Math.floor(width / containerWidth) != catalogColumns && initialRender) return null;
+  if (Math.floor(width / containerWidth) != catalogColumns || initialRender) return null;
 
   return (
     <View style={{ flex: 1 }}>
@@ -95,7 +95,7 @@ export const Catalog = () => {
         </View>
       </View>
       {data && (
-        <View className="flex-1 mx-2">
+        <View className="flex-1 mx-2 overflow-hidden rounded-sm">
           <FlashList
             removeClippedSubviews
             data={catalogItems}

@@ -23,7 +23,7 @@ export const CatalogTitleCard = ({ title }: { title: BaseTitle }) => {
     >
       <View>
         <FastImage
-          source={{ uri: title.cover.default }}
+          source={{ uri: title.cover.thumbnail }}
           style={{ height: 190, width: 120, borderRadius: 4 }}
         />
         <Text className="text-sm mt-1 font-medium text-zinc-200" numberOfLines={2}>

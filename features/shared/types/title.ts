@@ -14,6 +14,7 @@ export type BaseTitle = {
     votesFormated: string;
   };
   cover: {
+    thumbnail: string;
     default: string;
   };
   site: number;
