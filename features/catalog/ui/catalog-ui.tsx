@@ -2,20 +2,21 @@ import { TextInput, useWindowDimensions, View } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import { Filter, Search } from "lucide-react-native";
 
-import { useInfiniteQuery } from "@tanstack/react-query";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useEffect, useMemo, useState } from "react";
 
 import useDebounce from "@/hooks/use-debounce";
 import { useProperties } from "@/store/use-properties";
 
-import { api } from "@/lib/axios";
-
 import { CatalogTitleCard } from "@/features/catalog/components/catalog-title-card";
 
 import { BaseTitle } from "@/features/shared/types/title";
 import { TitleCardPlaceholder } from "@/features/home/components/title-card-placeholder";
 import { PulseView } from "@/components/ui/pulse-view";
+import { Button } from "@/components/ui/button";
+import { router } from "expo-router";
+
+import { useCatalogAPI } from "@/features/catalog/api/use-catalog-api";
 
 export const Catalog = () => {
   const { top } = useSafeAreaInsets();
@@ -25,25 +26,7 @@ export const Catalog = () => {
 
   const [query] = useDebounce(search, 500);
 
-  const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery<{
-    data: BaseTitle[];
-  }>({
-    queryKey: ["catalog-search", query.trim()],
-    initialPageParam: 1,
-    queryFn: async ({ pageParam }) =>
-      (
-        await api.get(
-          `/manga?fields[]=rate&fields[]=rate_avg&fields[]=userBookmark&q=${query.trim()}&site_id[]=1&page=${pageParam}`
-        )
-      ).data,
-    staleTime: 1000 * 60 * 1,
-    getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.data?.length != 0 && allPages?.length < 10) {
-        return allPages.length + 1;
-      }
-      return undefined;
-    },
-  });
+  const { data, isFetchingNextPage, fetchNextPage } = useCatalogAPI(query);
 
   const { width, height } = useWindowDimensions();
   const { catalogColumns, setCatalogColumns } = useProperties();
