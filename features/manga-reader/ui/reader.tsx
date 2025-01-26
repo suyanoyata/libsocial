@@ -197,8 +197,10 @@ export const MangaReaderUI = () => {
           onMomentumScrollEnd={(event) => setOffset(event.nativeEvent.contentOffset.y)}
           maxToRenderPerBatch={6}
           initialNumToRender={20}
+          stickyHeaderIndices={[0]}
           onEndReached={preloadChapter}
           onEndReachedThreshold={0.5}
+          showsVerticalScrollIndicator={false}
           ListHeaderComponent={() => <ReaderHeader chapter={data} title={title} />}
           ListFooterComponent={() => (
             <ReaderChapterNavigation chapterIndex={chapterIndex} chapters={chapters} />

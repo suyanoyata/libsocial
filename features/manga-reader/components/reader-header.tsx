@@ -20,7 +20,7 @@ export const ReaderHeader = ({
   return (
     <View
       style={{ paddingTop: top + 8, paddingBottom: 8 }}
-      className="mx-3 flex-row items-center gap-2"
+      className="px-3 flex-row items-center gap-2 bg-black"
     >
       <ChevronLeft
         onPress={() => router.back()}
