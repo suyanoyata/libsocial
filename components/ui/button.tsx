@@ -31,7 +31,7 @@ const textVariants = cva("text-black", {
   variants: {
     variant: {
       default: "text-black",
-      ghost: "text-white",
+      ghost: "text-zinc-200",
       destructive: "text-white",
     },
     size: {
