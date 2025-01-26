@@ -1,3 +1,4 @@
+import { PulseView } from "@/components/ui/pulse-view";
 import FastImage, { Source } from "@d11/react-native-fast-image";
 import { useEffect, useState } from "react";
 import { View, ViewProps } from "react-native";
@@ -29,6 +30,10 @@ export const TransitionedImage = ({
     setShowImage(true);
   };
 
+  const onError = () => {
+    setShowImage(false);
+  };
+
   useEffect(() => {
     return () => setShowImage(false);
   }, [recycleId]);
@@ -53,6 +58,7 @@ export const TransitionedImage = ({
         />
       )}
       <FastImage
+        onError={onError}
         onLoadEnd={onImageLoad}
         source={source}
         style={{ width, height, zIndex: 1 }}
