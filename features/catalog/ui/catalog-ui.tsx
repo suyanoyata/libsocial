@@ -1,6 +1,6 @@
 import { TextInput, useWindowDimensions, View } from "react-native";
 import { FlashList } from "@shopify/flash-list";
-import { Search } from "lucide-react-native";
+import { Filter, Search } from "lucide-react-native";
 
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -84,6 +84,18 @@ export const Catalog = () => {
         style={{ paddingTop: top + 8, paddingBottom: 10 }}
         className="bg-zinc-950 px-2"
       >
+        <Button
+          variant="ghost"
+          className="w-[110px] mb-2 rounded-full"
+          iconLeft={<Filter className="text-zinc-200" size={18} />}
+          onPress={() => {
+            router.push({
+              pathname: "/catalog-filters-view",
+            });
+          }}
+        >
+          Filters
+        </Button>
         <View className="bg-zinc-900 px-4 py-2 h-10 items-center flex-row font-medium rounded-md">
           <TextInput
             onChangeText={setSearch}
@@ -118,7 +130,8 @@ export const Catalog = () => {
               </View>
             )}
             ListFooterComponent={() =>
-              isFetchingNextPage && (
+              isFetchingNextPage &&
+              !(data.pages.length < 10) && (
                 <PulseView className="flex-1 -mt-8">
                   <FlashList
                     removeClippedSubviews

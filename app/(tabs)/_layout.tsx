@@ -2,11 +2,13 @@ import { Bell, Home, LayoutGrid, MenuIcon } from "lucide-react-native";
 import { View } from "react-native";
 import { Tabs } from "expo-router";
 
+import { useGenresConstants } from "@/features/shared/api/use-filter-constants";
 import { useImageServers } from "@/features/shared/api/use-image-servers";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function TabsLayout() {
   useImageServers();
+  useGenresConstants();
 
   const { top } = useSafeAreaInsets();
 
