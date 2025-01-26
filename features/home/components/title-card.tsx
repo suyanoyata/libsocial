@@ -7,6 +7,7 @@ import { Text } from "@/components/ui/text";
 
 import { BaseTitle } from "@/features/shared/types/title";
 import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
+import { TransitionedImage } from "@/features/shared/components/transitioned-image";
 
 export const TitleCard = ({ title }: { title: BaseTitle }) => {
   return (
@@ -22,9 +23,10 @@ export const TitleCard = ({ title }: { title: BaseTitle }) => {
       className="w-[120px]"
     >
       <View>
-        <FastImage
+        <TransitionedImage
           source={{ uri: title.cover.default }}
-          style={{ height: 180, width: 120, borderRadius: 4 }}
+          width={120}
+          height={180}
         />
         <Text className="text-sm mt-1 font-medium text-zinc-200" numberOfLines={2}>
           {title.eng_name != "" ? title.eng_name : title.name}
