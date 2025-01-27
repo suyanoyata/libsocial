@@ -11,7 +11,6 @@ import { ActivityIndicator, FlatList, useWindowDimensions, View } from "react-na
 import { LastReadItem, useReadingTracker } from "@/store/use-reading-tracker";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 
 import { useTitleReadChapter } from "@/store/use-chapters-tracker";
 import { useProperties } from "@/store/use-properties";
@@ -21,11 +20,10 @@ import { useChapter } from "@/features/manga-reader/api/use-chapter";
 import { useTitleInfo } from "@/features/title/api/use-title-info";
 import { useChapters } from "@/features/title/api/use-chapters";
 
-import { ReaderChapter } from "@/features/manga-reader/types/reader-chapter";
-
-import { api } from "@/lib/axios";
 import { Text } from "@/components/ui/text";
 import { MenuView } from "@react-native-menu/menu";
+
+import { preloadNextChapter } from "@/features/manga-reader/lib/preload-chapter";
 
 export const MangaReaderUI = () => {
   const route = useRoute();
@@ -33,7 +31,6 @@ export const MangaReaderUI = () => {
   const { width } = useWindowDimensions();
   const [offset, setOffset] = useState(0);
 
-  const queryClient = useQueryClient();
   const { currentImageServerIndex, readerImagePadding, readerDisplayCurrentPage } =
     useProperties();
 
@@ -49,19 +46,10 @@ export const MangaReaderUI = () => {
 
   const chapterIndex = Number(index);
 
-  // #region route arguments error handling
-  if (!slug_url || !index) {
-    console.error({
-      slug_url,
-      index,
-    });
-    throw new Error("Missing required params");
-  }
-
-  if (typeof slug_url !== "string" || typeof index !== "string") {
-    throw new Error("Route params types are mismatched");
-  }
-  // #endregion
+  const { error } = useMemo(
+    () => readerPropsSchema.safeParse({ slug_url, index }),
+    [index, slug_url]
+  );
 
   useEffect(() => {
     setTimeout(() => {
@@ -128,26 +116,18 @@ export const MangaReaderUI = () => {
     }, 250);
   }, [data, flatListRef]);
 
-  const preloadChapter = useCallback(async () => {
-    if (nextChapter) {
-      const response = await api
-        .get(
-          `/manga/${slug_url}/chapter?volume=${nextChapter.volume}&number=${nextChapter.number}`
-        )
-        .then((res) => res.data.data)
-        .catch((err) => console.error(err));
+  const preloadChapter = useCallback(
+    () => preloadNextChapter(slug_url, nextChapter),
+    [nextChapter, slug_url]
+  );
 
-      queryClient.setQueryData<ReaderChapter>(
-        ["manga-chapter-reader", slug_url, nextChapter.volume, nextChapter.number],
-        response
-      ),
-        FastImage.preload(
-          response.pages.map(
-            (page: { url: string }) => "https://img2.imglib.info" + page.url
-          )
-        );
-    }
-  }, [nextChapter, slug_url]);
+  if (error) {
+    return (
+      <View className="flex-1 items-center justify-center">
+        <Text className="text-zinc-200">Something went wrong</Text>
+      </View>
+    );
+  }
 
   if (!chapters || !title) {
     return (

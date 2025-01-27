@@ -18,8 +18,6 @@ export const preloadNextChapter = async (slug_url: string, nextChapter?: Chapter
       .then((res) => res.data.data)
       .catch((err) => console.error(err));
 
-    console.log(response);
-
     queryClient.setQueryData<ReaderChapter>(
       ["manga-chapter-reader", slug_url, nextChapter.volume, nextChapter.number],
       response
@@ -28,7 +26,6 @@ export const preloadNextChapter = async (slug_url: string, nextChapter?: Chapter
         response.pages.map(
           (page: { url: string }) => "https://img2.imglib.info" + page.url
         )
-      ),
-      console.log("preloaded next chapter");
+      );
   }
 };
