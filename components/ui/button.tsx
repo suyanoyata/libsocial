@@ -31,7 +31,7 @@ const textVariants = cva("text-black", {
   variants: {
     variant: {
       default: "text-black",
-      ghost: "text-zinc-200",
+      ghost: "text-zinc-200 font-medium",
       destructive: "text-white",
     },
     size: {
@@ -49,6 +49,7 @@ export interface ButtonProps extends PressableProps, VariantProps<typeof buttonV
   iconLeft?: React.ReactNode;
   iconRight?: React.ReactNode;
   children?: React.ReactNode;
+  textClassName?: string;
   onPress?: () => void;
 }
 
@@ -66,7 +67,9 @@ const Button = React.forwardRef<Pressable, ButtonProps>(
         {...props}
       >
         {iconLeft}
-        <Text className={cn(textVariants({ variant, size }))}>{children}</Text>
+        <Text className={cn(textVariants({ variant, size }), props.textClassName)}>
+          {children}
+        </Text>
         {iconRight}
       </Pressable>
     );

@@ -2,6 +2,8 @@ import { create } from "zustand";
 
 interface FilterStoreProperties {
   genres: number[];
+  search: string;
+  setSearch: (value: string) => void;
   addGenre: (genreId: number) => void;
   resetGenresWithId: (genreId: number) => void;
   removeGenre: (genreId: number) => void;
@@ -9,6 +11,8 @@ interface FilterStoreProperties {
 
 export const useFilterStore = create<FilterStoreProperties>((set, get) => ({
   genres: [],
+  search: "",
+  setSearch: (search: string) => set({ search }),
   addGenre: (genreId) => {
     set((state) => {
       if (state.genres.includes(genreId)) return state;

@@ -7,6 +7,7 @@ import { useGenresConstants } from "@/features/shared/api/use-filter-constants";
 import { Checkbox } from "tamagui";
 import { CheckIcon } from "lucide-react-native";
 import { useState } from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const GenreRender = ({ item }: { item: { name: string; id: number } }) => {
   const { genres, addGenre, removeGenre } = useFilterStore();
@@ -38,12 +39,15 @@ const GenreRender = ({ item }: { item: { name: string; id: number } }) => {
 export const CatalogFiltersUI = () => {
   const { data } = useGenresConstants();
 
+  const { bottom } = useSafeAreaInsets();
+
   return (
     <ModalWrapper>
       <View className="flex-1 mx-4 mt-3">
         <FlatList
           contentContainerStyle={{
             gap: 8,
+            paddingBottom: bottom + 4,
           }}
           data={data}
           initialNumToRender={30}

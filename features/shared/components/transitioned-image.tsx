@@ -1,4 +1,3 @@
-import { PulseView } from "@/components/ui/pulse-view";
 import FastImage, { Source } from "@d11/react-native-fast-image";
 import { useEffect, useState } from "react";
 import { View, ViewProps } from "react-native";
