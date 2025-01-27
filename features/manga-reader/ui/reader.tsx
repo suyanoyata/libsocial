@@ -198,6 +198,7 @@ export const MangaReaderUI = () => {
           maxToRenderPerBatch={6}
           initialNumToRender={20}
           stickyHeaderIndices={[0]}
+          stickyHeaderHiddenOnScroll
           onEndReached={preloadChapter}
           onEndReachedThreshold={0.5}
           showsVerticalScrollIndicator={false}

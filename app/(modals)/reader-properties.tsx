@@ -4,11 +4,12 @@ import { Text } from "@/components/ui/text";
 
 import { useImageServers } from "@/features/shared/api/use-image-servers";
 import { useProperties } from "@/store/use-properties";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { MenuView } from "@react-native-menu/menu";
 import { Slider } from "@tamagui/slider";
 import { View } from "react-native";
+import useDebounce from "@/hooks/use-debounce";
 
 export default function ReaderProperties() {
   const { data } = useImageServers();
@@ -20,9 +21,16 @@ export default function ReaderProperties() {
     setReaderImagePadding,
   } = useProperties();
 
+  const [padding, setPadding] = useState(readerImagePadding);
+  const [throttlePadding] = useDebounce(padding, 200);
+
   const [server, setServer] = useState(
     data ? data[currentImageServerIndex] : { id: 1, label: "Первый" }
   );
+
+  useEffect(() => {
+    setReaderImagePadding(throttlePadding);
+  }, [throttlePadding]);
 
   if (!data) return null;
 
@@ -44,12 +52,10 @@ export default function ReaderProperties() {
             <Button>{server.label}</Button>
           </MenuView>
         </View>
-        <Text className="text-zinc-200 mb-2">
-          Distance between images: {readerImagePadding}px
-        </Text>
+        <Text className="text-zinc-200 mb-2">Distance between images: {padding}px</Text>
         <Slider
-          value={[readerImagePadding]}
-          onValueChange={(value) => setReaderImagePadding(value[0])}
+          value={[padding]}
+          onValueChange={(value) => setPadding(value[0])}
           style={{ marginTop: 1 * 8 }}
           defaultValue={[0]}
           max={15}
