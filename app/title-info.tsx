@@ -22,6 +22,8 @@ import { TitleContext } from "@/features/title/context/title-context";
 import { TitleAbout } from "@/features/title/ui/title-about";
 import { TitleChapters } from "@/features/title/ui/title-chapters";
 
+import { titleInfoRouteSchema } from "@/features/title/types/title-info-route";
+
 export default function TitleInfo() {
   const router = useRoute();
 
@@ -33,13 +35,7 @@ export default function TitleInfo() {
     withDelay: string | undefined;
   };
 
-  if (!slug_url || typeof slug_url != "string") {
-    throw new Error(`Slug url is required or its type is mismatched`);
-  }
-
-  if (!site || typeof site != "string") {
-    throw new Error(`Site is required or its type is mismatched`);
-  }
+  const { error } = titleInfoRouteSchema.safeParse({ slug_url, site });
 
   const { top } = useSafeAreaInsets();
 
@@ -58,6 +54,15 @@ export default function TitleInfo() {
       }, 500);
     }
   }, [withDelay, data]);
+
+  if (error) {
+    return (
+      <View className="items-center justify-center flex-1">
+        <BackButton />
+        <Text className="text-zinc-200">Something went wrong</Text>
+      </View>
+    );
+  }
 
   if (!data) {
     return (

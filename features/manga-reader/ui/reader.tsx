@@ -26,6 +26,7 @@ import { MenuView } from "@react-native-menu/menu";
 import { readerPropsSchema } from "@/features/manga-reader/types/reader-route";
 
 import { preloadNextChapter } from "@/features/manga-reader/lib/preload-chapter";
+import { BackButton } from "@/components/ui/back-button";
 
 export const MangaReaderUI = () => {
   const route = useRoute();
@@ -126,6 +127,7 @@ export const MangaReaderUI = () => {
   if (error) {
     return (
       <View className="flex-1 items-center justify-center">
+        <BackButton />
         <Text className="text-zinc-200">Something went wrong</Text>
       </View>
     );
