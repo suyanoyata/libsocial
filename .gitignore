@@ -12,9 +12,13 @@ web-build/
 app-example/
 .idea/
 
+.vscode/
+
 # ignore native folders
 android/
 ios/
+
+bun.lockb
 
 # macOS
 .DS_Store
