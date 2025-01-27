@@ -106,5 +106,8 @@
     "react-test-renderer": "18.3.1",
     "typescript": "^5.3.3"
   },
-  "private": true
+  "private": true,
+  "patchedDependencies": {
+    "react-native-flextool@1.0.8": "patches/react-native-flextool@1.0.8.patch"
+  }
 }

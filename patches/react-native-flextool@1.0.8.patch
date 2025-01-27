@@ -1,0 +1,16 @@
+diff --git a/react-native-flextool.podspec b/react-native-flextool.podspec
+index 4d92bb1bcaba594079f8398b81da289b8a63d48d..d8948adef73c21ec68ca73f2a71c1514dcb8519f 100644
+--- a/react-native-flextool.podspec
++++ b/react-native-flextool.podspec
+@@ -18,8 +18,8 @@ Pod::Spec.new do |s|
+   s.source_files  = "ios/**/*.{h,m}"
+ 
+   s.dependency 'React'
+-  s.dependency 'FLEX', '~> 4.0'
+-
++  s.dependency 'FLEX', '5.22.10'
++  
+ end
+ 
+   
+\ No newline at end of file
