@@ -1,4 +1,4 @@
-import { Pressable, View } from "react-native";
+import { Pressable } from "react-native";
 
 import { Text } from "@/components/ui/text";
 
@@ -7,6 +7,7 @@ import { router } from "expo-router";
 import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
 import { useTitleReadChapter } from "@/store/use-chapters-tracker";
 import { EyeIcon, EyeOff } from "lucide-react-native";
+import { useState } from "react";
 
 export const Chapter = ({
   slug_url,
@@ -17,9 +18,9 @@ export const Chapter = ({
   index: number;
   chapter: ChapterType;
 }) => {
-  const { get } = useTitleReadChapter();
+  const { add, get, remove } = useTitleReadChapter();
 
-  const read = get(slug_url, index) as unknown as boolean;
+  const [read, setRead] = useState(get(slug_url, index) as unknown as boolean);
 
   return (
     <Pressable
@@ -35,13 +36,24 @@ export const Chapter = ({
       }}
       className="flex-row items-center gap-2 h-11 bg-zinc-900 active:bg-zinc-800 mb-2 px-4 rounded-lg"
     >
-      <View>
+      <Pressable
+        hitSlop={10}
+        onPress={() => {
+          if (!read) {
+            setRead(true);
+            add(slug_url, index);
+          } else {
+            setRead(false);
+            remove(slug_url, index);
+          }
+        }}
+      >
         {read ? (
           <EyeIcon className="text-zinc-500" size={20} />
         ) : (
           <EyeOff className="text-zinc-500" size={20} />
         )}
-      </View>
+      </Pressable>
       <Text className="text-zinc-200">
         Том {chapter.volume} Глава {chapter.number}
       </Text>

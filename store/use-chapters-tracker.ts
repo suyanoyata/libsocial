@@ -11,6 +11,7 @@ export interface TitleReadChapterProperties {
   titleReadChapters: TitleReadChapter[];
   add: (slug_url: string, chapterIndex: number) => void;
   get: (slug_url: string, chapterIndex: number) => void;
+  remove: (slug_url: string, chapterIndex: number) => void;
 }
 
 export const useTitleReadChapter = create<TitleReadChapterProperties>()(
@@ -60,6 +61,33 @@ export const useTitleReadChapter = create<TitleReadChapterProperties>()(
 
         return item?.chapters.includes(chapterIndex) ?? false;
       },
+
+      remove: (slug_url, chapterIndex) =>
+        set((state) => {
+          const exists = state.titleReadChapters.find(
+            (value) => value.slug_url == slug_url
+          );
+
+          if (exists) {
+            const filtered = state.titleReadChapters.filter(
+              (value) => value.slug_url !== slug_url
+            );
+
+            const chapters = exists.chapters.filter((index) => index !== chapterIndex);
+
+            return {
+              titleReadChapters: [
+                ...filtered,
+                {
+                  slug_url,
+                  chapters,
+                },
+              ],
+            };
+          }
+
+          return state;
+        }),
     }),
     {
       name: "libsocial.client.chapter-tracker-storage",
