@@ -76,7 +76,7 @@ export default function TitleInfo() {
 
   return (
     <FadeView withEnter className="flex-1">
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <BackButton />
         <ImageBackground
           source={{ uri: data.background.url }}
