@@ -1,6 +1,7 @@
 import "../global.css";
+import "react-native-gesture-handler";
 
-import { Stack } from "expo-router";
+import { SplashScreen, Stack } from "expo-router";
 import { QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { DarkTheme, ThemeProvider } from "@react-navigation/native";
@@ -41,7 +42,7 @@ const systemFont = createFont({
   family: "SF-Regular",
   size: {},
   face: {
-    300: { normal: "SF-Light", italic: "InterItalic" },
+    300: { normal: "SF-Light" },
     500: { normal: "SF-Medium" },
     600: { normal: "SF-SemiBold" },
     700: { normal: "SF-Bold" },
@@ -65,6 +66,8 @@ declare module "@tamagui/core" {
 
 iconFix();
 initLoggers();
+
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded] = useFonts({
@@ -94,7 +97,11 @@ export default function RootLayout() {
     };
   }, []);
 
-  if (!loaded) return;
+  useEffect(() => {
+    if (loaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded]);
 
   return (
     <PersistQueryClientProvider

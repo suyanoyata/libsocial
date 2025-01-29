@@ -31,7 +31,7 @@ const GenreRender = ({ item }: { item: { name: string; id: number } }) => {
           <CheckIcon />
         </Checkbox.Indicator>
       </Checkbox>
-      <Text className="text-zinc-200 font-medium text-lg">{item.name}</Text>
+      <Text className="text-zinc-200 font-medium text-base">{item.name}</Text>
     </Pressable>
   );
 };
@@ -42,18 +42,18 @@ export const CatalogFiltersUI = () => {
   const { bottom } = useSafeAreaInsets();
 
   return (
-    <ModalWrapper>
-      <View className="flex-1 mx-4 mt-3">
-        <FlatList
-          contentContainerStyle={{
-            gap: 8,
-            paddingBottom: bottom + 4,
-          }}
-          data={data}
-          initialNumToRender={30}
-          renderItem={({ item }) => <GenreRender item={item} />}
-        />
-      </View>
-    </ModalWrapper>
+    // <ModalWrapper>
+    <View className="flex-1 mx-4 mt-3">
+      <FlatList
+        contentContainerStyle={{
+          gap: 8,
+          paddingBottom: bottom + 4,
+        }}
+        data={data}
+        initialNumToRender={30}
+        renderItem={({ item }) => <GenreRender item={item} />}
+      />
+    </View>
+    // </ModalWrapper>
   );
 };

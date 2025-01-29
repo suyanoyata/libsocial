@@ -2,6 +2,8 @@ import { create } from "zustand";
 
 interface FilterStoreProperties {
   genres: number[];
+  caution: number[];
+  handleAgeRestrictionPress: (value: number) => void;
   search: string;
   setSearch: (value: string) => void;
   addGenre: (genreId: number) => void;
@@ -11,6 +13,7 @@ interface FilterStoreProperties {
 
 export const useFilterStore = create<FilterStoreProperties>((set, get) => ({
   genres: [],
+  caution: [],
   search: "",
   setSearch: (search: string) => set({ search }),
   addGenre: (genreId) => {
@@ -19,6 +22,24 @@ export const useFilterStore = create<FilterStoreProperties>((set, get) => ({
 
       return {
         genres: [...state.genres, genreId],
+      };
+    });
+  },
+  handleAgeRestrictionPress: (ageRestrictionId) => {
+    set((state) => {
+      if (state.caution.includes(ageRestrictionId)) {
+        const filteredAgeRestrictions = get().genres.filter(
+          (id) => id !== ageRestrictionId
+        );
+        set(() => ({
+          caution: filteredAgeRestrictions,
+        }));
+
+        return { caution: [...filteredAgeRestrictions] };
+      }
+
+      return {
+        caution: [...state.caution, ageRestrictionId],
       };
     });
   },

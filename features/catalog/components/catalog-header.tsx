@@ -1,17 +1,20 @@
 import { Filter, Search } from "lucide-react-native";
 import { TextInput, View } from "react-native";
 
-import { router } from "expo-router";
-
 import { Button } from "@/components/ui/button";
 
 import { useFilterStore } from "@/features/catalog/store/use-filter-store";
+
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useContext } from "react";
+
+import { DrawerContext } from "@/features/catalog/context/catalog-drawer-context";
 
 export const CatalogHeader = () => {
   const { top } = useSafeAreaInsets();
 
   const { setSearch } = useFilterStore();
+  const { setOpen } = useContext(DrawerContext);
 
   return (
     <View style={{ paddingTop: top + 8, paddingBottom: 10 }} className="bg-zinc-950 px-2">
@@ -30,9 +33,7 @@ export const CatalogHeader = () => {
         textClassName="text-zinc-400"
         iconLeft={<Filter className="text-zinc-400" size={18} />}
         onPress={() => {
-          router.push({
-            pathname: "/catalog-filters-view",
-          });
+          setOpen(true);
         }}
       >
         Filters

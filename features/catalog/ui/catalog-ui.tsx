@@ -16,6 +16,8 @@ import { getItemStyle } from "@/features/catalog/lib/item-position-align";
 import { FetchingNextPageCards } from "@/features/catalog/components/catalog-fetching-cards";
 import { CatalogHeader } from "@/features/catalog/components/catalog-header";
 import { CatalogTitleCard } from "@/features/catalog/components/catalog-title-card";
+import { CatalogDrawerLayout } from "@/features/catalog/layout/catalog-drawer-layout";
+import { DrawerContextProvider } from "@/features/catalog/context/catalog-drawer-context";
 
 export const Catalog = () => {
   const [initialRender, setInitialRender] = useState(true);
@@ -45,39 +47,41 @@ export const Catalog = () => {
   if (Math.floor(width / containerWidth) != catalogColumns || initialRender) return null;
 
   return (
-    <View style={{ flex: 1 }}>
-      <CatalogHeader />
-      {data && (
+    <DrawerContextProvider>
+      <CatalogDrawerLayout style={{ flex: 1 }}>
+        <CatalogHeader />
         <View className="flex-1 mx-2 overflow-hidden rounded-sm">
-          <FlashList
-            removeClippedSubviews
-            data={catalogItems}
-            onEndReachedThreshold={0.8}
-            onEndReached={() => fetchNextPage()}
-            estimatedListSize={{
-              width,
-              height,
-            }}
-            drawDistance={height * 3}
-            numColumns={catalogColumns}
-            estimatedItemSize={190}
-            renderItem={({ item, index }: { item: BaseTitle; index: number }) => (
-              <View
-                style={{
-                  ...getItemStyle(index, catalogColumns),
-                }}
-              >
-                <CatalogTitleCard title={item} />
-              </View>
-            )}
-            ListFooterComponent={
-              <FetchingNextPageCards
-                isFetching={isFetchingNextPage && data.pages.length >= 10}
-              />
-            }
-          />
+          {data && (
+            <FlashList
+              removeClippedSubviews
+              data={catalogItems}
+              onEndReachedThreshold={0.8}
+              onEndReached={() => fetchNextPage()}
+              estimatedListSize={{
+                width,
+                height,
+              }}
+              drawDistance={height * 3}
+              numColumns={catalogColumns}
+              estimatedItemSize={190}
+              renderItem={({ item, index }: { item: BaseTitle; index: number }) => (
+                <View
+                  style={{
+                    ...getItemStyle(index, catalogColumns),
+                  }}
+                >
+                  <CatalogTitleCard title={item} />
+                </View>
+              )}
+              ListFooterComponent={
+                <FetchingNextPageCards
+                  isFetching={isFetchingNextPage && data.pages.length >= 10}
+                />
+              }
+            />
+          )}
         </View>
-      )}
-    </View>
+      </CatalogDrawerLayout>
+    </DrawerContextProvider>
   );
 };
