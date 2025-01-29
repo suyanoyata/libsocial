@@ -19,6 +19,7 @@
   "dependencies": {
     "@d11/react-native-fast-image": "^8.9.1",
     "@expo/vector-icons": "^14.0.2",
+    "@likashefqet/react-native-image-zoom": "^4.3.0",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-community/netinfo": "11.4.1",
     "@react-native-menu/menu": "^1.2.0",

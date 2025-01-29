@@ -15,7 +15,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTitleReadChapter } from "@/store/use-chapters-tracker";
 import { useProperties } from "@/store/use-properties";
 
-import { useImageServers } from "@/features/shared/api/use-image-servers";
 import { useChapter } from "@/features/manga-reader/api/use-chapter";
 import { useTitleInfo } from "@/features/title/api/use-title-info";
 import { useChapters } from "@/features/title/api/use-chapters";
@@ -28,16 +27,16 @@ import { readerPropsSchema } from "@/features/manga-reader/types/reader-route";
 import { preloadNextChapter } from "@/features/manga-reader/lib/preload-chapter";
 import { BackButton } from "@/components/ui/back-button";
 
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { ReaderImage } from "@/features/manga-reader/components/reader-image";
+
 export const MangaReaderUI = () => {
   const route = useRoute();
 
   const { width } = useWindowDimensions();
   const [offset, setOffset] = useState(0);
 
-  const { currentImageServerIndex, readerImagePadding, readerDisplayCurrentPage } =
-    useProperties();
-
-  const { data: imageServers } = useImageServers();
+  const { readerImagePadding, readerDisplayCurrentPage } = useProperties();
 
   const { addItem, get } = useReadingTracker();
   const { add } = useTitleReadChapter();
@@ -141,72 +140,60 @@ export const MangaReaderUI = () => {
     );
   }
 
-  if (!imageServers) return null;
-
   return (
-    data && (
-      <FadeView withEnter className="flex-1 items-center justify-center">
-        {readerDisplayCurrentPage && (
-          <MenuView
-            onPressAction={(event) =>
-              flatListRef.current?.scrollToIndex({
-                index: parseInt(event.nativeEvent.event),
-                animated: true,
-              })
-            }
-            style={{
-              position: "absolute",
-              left: 16,
-              bottom: 16,
-              zIndex: 20,
-            }}
-            actions={data.pages.map((_, index) => ({
-              id: index.toString(),
-              title: `${index + 1} / ${data.pages.length}`,
-            }))}
-          >
-            <View className="bg-zinc-900/70 p-3 py-1.5 rounded-full">
-              <Text className="text-zinc-200 font-semibold">
-                {currentPage}/{data.pages.length}
-              </Text>
-            </View>
-          </MenuView>
-        )}
-        <FlatList
-          ref={flatListRef}
-          contentContainerStyle={{
-            gap: readerImagePadding,
-          }}
-          onScroll={(event) => setOffset(event.nativeEvent.contentOffset.y)}
-          onMomentumScrollEnd={(event) => setOffset(event.nativeEvent.contentOffset.y)}
-          maxToRenderPerBatch={6}
-          initialNumToRender={20}
-          stickyHeaderIndices={[0]}
-          stickyHeaderHiddenOnScroll
-          onEndReached={preloadChapter}
-          onEndReachedThreshold={0.5}
-          showsVerticalScrollIndicator={false}
-          ListHeaderComponent={() => <ReaderHeader chapter={data} title={title} />}
-          ListFooterComponent={() => (
-            <ReaderChapterNavigation chapterIndex={chapterIndex} chapters={chapters} />
-          )}
-          style={{ width }}
-          data={data.pages}
-          renderItem={({ item }) => (
-            <FastImage
-              resizeMode="contain"
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      {data && (
+        <FadeView withEnter className="flex-1 items-center justify-center">
+          {readerDisplayCurrentPage && (
+            <MenuView
+              onPressAction={(event) =>
+                flatListRef.current?.scrollToIndex({
+                  index: parseInt(event.nativeEvent.event),
+                  animated: true,
+                })
+              }
               style={{
-                marginHorizontal: "auto",
-                width: width > 800 ? 800 : width,
-                height: width > 800 ? 800 : width / item.ratio,
+                position: "absolute",
+                left: 16,
+                bottom: 16,
+                zIndex: 20,
               }}
-              source={{
-                uri: imageServers[currentImageServerIndex].url + item.url,
-              }}
-            />
+              actions={data.pages.map((_, index) => ({
+                id: index.toString(),
+                title: `${index + 1} / ${data.pages.length}`,
+              }))}
+            >
+              <View className="bg-zinc-900/70 p-3 py-1.5 rounded-full">
+                <Text className="text-zinc-200 font-semibold">
+                  {currentPage}/{data.pages.length}
+                </Text>
+              </View>
+            </MenuView>
           )}
-        />
-      </FadeView>
-    )
+          <FlatList
+            ref={flatListRef}
+            contentContainerStyle={{
+              gap: readerImagePadding,
+            }}
+            onScroll={(event) => setOffset(event.nativeEvent.contentOffset.y)}
+            onMomentumScrollEnd={(event) => setOffset(event.nativeEvent.contentOffset.y)}
+            maxToRenderPerBatch={6}
+            initialNumToRender={20}
+            stickyHeaderIndices={[0]}
+            stickyHeaderHiddenOnScroll
+            onEndReached={preloadChapter}
+            onEndReachedThreshold={0.5}
+            showsVerticalScrollIndicator={false}
+            ListHeaderComponent={() => <ReaderHeader chapter={data} title={title} />}
+            ListFooterComponent={() => (
+              <ReaderChapterNavigation chapterIndex={chapterIndex} chapters={chapters} />
+            )}
+            style={{ width }}
+            data={data.pages}
+            renderItem={({ item }) => <ReaderImage url={item.url} ratio={item.ratio} />}
+          />
+        </FadeView>
+      )}
+    </GestureHandlerRootView>
   );
 };
