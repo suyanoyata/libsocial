@@ -109,7 +109,7 @@ export default function RootLayout() {
   }, [loaded]);
 
   const focusCallback = useCallback(async (event: string) => {
-    if (event == "background" || event == "active") {
+    if (event == "background" || (event == "active" && !updating)) {
       const update = await checkForUpdateAsync();
 
       if (!update.isAvailable) return;
