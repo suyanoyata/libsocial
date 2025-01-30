@@ -43,8 +43,9 @@ export const CatalogFiltersUI = () => {
 
   return (
     // <ModalWrapper>
-    <View className="flex-1 mx-4 mt-3">
+    <View className="flex-1 mt-3">
       <FlatList
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           gap: 8,
           paddingBottom: bottom + 4,
