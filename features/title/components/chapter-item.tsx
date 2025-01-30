@@ -7,7 +7,7 @@ import { router } from "expo-router";
 import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
 import { useTitleReadChapter } from "@/store/use-chapters-tracker";
 import { EyeIcon, EyeOff } from "lucide-react-native";
-import { useLayoutEffect, useState } from "react";
+import { useCallback, useLayoutEffect, useState, useTransition } from "react";
 
 export const Chapter = ({
   slug_url,
@@ -22,20 +22,29 @@ export const Chapter = ({
 
   const [read, setRead] = useState(get(slug_url, index) as unknown as boolean);
 
-  useLayoutEffect(() => {
+  const [isPending, startTransition] = useTransition();
+
+  const readCallback = useCallback(() => {
     setRead(get(slug_url, index) as unknown as boolean);
   }, [index]);
+
+  useLayoutEffect(readCallback, [index]);
 
   return (
     <Pressable
       onPress={() => {
-        impactAsync(ImpactFeedbackStyle.Soft);
-        router.navigate({
-          pathname: "/manga-reader",
-          params: {
-            slug_url,
-            index,
-          },
+        if (isPending) return;
+
+        startTransition(() => {
+          setRead(true);
+          impactAsync(ImpactFeedbackStyle.Soft);
+          router.navigate({
+            pathname: "/manga-reader",
+            params: {
+              slug_url,
+              index,
+            },
+          });
         });
       }}
       className="flex-row items-center gap-2 h-11 bg-zinc-900 active:bg-zinc-800 mb-2 px-4 rounded-lg"

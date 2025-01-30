@@ -19,7 +19,7 @@ import { FlatList, View } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
 export const TitleRelations = ({ label, slug_url, endpoint }: TitleRelationsProps) => {
-  const { data } = useQuery<RelationsResponse>({
+  const { data, isPending } = useQuery<RelationsResponse>({
     queryKey: [`title-${endpoint}`, slug_url],
     queryFn: async () => (await api.get(`/manga/${slug_url}/${endpoint}`)).data.data,
   });
@@ -37,8 +37,10 @@ export const TitleRelations = ({ label, slug_url, endpoint }: TitleRelationsProp
     }));
   }, [data]);
 
+  if ((!isPending && !data) || (data && data.length == 0)) return null;
+
   return (
-    <View className="my-2 relative h-[185px]">
+    <Animated.View className="my-2 relative h-[185px]">
       <Text className="text-zinc-300 text-2xl font-bold mb-2">{label}</Text>
       <View>
         {relationData.length == 0 ? (
@@ -64,6 +66,6 @@ export const TitleRelations = ({ label, slug_url, endpoint }: TitleRelationsProp
           </Animated.View>
         )}
       </View>
-    </View>
+    </Animated.View>
   );
 };
