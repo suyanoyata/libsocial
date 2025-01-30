@@ -1,4 +1,3 @@
-import { useImageServers } from "@/features/shared/api/use-image-servers";
 import { useProperties } from "@/store/use-properties";
 import { useState } from "react";
 
@@ -7,16 +6,16 @@ import { useWindowDimensions, View } from "react-native";
 import FastImage from "@d11/react-native-fast-image";
 
 import { Zoomable } from "@likashefqet/react-native-image-zoom";
+import { ImageServer } from "@/features/shared/types/image-server";
 
 type ReaderImageProps = {
   url: string;
   ratio: number;
+  imageServers?: ImageServer[];
 };
 
-export const ReaderImage = ({ url, ratio }: ReaderImageProps) => {
+export const ReaderImage = ({ url, ratio, imageServers }: ReaderImageProps) => {
   const { width } = useWindowDimensions();
-
-  const { data: imageServers } = useImageServers();
 
   const { currentImageServerIndex } = useProperties();
   const [focused, setFocused] = useState(false);

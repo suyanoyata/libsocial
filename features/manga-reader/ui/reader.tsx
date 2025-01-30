@@ -3,8 +3,6 @@ import { FadeView } from "@/components/ui/fade-view";
 import { ReaderChapterNavigation } from "@/features/manga-reader/components/reader-chapter-navigation";
 import { ReaderHeader } from "@/features/manga-reader/components/reader-header";
 
-import FastImage from "@d11/react-native-fast-image";
-
 import { useRoute } from "@react-navigation/native";
 import { ActivityIndicator, FlatList, useWindowDimensions, View } from "react-native";
 
@@ -29,6 +27,7 @@ import { BackButton } from "@/components/ui/back-button";
 
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ReaderImage } from "@/features/manga-reader/components/reader-image";
+import { useImageServers } from "@/features/shared/api/use-image-servers";
 
 export const MangaReaderUI = () => {
   const route = useRoute();
@@ -72,6 +71,8 @@ export const MangaReaderUI = () => {
 
   const { data } = useChapter(slug_url, chapters && chapters[chapterIndex]);
 
+  const { data: imageServers } = useImageServers();
+
   useEffect(() => {
     if (!title || !chapters) return;
 
@@ -87,24 +88,6 @@ export const MangaReaderUI = () => {
       scrollTo: offset,
     });
   }, [slug_url, title, data, offset]);
-
-  const breakpoints = useMemo(() => {
-    return data?.pages.reduce((acc: number[], page) => {
-      const value = Math.round(width / page.ratio) + readerImagePadding;
-
-      const lastValue = acc[acc.length - 1] || 0;
-      acc.push(lastValue + value);
-      return acc;
-    }, []);
-  }, [data?.pages]);
-
-  useEffect(() => {
-    const filtered = breakpoints?.filter((value) => value <= offset);
-
-    if (filtered && filtered?.length != 0) {
-      setCurrentPage(filtered.length);
-    }
-  }, [offset]);
 
   useEffect(() => {
     const item = get(slug_url) as unknown as LastReadItem;
@@ -176,6 +159,16 @@ export const MangaReaderUI = () => {
             contentContainerStyle={{
               gap: readerImagePadding,
             }}
+            viewabilityConfig={{
+              minimumViewTime: 3,
+              waitForInteraction: false,
+              viewAreaCoveragePercentThreshold: 0.4,
+            }}
+            onViewableItemsChanged={(event) => {
+              if (event.changed[0].index && event.changed[0].isViewable) {
+                setCurrentPage(event.changed[0].index);
+              }
+            }}
             onScroll={(event) => setOffset(event.nativeEvent.contentOffset.y)}
             onMomentumScrollEnd={(event) => setOffset(event.nativeEvent.contentOffset.y)}
             maxToRenderPerBatch={6}
@@ -191,7 +184,13 @@ export const MangaReaderUI = () => {
             )}
             style={{ width }}
             data={data.pages}
-            renderItem={({ item }) => <ReaderImage url={item.url} ratio={item.ratio} />}
+            renderItem={({ item }) => (
+              <ReaderImage
+                imageServers={imageServers}
+                url={item.url}
+                ratio={item.ratio}
+              />
+            )}
           />
         </FadeView>
       )}
