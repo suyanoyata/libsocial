@@ -12,6 +12,8 @@ import { X } from "lucide-react-native";
 export const LastReadTitleCard = ({ item }: { item: LastReadItem }) => {
   const { removeItem } = useReadingTracker();
 
+  const allChaptersRead = item.lastReadChapter === item.overallChapters;
+
   return (
     <Pressable
       onPress={() => {
@@ -20,16 +22,18 @@ export const LastReadTitleCard = ({ item }: { item: LastReadItem }) => {
           params: {
             slug_url: item.slug_url,
             site: item.site,
-            withDelay: "1",
+            withDelay: allChaptersRead ? undefined : "1",
           },
         });
-        router.push({
-          pathname: "/manga-reader",
-          params: {
-            slug_url: item.slug_url,
-            index: String(item.lastReadChapter - 1),
-          },
-        });
+        if (!allChaptersRead) {
+          router.push({
+            pathname: "/manga-reader",
+            params: {
+              slug_url: item.slug_url,
+              index: String(item.lastReadChapter - 1),
+            },
+          });
+        }
       }}
       className="bg-zinc-900 rounded-lg overflow-hidden flex-row w-[300px] active:bg-zinc-800/70"
     >
@@ -50,14 +54,20 @@ export const LastReadTitleCard = ({ item }: { item: LastReadItem }) => {
         <Text className="text-zinc-200 text-base font-semibold w-[90%]" numberOfLines={2}>
           {item.title}
         </Text>
-        <View className="h-1.5 rounded-full bg-zinc-700 mt-auto overflow-hidden">
-          <View
-            className="bg-white h-1.5"
-            style={{
-              width: `${(item.lastReadChapter / item.overallChapters) * 100}%`,
-            }}
-          ></View>
-        </View>
+        {!allChaptersRead ? (
+          <View className="h-1.5 rounded-full bg-zinc-700 mt-auto overflow-hidden">
+            <View
+              className="bg-white h-1.5"
+              style={{
+                width: `${(item.lastReadChapter / item.overallChapters) * 100}%`,
+              }}
+            />
+          </View>
+        ) : (
+          <Text className="text-zinc-400 font-medium text-sm mt-auto">
+            You've read all chapters
+          </Text>
+        )}
       </View>
     </Pressable>
   );
