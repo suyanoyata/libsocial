@@ -7,7 +7,7 @@ import { router } from "expo-router";
 import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
 import { useTitleReadChapter } from "@/store/use-chapters-tracker";
 import { EyeIcon, EyeOff } from "lucide-react-native";
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 
 export const Chapter = ({
   slug_url,
@@ -21,6 +21,10 @@ export const Chapter = ({
   const { add, get, remove } = useTitleReadChapter();
 
   const [read, setRead] = useState(get(slug_url, index) as unknown as boolean);
+
+  useLayoutEffect(() => {
+    setRead(get(slug_url, index) as unknown as boolean);
+  }, [index]);
 
   return (
     <Pressable
