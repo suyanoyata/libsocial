@@ -38,7 +38,7 @@ export const TitleChapters = ({ slug_url }: { slug_url: string }) => {
         variant="ghost"
         className="rounded-full w-28"
         iconLeft={
-          descending ? (
+          !descending ? (
             <SortDesc className="text-zinc-200" size={18} />
           ) : (
             <SortAsc className="text-zinc-200" size={18} />
