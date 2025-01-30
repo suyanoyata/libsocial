@@ -94,6 +94,8 @@ export const MangaReaderUI = () => {
 
     if (!data || !flatListRef || !item) return;
 
+    if (item.lastReadChapter - 1 !== chapterIndex) return;
+
     setTimeout(() => {
       flatListRef.current?.scrollToOffset({
         animated: false,
