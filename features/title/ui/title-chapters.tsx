@@ -1,7 +1,7 @@
 import { Chapter } from "@/features/title/components/chapter-item";
 
 import { TitleContext } from "@/features/title/context/title-context";
-import { useContext, useState, useTransition } from "react";
+import { useCallback, useContext, useMemo, useState, useTransition } from "react";
 
 import { useChapters } from "@/features/title/api/use-chapters";
 import { useWindowDimensions, View } from "react-native";
@@ -22,19 +22,27 @@ export const TitleChapters = ({ slug_url }: { slug_url: string }) => {
 
   const { data } = useChapters(slug_url);
 
-  const [chapters, setChapters] = useState(data);
   const [isReversing, startReversing] = useTransition();
   const [descending, setDescending] = useState(true);
+
+  const chapters = useMemo(() => {
+    if (!data) return null;
+
+    if (descending) return data;
+
+    return data.toReversed();
+  }, [data, descending]);
+
+  const handleSortPress = useCallback(() => {
+    startReversing(() => {
+      setDescending((prev) => !prev);
+    });
+  }, [startReversing]);
 
   return (
     <View className={cn("flex-1", tab == "chapters" ? "flex" : "hidden")}>
       <Button
-        onPress={() => {
-          setDescending((prev) => !prev);
-          startReversing(() => {
-            setChapters((prev) => prev?.toReversed());
-          });
-        }}
+        onPress={handleSortPress}
         variant="ghost"
         className="rounded-full w-28"
         iconLeft={
