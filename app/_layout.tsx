@@ -1,7 +1,7 @@
 import "../global.css";
 import "react-native-gesture-handler";
 
-import { SplashScreen, Stack } from "expo-router";
+import { SplashScreen, Stack, useFocusEffect } from "expo-router";
 import { QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { DarkTheme, ThemeProvider } from "@react-navigation/native";
@@ -12,10 +12,15 @@ import { defaultConfig } from "@tamagui/config/v4";
 
 import { useProperties } from "@/store/use-properties";
 import { useFonts } from "expo-font";
-import { addUpdatesStateChangeListener, reloadAsync } from "expo-updates";
-import { useEffect, useState } from "react";
+import {
+  addUpdatesStateChangeListener,
+  checkForUpdateAsync,
+  fetchUpdateAsync,
+  reloadAsync,
+} from "expo-updates";
+import { useCallback, useEffect, useState } from "react";
 
-import { View } from "react-native";
+import { AppState, View } from "react-native";
 
 import { enableFreeze, enableScreens } from "react-native-screens";
 
@@ -102,6 +107,23 @@ export default function RootLayout() {
       SplashScreen.hideAsync();
     }
   }, [loaded]);
+
+  const focusCallback = useCallback(async (event: string) => {
+    if (event == "background" || event == "active") {
+      const update = await checkForUpdateAsync();
+
+      if (!update.isAvailable) return;
+
+      setUpdating(true);
+      await fetchUpdateAsync();
+      await reloadAsync();
+      setUpdating(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    AppState.addEventListener("change", focusCallback);
+  }, []);
 
   return (
     <PersistQueryClientProvider
