@@ -1,3 +1,4 @@
+import { SwitchMenuOption } from "@/components/ui/switch-menu-option";
 import { ModalWrapper } from "@/components/ui/modal-wrapper";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
@@ -19,6 +20,8 @@ export default function ReaderProperties() {
     setCurrentImageServerIndex,
     readerImagePadding,
     setReaderImagePadding,
+    showReaderScrollbar,
+    setShowReaderScrollbar,
   } = useProperties();
 
   const [padding, setPadding] = useState(readerImagePadding);
@@ -36,7 +39,7 @@ export default function ReaderProperties() {
 
   return (
     <ModalWrapper>
-      <View className="mx-4 flex-1">
+      <View className="mx-4 flex-1 gap-2">
         <View className="flex-row items-center">
           <Text className="text-zinc-200 flex-1">Select image server</Text>
           <MenuView
@@ -52,11 +55,11 @@ export default function ReaderProperties() {
             <Button>{server.label}</Button>
           </MenuView>
         </View>
-        <Text className="text-zinc-200 mb-2">Distance between images: {padding}px</Text>
+        <Text className="text-zinc-200">Distance between images: {padding}px</Text>
         <Slider
           value={[padding]}
           onValueChange={(value) => setPadding(value[0])}
-          style={{ marginTop: 1 * 8 }}
+          style={{ marginVertical: 1 * 8 }}
           defaultValue={[0]}
           max={15}
           min={0}
@@ -78,6 +81,9 @@ export default function ReaderProperties() {
             index={0}
           />
         </Slider>
+        <SwitchMenuOption value={showReaderScrollbar} setValue={setShowReaderScrollbar}>
+          Display scrollbar in reader
+        </SwitchMenuOption>
       </View>
     </ModalWrapper>
   );

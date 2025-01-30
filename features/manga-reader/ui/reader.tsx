@@ -36,7 +36,8 @@ export const MangaReaderUI = () => {
   const { width } = useWindowDimensions();
   const [offset, setOffset] = useState(0);
 
-  const { readerImagePadding, readerDisplayCurrentPage } = useProperties();
+  const { readerImagePadding, readerDisplayCurrentPage, showReaderScrollbar } =
+    useProperties();
 
   const { addItem, get } = useReadingTracker();
   const { add } = useTitleReadChapter();
@@ -183,7 +184,7 @@ export const MangaReaderUI = () => {
             stickyHeaderHiddenOnScroll
             onEndReached={preloadChapter}
             onEndReachedThreshold={0.5}
-            showsVerticalScrollIndicator={false}
+            showsVerticalScrollIndicator={showReaderScrollbar}
             ListHeaderComponent={() => <ReaderHeader chapter={data} title={title} />}
             ListFooterComponent={() => (
               <ReaderChapterNavigation chapterIndex={chapterIndex} chapters={chapters} />
