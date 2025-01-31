@@ -35,6 +35,7 @@ export const ReaderImage = ({ url, ratio, imageServers }: ReaderImageProps) => {
 
   return (
     <Zoomable
+      onPinchStart={() => setFocused(true)}
       onInteractionStart={() => setFocused(true)}
       onResetAnimationEnd={() => setFocused(false)}
       style={{ zIndex: focused ? 10 : 5 }}

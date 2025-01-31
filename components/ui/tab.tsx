@@ -1,6 +1,7 @@
 import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
 import { Pressable, PressableProps, View } from "react-native";
 import { Text } from "@/components/ui/text";
+import { useTransition } from "react";
 
 type TabProps = PressableProps & {
   value: string;
@@ -18,12 +19,16 @@ export const Tab = ({
   value,
   ...props
 }: TabProps) => {
+  const [isPending, startTransition] = useTransition();
+
   return (
     <Pressable
       hitSlop={4}
       onPress={() => {
-        impactAsync(ImpactFeedbackStyle.Soft);
-        setSelected(value);
+        startTransition(() => {
+          impactAsync(ImpactFeedbackStyle.Soft);
+          setSelected(value);
+        });
       }}
       className="flex-1"
       style={{ borderTopEndRadius: 4, borderTopStartRadius: 4 }}

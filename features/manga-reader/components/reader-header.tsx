@@ -36,7 +36,11 @@ export const ReaderHeader = ({
           {title.eng_name != "" ? title.eng_name : title.name}
         </Text>
       </View>
-      <Cog onPress={() => router.navigate("/reader-properties")} color="#a1a1aa" />
+      <Cog
+        hitSlop={10}
+        onPress={() => router.navigate("/reader-properties")}
+        color="#a1a1aa"
+      />
     </View>
   );
 };

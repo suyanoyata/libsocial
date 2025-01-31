@@ -22,6 +22,8 @@ export default function ReaderProperties() {
     setReaderImagePadding,
     showReaderScrollbar,
     setShowReaderScrollbar,
+    readerDisplayCurrentPage,
+    setReaderDisplayCurrentPage,
   } = useProperties();
 
   const [padding, setPadding] = useState(readerImagePadding);
@@ -83,6 +85,12 @@ export default function ReaderProperties() {
         </Slider>
         <SwitchMenuOption value={showReaderScrollbar} setValue={setShowReaderScrollbar}>
           Display scrollbar in reader
+        </SwitchMenuOption>
+        <SwitchMenuOption
+          value={readerDisplayCurrentPage}
+          setValue={setReaderDisplayCurrentPage}
+        >
+          Display current page in reader (unstable)
         </SwitchMenuOption>
       </View>
     </ModalWrapper>

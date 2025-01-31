@@ -11,6 +11,7 @@ export type BaseTitle = {
   slug_url: string;
   rating: {
     average: number;
+    averageFormated: string;
     votesFormated: string;
   };
   cover: {

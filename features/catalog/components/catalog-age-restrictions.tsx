@@ -7,18 +7,27 @@ import { FlatList, Pressable, View } from "react-native";
 import { Checkbox } from "tamagui";
 
 import { Text } from "@/components/ui/text";
+import { useMemo } from "react";
+import { useProperties } from "@/store/use-properties";
 
 export const CatalogAgeRestrictions = () => {
   const { data } = useAgeRestrictions();
 
+  const { siteId } = useProperties();
+
   const { handleAgeRestrictionPress, caution } = useFilterStore();
+
+  const filteredRestrictions = useMemo(
+    () => data?.filter((item) => item.site_ids.toString().includes(siteId)),
+    [data]
+  );
 
   return (
     <View>
       <Text className="text-zinc-200 mb-2 font-medium text-base">Age Restriction</Text>
       <View className="flex-row gap-4 flex-wrap">
         <FlatList
-          data={data}
+          data={filteredRestrictions}
           showsHorizontalScrollIndicator={false}
           numColumns={2}
           contentContainerClassName="justify-between gap-3"

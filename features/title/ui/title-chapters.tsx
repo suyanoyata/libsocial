@@ -1,7 +1,7 @@
 import { Chapter } from "@/features/title/components/chapter-item";
 
 import { TitleContext } from "@/features/title/context/title-context";
-import { useCallback, useContext, useMemo, useState, useTransition } from "react";
+import { useContext, useEffect, useState, useTransition } from "react";
 
 import { useChapters } from "@/features/title/api/use-chapters";
 import { useWindowDimensions, View } from "react-native";
@@ -13,6 +13,7 @@ import { FlashList } from "@shopify/flash-list";
 import { Button } from "@/components/ui/button";
 
 import { SortAsc, SortDesc } from "lucide-react-native";
+import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
 
 export const TitleChapters = ({ slug_url }: { slug_url: string }) => {
   const { width, height } = useWindowDimensions();
@@ -24,25 +25,23 @@ export const TitleChapters = ({ slug_url }: { slug_url: string }) => {
 
   const [isReversing, startReversing] = useTransition();
   const [descending, setDescending] = useState(true);
+  const [chapters, setChapters] = useState(data);
 
-  const chapters = useMemo(() => {
-    if (!data) return null;
-
-    if (descending) return data;
-
-    return data.toReversed();
-  }, [data, descending]);
-
-  const handleSortPress = useCallback(() => {
-    startReversing(() => {
-      setDescending((prev) => !prev);
-    });
-  }, [startReversing]);
+  useEffect(() => {
+    setChapters(data);
+  }, [data]);
 
   return (
     <View className={cn("flex-1", tab == "chapters" ? "flex" : "hidden")}>
       <Button
-        onPress={handleSortPress}
+        onPress={() => {
+          impactAsync(ImpactFeedbackStyle.Soft);
+          startReversing(() => {
+            setDescending((prev) => !prev);
+
+            setChapters((prev) => prev?.toReversed());
+          });
+        }}
         variant="ghost"
         className="rounded-full w-28"
         iconLeft={

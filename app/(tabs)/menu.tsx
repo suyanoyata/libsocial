@@ -9,12 +9,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { SafeAreaView, NativeModules } from "react-native";
 
 export default function Menu() {
-  const {
-    readerDisplayCurrentPage,
-    setReaderDisplayCurrentPage,
-    showQueryDevTools,
-    setShowQueryDevTools,
-  } = useProperties();
+  const { showQueryDevTools, setShowQueryDevTools } = useProperties();
 
   const queryClient = useQueryClient();
 
@@ -22,12 +17,6 @@ export default function Menu() {
 
   return (
     <SafeAreaView className="mx-4 gap-2">
-      <SwitchMenuOption
-        value={readerDisplayCurrentPage}
-        setValue={setReaderDisplayCurrentPage}
-      >
-        Display current page in reader (unstable)
-      </SwitchMenuOption>
       <SwitchMenuOption
         debugOnly
         value={showQueryDevTools}

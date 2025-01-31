@@ -28,6 +28,8 @@ import { clientPersister } from "@/lib/persistent-query-storage";
 import { initLoggers } from "@/lib/axios";
 import { iconFix } from "@/lib/icons-fix";
 
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+
 enableFreeze();
 enableScreens();
 
@@ -126,25 +128,27 @@ export default function RootLayout() {
   }, []);
 
   return (
-    <PersistQueryClientProvider
-      persistOptions={{ persister: clientPersister }}
-      client={queryClient}
-    >
-      <View className="bg-black flex-1">
-        <TamaguiProvider config={config}>
-          <ThemeProvider value={DarkTheme}>
-            <Stack
-              screenOptions={{
-                headerShown: false,
-              }}
-            >
-              <Stack.Screen name="(tabs)" />
-              <Stack.Screen options={{ presentation: "modal" }} name="(modals)" />
-            </Stack>
-            {__DEV__ && showQueryDevTools && <DevToolsBubble />}
-          </ThemeProvider>
-        </TamaguiProvider>
-      </View>
-    </PersistQueryClientProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <PersistQueryClientProvider
+        persistOptions={{ persister: clientPersister }}
+        client={queryClient}
+      >
+        <View className="bg-black flex-1">
+          <TamaguiProvider config={config}>
+            <ThemeProvider value={DarkTheme}>
+              <Stack
+                screenOptions={{
+                  headerShown: false,
+                }}
+              >
+                <Stack.Screen name="(tabs)" />
+                <Stack.Screen options={{ presentation: "modal" }} name="(modals)" />
+              </Stack>
+              {__DEV__ && showQueryDevTools && <DevToolsBubble />}
+            </ThemeProvider>
+          </TamaguiProvider>
+        </View>
+      </PersistQueryClientProvider>
+    </GestureHandlerRootView>
   );
 }

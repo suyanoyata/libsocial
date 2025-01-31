@@ -20,7 +20,7 @@ export const TitleGenre = ({ genre }: { genre: Genre }) => {
     <Pressable
       onPress={handleGenrePress}
       className={cn(
-        "bg-zinc-800/60 border border-zinc-800 rounded-lg p-1 px-2",
+        "bg-zinc-800/60 border border-zinc-800 rounded-lg p-1 px-2 active:bg-zinc-800/80",
         genre.adult && "bg-red-200/10"
       )}
     >
