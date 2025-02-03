@@ -43,8 +43,7 @@
           "supportsPictureInPicture": true
         }
       ],
-      "expo-font",
-      "expo-localization"
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
