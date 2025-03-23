@@ -18,15 +18,12 @@ export const QuickSearchCard = ({ item }: { item: BaseTitle }) => {
       }}
       className="mb-2 mx-2 bg-zinc-900 overflow-hidden rounded-lg flex-row active:bg-zinc-800/70"
     >
-      <FastImage
-        source={{ uri: item.cover.default }}
-        style={{ width: 120, height: 160 }}
-      />
+      <FastImage source={{ uri: item.cover.default }} style={{ width: 120, height: 160 }} />
       <View className="p-2 flex-1 relative">
         <Text className="text-zinc-300 font-medium text-base">{item.name}</Text>
         <Text className="absolute bottom-2 right-2 text-zinc-200 font-medium">
           <Star fill="white" color="transparent" size={16} />
-          {item.rating.average} • {item.rating.votesFormated}
+          {/* {item.rating.average} • {item.rating.votesFormated} */}
         </Text>
       </View>
     </Pressable>

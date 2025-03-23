@@ -1,3 +1,5 @@
+import { AllowedSiteIds } from "@/store/use-properties";
+
 export type BaseTitle = {
   ageRestriction: {
     id: number;
@@ -18,7 +20,7 @@ export type BaseTitle = {
     thumbnail: string;
     default: string;
   };
-  site: number;
+  site: AllowedSiteIds;
   model: string;
 };
 
@@ -57,4 +59,9 @@ export interface Title extends BaseTitle {
   status_id: number;
   artists: string[];
   format: string;
+  type: {
+    id: number;
+    label: string;
+  };
+  shiki_rate: number;
 }

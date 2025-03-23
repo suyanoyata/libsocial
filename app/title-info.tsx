@@ -3,13 +3,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 
-import {
-  ActivityIndicator,
-  ImageBackground,
-  Platform,
-  ScrollView,
-  View,
-} from "react-native";
+import { ActivityIndicator, ImageBackground, Platform, ScrollView, View } from "react-native";
 import FastImage from "@d11/react-native-fast-image";
 import { BlurView } from "expo-blur";
 
@@ -23,6 +17,7 @@ import { TitleAbout } from "@/features/title/ui/title-about";
 import { TitleChapters } from "@/features/title/ui/title-chapters";
 
 import { titleInfoRouteSchema } from "@/features/title/types/title-info-route";
+import { TitleEpisodes } from "@/features/title/ui/title-episodes";
 
 export default function TitleInfo() {
   const router = useRoute();
@@ -67,6 +62,7 @@ export default function TitleInfo() {
   if (!data) {
     return (
       <View className="items-center justify-center flex-1">
+        <BackButton />
         <ActivityIndicator />
       </View>
     );
@@ -108,23 +104,24 @@ export default function TitleInfo() {
                 width: 140,
               }}
             />
-            <View className="flex-1 gap-1.5 mx-2">
+            {/* <View className="flex-1 gap-1.5 mx-2">
               {data.otherNames.map((name) => (
                 <Text key={name} className="text-zinc-200 font-medium">
                   {name}
                 </Text>
               ))}
-            </View>
+            </View> */}
           </View>
         </ImageBackground>
         <View className="mx-2 gap-0.5 mt-2 flex-1">
           <Text className="text-4xl text-zinc-200 font-bold" numberOfLines={2}>
             {data.eng_name != "" ? data.eng_name : data.name}
           </Text>
-          <TabsSwitcher tab={tab} setTab={setTab} />
+          <TabsSwitcher site={data.site} tab={tab} setTab={setTab} />
           <TitleContext.Provider value={tab}>
             <TitleAbout data={data} />
-            <TitleChapters slug_url={slug_url} />
+            <TitleChapters site={Number(data.site)} slug_url={slug_url} />
+            <TitleEpisodes site={data.site} slug_url={data.slug_url} />
           </TitleContext.Provider>
         </View>
       </ScrollView>

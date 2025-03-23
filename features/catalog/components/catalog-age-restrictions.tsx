@@ -22,6 +22,8 @@ export const CatalogAgeRestrictions = () => {
     [data]
   );
 
+  return null;
+
   return (
     <View>
       <Text className="text-zinc-200 mb-2 font-medium text-base">Age Restriction</Text>

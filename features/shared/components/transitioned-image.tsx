@@ -1,6 +1,8 @@
-import FastImage, { Source } from "@d11/react-native-fast-image";
 import { useEffect, useState } from "react";
+
 import { View, ViewProps } from "react-native";
+import FastImage, { Source } from "@d11/react-native-fast-image";
+
 import Animated, { FadeOut } from "react-native-reanimated";
 
 type TransitionedImageProps = ViewProps & {

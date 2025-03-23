@@ -5,9 +5,9 @@ import { DrawerProps } from "react-native-drawer-layout/lib/typescript/commonjs/
 
 import { DrawerContext } from "@/features/catalog/context/catalog-drawer-context";
 
-import CatalogFiltersUI from "@/app/(modals)/catalog-filters-view";
+// import CatalogFiltersUI from "@/app/(modals)/catalog-filters-view";
 
-import { useContext, useState } from "react";
+import { lazy, useContext, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useFilterStore } from "@/features/catalog/store/use-filter-store";
@@ -15,6 +15,7 @@ import { useFilterStore } from "@/features/catalog/store/use-filter-store";
 import { Pressable, View } from "react-native";
 import { Text } from "@/components/ui/text";
 import { CatalogAgeRestrictions } from "@/features/catalog/components/catalog-age-restrictions";
+import CatalogFiltersUI from "@/app/(modals)/catalog-filters-view";
 
 type DrawerLayoutProps = Omit<
   DrawerProps,

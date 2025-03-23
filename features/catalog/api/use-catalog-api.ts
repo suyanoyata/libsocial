@@ -3,9 +3,11 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { BaseTitle } from "@/features/shared/types/title";
 import { useFilterStore } from "@/features/catalog/store/use-filter-store";
 import { api } from "@/lib/axios";
+import { useProperties } from "@/store/use-properties";
 
 export const useCatalogAPI = (query: string) => {
   const { genres, caution } = useFilterStore();
+  const { siteId } = useProperties();
 
   return useInfiniteQuery<{
     data: BaseTitle[];
@@ -16,7 +18,9 @@ export const useCatalogAPI = (query: string) => {
       let genreParams = genres.map((id) => `&genres[]=${id}`).join("");
       let cautionParams = caution.map((id) => `&caution[]=${id}`).join("");
 
-      let call = `/manga?fields[]=rate&fields[]=rate_avg&fields[]=userBookmark&q=${query.trim()}&site_id[]=1&page=${pageParam}`;
+      let call = `/${
+        siteId == "5" ? "anime" : "manga"
+      }?fields[]=rate&fields[]=rate_avg&fields[]=userBookmark&q=${query.trim()}&site_id[]=${siteId}&page=${pageParam}`;
 
       if (genreParams.length > 0) {
         call += genreParams;

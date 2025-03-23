@@ -48,7 +48,7 @@ export const ReaderImage = ({ url, ratio, imageServers }: ReaderImageProps) => {
           height: width > 800 ? 800 : width / ratio,
         }}
         source={{
-          uri: imageServers[currentImageServerIndex].url + url,
+          uri: url,
         }}
       />
     </Zoomable>

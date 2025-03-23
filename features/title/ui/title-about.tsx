@@ -22,8 +22,8 @@ export const TitleAbout = ({ data }: { data: Title }) => {
     >
       <TitleSummary>{data.summary}</TitleSummary>
       <Genres ageRestriction={data.ageRestriction} genres={data.genres} />
-      <TitleRelations label="Связанное" slug_url={data.slug_url} endpoint="relations" />
-      <TitleRelations label="Похожие" slug_url={data.slug_url} endpoint="similar" />
+      {/* <TitleRelations label="Связанное" slug_url={data.slug_url} endpoint="relations" />
+      <TitleRelations label="Похожие" slug_url={data.slug_url} endpoint="similar" /> */}
     </View>
   );
 };

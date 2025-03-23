@@ -1,7 +1,7 @@
 import { Chapter } from "@/features/title/components/chapter-item";
 
 import { TitleContext } from "@/features/title/context/title-context";
-import { useContext, useEffect, useState, useTransition } from "react";
+import { useContext, useEffect, useMemo, useState, useTransition } from "react";
 
 import { useChapters } from "@/features/title/api/use-chapters";
 import { useWindowDimensions, View } from "react-native";
@@ -15,21 +15,22 @@ import { Button } from "@/components/ui/button";
 import { SortAsc, SortDesc } from "lucide-react-native";
 import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
 
-export const TitleChapters = ({ slug_url }: { slug_url: string }) => {
+export const TitleChapters = ({ slug_url, site }: { slug_url: string; site: number }) => {
   const { width, height } = useWindowDimensions();
   const { bottom } = useSafeAreaInsets();
 
   const tab = useContext(TitleContext);
 
-  const { data } = useChapters(slug_url);
+  const { data } = useChapters(slug_url, site);
 
   const [isReversing, startReversing] = useTransition();
   const [descending, setDescending] = useState(true);
-  const [chapters, setChapters] = useState(data);
 
-  useEffect(() => {
-    setChapters(data);
-  }, [data]);
+  const chapters = useMemo(() => {
+    return descending ? data?.toReversed() : data;
+  }, [descending, data]);
+
+  if (String(site) == "5") return null;
 
   return (
     <View className={cn("flex-1", tab == "chapters" ? "flex" : "hidden")}>
@@ -38,8 +39,6 @@ export const TitleChapters = ({ slug_url }: { slug_url: string }) => {
           impactAsync(ImpactFeedbackStyle.Soft);
           startReversing(() => {
             setDescending((prev) => !prev);
-
-            setChapters((prev) => prev?.toReversed());
           });
         }}
         variant="ghost"
@@ -56,7 +55,7 @@ export const TitleChapters = ({ slug_url }: { slug_url: string }) => {
       </Button>
       <FlashList
         className={cn(
-          "gap-2 mt-4 flex-1 opacity-100 duration-75",
+          "gap-2 mt-4 flex-1 opacity-100 duration-75 overflow-hidden",
           isReversing && "opacity-50"
         )}
         contentContainerStyle={{
@@ -66,6 +65,8 @@ export const TitleChapters = ({ slug_url }: { slug_url: string }) => {
           height,
           width,
         }}
+        keyExtractor={(item) => String(item.id)}
+        removeClippedSubviews
         scrollEnabled={false}
         data={chapters}
         estimatedItemSize={48}

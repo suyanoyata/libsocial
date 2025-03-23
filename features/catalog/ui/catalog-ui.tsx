@@ -1,6 +1,6 @@
 import { FlashList } from "@shopify/flash-list";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useWindowDimensions, View } from "react-native";
 import { useFilterStore } from "@/features/catalog/store/use-filter-store";
 import useDebounce from "@/hooks/use-debounce";
@@ -28,9 +28,11 @@ export const Catalog = () => {
   const { data, isFetchingNextPage, fetchNextPage } = useCatalogAPI(query);
 
   const { width, height } = useWindowDimensions();
-  const { catalogColumns, setCatalogColumns } = useProperties();
+  const { catalogColumns, setCatalogColumns, setCatalogImageWidth } = useProperties();
 
   const containerWidth = 125;
+
+  const ref = useRef<View>(null);
 
   useEffect(() => {
     if (Math.floor(width / containerWidth) != catalogColumns) {
@@ -43,6 +45,12 @@ export const Catalog = () => {
     () => data?.pages.reduce<BaseTitle[]>((acc, page) => acc.concat(page.data), []),
     [data]
   );
+
+  useEffect(() => {
+    ref.current?.measure((x, y, width) => {
+      setCatalogImageWidth(width);
+    });
+  }, [ref.current]);
 
   if (Math.floor(width / containerWidth) != catalogColumns || initialRender) return null;
 
@@ -66,6 +74,7 @@ export const Catalog = () => {
               estimatedItemSize={190}
               renderItem={({ item, index }: { item: BaseTitle; index: number }) => (
                 <View
+                  ref={ref}
                   style={{
                     ...getItemStyle(index, catalogColumns),
                   }}
@@ -74,9 +83,7 @@ export const Catalog = () => {
                 </View>
               )}
               ListFooterComponent={
-                <FetchingNextPageCards
-                  isFetching={isFetchingNextPage && data.pages.length >= 10}
-                />
+                <FetchingNextPageCards isFetching={isFetchingNextPage && data.pages.length >= 10} />
               }
             />
           )}

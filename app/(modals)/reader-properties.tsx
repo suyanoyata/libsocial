@@ -42,7 +42,7 @@ export default function ReaderProperties() {
   return (
     <ModalWrapper>
       <View className="mx-4 flex-1 gap-2">
-        <View className="flex-row items-center">
+        {/* <View className="flex-row items-center">
           <Text className="text-zinc-200 flex-1">Select image server</Text>
           <MenuView
             onPressAction={({ nativeEvent }) => {
@@ -56,8 +56,8 @@ export default function ReaderProperties() {
           >
             <Button>{server.label}</Button>
           </MenuView>
-        </View>
-        <Text className="text-zinc-200">Distance between images: {padding}px</Text>
+        </View> */}
+        <Text className="text-zinc-200 mt-2">Distance between images: {padding}px</Text>
         <Slider
           value={[padding]}
           onValueChange={(value) => setPadding(value[0])}
@@ -86,10 +86,7 @@ export default function ReaderProperties() {
         <SwitchMenuOption value={showReaderScrollbar} setValue={setShowReaderScrollbar}>
           Display scrollbar in reader
         </SwitchMenuOption>
-        <SwitchMenuOption
-          value={readerDisplayCurrentPage}
-          setValue={setReaderDisplayCurrentPage}
-        >
+        <SwitchMenuOption value={readerDisplayCurrentPage} setValue={setReaderDisplayCurrentPage}>
           Display current page in reader (unstable)
         </SwitchMenuOption>
       </View>

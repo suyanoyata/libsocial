@@ -23,11 +23,7 @@ export const TitleCard = ({ title }: { title: BaseTitle }) => {
       className="w-[120px]"
     >
       <View>
-        <TransitionedImage
-          source={{ uri: title.cover.default }}
-          width={120}
-          height={180}
-        />
+        <TransitionedImage source={{ uri: title.cover.default }} width={120} height={180} />
         <Text className="text-sm mt-1 font-medium text-zinc-200" numberOfLines={2}>
           {title.eng_name != "" ? title.eng_name : title.name}
         </Text>

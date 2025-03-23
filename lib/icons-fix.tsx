@@ -8,6 +8,7 @@ import {
   SortDesc,
   SortAsc,
   Bookmark,
+  Star,
 } from "lucide-react-native";
 import { cssInterop } from "nativewind";
 
@@ -26,4 +27,4 @@ export function interopIcons(icons: LucideIcon[]) {
 }
 
 export const iconFix = () =>
-  interopIcons([X, Eye, EyeOff, Search, Filter, SortDesc, SortAsc, Bookmark]);
+  interopIcons([X, Eye, EyeOff, Search, Filter, SortDesc, SortAsc, Bookmark, Star]);

@@ -24,7 +24,7 @@ export const PopularTitles = () => {
     >
       {shouldRenderItems && (
         <FadeView withEnter className="flex-row gap-2">
-          {data.popular.map((title) => (
+          {data?.popular.map((title) => (
             <TitleCard key={title.id} title={title} />
           ))}
         </FadeView>

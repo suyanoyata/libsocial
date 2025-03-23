@@ -1,8 +1,8 @@
 import "../global.css";
 import "react-native-gesture-handler";
 
-import { SplashScreen, Stack, useFocusEffect } from "expo-router";
-import { QueryClient } from "@tanstack/react-query";
+import { SplashScreen, Stack } from "expo-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { DarkTheme, ThemeProvider } from "@react-navigation/native";
 import { DevToolsBubble } from "react-native-react-query-devtools";
@@ -25,10 +25,10 @@ import { AppState, View } from "react-native";
 import { enableFreeze, enableScreens } from "react-native-screens";
 
 import { clientPersister } from "@/lib/persistent-query-storage";
-import { initLoggers } from "@/lib/axios";
 import { iconFix } from "@/lib/icons-fix";
 
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { setBackgroundColorAsync } from "expo-system-ui";
 
 enableFreeze();
 enableScreens();
@@ -65,14 +65,9 @@ const config = createTamagui({
   },
 });
 
-type Conf = typeof config;
-
-declare module "@tamagui/core" {
-  interface TamaguiCustomConfig extends Conf {}
-}
-
 iconFix();
-initLoggers();
+
+setBackgroundColorAsync("black");
 
 SplashScreen.preventAutoHideAsync();
 
@@ -127,12 +122,15 @@ export default function RootLayout() {
     AppState.addEventListener("change", focusCallback);
   }, []);
 
+  // queryClient.clear();
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <PersistQueryClientProvider
         persistOptions={{ persister: clientPersister }}
         client={queryClient}
       >
+        {/* <QueryClientProvider client={queryClient}> */}
         <View className="bg-black flex-1">
           <TamaguiProvider config={config}>
             <ThemeProvider value={DarkTheme}>
@@ -148,6 +146,7 @@ export default function RootLayout() {
             </ThemeProvider>
           </TamaguiProvider>
         </View>
+        {/* </QueryClientProvider> */}
       </PersistQueryClientProvider>
     </GestureHandlerRootView>
   );

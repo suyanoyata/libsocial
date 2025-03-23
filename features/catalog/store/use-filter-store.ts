@@ -1,3 +1,5 @@
+// TODO: replace number[] with Set to ensure items being unique?
+
 import { create } from "zustand";
 
 interface FilterStoreProperties {

@@ -1,15 +1,21 @@
+import { siteIds } from "@/const/site-fields";
 import { Title } from "@/features/shared/types/title";
 import { api } from "@/lib/axios";
+import { useProperties } from "@/store/use-properties";
 import { useQuery } from "@tanstack/react-query";
 
 export const useTitleInfo = (slug_url: string, site: string) => {
+  const { siteId } = useProperties();
+
+  const siteProperties = siteIds[siteId];
+
   return useQuery<Title>({
     queryKey: ["title-info", slug_url, site],
-    queryFn: async () =>
-      (
-        await api.get(
-          `/manga/${slug_url}?fields[]=background&fields[]=eng_name&fields[]=otherNames&fields[]=summary&fields[]=releaseDate&fields[]=type_id&fields[]=caution&fields[]=views&fields[]=close_view&fields[]=rate_avg&fields[]=rate&fields[]=genres&fields[]=tags&fields[]=teams&fields[]=user&fields[]=franchise&fields[]=authors&fields[]=publisher&fields[]=userRating&fields[]=moderated&fields[]=metadata&fields[]=metadata.count&fields[]=metadata.close_comments&fields[]=manga_status_id&fields[]=chap_count&fields[]=status_id&fields[]=artists&fields[]=format`
-        )
-      ).data.data,
+    queryFn: async () => {
+      return (
+        await api.get(`/${siteProperties.type}/${slug_url}?${siteProperties.fields}`)
+      ).data.data;
+    },
+    enabled: !!slug_url,
   });
 };

@@ -36,8 +36,7 @@ export const MangaReaderUI = () => {
   const [offset, setOffset] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { readerImagePadding, readerDisplayCurrentPage, showReaderScrollbar } =
-    useProperties();
+  const { readerImagePadding, readerDisplayCurrentPage, showReaderScrollbar } = useProperties();
 
   const { addItem } = useReadingTracker();
   const { add } = useTitleReadChapter();
@@ -81,7 +80,7 @@ export const MangaReaderUI = () => {
       cover: {
         default: title.cover.default,
       },
-      site: title.site,
+      site: Number(title.site),
       scrollTo: offset,
     });
   }, [slug_url, title, data, offset]);
