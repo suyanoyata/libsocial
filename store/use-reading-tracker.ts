@@ -12,11 +12,12 @@ export type LastReadItem = {
   };
   site: number;
   scrollTo: number;
+  hide: boolean;
 };
 
 export interface ApplicationProperties {
   lastReadItems: LastReadItem[];
-  addItem: (lastReadItem: LastReadItem) => void;
+  addItem: (lastReadItem: Omit<LastReadItem, "hide">) => void;
   get: (slug_url: string) => LastReadItem | undefined;
   removeItem: (slug_url: string) => void;
   reset: () => void;
@@ -33,6 +34,7 @@ export const useReadingTracker = create<ApplicationProperties>()(
           const newItem = {
             ...lastReadItem,
             lastReadChapter: lastReadItem.lastReadChapter + 1,
+            hide: false,
           };
           const existingTitle = state.lastReadItems.find(
             (item) => item.slug_url == lastReadItem.slug_url
@@ -67,8 +69,11 @@ export const useReadingTracker = create<ApplicationProperties>()(
 
       removeItem: (slug_url) =>
         set((state) => {
-          const filterTitles = state.lastReadItems.filter((title) => title.slug_url != slug_url);
-          return { lastReadItems: filterTitles };
+          return {
+            lastReadItems: state.lastReadItems.map((item) =>
+              item.slug_url == slug_url ? { ...item, hide: true } : item
+            ),
+          };
         }),
 
       reset: () => {
@@ -83,6 +88,7 @@ export const useReadingTracker = create<ApplicationProperties>()(
               return {
                 ...item,
                 lastReadChapter: chapterIndex + 1,
+                hide: false,
               };
             }
             return item;

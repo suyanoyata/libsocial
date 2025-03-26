@@ -15,6 +15,8 @@ export const LastReadTitleCard = ({ item }: { item: LastReadItem }) => {
 
   const allChaptersRead = useMemo(() => item.lastReadChapter === item.overallChapters, [item]);
 
+  if (item.hide) return null;
+
   return (
     <Pressable
       onPress={() => {
