@@ -13,7 +13,7 @@ export const api = axios.create({
     Referer: "https://mangalib.me/",
     Origin: "https://mangalib.me",
     "Site-Id": useProperties.getState().siteId,
-    // "Site-Id": "1",
+    // "Site-Id": "5",
     // Authorization: token,
     "Content-Type": "application/json",
     "User-Agent":

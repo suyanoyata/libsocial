@@ -1,7 +1,7 @@
 import { FlashList } from "@shopify/flash-list";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useWindowDimensions, View } from "react-native";
+import { RefreshControl, useWindowDimensions, View } from "react-native";
 import { useFilterStore } from "@/features/catalog/store/use-filter-store";
 import useDebounce from "@/hooks/use-debounce";
 
@@ -25,7 +25,7 @@ export const Catalog = () => {
   const { search } = useFilterStore();
   const [query] = useDebounce(search, 500);
 
-  const { data, isFetchingNextPage, fetchNextPage } = useCatalogAPI(query);
+  const { data, isFetchingNextPage, fetchNextPage, isFetching, refetch } = useCatalogAPI(query);
 
   const { width, height } = useWindowDimensions();
   const { catalogColumns, setCatalogColumns, setCatalogImageWidth } = useProperties();
@@ -52,15 +52,36 @@ export const Catalog = () => {
     });
   }, [ref.current]);
 
+  const renderItem = ({ item, index }: { item: BaseTitle; index: number }) => (
+    <View
+      ref={ref}
+      style={{
+        ...getItemStyle(index, catalogColumns),
+      }}
+    >
+      <CatalogTitleCard title={item} />
+    </View>
+  );
+
+  const keyExtractor = (item: BaseTitle) => String(item.id);
+
   if (Math.floor(width / containerWidth) != catalogColumns || initialRender) return null;
 
   return (
     <DrawerContextProvider>
       <CatalogDrawerLayout style={{ flex: 1 }}>
         <CatalogHeader />
-        <View className="flex-1 mx-2 overflow-hidden rounded-sm">
+        <View
+          style={{
+            height,
+          }}
+          className="flex-1 mx-2 overflow-hidden rounded-sm"
+        >
           {data && (
             <FlashList
+              refreshControl={
+                <RefreshControl tintColor="white" refreshing={isFetching} onRefresh={refetch} />
+              }
               removeClippedSubviews
               data={catalogItems}
               onEndReachedThreshold={0.8}
@@ -69,19 +90,11 @@ export const Catalog = () => {
                 width,
                 height,
               }}
-              drawDistance={height * 3}
+              keyExtractor={keyExtractor}
+              drawDistance={height * 6}
               numColumns={catalogColumns}
               estimatedItemSize={190}
-              renderItem={({ item, index }: { item: BaseTitle; index: number }) => (
-                <View
-                  ref={ref}
-                  style={{
-                    ...getItemStyle(index, catalogColumns),
-                  }}
-                >
-                  <CatalogTitleCard title={item} />
-                </View>
-              )}
+              renderItem={renderItem}
               ListFooterComponent={
                 <FetchingNextPageCards isFetching={isFetchingNextPage && data.pages.length >= 10} />
               }

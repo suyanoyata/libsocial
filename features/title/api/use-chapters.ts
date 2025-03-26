@@ -1,12 +1,10 @@
-import { z } from "zod";
 import { api } from "@/lib/axios";
 
 import { useQuery } from "@tanstack/react-query";
 
 import { Chapter } from "@/features/shared/types/chapter";
-import { AllowedSiteIds } from "@/store/use-properties";
 
-export const useChapters = (slug_url: string, site?: AllowedSiteIds) => {
+export const useChapters = (slug_url: string, site?: number) => {
   return useQuery<Chapter[]>({
     queryKey: ["chapters", slug_url],
     queryFn: async () => {

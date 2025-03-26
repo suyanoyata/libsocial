@@ -5,7 +5,6 @@ import { SplashScreen, Stack } from "expo-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { DarkTheme, ThemeProvider } from "@react-navigation/native";
-import { DevToolsBubble } from "react-native-react-query-devtools";
 
 import { createFont, createTamagui, TamaguiProvider } from "@tamagui/core";
 import { defaultConfig } from "@tamagui/config/v4";
@@ -29,6 +28,10 @@ import { iconFix } from "@/lib/icons-fix";
 
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { setBackgroundColorAsync } from "expo-system-ui";
+
+import { useSyncQueries } from "tanstack-query-dev-tools-expo-plugin";
+
+import { Toaster } from "sonner-native";
 
 enableFreeze();
 enableScreens();
@@ -85,6 +88,8 @@ export default function RootLayout() {
 
   const { showQueryDevTools } = useProperties();
 
+  useSyncQueries({ queryClient });
+
   useEffect(() => {
     addUpdatesStateChangeListener(async (listener) => {
       if (listener.context.isUpdatePending && !updating) {
@@ -122,15 +127,12 @@ export default function RootLayout() {
     AppState.addEventListener("change", focusCallback);
   }, []);
 
-  // queryClient.clear();
-
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <PersistQueryClientProvider
         persistOptions={{ persister: clientPersister }}
         client={queryClient}
       >
-        {/* <QueryClientProvider client={queryClient}> */}
         <View className="bg-black flex-1">
           <TamaguiProvider config={config}>
             <ThemeProvider value={DarkTheme}>
@@ -142,11 +144,10 @@ export default function RootLayout() {
                 <Stack.Screen name="(tabs)" />
                 <Stack.Screen options={{ presentation: "modal" }} name="(modals)" />
               </Stack>
-              {__DEV__ && showQueryDevTools && <DevToolsBubble />}
+              <Toaster theme="dark" position="bottom-center" visibleToasts={1} duration={1500} />
             </ThemeProvider>
           </TamaguiProvider>
         </View>
-        {/* </QueryClientProvider> */}
       </PersistQueryClientProvider>
     </GestureHandlerRootView>
   );

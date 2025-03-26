@@ -15,13 +15,14 @@ import { ImageBackground, View } from "react-native";
 
 import { TitleSummary } from "@/features/title/components/title-summary";
 import { Genres } from "@/features/title/components/genres";
+import { ChevronRight } from "lucide-react-native";
 
 export default function QuickSearchTitlePreview() {
   const route = useRoute();
   const { slug_url, site } = route.params as { slug_url: string; site: string };
 
   const { data } = useTitleInfo(slug_url, site);
-  const { bottom, top } = useSafeAreaInsets();
+  const { bottom } = useSafeAreaInsets();
 
   return (
     <ModalWrapper scrollable>
@@ -38,13 +39,14 @@ export default function QuickSearchTitlePreview() {
               params: { slug_url, site },
             });
           }}
+          iconRight={<ChevronRight color="white" size={18} />}
           variant="ghost"
           className="absolute right-4 z-30"
           style={{
-            top: -26,
+            top: -28,
           }}
         >
-          Перейти
+          Learn More
         </Button>
         {data && (
           <FadeView withEnter className="flex-1 -mt-11">
@@ -68,7 +70,7 @@ export default function QuickSearchTitlePreview() {
                     backgroundColor: "rgba(0,0,0,0.7)",
                   }}
                 />
-                <View className="mx-2 flex-row">
+                <View className="mx-auto flex-row">
                   <FastImage
                     source={{ uri: data.cover.default }}
                     style={{
@@ -77,13 +79,6 @@ export default function QuickSearchTitlePreview() {
                       width: 140,
                     }}
                   />
-                  <View className="flex-1 gap-1.5 mx-2">
-                    {data.otherNames.map((name) => (
-                      <Text key={name} className="text-zinc-200 font-medium">
-                        {name}
-                      </Text>
-                    ))}
-                  </View>
                 </View>
               </ImageBackground>
               <View className="mx-2 gap-1 mt-2">

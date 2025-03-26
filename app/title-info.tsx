@@ -11,13 +11,9 @@ import { BackButton } from "@/components/ui/back-button";
 import { FadeView } from "@/components/ui/fade-view";
 import { Text } from "@/components/ui/text";
 
-import { TabsSwitcher } from "@/features/title/components/tabs-switcher";
-import { TitleContext } from "@/features/title/context/title-context";
 import { TitleAbout } from "@/features/title/ui/title-about";
-import { TitleChapters } from "@/features/title/ui/title-chapters";
 
 import { titleInfoRouteSchema } from "@/features/title/types/title-info-route";
-import { TitleEpisodes } from "@/features/title/ui/title-episodes";
 
 export default function TitleInfo() {
   const router = useRoute();
@@ -35,8 +31,6 @@ export default function TitleInfo() {
   const { top } = useSafeAreaInsets();
 
   const { data } = useTitleInfo(slug_url, site);
-
-  const [tab, setTab] = useState("about");
 
   useEffect(() => {
     if (!withDelay && data) {
@@ -72,7 +66,7 @@ export default function TitleInfo() {
 
   return (
     <FadeView withEnter className="flex-1">
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView scrollEnabled={false} showsVerticalScrollIndicator={false}>
         <BackButton />
         <ImageBackground
           source={{ uri: data.background.url }}
@@ -95,7 +89,7 @@ export default function TitleInfo() {
               backgroundColor: "rgba(0,0,0,0.7)",
             }}
           />
-          <View className="mx-2 flex-row z-10">
+          <View className="mx-auto flex-row z-10">
             <FastImage
               source={{ uri: data.cover.default }}
               style={{
@@ -104,25 +98,15 @@ export default function TitleInfo() {
                 width: 140,
               }}
             />
-            {/* <View className="flex-1 gap-1.5 mx-2">
-              {data.otherNames.map((name) => (
-                <Text key={name} className="text-zinc-200 font-medium">
-                  {name}
-                </Text>
-              ))}
-            </View> */}
           </View>
         </ImageBackground>
         <View className="mx-2 gap-0.5 mt-2 flex-1">
           <Text className="text-4xl text-zinc-200 font-bold" numberOfLines={2}>
             {data.eng_name != "" ? data.eng_name : data.name}
           </Text>
-          <TabsSwitcher site={data.site} tab={tab} setTab={setTab} />
-          <TitleContext.Provider value={tab}>
-            <TitleAbout data={data} />
-            <TitleChapters site={Number(data.site)} slug_url={slug_url} />
-            <TitleEpisodes site={data.site} slug_url={data.slug_url} />
-          </TitleContext.Provider>
+          <TitleAbout data={data} />
+          {/* <TitleChapters site={Number(data.site)} slug_url={slug_url} /> */}
+          {/* <TitleEpisodes site={data.site} slug_url={data.slug_url} /> */}
         </View>
       </ScrollView>
     </FadeView>

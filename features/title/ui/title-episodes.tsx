@@ -1,43 +1,37 @@
-import { Text } from "@/components/ui/text";
-import { useEpisodesAPI } from "@/features/title/api/use-episodes-api";
-import { TitleContext } from "@/features/title/context/title-context";
-import { AllowedSiteIds } from "@/store/use-properties";
-import { router } from "expo-router";
-import { useContext } from "react";
-import { FlatList, Pressable } from "react-native";
+import { ContentCollectionView } from "@/components/ui/content-collection-view";
+import { Episode } from "@/features/title/components/episode-item";
 
-export const TitleEpisodes = ({
-  slug_url,
-  site,
-}: {
-  slug_url: string;
-  site: AllowedSiteIds;
-}) => {
+import { useEpisodesAPI } from "@/features/title/api/use-episodes-api";
+import { useMemo, useState } from "react";
+
+import { TitleEpisodeBase } from "@/features/title/types/title-episodes-response";
+
+export const TitleEpisodes = ({ slug_url, site }: { slug_url: string; site: number }) => {
   const { data } = useEpisodesAPI(slug_url, site);
 
-  const tab = useContext(TitleContext);
+  const [descending, setDescending] = useState(false);
 
-  if (tab != "episodes") return null;
+  const episodes = useMemo(() => {
+    return descending ? data?.toReversed() : data;
+  }, [descending, data]);
+
+  const keyExtractor = (item: TitleEpisodeBase) => item.id.toString();
+
+  const renderItem = ({ item, index }: { item: TitleEpisodeBase; index: number }) => (
+    <Episode slug_url={slug_url} episode={item} index={index} />
+  );
+
+  if (!data) return null;
 
   return (
-    <FlatList
-      scrollEnabled={false}
-      data={data}
-      keyExtractor={(item) => item.id.toString()}
-      renderItem={({ item }) => (
-        <Pressable
-          onPress={() =>
-            router.push({
-              pathname: "/anime-watch",
-              params: {
-                slug_url,
-              },
-            })
-          }
-        >
-          <Text className="text-zinc-200">{item.number}</Text>
-        </Pressable>
-      )}
+    <ContentCollectionView
+      renderItem={renderItem}
+      keyExtractor={keyExtractor}
+      title={`${data?.length} Episodes`}
+      data={episodes}
+      estimatedItemSize={45}
+      reverseCallback={() => setDescending((prev) => !prev)}
+      descending={descending}
     />
   );
 };

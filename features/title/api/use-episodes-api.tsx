@@ -1,14 +1,16 @@
-import { TitleEpisodeBase } from "@/features/title/types/title-episodes-response";
 import { api } from "@/lib/axios";
-import { AllowedSiteIds } from "@/store/use-properties";
 import { useQuery } from "@tanstack/react-query";
 
-export const useEpisodesAPI = (slug_url: string, site: AllowedSiteIds = "5") => {
+import { TitleEpisodeBase } from "@/features/title/types/title-episodes-response";
+
+export const useEpisodesAPI = (slug_url: string, site: number) => {
   return useQuery<TitleEpisodeBase[]>({
-    queryKey: ["episodes", slug_url, site],
+    queryKey: ["episodes", slug_url],
     queryFn: async () => {
-      return (await api.get(`/episodes?anime_id=${slug_url}`)).data.data;
+      const { data } = await api.get(`/episodes?anime_id=${slug_url}`);
+
+      return data;
     },
-    enabled: site && site == "5" && !!slug_url,
+    enabled: !!site && site == 5 && !!slug_url,
   });
 };

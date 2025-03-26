@@ -1,5 +1,3 @@
-import { AllowedSiteIds } from "@/store/use-properties";
-
 export type BaseTitle = {
   ageRestriction: {
     id: number;
@@ -20,7 +18,7 @@ export type BaseTitle = {
     thumbnail: string;
     default: string;
   };
-  site: AllowedSiteIds;
+  site: string;
   model: string;
 };
 

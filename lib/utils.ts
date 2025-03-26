@@ -10,3 +10,7 @@ export function objectTypes(obj: any) {
     [key]: typeof obj[key],
   }));
 }
+
+export const biggest = (arr: number[]) => {
+  return Math.max(...arr);
+};

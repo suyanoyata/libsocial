@@ -13,10 +13,11 @@ import { useEffect, useState } from "react";
 import { Text } from "@/components/ui/text";
 
 import { InputAccessoryView, Keyboard, ScrollView, View } from "react-native";
-import { X } from "lucide-react-native";
+import { Search, X } from "lucide-react-native";
 
 import { QuickSearchContent } from "@/features/quick-search/components/quick-search-content";
 import { useQuickSearchHistory } from "@/features/quick-search/hooks/use-quick-search-history";
+import withBubble from "@/components/ui/withBubble";
 
 export const QuickSearchUI = () => {
   const [search, setSearch] = useState("");
@@ -33,16 +34,16 @@ export const QuickSearchUI = () => {
 
   const { history } = useQuickSearchHistory();
 
+  const SearchIcon = withBubble(Search);
+
   return (
     <ModalWrapper>
       <View className="px-2 flex-1">
         <QuickSearchInput search={search} setSearch={setSearch} />
         {!search && (
-          <FadeView
-            withExit
-            className="absolute items-center justify-center flex-1 top-1/2 w-full"
-          >
-            <Text className="text-white text-sm">Type something in search</Text>
+          <FadeView withExit className="absolute items-center justify-center flex-1 top-1/2 w-full">
+            <SearchIcon />
+            <Text className="text-white text-sm mt-2">Type something in search</Text>
           </FadeView>
         )}
         <QuickSearchFetching q={query} live={search} />

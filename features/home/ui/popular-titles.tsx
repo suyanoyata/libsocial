@@ -15,6 +15,7 @@ export const PopularTitles = () => {
 
   return (
     <ScrollView
+      className="h-[220px]"
       horizontal
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={{

@@ -10,7 +10,8 @@ export type TitleReadChapter = {
 export interface TitleReadChapterProperties {
   titleReadChapters: TitleReadChapter[];
   add: (slug_url: string, chapterIndex: number) => void;
-  get: (slug_url: string, chapterIndex: number) => void;
+  getReadChapters: (slug_url: string) => number[] | undefined;
+  get: (slug_url: string, chapterIndex: number) => boolean;
   remove: (slug_url: string, chapterIndex: number) => void;
 }
 
@@ -21,9 +22,7 @@ export const useTitleReadChapter = create<TitleReadChapterProperties>()(
 
       add: (slug_url: string, chapterIndex: number) =>
         set((state) => {
-          const exists = state.titleReadChapters.find(
-            (value) => value.slug_url == slug_url
-          );
+          const exists = state.titleReadChapters.find((value) => value.slug_url == slug_url);
 
           if (!exists) {
             return {
@@ -39,9 +38,7 @@ export const useTitleReadChapter = create<TitleReadChapterProperties>()(
 
           if (exists.chapters.includes(chapterIndex)) return state;
 
-          const filtered = state.titleReadChapters.filter(
-            (value) => value.slug_url !== slug_url
-          );
+          const filtered = state.titleReadChapters.filter((value) => value.slug_url !== slug_url);
 
           return {
             titleReadChapters: [
@@ -54,7 +51,14 @@ export const useTitleReadChapter = create<TitleReadChapterProperties>()(
           };
         }),
 
-      get: (slug_url, chapterIndex): boolean => {
+      getReadChapters: (slug_url) => {
+        const items = get().titleReadChapters;
+
+        const item = items.find((item) => slug_url == item.slug_url);
+
+        return item?.chapters;
+      },
+      get: (slug_url, chapterIndex) => {
         const items = get().titleReadChapters;
 
         const item = items.find((item) => slug_url == item.slug_url);
@@ -64,14 +68,10 @@ export const useTitleReadChapter = create<TitleReadChapterProperties>()(
 
       remove: (slug_url, chapterIndex) =>
         set((state) => {
-          const exists = state.titleReadChapters.find(
-            (value) => value.slug_url == slug_url
-          );
+          const exists = state.titleReadChapters.find((value) => value.slug_url == slug_url);
 
           if (exists) {
-            const filtered = state.titleReadChapters.filter(
-              (value) => value.slug_url !== slug_url
-            );
+            const filtered = state.titleReadChapters.filter((value) => value.slug_url !== slug_url);
 
             const chapters = exists.chapters.filter((index) => index !== chapterIndex);
 

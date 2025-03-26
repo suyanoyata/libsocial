@@ -17,8 +17,11 @@ export const CatalogHeader = () => {
   const { setOpen } = useContext(DrawerContext);
 
   return (
-    <View style={{ paddingTop: top + 8, paddingBottom: 10 }} className="bg-zinc-950 px-2">
-      <View className="bg-zinc-900 px-4 py-2 h-10 items-center flex-row font-medium rounded-md">
+    <View
+      style={{ paddingTop: top + 8, paddingBottom: 10 }}
+      className="bg-zinc-950 px-3.5 flex-row"
+    >
+      <View className="bg-zinc-900 px-4 py-2 h-10 items-center flex-row font-medium rounded-md flex-1">
         <TextInput
           onChangeText={setSearch}
           placeholder="Search..."
@@ -29,14 +32,13 @@ export const CatalogHeader = () => {
       </View>
       <Button
         variant="ghost"
-        className="w-[110px] mt-2 rounded-full"
+        className="w-[50px] rounded-full ml-2"
         textClassName="text-zinc-400"
-        iconLeft={<Filter className="text-zinc-400" size={18} />}
         onPress={() => {
           setOpen(true);
         }}
       >
-        Filters
+        <Filter className="text-zinc-400" size={18} />
       </Button>
     </View>
   );

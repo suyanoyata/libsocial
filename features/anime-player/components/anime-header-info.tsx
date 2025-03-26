@@ -39,9 +39,9 @@ export const AnimeHeaderInfo = () => {
         <Text numberOfLines={2} className="text-zinc-300 font-bold text-2xl">
           {data.eng_name}
         </Text>
-        <Text numberOfLines={2} className="text-sm text-zinc-400 items-baseline h-5">
+        {/* <Text numberOfLines={2} className="text-sm text-zinc-400 items-baseline h-5">
           {data.type.label} • <AnimeRating rate={data.shiki_rate} />
-        </Text>
+        </Text> */}
       </View>
     </View>
   );

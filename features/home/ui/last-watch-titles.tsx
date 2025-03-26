@@ -1,0 +1,48 @@
+import { Trash2 } from "lucide-react-native";
+import { View, ScrollView, FlatList } from "react-native";
+
+import { Text } from "@/components/ui/text";
+
+import Animated, { FadeIn } from "react-native-reanimated";
+
+import { Button } from "@/components/ui/button";
+
+import { LastWatchItem, useWatchTracker } from "@/store/use-watch-tracker";
+import { useProperties } from "@/store/use-properties";
+import { LastWatchedTitleCard } from "@/features/home/components/last-watched-title-card";
+
+export const LastWatchTitles = () => {
+  const { lastWatchItems, reset } = useWatchTracker();
+
+  const { siteId } = useProperties();
+
+  const renderItem = ({ item }: { item: LastWatchItem }) => <LastWatchedTitleCard item={item} />;
+  const keyExtractor = (item: LastWatchItem) => item.slug_url;
+
+  if (lastWatchItems.length == 0 || siteId != "5") return null;
+
+  return (
+    <Animated.View entering={FadeIn}>
+      <View className="flex-row items-center justify-between mx-2 mt-3">
+        <Text className="text-3xl font-extrabold text-white">You've stopped at</Text>
+        <Button
+          onPress={() => reset()}
+          iconLeft={<Trash2 size={18} color="white" />}
+          variant="destructive"
+        >
+          Clear all
+        </Button>
+      </View>
+      <View className="flex-row mx-2 mt-4">
+        <FlatList
+          contentContainerClassName="gap-4"
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={keyExtractor}
+          renderItem={renderItem}
+          horizontal
+          data={lastWatchItems}
+        />
+      </View>
+    </Animated.View>
+  );
+};

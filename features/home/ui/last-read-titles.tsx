@@ -9,11 +9,14 @@ import { Button } from "@/components/ui/button";
 import { LastReadTitleCard } from "@/features/home/components/last-read-title-card";
 
 import { useReadingTracker } from "@/store/use-reading-tracker";
+import { useProperties } from "@/store/use-properties";
 
 export const LastReadTitles = () => {
   const { lastReadItems, reset } = useReadingTracker();
 
-  if (lastReadItems.length == 0) return null;
+  const { siteId } = useProperties();
+
+  if (lastReadItems.length == 0 || siteId == "5") return null;
 
   return (
     <Animated.View entering={FadeIn}>

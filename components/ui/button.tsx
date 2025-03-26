@@ -67,9 +67,7 @@ const Button = React.forwardRef<Pressable, ButtonProps>(
         {...props}
       >
         {iconLeft}
-        <Text className={cn(textVariants({ variant, size }), props.textClassName)}>
-          {children}
-        </Text>
+        <Text className={cn(textVariants({ variant, size }), props.textClassName)}>{children}</Text>
         {iconRight}
       </Pressable>
     );

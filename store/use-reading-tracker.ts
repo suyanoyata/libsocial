@@ -17,9 +17,10 @@ export type LastReadItem = {
 export interface ApplicationProperties {
   lastReadItems: LastReadItem[];
   addItem: (lastReadItem: LastReadItem) => void;
-  get: (slug_url: string) => void;
+  get: (slug_url: string) => LastReadItem | undefined;
   removeItem: (slug_url: string) => void;
   reset: () => void;
+  updateLastReadChapter: (slug_url: string, chapterIndex: number) => void;
 }
 
 export const useReadingTracker = create<ApplicationProperties>()(
@@ -58,7 +59,7 @@ export const useReadingTracker = create<ApplicationProperties>()(
           return { lastReadItems: [newItem, ...state.lastReadItems] };
         }),
 
-      get: (slug_url: string): LastReadItem | undefined => {
+      get: (slug_url): LastReadItem | undefined => {
         const items = get().lastReadItems;
 
         return items.find((item) => slug_url == item.slug_url);
@@ -66,15 +67,28 @@ export const useReadingTracker = create<ApplicationProperties>()(
 
       removeItem: (slug_url) =>
         set((state) => {
-          const filterTitles = state.lastReadItems.filter(
-            (title) => title.slug_url != slug_url
-          );
+          const filterTitles = state.lastReadItems.filter((title) => title.slug_url != slug_url);
           return { lastReadItems: filterTitles };
         }),
 
       reset: () => {
         zustandStorage.removeItem("libsocial.client.title-storage"),
           set(() => ({ lastReadItems: [] }));
+      },
+
+      updateLastReadChapter(slug_url, chapterIndex) {
+        set((state) => {
+          const lastReadItems = state.lastReadItems.map((item) => {
+            if (item.slug_url === slug_url) {
+              return {
+                ...item,
+                lastReadChapter: chapterIndex + 1,
+              };
+            }
+            return item;
+          });
+          return { lastReadItems };
+        });
       },
     }),
     {

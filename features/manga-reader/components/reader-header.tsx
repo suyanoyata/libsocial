@@ -29,7 +29,6 @@ export const ReaderHeader = ({ chapter, title }: { chapter: ReaderChapter; title
       <Cog
         hitSlop={10}
         onPress={() => {
-          console.log("click");
           router.navigate("/reader-properties");
         }}
         color="#a1a1aa"

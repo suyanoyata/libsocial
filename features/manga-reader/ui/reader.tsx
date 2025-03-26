@@ -26,13 +26,14 @@ import { preloadNextChapter } from "@/features/manga-reader/lib/preload-chapter"
 import { BackButton } from "@/components/ui/back-button";
 
 import { ReaderImage } from "@/features/manga-reader/components/reader-image";
-import { useImageServers } from "@/features/shared/api/use-image-servers";
 import { useReaderScrollTo } from "@/features/manga-reader/hooks/use-reader-scroll-to";
+import withBubble from "@/components/ui/withBubble";
+import { SearchX } from "lucide-react-native";
 
 export const MangaReaderUI = () => {
   const route = useRoute();
 
-  const { width } = useWindowDimensions();
+  const { width, height } = useWindowDimensions();
   const [offset, setOffset] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -61,13 +62,33 @@ export const MangaReaderUI = () => {
 
   const { data: title } = useTitleInfo(slug_url, "1");
   const { data: chapters } = useChapters(slug_url, title?.site);
-  const { data: imageServers } = useImageServers();
 
   const nextChapter = chapters && chapters[chapterIndex + 1];
 
   const { flatListRef, scroll } = useReaderScrollTo(slug_url, chapterIndex);
 
-  const { data } = useChapter(slug_url, chapters && chapters[chapterIndex]);
+  const { data, refetch, isFetching, isError } = useChapter(
+    slug_url,
+    chapters && chapters[chapterIndex]
+  );
+
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout | null = null;
+
+    if (isError) return;
+
+    if (!isFetching && data && data.pages.length == 0) {
+      timeoutId = setTimeout(() => {
+        refetch();
+      }, 500);
+    }
+
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [data, isFetching, isError]);
 
   useEffect(() => {
     if (!title || !chapters) return;
@@ -94,11 +115,23 @@ export const MangaReaderUI = () => {
     [nextChapter, slug_url]
   );
 
-  if (error) {
+  const keyExtractor = (item: { url: string; ratio: number }) => item.url;
+
+  const renderItem = ({ item }: { item: { url: string; ratio: number } }) => (
+    <ReaderImage url={item.url} ratio={item.ratio} />
+  );
+
+  const ErrorIcon = withBubble(SearchX);
+
+  if (isError) {
     return (
       <View className="flex-1 items-center justify-center">
         <BackButton />
-        <Text className="text-zinc-200">Something went wrong</Text>
+        <ErrorIcon />
+        <Text className="text-white/80 mt-2">Something went wrong</Text>
+        <Text className="text-white/60 mt-2 text-sm font-medium">
+          Chapter is licensed or not found
+        </Text>
       </View>
     );
   }
@@ -107,6 +140,16 @@ export const MangaReaderUI = () => {
     return (
       <View className="flex-1 items-center justify-center">
         <ActivityIndicator />
+      </View>
+    );
+  }
+
+  if (data && data.pages.length == 0) {
+    return (
+      <View className="flex-1 items-center justify-center">
+        <BackButton />
+        <ActivityIndicator size="small" color="white" />
+        <Text className="text-zinc-200 mt-2">Chapter is downloading, hang on...</Text>
       </View>
     );
   }
@@ -156,9 +199,10 @@ export const MangaReaderUI = () => {
             setCurrentPage(event.changed[0].index);
           }
         }}
+        keyExtractor={keyExtractor}
         onMomentumScrollEnd={(event) => setOffset(event.nativeEvent.contentOffset.y)}
         maxToRenderPerBatch={6}
-        initialNumToRender={10}
+        initialNumToRender={5}
         stickyHeaderIndices={[0]}
         stickyHeaderHiddenOnScroll
         onEndReached={preloadChapter}
@@ -170,9 +214,7 @@ export const MangaReaderUI = () => {
         )}
         style={{ width }}
         data={data.pages}
-        renderItem={({ item }) => (
-          <ReaderImage imageServers={imageServers} url={item.url} ratio={item.ratio} />
-        )}
+        renderItem={renderItem}
       />
     </FadeView>
   );

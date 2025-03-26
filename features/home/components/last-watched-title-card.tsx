@@ -6,14 +6,18 @@ import { View, Pressable } from "react-native";
 
 import { Text } from "@/components/ui/text";
 
-import { LastReadItem, useReadingTracker } from "@/store/use-reading-tracker";
-
 import { X } from "lucide-react-native";
+import { LastWatchItem, useWatchTracker } from "@/store/use-watch-tracker";
 
-export const LastReadTitleCard = ({ item }: { item: LastReadItem }) => {
-  const { removeItem } = useReadingTracker();
+export const LastWatchedTitleCard = ({ item }: { item: LastWatchItem }) => {
+  const { hide } = useWatchTracker();
 
-  const allChaptersRead = useMemo(() => item.lastReadChapter === item.overallChapters, [item]);
+  const allEpisodesWatched = useMemo(
+    () => item.lastWatchedEpisode + 1 === item.overallEpisodes,
+    [item]
+  );
+
+  if (item.hide == true) return;
 
   return (
     <Pressable
@@ -22,25 +26,25 @@ export const LastReadTitleCard = ({ item }: { item: LastReadItem }) => {
           pathname: "/title-info",
           params: {
             slug_url: item.slug_url,
-            site: item.site,
-            withDelay: allChaptersRead ? undefined : "1",
+            site: "5",
+            withDelay: allEpisodesWatched ? undefined : "1",
           },
         });
-        if (!allChaptersRead) {
-          router.push({
-            pathname: "/manga-reader",
-            params: {
-              slug_url: item.slug_url,
-              index: String(item.lastReadChapter - 1),
-            },
-          });
-        }
+        // if (!allEpisodesWatched) {
+        //   router.push({
+        //     pathname: "/manga-reader",
+        //     params: {
+        //       slug_url: item.slug_url,
+        //       index: String(item.lastWatchedEpisode - 1),
+        //     },
+        //   });
+        // }
       }}
       className="bg-zinc-900 rounded-lg overflow-hidden flex-row w-[300px] active:bg-zinc-800/70"
     >
       <Pressable
         onPress={() => {
-          removeItem(item.slug_url);
+          hide(item.slug_url);
         }}
         hitSlop={8}
         className="absolute top-2 right-2 text-zinc-500 z-10"
@@ -52,18 +56,18 @@ export const LastReadTitleCard = ({ item }: { item: LastReadItem }) => {
         <Text className="text-zinc-200 text-base font-semibold w-[90%]" numberOfLines={2}>
           {item.title}
         </Text>
-        {!allChaptersRead ? (
+        {!allEpisodesWatched ? (
           <View className="h-1.5 rounded-full bg-zinc-700 mt-auto overflow-hidden">
             <View
               className="bg-white h-1.5"
               style={{
-                width: `${(item.lastReadChapter / item.overallChapters) * 100}%`,
+                width: `${(item.lastWatchedEpisode / item.overallEpisodes) * 100}%`,
               }}
             />
           </View>
         ) : (
           <Text className="text-zinc-400 font-medium text-sm mt-auto">
-            You've read all chapters
+            You've watched all episodes
           </Text>
         )}
       </View>
