@@ -1,29 +1,18 @@
 import { ActionMenuOption } from "@/components/ui/action-menu-option";
-import { SwitchMenuOption } from "@/components/ui/switch-menu-option";
 
 import { Text } from "@/components/ui/text";
 
-import { useProperties } from "@/store/use-properties";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { SafeAreaView, NativeModules } from "react-native";
 
 export default function Menu() {
-  const { showQueryDevTools, setShowQueryDevTools } = useProperties();
-
   const queryClient = useQueryClient();
 
   const { RNFlipboardFlex } = NativeModules;
 
   return (
     <SafeAreaView className="mx-4 gap-2">
-      <SwitchMenuOption
-        debugOnly
-        value={showQueryDevTools}
-        setValue={setShowQueryDevTools}
-      >
-        Show query dev-tools bubble
-      </SwitchMenuOption>
       <ActionMenuOption
         buttonVariant="destructive"
         note="This will clear all previous network requests, such as catalog, search results data, image servers, etc... Your search and reading history will remain."
@@ -32,11 +21,7 @@ export default function Menu() {
       >
         Clear network caches
       </ActionMenuOption>
-      <ActionMenuOption
-        actionText="Open"
-        debugOnly
-        action={() => RNFlipboardFlex.showExplorer()}
-      >
+      <ActionMenuOption actionText="Open" debugOnly action={() => RNFlipboardFlex.showExplorer()}>
         Open FLEXTool
       </ActionMenuOption>
       <Text className="text-zinc-700 text-center">

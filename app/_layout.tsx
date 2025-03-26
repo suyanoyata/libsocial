@@ -2,14 +2,13 @@ import "../global.css";
 import "react-native-gesture-handler";
 
 import { SplashScreen, Stack } from "expo-router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { DarkTheme, ThemeProvider } from "@react-navigation/native";
 
 import { createFont, createTamagui, TamaguiProvider } from "@tamagui/core";
 import { defaultConfig } from "@tamagui/config/v4";
 
-import { useProperties } from "@/store/use-properties";
 import { useFonts } from "expo-font";
 import {
   addUpdatesStateChangeListener,
@@ -85,8 +84,6 @@ export default function RootLayout() {
   });
 
   const [updating, setUpdating] = useState(false);
-
-  const { showQueryDevTools } = useProperties();
 
   useSyncQueries({ queryClient });
 
