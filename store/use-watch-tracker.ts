@@ -3,6 +3,9 @@ import { createJSONStorage, persist } from "zustand/middleware";
 
 import { zustandStorage } from "@/lib/persistent-zustand-storage";
 import { biggest } from "@/lib/utils";
+import { QueryClient } from "@tanstack/react-query";
+import { Title } from "@/features/shared/types/title";
+import { TitleEpisodeBase } from "@/features/title/types/title-episodes-response";
 
 export type LastWatchItem = {
   slug_url: string;
@@ -18,10 +21,7 @@ export type LastWatchItem = {
 
 export interface WatchTrackerStore {
   lastWatchItems: LastWatchItem[];
-  add: (
-    lastWatchItem: Omit<LastWatchItem, "watchedEpisodeIndexes" | "lastWatchedEpisode" | "hide">,
-    index: number
-  ) => void;
+  add: (client: QueryClient, slug_url: LastWatchItem["slug_url"], index: number) => void;
   get: (slug_url: string) => LastWatchItem | undefined;
   isEpisodeExists: (slug_url: string, episodeIndex: number) => boolean;
   removeEpisode: (slug_url: string, episodeIndex: number) => void;
@@ -34,20 +34,31 @@ export const useWatchTracker = create<WatchTrackerStore>()(
   persist(
     (set, get) => ({
       lastWatchItems: [],
-      add: (lastWatchItem, index) => {
+      add: (client, slug_url, index) => {
         set((state) => {
-          const exists = state.lastWatchItems.find(
-            (value) => value.slug_url == lastWatchItem.slug_url
-          );
+          const title = client.getQueryData<Title>(["title-info", slug_url, "5"]);
+          const episodes = client.getQueryData<TitleEpisodeBase[]>(["episodes", slug_url]);
 
-          if (exists) {
+          if (!title || !episodes) return state;
+
+          const exists = state.lastWatchItems.find((value) => value.slug_url == title.slug_url);
+
+          const titleMeta = {
+            cover: title.cover,
+            overallEpisodes: episodes?.length ?? 0,
+            slug_url: title.slug_url,
+            title: title.eng_name ?? title.name,
+          };
+
+          if (exists && title) {
             return {
               lastWatchItems: state.lastWatchItems.map((item) => {
-                if (item.slug_url === lastWatchItem.slug_url) {
+                if (item.slug_url === title.slug_url) {
                   const maxIndex = biggest([...item.watchedEpisodeIndexes, index]);
 
                   return {
                     ...item,
+                    ...titleMeta,
                     hide: false,
                     watchedEpisodeIndexes: [...item.watchedEpisodeIndexes, index],
                     lastWatchedEpisode: maxIndex,
@@ -60,7 +71,7 @@ export const useWatchTracker = create<WatchTrackerStore>()(
           return {
             lastWatchItems: [
               {
-                ...lastWatchItem,
+                ...titleMeta,
                 hide: false,
                 lastWatchedEpisode: index,
                 watchedEpisodeIndexes: [index],

@@ -11,13 +11,9 @@ export const useEpisode = (episodeId?: number) => {
   return useQuery<TitleEpisode>({
     queryKey: ["episode", slug_url, episodeId],
     queryFn: async () => {
-      const episode: TitleEpisode = (await api.get(`/episodes/${episodeId}`)).data.data;
-      const players = episode.players.filter((player) => player.player == "Animelib");
+      const { data: episode } = await api.get<TitleEpisode>(`/episodes/${episodeId}`);
 
-      return {
-        ...episode,
-        players,
-      };
+      return episode;
     },
     enabled: !!episodeId,
   });

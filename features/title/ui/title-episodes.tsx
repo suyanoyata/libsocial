@@ -17,8 +17,8 @@ export const TitleEpisodes = ({ slug_url, site }: { slug_url: string; site: numb
 
   const keyExtractor = (item: TitleEpisodeBase) => item.id.toString();
 
-  const renderItem = ({ item, index }: { item: TitleEpisodeBase; index: number }) => (
-    <Episode slug_url={slug_url} episode={item} index={index} />
+  const renderItem = ({ item }: { item: TitleEpisodeBase }) => (
+    <Episode slug_url={slug_url} episode={item} index={item.item_number} />
   );
 
   if (!data) return null;

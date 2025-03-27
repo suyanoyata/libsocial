@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { TitleEpisodeBase } from "@/features/title/types/title-episodes-response";
 
-export const useEpisodesAPI = (slug_url: string, site: number) => {
+export const useEpisodesAPI = (slug_url: string) => {
   return useQuery<TitleEpisodeBase[]>({
     queryKey: ["episodes", slug_url],
     queryFn: async () => {
@@ -11,6 +11,6 @@ export const useEpisodesAPI = (slug_url: string, site: number) => {
 
       return data;
     },
-    enabled: !!site && site == 5 && !!slug_url,
+    enabled: !!slug_url,
   });
 };

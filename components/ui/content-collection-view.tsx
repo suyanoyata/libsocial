@@ -73,6 +73,7 @@ export const ContentCollectionView = <T,>({
             height,
             width,
           }}
+          showsVerticalScrollIndicator={false}
           disableAutoLayout
           drawDistance={contentHeight}
           removeClippedSubviews

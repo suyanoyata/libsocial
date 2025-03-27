@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { LastWatchItem, useWatchTracker } from "@/store/use-watch-tracker";
 import { useProperties } from "@/store/use-properties";
 import { LastWatchedTitleCard } from "@/features/home/components/last-watched-title-card";
+import { useMemo } from "react";
 
 export const LastWatchTitles = () => {
   const { lastWatchItems, reset } = useWatchTracker();
@@ -19,7 +20,12 @@ export const LastWatchTitles = () => {
   const renderItem = ({ item }: { item: LastWatchItem }) => <LastWatchedTitleCard item={item} />;
   const keyExtractor = (item: LastWatchItem) => item.slug_url;
 
-  if (lastWatchItems.length == 0 || siteId != "5") return null;
+  const visibleItems = useMemo(
+    () => lastWatchItems.filter((i) => i.hide == false),
+    [lastWatchItems]
+  );
+
+  if (visibleItems.length == 0 || siteId != "5") return null;
 
   return (
     <Animated.View entering={FadeIn}>
@@ -33,7 +39,7 @@ export const LastWatchTitles = () => {
           Clear all
         </Button>
       </View>
-      <View className="flex-row mx-2 mt-4">
+      <View className="flex-row mt-4">
         <FlatList
           contentContainerClassName="gap-4"
           showsHorizontalScrollIndicator={false}

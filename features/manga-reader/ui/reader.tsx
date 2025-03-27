@@ -33,7 +33,7 @@ import { SearchX } from "lucide-react-native";
 export const MangaReaderUI = () => {
   const route = useRoute();
 
-  const { width, height } = useWindowDimensions();
+  const { width } = useWindowDimensions();
   const [offset, setOffset] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
 

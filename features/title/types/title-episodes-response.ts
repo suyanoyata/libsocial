@@ -3,17 +3,10 @@ export type TitleEpisodeBase = {
   created_at: string;
   number: string;
   season: string;
+  item_number: number;
 };
 
 export type TitleEpisode = TitleEpisodeBase & {
-  players: {
-    created_at: string;
-    player: "Kodik" | "Animelib";
-    video: {
-      quality: {
-        quality: number;
-        href: string;
-      }[];
-    };
-  }[];
+  source: string | null;
+  endingLength: number | null;
 };

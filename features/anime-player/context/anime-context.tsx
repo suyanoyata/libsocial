@@ -7,6 +7,7 @@ interface AnimeStore {
   id: number;
   slug_url: string;
   selectedQuality: number;
+  setEpisodeIndex: (episodeIndex: number) => void;
   setSlugUrl: (slug: string) => void;
 }
 
@@ -16,6 +17,7 @@ export const createAnimeStore = (): StoreApi<AnimeStore> =>
     id: 0,
     slug_url: "",
     selectedQuality: 0,
+    setEpisodeIndex: (episodeIndex) => set({ selectedEpisodeIndex: episodeIndex }),
     setSlugUrl: (slug_url) => set({ slug_url }),
   }));
 
@@ -23,9 +25,7 @@ const AnimeStoreContext = createContext<StoreApi<AnimeStore> | null>(null);
 
 export const AnimeStoreProvider = ({ children }: { children: React.ReactNode }) => {
   const store = createAnimeStore();
-  return (
-    <AnimeStoreContext.Provider value={store}>{children}</AnimeStoreContext.Provider>
-  );
+  return <AnimeStoreContext.Provider value={store}>{children}</AnimeStoreContext.Provider>;
 };
 
 export const store = <T,>(selector: (state: AnimeStore) => T): T => {

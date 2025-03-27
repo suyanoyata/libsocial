@@ -1,15 +1,18 @@
 import { Pressable } from "react-native";
 
 import { Text } from "@/components/ui/text";
-
-import { router, useFocusEffect } from "expo-router";
-import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
 import { Bookmark, EyeIcon, EyeOff } from "lucide-react-native";
+
+import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
+
 import { memo, useCallback, useLayoutEffect, useMemo, useState, useTransition } from "react";
-import { TitleEpisodeBase } from "@/features/title/types/title-episodes-response";
-import { useWatchTracker } from "@/store/use-watch-tracker";
+import { router, useFocusEffect } from "expo-router";
+
 import { useQueryClient } from "@tanstack/react-query";
-import { Title } from "@/features/shared/types/title";
+import { useWatchTracker } from "@/store/use-watch-tracker";
+
+import { TitleEpisodeBase } from "@/features/title/types/title-episodes-response";
+
 import { toast } from "sonner-native";
 
 export const Episode = memo(
@@ -43,20 +46,7 @@ export const Episode = memo(
     useLayoutEffect(watchCallback, [index]);
 
     const addCallback = useCallback(() => {
-      const title = queryClient.getQueryData<Title>(["title-info", slug_url, "5"]);
-      const episodes = queryClient.getQueryData<TitleEpisodeBase[]>(["episodes", slug_url]);
-
-      if (!title || !episodes) return;
-
-      add(
-        {
-          slug_url,
-          cover: title.cover,
-          title: title.eng_name ?? title.name,
-          overallEpisodes: episodes.length,
-        },
-        index
-      );
+      add(queryClient, slug_url, index);
     }, [slug_url, index]);
 
     return (
@@ -70,15 +60,12 @@ export const Episode = memo(
             impactAsync(ImpactFeedbackStyle.Soft);
 
             addCallback();
-
-            // router.back();
-
-            return;
+            router.back();
             router.navigate({
               pathname: "/anime-watch",
               params: {
                 slug_url,
-                index,
+                episodeIndex: index,
               },
             });
           });
