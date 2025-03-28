@@ -31,6 +31,7 @@ import { setBackgroundColorAsync } from "expo-system-ui";
 import { useSyncQueries } from "tanstack-query-dev-tools-expo-plugin";
 
 import { Toaster } from "sonner-native";
+import { BackButton } from "@/components/ui/back-button";
 
 enableFreeze();
 enableScreens();
@@ -135,11 +136,16 @@ export default function RootLayout() {
             <ThemeProvider value={DarkTheme}>
               <Stack
                 screenOptions={{
-                  headerShown: false,
+                  headerShown: true,
+                  header: () => <BackButton />,
                 }}
               >
-                <Stack.Screen name="(tabs)" />
-                <Stack.Screen options={{ presentation: "modal" }} name="(modals)" />
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen
+                  options={{ presentation: "modal", headerShown: false }}
+                  name="(modals)"
+                />
+                <Stack.Screen name="manga-reader" options={{ headerShown: false }} />
               </Stack>
             </ThemeProvider>
           </TamaguiProvider>

@@ -7,13 +7,14 @@ import { ActivityIndicator, ImageBackground, Platform, ScrollView, View } from "
 import FastImage from "@d11/react-native-fast-image";
 import { BlurView } from "expo-blur";
 
-import { BackButton } from "@/components/ui/back-button";
 import { FadeView } from "@/components/ui/fade-view";
 import { Text } from "@/components/ui/text";
 
 import { TitleAbout } from "@/features/title/ui/title-about";
 
 import { titleInfoRouteSchema } from "@/features/title/types/title-info-route";
+import withBubble from "@/components/ui/withBubble";
+import { Unplug } from "lucide-react-native";
 
 export default function TitleInfo() {
   const router = useRoute();
@@ -45,10 +46,12 @@ export default function TitleInfo() {
   }, [withDelay, data]);
 
   if (error) {
+    const Icon = withBubble(Unplug);
+
     return (
       <View className="items-center justify-center flex-1">
-        <BackButton />
-        <Text className="text-zinc-200">Something went wrong</Text>
+        <Icon />
+        <Text className="text-white/80 text-base font-medium mt-2">Something went wrong</Text>
       </View>
     );
   }
@@ -56,7 +59,6 @@ export default function TitleInfo() {
   if (!data) {
     return (
       <View className="items-center justify-center flex-1">
-        <BackButton />
         <ActivityIndicator />
       </View>
     );
@@ -67,7 +69,6 @@ export default function TitleInfo() {
   return (
     <FadeView withEnter className="flex-1">
       <ScrollView showsVerticalScrollIndicator={false}>
-        <BackButton />
         <ImageBackground
           source={{ uri: data.background.url }}
           style={{

@@ -121,9 +121,8 @@ export const MangaReaderUI = () => {
     <ReaderImage url={item.url} ratio={item.ratio} />
   );
 
-  const ErrorIcon = withBubble(SearchX);
-
   if (isError) {
+    const ErrorIcon = withBubble(SearchX);
     return (
       <View className="flex-1 items-center justify-center">
         <BackButton />
