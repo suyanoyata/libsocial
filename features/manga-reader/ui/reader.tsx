@@ -153,7 +153,14 @@ export const MangaReaderUI = () => {
     );
   }
 
-  if (!data) return;
+  if (!data) {
+    return (
+      <View className="flex-1 items-center justify-center">
+        <BackButton />
+        <ActivityIndicator size="small" color="white" />
+      </View>
+    );
+  }
 
   return (
     <FadeView withEnter className="flex-1 items-center justify-center">
