@@ -20,7 +20,7 @@ export const useCatalogAPI = (query: string) => {
 
       let call = `/${
         siteId == "5" ? "anime" : "manga"
-      }?fields[]=rate&fields[]=rate_avg&fields[]=userBookmark&q=${query.trim()}&site_id[]=${siteId}&page=${pageParam}`;
+      }?q=${query.trim()}&site_id[]=${siteId}&page=${pageParam}`;
 
       if (genreParams.length > 0) {
         call += genreParams;

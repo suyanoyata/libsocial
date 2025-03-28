@@ -13,14 +13,9 @@ export const useQuickSearch = (q: string, signal?: AbortSignal) => {
         return [];
       }
       return (
-        await api.get(
-          `/${
-            siteId == "5" ? "anime" : "manga"
-          }?fields[]=rate_avg&fields[]=rate&fields[]=releaseDate&q=${q}&site_id[]=1`,
-          {
-            signal,
-          }
-        )
+        await api.get(`/${siteId == "5" ? "anime" : "manga"}?q=${q}&site_id[]=1`, {
+          signal,
+        })
       ).data.data;
     },
   });
