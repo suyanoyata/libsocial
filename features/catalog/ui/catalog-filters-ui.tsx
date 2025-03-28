@@ -8,8 +8,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useFilterStore } from "@/features/catalog/store/use-filter-store";
 import { useGenresConstants } from "@/features/shared/api/use-filter-constants";
 
-import { memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback } from "react";
 import Animated, { FadeIn } from "react-native-reanimated";
+import { useDeferredRender } from "@/hooks/use-deferred-render";
 
 const GenreRender = memo(
   ({ item }: { item: { name: string; id: number } }) => {
@@ -48,27 +49,13 @@ export const CatalogGenresFilter = () => {
   const { data } = useGenresConstants();
 
   const { bottom } = useSafeAreaInsets();
-  const [enabled, setEnabled] = useState(false);
+  const enabled = useDeferredRender();
 
   const renderItem = ({ item }: { item: { name: string; id: number } }) => (
     <GenreRender item={item} />
   );
 
   const keyExtractor = (item: { id: number }) => item.id.toString();
-
-  useEffect(() => {
-    let id: NodeJS.Timeout | null;
-
-    if (data) {
-      id = setTimeout(() => {
-        setEnabled(true);
-      }, 5);
-    }
-
-    return () => {
-      if (id) clearTimeout(id);
-    };
-  }, []);
 
   return (
     <View className="flex-1 mt-3 mx-4">
