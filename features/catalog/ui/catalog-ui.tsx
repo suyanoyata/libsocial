@@ -16,7 +16,6 @@ import { getItemStyle } from "@/features/catalog/lib/item-position-align";
 import { FetchingNextPageCards } from "@/features/catalog/components/catalog-fetching-cards";
 import { CatalogHeader } from "@/features/catalog/components/catalog-header";
 import { CatalogTitleCard } from "@/features/catalog/components/catalog-title-card";
-import { DrawerContextProvider } from "@/features/catalog/context/catalog-drawer-context";
 
 export const Catalog = () => {
   const [initialRender, setInitialRender] = useState(true);
@@ -67,7 +66,7 @@ export const Catalog = () => {
   if (Math.floor(width / containerWidth) != catalogColumns || initialRender) return null;
 
   return (
-    <DrawerContextProvider>
+    <>
       <CatalogHeader />
       <View
         style={{
@@ -99,6 +98,6 @@ export const Catalog = () => {
           />
         )}
       </View>
-    </DrawerContextProvider>
+    </>
   );
 };

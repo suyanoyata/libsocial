@@ -6,16 +6,13 @@ import { Button } from "@/components/ui/button";
 import { useFilterStore } from "@/features/catalog/store/use-filter-store";
 
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useContext } from "react";
 
-import { DrawerContext } from "@/features/catalog/context/catalog-drawer-context";
 import { router } from "expo-router";
 
 export const CatalogHeader = () => {
   const { top } = useSafeAreaInsets();
 
   const { setSearch } = useFilterStore();
-  const { setOpen } = useContext(DrawerContext);
 
   return (
     <View
