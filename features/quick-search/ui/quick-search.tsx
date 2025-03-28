@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { FadeView } from "@/components/ui/fade-view";
 
 import { useQuickSearch } from "@/features/quick-search/api/use-quick-search";
@@ -11,11 +10,10 @@ import { useEffect, useState } from "react";
 
 import { Text } from "@/components/ui/text";
 
-import { InputAccessoryView, Keyboard, ScrollView, View } from "react-native";
+import { View } from "react-native";
 import { Search, X } from "lucide-react-native";
 
 import { QuickSearchContent } from "@/features/quick-search/components/quick-search-content";
-import { useQuickSearchHistory } from "@/features/quick-search/hooks/use-quick-search-history";
 import withBubble from "@/components/ui/withBubble";
 
 export const QuickSearchUI = () => {
@@ -23,15 +21,13 @@ export const QuickSearchUI = () => {
   const [query] = useDebounce(search, 650);
 
   const signal = new AbortController();
-  useQuickSearch(query, signal.signal);
+  const { data, isError, isFetching } = useQuickSearch(query, signal.signal);
 
   useEffect(() => {
     return () => {
       signal.abort();
     };
   }, [search]);
-
-  const { history } = useQuickSearchHistory();
 
   const SearchIcon = withBubble(Search);
 
@@ -46,28 +42,15 @@ export const QuickSearchUI = () => {
       )}
       <QuickSearchFetching q={query} live={search} />
       <QuickSearchContent q={query} live={search} />
-      <InputAccessoryView nativeID="quick-search">
-        <ScrollView
-          keyboardShouldPersistTaps="always"
-          horizontal
-          contentContainerClassName="flex-row gap-2 bg-black p-2 flex-1"
+      {search == query && search.length > 0 && data?.length == 0 && !isError && !isFetching && (
+        <FadeView
+          withEnter
+          className="absolute items-center justify-center flex-1 top-[45%] w-full"
         >
-          {history.map((item, index) => (
-            <Button
-              size="sm"
-              key={index}
-              onPress={() => {
-                setSearch(item);
-                Keyboard.dismiss();
-              }}
-              className="bg-zinc-900 z-10"
-              iconRight={<X size={18} color="white" />}
-            >
-              <Text className="text-white">{item}</Text>
-            </Button>
-          ))}
-        </ScrollView>
-      </InputAccessoryView>
+          <SearchIcon />
+          <Text className="text-white/70 mt-2">No results found for "{search}"</Text>
+        </FadeView>
+      )}
     </View>
   );
 };

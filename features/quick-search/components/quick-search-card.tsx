@@ -1,12 +1,20 @@
-import { Pressable, View } from "react-native";
+import { useMemo } from "react";
+
+import { Pressable, useWindowDimensions, View } from "react-native";
+import FastImage from "@d11/react-native-fast-image";
 
 import { Text } from "@/components/ui/text";
+import { Genres } from "@/features/title/components/genres";
 
 import { BaseTitle } from "@/features/shared/types/title";
-import FastImage from "@d11/react-native-fast-image";
+
 import { router } from "expo-router";
 
 export const QuickSearchCard = ({ item }: { item: BaseTitle }) => {
+  const { width } = useWindowDimensions();
+
+  const genres = useMemo(() => item.genres.slice(0, width / 140), [item.genres, width]);
+
   return (
     <Pressable
       onPress={() => {
@@ -20,6 +28,12 @@ export const QuickSearchCard = ({ item }: { item: BaseTitle }) => {
       <FastImage source={{ uri: item.cover.default }} style={{ width: 120, height: 160 }} />
       <View className="p-2 flex-1 relative">
         <Text className="text-zinc-300 font-medium text-base">{item.name}</Text>
+        <Text className="text-white/50 font-medium text-sm" numberOfLines={4}>
+          {item.summary}
+        </Text>
+        <View className="mt-auto pointer-events-none">
+          <Genres genres={genres} />
+        </View>
       </View>
     </Pressable>
   );

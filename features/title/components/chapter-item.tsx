@@ -13,11 +13,20 @@ import { biggest } from "@/lib/utils";
 import Animated, { BounceIn } from "react-native-reanimated";
 
 import { actionToast } from "@/features/title/lib/action-toast";
+import { useQueryClient } from "@tanstack/react-query";
+import { Title } from "@/features/shared/types/title";
 
 export const Chapter = memo(
   ({ slug_url, index, chapter }: { slug_url: string; index: number; chapter: ChapterType }) => {
-    const { add, get, remove, getReadChapters } = useTitleReadChapter();
-    const { get: getLastReadChapter, updateLastReadChapter } = useReadingTracker();
+    const get = useTitleReadChapter((state) => state.get);
+    const add = useTitleReadChapter((state) => state.add);
+    const remove = useTitleReadChapter((state) => state.remove);
+    const getReadChapters = useTitleReadChapter((state) => state.getReadChapters);
+
+    const client = useQueryClient();
+
+    const { get: getLastReadChapter, updateLastReadChapter, addItem } = useReadingTracker();
+
     const lastRead = getLastReadChapter(slug_url);
 
     const [read, setRead] = useState(get(slug_url, index));
@@ -35,6 +44,22 @@ export const Chapter = memo(
 
     const changeCallback = useCallback(() => {
       if (!read) {
+        if (!getLastReadChapter(slug_url)) {
+          const data = client.getQueryData<Title>(["title-info", slug_url, "1"]);
+          const chapters = client.getQueryData<ChapterType[]>(["chapters", slug_url]);
+
+          if (!data || !chapters) return;
+
+          addItem({
+            slug_url,
+            title: data.eng_name ?? data.name,
+            lastReadChapter: index,
+            overallChapters: chapters.length,
+            site: 1,
+            scrollTo: 0,
+            cover: data.cover,
+          });
+        }
         add(slug_url, index);
       } else {
         remove(slug_url, index);
@@ -81,7 +106,7 @@ export const Chapter = memo(
         >
           {isCurrentLastReadChapter ? (
             <Animated.View entering={BounceIn.duration(500)}>
-              <Bookmark size={18} className="text-red-500 fill-red-500" />
+              <Bookmark size={20} className="text-red-500 fill-red-500" />
             </Animated.View>
           ) : (
             <ReadIcon className="text-zinc-500" size={20} />

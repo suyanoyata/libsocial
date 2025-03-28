@@ -13,8 +13,8 @@ import { useWatchTracker } from "@/store/use-watch-tracker";
 
 import { TitleEpisodeBase } from "@/features/title/types/title-episodes-response";
 
-import { toast } from "sonner-native";
 import { actionToast } from "@/features/title/lib/action-toast";
+import Animated, { BounceIn } from "react-native-reanimated";
 
 export const Episode = memo(
   ({
@@ -28,7 +28,7 @@ export const Episode = memo(
   }) => {
     const queryClient = useQueryClient();
 
-    const { add, isEpisodeExists, get, removeEpisode } = useWatchTracker();
+    const { add, isEpisodeExists, removeEpisode, get } = useWatchTracker();
 
     const [watch, setWatch] = useState(isEpisodeExists(slug_url, index));
     const WatchIcon = !watch ? EyeOff : EyeIcon;
@@ -86,14 +86,16 @@ export const Episode = memo(
 
             actionToast(
               "watch",
-              get(slug_url)!?.lastWatchedEpisode <= index,
+              get(slug_url)!?.lastWatchedEpisode - 1 <= index,
               `Marked Episode ${episode.number} as ${watch ? "unwatched" : "watched"}`,
               watch
             );
           }}
         >
           {isLastWatchedEpisode ? (
-            <Bookmark size={18} className="text-red-500 fill-red-500" />
+            <Animated.View entering={BounceIn.duration(500)}>
+              <Bookmark size={20} className="text-red-500 fill-red-500" />
+            </Animated.View>
           ) : (
             <WatchIcon className="text-zinc-500" size={20} />
           )}

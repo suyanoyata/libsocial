@@ -1,4 +1,4 @@
-import { Pressable, View } from "react-native";
+import { View } from "react-native";
 import { Text } from "@/components/ui/text";
 
 import { router } from "expo-router";
@@ -10,7 +10,7 @@ export default function CatalogFiltersView() {
   const { genres } = useFilterStore();
 
   return (
-    <View className="mt-3 mx-4">
+    <View className="mt-3 mx-2">
       <Button
         asChild
         variant="ghost"

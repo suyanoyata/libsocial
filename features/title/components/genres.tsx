@@ -1,17 +1,20 @@
 import { Genre } from "@/features/shared/types/title";
 import { TitleGenre } from "@/features/title/components/title-genre";
+import { cn } from "@/lib/utils";
 import { Text, View } from "react-native";
 
 export const Genres = ({
   genres,
-  ageRestriction,
-}: {
+  className,
+}: // ageRestriction,
+{
   genres: Genre[];
-  ageRestriction: { id: number; label: string };
+  className?: string;
+  // ageRestriction: { id: number; label: string };
 }) => {
   return (
-    <View className="flex-row flex-wrap gap-2 mt-1">
-      {ageRestriction?.id > 2 && (
+    <View className={cn("flex-row flex-wrap gap-2 mt-1", className)}>
+      {/* {ageRestriction?.id > 2 && (
         <TitleGenre
           genre={{
             adult: true,
@@ -19,7 +22,7 @@ export const Genres = ({
             id: ageRestriction.id,
           }}
         />
-      )}
+      )} */}
       {genres.map((genre) => (
         <TitleGenre
           genre={{

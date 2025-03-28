@@ -23,6 +23,10 @@ export const AnimePlayer = () => {
 
   const [shouldDisplayNextEpisode, setShouldDisplayNextEpisode] = useState(false);
 
+  useEffect(() => {
+    setLoaded(false);
+  }, [selectedEpisodeIndex]);
+
   const player = useVideoPlayer(
     {
       uri: data?.source ?? "",

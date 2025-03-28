@@ -8,7 +8,7 @@ import { useRoute } from "@react-navigation/native";
 import { BlurView } from "expo-blur";
 import FastImage from "@d11/react-native-fast-image";
 
-import { DeviceEventEmitter, ImageBackground, View } from "react-native";
+import { DeviceEventEmitter, ImageBackground, ScrollView, View } from "react-native";
 
 import { TitleSummary } from "@/features/title/components/title-summary";
 import { Genres } from "@/features/title/components/genres";
@@ -34,14 +34,14 @@ export default function QuickSearchTitlePreview() {
   }, []);
 
   return (
-    <View
+    <ScrollView
       className="bg-black flex-1"
       style={{
         paddingBottom: bottom + 8,
       }}
     >
       {data && (
-        <FadeView withEnter className="flex-1">
+        <FadeView withEnter className="flex-1 pb-24">
           <View className="flex-1">
             <ImageBackground
               source={{ uri: data.background.url }}
@@ -74,13 +74,13 @@ export default function QuickSearchTitlePreview() {
               </View>
             </ImageBackground>
             <View className="mx-2 gap-1 mt-2">
-              <Text className="text-4xl text-zinc-200 font-bold">{data.rus_name ?? data.name}</Text>
+              <Text className="text-4xl text-zinc-200 font-bold">{data.eng_name ?? data.name}</Text>
               <TitleSummary>{data.summary}</TitleSummary>
-              <Genres ageRestriction={data.ageRestriction} genres={data.genres} />
+              <Genres genres={data.genres} />
             </View>
           </View>
         </FadeView>
       )}
-    </View>
+    </ScrollView>
   );
 }

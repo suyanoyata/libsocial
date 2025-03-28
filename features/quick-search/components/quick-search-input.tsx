@@ -43,9 +43,7 @@ export const QuickSearchInput = ({
             }}
             key={index}
             className="bg-zinc-900 active:bg-zinc-800"
-            iconRight={
-              <X onPress={() => deleteFromHistory(item)} color="white" size={18} />
-            }
+            iconRight={<X onPress={() => deleteFromHistory(item)} color="white" size={18} />}
           >
             <Text className="text-white">{item}</Text>
           </Button>

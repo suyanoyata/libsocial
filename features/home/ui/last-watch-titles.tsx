@@ -28,10 +28,13 @@ export const LastWatchTitles = () => {
   if (visibleItems.length == 0 || siteId != "5") return null;
 
   return (
-    <Animated.View entering={FadeIn}>
-      <View className="flex-row items-center justify-between mx-2 mt-3">
-        <Text className="text-3xl font-extrabold text-white">You've stopped at</Text>
+    <Animated.View entering={FadeIn} className="mx-2">
+      <View className="flex-row items-center justify-between mt-3">
+        <Text className="text-3xl max-sm:text-2xl font-extrabold text-white">
+          You've stopped at
+        </Text>
         <Button
+          textClassName="max-sm:text-sm"
           onPress={() => reset()}
           iconLeft={<Trash2 size={18} color="white" />}
           variant="destructive"
