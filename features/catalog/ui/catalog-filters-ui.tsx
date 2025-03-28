@@ -8,7 +8,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useFilterStore } from "@/features/catalog/store/use-filter-store";
 import { useGenresConstants } from "@/features/shared/api/use-filter-constants";
 
-import { memo, useCallback } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
+import Animated, { FadeIn } from "react-native-reanimated";
 
 const GenreRender = memo(
   ({ item }: { item: { name: string; id: number } }) => {
@@ -47,6 +48,7 @@ export const CatalogGenresFilter = () => {
   const { data } = useGenresConstants();
 
   const { bottom } = useSafeAreaInsets();
+  const [enabled, setEnabled] = useState(false);
 
   const renderItem = ({ item }: { item: { name: string; id: number } }) => (
     <GenreRender item={item} />
@@ -54,26 +56,43 @@ export const CatalogGenresFilter = () => {
 
   const keyExtractor = (item: { id: number }) => item.id.toString();
 
+  useEffect(() => {
+    let id: NodeJS.Timeout | null;
+
+    if (data) {
+      id = setTimeout(() => {
+        setEnabled(true);
+      }, 5);
+    }
+
+    return () => {
+      if (id) clearTimeout(id);
+    };
+  }, []);
+
   return (
     <View className="flex-1 mt-3 mx-4">
-      <FlatList
-        className="h-screen"
-        showsVerticalScrollIndicator={false}
-        getItemLayout={(_, index) => ({
-          index,
-          length: 23,
-          offset: index * 23,
-        })}
-        contentContainerStyle={{
-          gap: 8,
-          paddingBottom: bottom + 4,
-        }}
-        removeClippedSubviews
-        initialNumToRender={30}
-        keyExtractor={keyExtractor}
-        data={data}
-        renderItem={renderItem}
-      />
+      {enabled && (
+        <Animated.FlatList
+          entering={FadeIn}
+          className="h-screen"
+          showsVerticalScrollIndicator={false}
+          getItemLayout={(_, index) => ({
+            index,
+            length: 23,
+            offset: index * 23,
+          })}
+          contentContainerStyle={{
+            gap: 8,
+            paddingBottom: bottom + 4,
+          }}
+          removeClippedSubviews
+          initialNumToRender={30}
+          keyExtractor={keyExtractor}
+          data={data}
+          renderItem={renderItem}
+        />
+      )}
     </View>
   );
 };
