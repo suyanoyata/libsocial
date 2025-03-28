@@ -11,6 +11,7 @@ interface FilterStoreProperties {
   addGenre: (genreId: number) => void;
   resetGenresWithId: (genreId: number) => void;
   removeGenre: (genreId: number) => void;
+  reset: () => void;
 }
 
 export const useFilterStore = create<FilterStoreProperties>((set, get) => ({
@@ -30,9 +31,7 @@ export const useFilterStore = create<FilterStoreProperties>((set, get) => ({
   handleAgeRestrictionPress: (ageRestrictionId) => {
     set((state) => {
       if (state.caution.includes(ageRestrictionId)) {
-        const filteredAgeRestrictions = get().genres.filter(
-          (id) => id !== ageRestrictionId
-        );
+        const filteredAgeRestrictions = get().genres.filter((id) => id !== ageRestrictionId);
         set(() => ({
           caution: filteredAgeRestrictions,
         }));
@@ -54,4 +53,9 @@ export const useFilterStore = create<FilterStoreProperties>((set, get) => ({
       genres: filteredGenres,
     }));
   },
+  reset: () =>
+    set(() => ({
+      genres: [],
+      caution: [],
+    })),
 }));
