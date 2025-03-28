@@ -9,6 +9,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useContext } from "react";
 
 import { DrawerContext } from "@/features/catalog/context/catalog-drawer-context";
+import { router } from "expo-router";
 
 export const CatalogHeader = () => {
   const { top } = useSafeAreaInsets();
@@ -35,7 +36,7 @@ export const CatalogHeader = () => {
         className="w-[50px] rounded-full ml-2"
         textClassName="text-zinc-400"
         onPress={() => {
-          setOpen(true);
+          router.push("/catalog-filters-view");
         }}
       >
         <Filter className="text-zinc-400" size={18} />

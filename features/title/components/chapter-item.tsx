@@ -9,8 +9,10 @@ import { useTitleReadChapter } from "@/store/use-chapters-tracker";
 import { Bookmark, EyeIcon, EyeOff } from "lucide-react-native";
 import { memo, useCallback, useLayoutEffect, useMemo, useState, useTransition } from "react";
 import { useReadingTracker } from "@/store/use-reading-tracker";
-import { toast } from "sonner-native";
 import { biggest } from "@/lib/utils";
+import Animated, { BounceIn } from "react-native-reanimated";
+
+import { actionToast } from "@/features/title/lib/action-toast";
 
 export const Chapter = memo(
   ({ slug_url, index, chapter }: { slug_url: string; index: number; chapter: ChapterType }) => {
@@ -38,8 +40,12 @@ export const Chapter = memo(
         remove(slug_url, index);
       }
       updateLastReadChapter(slug_url, biggest(getReadChapters(slug_url)!));
-      toast.success(
-        `Marked Volume ${chapter.volume} Chapter ${chapter.number} as ${read ? "unread" : "read"}`
+
+      actionToast(
+        "read",
+        lastRead!?.lastReadChapter <= index,
+        `Marked Volume ${chapter.volume} Chapter ${chapter.number} as ${read ? "unread" : "read"}`,
+        read
       );
     }, [read]);
 
@@ -74,7 +80,9 @@ export const Chapter = memo(
           }}
         >
           {isCurrentLastReadChapter ? (
-            <Bookmark size={18} className="text-red-500 fill-red-500" />
+            <Animated.View entering={BounceIn.duration(500)}>
+              <Bookmark size={18} className="text-red-500 fill-red-500" />
+            </Animated.View>
           ) : (
             <ReadIcon className="text-zinc-500" size={20} />
           )}

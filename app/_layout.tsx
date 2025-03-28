@@ -141,11 +141,17 @@ export default function RootLayout() {
                 <Stack.Screen name="(tabs)" />
                 <Stack.Screen options={{ presentation: "modal" }} name="(modals)" />
               </Stack>
-              <Toaster theme="dark" position="bottom-center" visibleToasts={1} duration={1500} />
             </ThemeProvider>
           </TamaguiProvider>
         </View>
       </PersistQueryClientProvider>
+      <Toaster
+        offset={10}
+        theme="light"
+        position="bottom-center"
+        visibleToasts={1}
+        duration={1500}
+      />
     </GestureHandlerRootView>
   );
 }

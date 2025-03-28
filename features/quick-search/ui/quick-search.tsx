@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { FadeView } from "@/components/ui/fade-view";
-import { ModalWrapper } from "@/components/ui/modal-wrapper";
 
 import { useQuickSearch } from "@/features/quick-search/api/use-quick-search";
 
@@ -37,40 +36,38 @@ export const QuickSearchUI = () => {
   const SearchIcon = withBubble(Search);
 
   return (
-    <ModalWrapper>
-      <View className="px-2 flex-1">
-        <QuickSearchInput search={search} setSearch={setSearch} />
-        {!search && (
-          <FadeView withExit className="absolute items-center justify-center flex-1 top-1/2 w-full">
-            <SearchIcon />
-            <Text className="text-white text-sm mt-2">Type something in search</Text>
-          </FadeView>
-        )}
-        <QuickSearchFetching q={query} live={search} />
-        <QuickSearchContent q={query} live={search} />
-        <InputAccessoryView nativeID="quick-search">
-          <ScrollView
-            keyboardShouldPersistTaps="always"
-            horizontal
-            contentContainerClassName="flex-row gap-2 bg-black p-2 flex-1"
-          >
-            {history.map((item, index) => (
-              <Button
-                size="sm"
-                key={index}
-                onPress={() => {
-                  setSearch(item);
-                  Keyboard.dismiss();
-                }}
-                className="bg-zinc-900 z-10"
-                iconRight={<X size={18} color="white" />}
-              >
-                <Text className="text-white">{item}</Text>
-              </Button>
-            ))}
-          </ScrollView>
-        </InputAccessoryView>
-      </View>
-    </ModalWrapper>
+    <View className="px-2 flex-1">
+      <QuickSearchInput search={search} setSearch={setSearch} />
+      {!search && (
+        <FadeView withExit className="absolute items-center justify-center flex-1 top-1/2 w-full">
+          <SearchIcon />
+          <Text className="text-white text-sm mt-2">Type something in search</Text>
+        </FadeView>
+      )}
+      <QuickSearchFetching q={query} live={search} />
+      <QuickSearchContent q={query} live={search} />
+      <InputAccessoryView nativeID="quick-search">
+        <ScrollView
+          keyboardShouldPersistTaps="always"
+          horizontal
+          contentContainerClassName="flex-row gap-2 bg-black p-2 flex-1"
+        >
+          {history.map((item, index) => (
+            <Button
+              size="sm"
+              key={index}
+              onPress={() => {
+                setSearch(item);
+                Keyboard.dismiss();
+              }}
+              className="bg-zinc-900 z-10"
+              iconRight={<X size={18} color="white" />}
+            >
+              <Text className="text-white">{item}</Text>
+            </Button>
+          ))}
+        </ScrollView>
+      </InputAccessoryView>
+    </View>
   );
 };

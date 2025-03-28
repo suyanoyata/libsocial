@@ -14,6 +14,7 @@ import { useWatchTracker } from "@/store/use-watch-tracker";
 import { TitleEpisodeBase } from "@/features/title/types/title-episodes-response";
 
 import { toast } from "sonner-native";
+import { actionToast } from "@/features/title/lib/action-toast";
 
 export const Episode = memo(
   ({
@@ -82,7 +83,13 @@ export const Episode = memo(
               setWatch(true);
               addCallback();
             }
-            toast.success(`Marked Episode ${episode.number} as ${watch ? "unwatched" : "watched"}`);
+
+            actionToast(
+              "watch",
+              get(slug_url)!?.lastWatchedEpisode <= index,
+              `Marked Episode ${episode.number} as ${watch ? "unwatched" : "watched"}`,
+              watch
+            );
           }}
         >
           {isLastWatchedEpisode ? (

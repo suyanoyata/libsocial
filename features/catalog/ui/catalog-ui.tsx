@@ -16,7 +16,6 @@ import { getItemStyle } from "@/features/catalog/lib/item-position-align";
 import { FetchingNextPageCards } from "@/features/catalog/components/catalog-fetching-cards";
 import { CatalogHeader } from "@/features/catalog/components/catalog-header";
 import { CatalogTitleCard } from "@/features/catalog/components/catalog-title-card";
-import { CatalogDrawerLayout } from "@/features/catalog/layout/catalog-drawer-layout";
 import { DrawerContextProvider } from "@/features/catalog/context/catalog-drawer-context";
 
 export const Catalog = () => {
@@ -69,39 +68,37 @@ export const Catalog = () => {
 
   return (
     <DrawerContextProvider>
-      <CatalogDrawerLayout style={{ flex: 1 }}>
-        <CatalogHeader />
-        <View
-          style={{
-            height,
-          }}
-          className="flex-1 mx-2 overflow-hidden rounded-sm"
-        >
-          {data && (
-            <FlashList
-              refreshControl={
-                <RefreshControl tintColor="white" refreshing={isFetching} onRefresh={refetch} />
-              }
-              removeClippedSubviews
-              data={catalogItems}
-              onEndReachedThreshold={0.8}
-              onEndReached={() => fetchNextPage()}
-              estimatedListSize={{
-                width,
-                height,
-              }}
-              keyExtractor={keyExtractor}
-              drawDistance={height * 6}
-              numColumns={catalogColumns}
-              estimatedItemSize={190}
-              renderItem={renderItem}
-              ListFooterComponent={
-                <FetchingNextPageCards isFetching={isFetchingNextPage && data.pages.length >= 10} />
-              }
-            />
-          )}
-        </View>
-      </CatalogDrawerLayout>
+      <CatalogHeader />
+      <View
+        style={{
+          height,
+        }}
+        className="flex-1 mx-2 overflow-hidden rounded-sm"
+      >
+        {data && (
+          <FlashList
+            refreshControl={
+              <RefreshControl tintColor="white" refreshing={isFetching} onRefresh={refetch} />
+            }
+            removeClippedSubviews
+            data={catalogItems}
+            onEndReachedThreshold={0.8}
+            onEndReached={() => fetchNextPage()}
+            estimatedListSize={{
+              width,
+              height,
+            }}
+            keyExtractor={keyExtractor}
+            drawDistance={height * 6}
+            numColumns={catalogColumns}
+            estimatedItemSize={190}
+            renderItem={renderItem}
+            ListFooterComponent={
+              <FetchingNextPageCards isFetching={isFetchingNextPage && data.pages.length >= 10} />
+            }
+          />
+        )}
+      </View>
     </DrawerContextProvider>
   );
 };

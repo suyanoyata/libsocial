@@ -51,11 +51,12 @@ export interface ButtonProps extends PressableProps, VariantProps<typeof buttonV
   children?: React.ReactNode;
   textClassName?: string;
   onPress?: () => void;
+  asChild?: boolean;
 }
 
 // @ts-ignore
 const Button = React.forwardRef<Pressable, ButtonProps>(
-  ({ className, size, variant, children, iconLeft, iconRight, ...props }, ref) => {
+  ({ asChild, className, size, variant, children, iconLeft, iconRight, ...props }, ref) => {
     return (
       <Pressable
         ref={ref}
@@ -67,7 +68,13 @@ const Button = React.forwardRef<Pressable, ButtonProps>(
         {...props}
       >
         {iconLeft}
-        <Text className={cn(textVariants({ variant, size }), props.textClassName)}>{children}</Text>
+        {asChild ? (
+          children
+        ) : (
+          <Text className={cn(textVariants({ variant, size }), props.textClassName)}>
+            {children}
+          </Text>
+        )}
         {iconRight}
       </Pressable>
     );
