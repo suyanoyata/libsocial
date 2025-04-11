@@ -1,8 +1,7 @@
-import { CheckIcon } from "lucide-react-native";
-
-import { FlatList, Pressable, View } from "react-native";
+import { Pressable, View } from "react-native";
 import { Text } from "@/components/ui/text";
-import { Checkbox } from "tamagui";
+
+import { Checkbox } from "@/components/ui/checkbox";
 
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useFilterStore } from "@/features/catalog/store/use-filter-store";
@@ -28,16 +27,7 @@ const GenreRender = memo(
 
     return (
       <Pressable onPress={handlePress} className="flex-row items-center gap-2">
-        <Checkbox
-          size="$5"
-          backgroundColor={checked ? "#fb923c" : "transparent"}
-          borderColor="#fb923c"
-          checked={checked}
-        >
-          <Checkbox.Indicator>
-            <CheckIcon color="white" strokeWidth={3} />
-          </Checkbox.Indicator>
-        </Checkbox>
+        <Checkbox checked={checked} />
         <Text className="text-zinc-200 font-medium text-base">{item.name}</Text>
       </Pressable>
     );
