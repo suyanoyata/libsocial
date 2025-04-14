@@ -12,9 +12,7 @@ export const preloadNextChapter = async (slug_url: string, nextChapter?: Chapter
 
   if (nextChapter) {
     const response = await api
-      .get(
-        `/manga/${slug_url}/chapter?volume=${nextChapter.volume}&number=${nextChapter.number}`
-      )
+      .get(`/manga/${slug_url}/chapter?volume=${nextChapter.volume}&number=${nextChapter.number}`)
       .then((res) => res.data.data)
       .catch((err) => console.error(err));
 
@@ -22,10 +20,6 @@ export const preloadNextChapter = async (slug_url: string, nextChapter?: Chapter
       ["manga-chapter-reader", slug_url, nextChapter.volume, nextChapter.number],
       response
     ),
-      FastImage.preload(
-        response.pages.map(
-          (page: { url: string }) => "https://img2.imglib.info" + page.url
-        )
-      );
+      FastImage.preload(response.pages.map((page: { url: string }) => page.url));
   }
 };
