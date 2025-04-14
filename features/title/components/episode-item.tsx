@@ -54,6 +54,7 @@ export const Episode = memo(
       <Pressable
         onPress={() => {
           if (isPending) return;
+          router.back();
 
           setWatch(true);
 
@@ -61,7 +62,6 @@ export const Episode = memo(
             impactAsync(ImpactFeedbackStyle.Soft);
 
             addCallback();
-            router.back();
             router.navigate({
               pathname: "/anime-watch",
               params: {

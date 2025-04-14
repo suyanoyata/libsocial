@@ -7,7 +7,7 @@ import { useMemo, useState } from "react";
 import { TitleEpisodeBase } from "@/features/title/types/title-episodes-response";
 
 export const TitleEpisodes = ({ slug_url, site }: { slug_url: string; site: number }) => {
-  const { data } = useEpisodesAPI(slug_url, site);
+  const { data } = useEpisodesAPI(slug_url);
 
   const [descending, setDescending] = useState(false);
 

@@ -25,7 +25,7 @@ export const TitleChapters = ({ slug_url, site }: { slug_url: string; site: numb
 
   return (
     <ContentCollectionView
-      estimatedItemSize={40}
+      estimatedItemSize={45}
       keyExtractor={keyExtractor}
       renderItem={renderItem}
       descending={descending}

@@ -80,11 +80,11 @@ export const Chapter = memo(
       <Pressable
         onPress={() => {
           if (isPending) return;
+          router.back();
           setRead(true);
 
           startTransition(() => {
             impactAsync(ImpactFeedbackStyle.Soft);
-            router.back();
             router.navigate({
               pathname: "/manga-reader",
               params: {

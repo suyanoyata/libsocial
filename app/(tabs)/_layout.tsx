@@ -28,9 +28,6 @@ export default function TabsLayout() {
       queryClient.refetchQueries({
         queryKey: ["home-titles"],
       });
-      // queryClient.removeQueries({
-      //   queryKey: ["home-titles"],
-      // });
     },
     [siteId]
   );
@@ -59,10 +56,11 @@ export default function TabsLayout() {
           sceneStyle: {},
           tabBarIcon: ({ color }) => (
             <MenuView
+              themeVariant="dark"
               shouldOpenOnLongPress
               actions={[
-                { id: "1", title: "Manga", image: "bookmark.fill", imageColor: "#2367A2" },
-                { id: "5", title: "Anime", image: "play.fill", imageColor: "#2367A2" },
+                { id: "1", title: "Manga", image: "bookmark.fill", imageColor: "white" },
+                { id: "5", title: "Anime", image: "play.fill", imageColor: "white" },
               ]}
               onPressAction={(value) => handleAction(value.nativeEvent.event)}
             >

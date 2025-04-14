@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { Chapter } from "@/features/shared/types/chapter";
 
-export const useChapters = (slug_url: string, site?: number) => {
+export const useChapters = (slug_url: string, site?: number | string) => {
   return useQuery<Chapter[]>({
     queryKey: ["chapters", slug_url],
     queryFn: async () => {

@@ -8,7 +8,7 @@ import { ActivityIndicator, FlatList, useWindowDimensions, View } from "react-na
 
 import { useReadingTracker } from "@/store/use-reading-tracker";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { useTitleReadChapter } from "@/store/use-chapters-tracker";
 import { useProperties } from "@/store/use-properties";
@@ -19,8 +19,6 @@ import { useChapters } from "@/features/title/api/use-chapters";
 
 import { Text } from "@/components/ui/text";
 import { MenuView } from "@react-native-menu/menu";
-
-import { readerPropsSchema } from "@/features/manga-reader/types/reader-route";
 
 import { preloadNextChapter } from "@/features/manga-reader/lib/preload-chapter";
 import { BackButton } from "@/components/ui/back-button";
@@ -48,11 +46,6 @@ export const MangaReaderUI = () => {
   };
 
   const chapterIndex = Number(index);
-
-  const { error } = useMemo(
-    () => readerPropsSchema.safeParse({ slug_url, index }),
-    [index, slug_url]
-  );
 
   useEffect(() => {
     setTimeout(() => {
