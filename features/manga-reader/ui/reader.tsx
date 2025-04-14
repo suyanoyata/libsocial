@@ -27,13 +27,17 @@ import { ReaderImage } from "@/features/manga-reader/components/reader-image";
 import { useReaderScrollTo } from "@/features/manga-reader/hooks/use-reader-scroll-to";
 import withBubble from "@/components/ui/withBubble";
 import { SearchX } from "lucide-react-native";
+import { useQueryClient } from "@tanstack/react-query";
+import { useDeferredRender } from "@/hooks/use-deferred-render";
 
 export const MangaReaderUI = () => {
   const route = useRoute();
 
-  const { width } = useWindowDimensions();
+  const { width, height } = useWindowDimensions();
   const [offset, setOffset] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+
+  const shouldRender = useDeferredRender();
 
   const { readerImagePadding, readerDisplayCurrentPage, showReaderScrollbar } = useProperties();
 
@@ -103,16 +107,13 @@ export const MangaReaderUI = () => {
     if (data) scroll();
   }, [data]);
 
-  const preloadChapter = useCallback(
-    () => preloadNextChapter(slug_url, nextChapter),
-    [nextChapter, slug_url]
-  );
-
   const keyExtractor = (item: { url: string; ratio: number }) => item.url;
 
   const renderItem = ({ item }: { item: { url: string; ratio: number } }) => (
     <ReaderImage url={item.url} ratio={item.ratio} />
   );
+
+  const client = useQueryClient();
 
   if (isError) {
     const ErrorIcon = withBubble(SearchX);
@@ -154,6 +155,8 @@ export const MangaReaderUI = () => {
       </View>
     );
   }
+
+  if (!shouldRender) return null;
 
   return (
     <FadeView withEnter className="flex-1 items-center justify-center">
@@ -204,14 +207,14 @@ export const MangaReaderUI = () => {
         initialNumToRender={5}
         stickyHeaderIndices={[0]}
         stickyHeaderHiddenOnScroll
-        onEndReached={preloadChapter}
-        onEndReachedThreshold={0.5}
+        onEndReached={() => preloadNextChapter(client, slug_url, nextChapter)}
+        onEndReachedThreshold={0.3}
         showsVerticalScrollIndicator={showReaderScrollbar}
         ListHeaderComponent={() => <ReaderHeader chapter={data} title={title} />}
         ListFooterComponent={() => (
           <ReaderChapterNavigation chapterIndex={chapterIndex} chapters={chapters} />
         )}
-        style={{ width }}
+        style={{ width, height }}
         data={data.pages}
         renderItem={renderItem}
       />
