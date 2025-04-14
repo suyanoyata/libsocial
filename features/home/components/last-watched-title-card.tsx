@@ -13,7 +13,7 @@ export const LastWatchedTitleCard = ({ item }: { item: LastWatchItem }) => {
   const { hide } = useWatchTracker();
 
   const allEpisodesWatched = useMemo(
-    () => item.lastWatchedEpisode + 1 === item.overallEpisodes,
+    () => item.lastWatchedEpisode === item.overallEpisodes,
     [item]
   );
 
