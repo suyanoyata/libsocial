@@ -1,15 +1,21 @@
-import { Home, LayoutGrid, MenuIcon } from "lucide-react-native";
+import { Download, Home, LayoutGrid, MenuIcon, Trash2 } from "lucide-react-native";
+import { Pressable, View } from "react-native";
 import { Tabs } from "expo-router";
 
+import { Header } from "@/components/ui/header";
+
 import { useCallback } from "react";
+import { useProperties } from "@/store/use-properties";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useGenresConstants } from "@/features/shared/api/use-filter-constants";
 
 import { MenuView } from "@react-native-menu/menu";
 
-import { useProperties } from "@/store/use-properties";
 import { api } from "@/lib/axios";
+import { cn } from "@/lib/utils";
+
+import { ClearDownloadedChapters } from "@/features/downloads/components/clear-downloaded-chapters";
 
 export default function TabsLayout() {
   useGenresConstants();
@@ -35,6 +41,7 @@ export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
+        header: (props) => <Header {...props} />,
         lazy: true,
         sceneStyle: {
           marginTop: top,
@@ -77,8 +84,24 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
+        name="downloads"
+        options={{
+          title: "Downloads",
+          headerTitle: "Downloads",
+          header: (props) => <Header {...props} headerRight={<ClearDownloadedChapters />} />,
+          headerShown: true,
+          tabBarIcon: ({ color }) => (
+            <Download color={color} className={cn(siteId == "5" && "text-zinc-800")} />
+          ),
+          tabBarButton: (props) =>
+            siteId == "5" ? <View {...props} /> : <Pressable {...props} className="bg-red-400" />,
+        }}
+      />
+      <Tabs.Screen
         name="menu"
         options={{
+          title: "Settings",
+          headerShown: true,
           tabBarIcon: ({ color }) => <MenuIcon color={color} />,
         }}
       />

@@ -15,6 +15,7 @@ import Animated, { BounceIn } from "react-native-reanimated";
 import { actionToast } from "@/features/title/lib/action-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { Title } from "@/features/shared/types/title";
+import { DownloadChapterButton } from "@/features/downloads/components/download-chapter-button";
 
 export const Chapter = memo(
   ({ slug_url, index, chapter }: { slug_url: string; index: number; chapter: ChapterType }) => {
@@ -94,7 +95,7 @@ export const Chapter = memo(
             });
           });
         }}
-        className="flex-row items-center gap-2 h-11 bg-zinc-900 active:bg-zinc-800 mb-2 px-4 rounded-lg"
+        className="flex-row items-center gap-2 h-11 bg-zinc-900 active:bg-zinc-800 mb-2 px-4 rounded-lg relative overflow-hidden"
       >
         <Pressable
           hitSlop={10}
@@ -115,6 +116,7 @@ export const Chapter = memo(
         <Text className="text-zinc-200">
           Volume {chapter.volume} Chapter {chapter.number}
         </Text>
+        <DownloadChapterButton slug_url={slug_url} chapter={chapter} />
       </Pressable>
     );
   }

@@ -8,7 +8,7 @@ import { ActivityIndicator, FlatList, useWindowDimensions, View } from "react-na
 
 import { useReadingTracker } from "@/store/use-reading-tracker";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { useTitleReadChapter } from "@/store/use-chapters-tracker";
 import { useProperties } from "@/store/use-properties";
@@ -24,11 +24,12 @@ import { preloadNextChapter } from "@/features/manga-reader/lib/preload-chapter"
 import { BackButton } from "@/components/ui/back-button";
 
 import { ReaderImage } from "@/features/manga-reader/components/reader-image";
-import { useReaderScrollTo } from "@/features/manga-reader/hooks/use-reader-scroll-to";
 import withBubble from "@/components/ui/withBubble";
 import { SearchX } from "lucide-react-native";
+
 import { useQueryClient } from "@tanstack/react-query";
 import { useDeferredRender } from "@/hooks/use-deferred-render";
+import { useReaderScrollTo } from "@/features/manga-reader/hooks/use-reader-scroll-to";
 
 export const MangaReaderUI = () => {
   const route = useRoute();
@@ -114,6 +115,18 @@ export const MangaReaderUI = () => {
   );
 
   const client = useQueryClient();
+
+  const shouldDownloadNextChapter = useMemo(() => {
+    const threshold = 0.5;
+
+    return data && currentPage / data?.pages.length > threshold;
+  }, [data, currentPage]);
+
+  useEffect(() => {
+    if (shouldDownloadNextChapter) {
+      preloadNextChapter(client, slug_url, nextChapter);
+    }
+  }, [shouldDownloadNextChapter]);
 
   if (isError) {
     const ErrorIcon = withBubble(SearchX);
@@ -207,8 +220,6 @@ export const MangaReaderUI = () => {
         initialNumToRender={5}
         stickyHeaderIndices={[0]}
         stickyHeaderHiddenOnScroll
-        onEndReached={() => preloadNextChapter(client, slug_url, nextChapter)}
-        onEndReachedThreshold={0.3}
         showsVerticalScrollIndicator={showReaderScrollbar}
         ListHeaderComponent={() => <ReaderHeader chapter={data} title={title} />}
         ListFooterComponent={() => (
