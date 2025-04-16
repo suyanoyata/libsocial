@@ -1,3 +1,5 @@
+import { Chapter } from "@/features/shared/types/chapter";
+
 export type ReaderChapter = {
   volume: string;
   number: string;
@@ -5,4 +7,4 @@ export type ReaderChapter = {
     url: string;
     ratio: number;
   }[];
-};
+} & Chapter;

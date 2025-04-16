@@ -12,6 +12,15 @@ export const preloadNextChapter = async (
   slug_url: string,
   nextChapter?: Chapter
 ) => {
+  const didLoadNextChapter = !!client.getQueryData<ReaderChapter>([
+    "manga-chapter-reader",
+    slug_url,
+    nextChapter?.volume,
+    nextChapter?.number,
+  ]);
+
+  if (didLoadNextChapter) return;
+
   if (nextChapter?.volume && nextChapter?.number) {
     const {
       data: { data },
