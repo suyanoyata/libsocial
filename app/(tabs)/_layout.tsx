@@ -47,7 +47,8 @@ export default function TabsLayout() {
           marginTop: top,
         },
         tabBarStyle: {
-          backgroundColor: "#09090b",
+          backgroundColor: "#00000000",
+          // backgroundColor: "#09090b",
           borderTopWidth: 0,
         },
         tabBarLabelPosition: "beside-icon",

@@ -8,7 +8,7 @@ export const ClearDownloadedChapters = () => {
 
   const deleteEverything = () => {
     Alert.alert(
-      "Delete chapters",
+      "Delete all chapters",
       `You're about to delete all ${count} chapters that you've downloaded.\n\nAre you sure?`,
       [
         {
@@ -26,9 +26,11 @@ export const ClearDownloadedChapters = () => {
     );
   };
 
+  if (count == 0) return;
+
   return (
     <Pressable onPress={deleteEverything}>
-      <Trash2 className="text-red-400" />
+      <Trash2 className="text-zinc-300" />
     </Pressable>
   );
 };

@@ -1,18 +1,16 @@
 import { useEffect } from "react";
-import { Link, router, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useProperties } from "@/store/use-properties";
 
-import { Pressable, SafeAreaView, ScrollView, View } from "react-native";
+import { SafeAreaView, ScrollView, View } from "react-native";
 
 import { Text } from "@/components/ui/text";
 import { useDownloads } from "@/features/downloads/store/use-downloads";
 
-import { TransitionedImage } from "@/features/shared/components/transitioned-image";
-import { useQueryClient } from "@tanstack/react-query";
+import { DownloadCard } from "@/features/downloads/components/download-card";
+import { Download } from "lucide-react-native";
 
 export default function Downloads() {
-  const client = useQueryClient();
-
   const { push } = useRouter();
 
   const { siteId } = useProperties();
@@ -28,7 +26,14 @@ export default function Downloads() {
   if (items.length == 0) {
     return (
       <View className="items-center justify-center flex-1">
-        <Text className="text-white">You don't have any downloaded chapter yet</Text>
+        <Text className="text-zinc-400 font-medium text-center mx-3 leading-7">
+          You don't have any downloaded chapters. To download them go to any manga chapters and
+          press on{" "}
+          <View className="h-4">
+            <Download className="text-white" size={20} strokeWidth={3} />
+          </View>{" "}
+          icon.
+        </Text>
       </View>
     );
   }
@@ -37,30 +42,7 @@ export default function Downloads() {
     <ScrollView className="mt-4 mx-2">
       <SafeAreaView className="gap-4">
         {items.map((item, index) => (
-          <Pressable
-            onPress={() => {
-              router.push({
-                pathname: "/downloaded-reader",
-                params: {
-                  slug_url: item.title.slug_url,
-                  volume: item.chapter.volume,
-                  chapter: item.chapter.number,
-                },
-              });
-            }}
-            key={index}
-            className="flex-row gap-2"
-          >
-            <TransitionedImage width={90} height={130} source={{ uri: item.title.cover.default }} />
-            <View>
-              <Text className="text-white text-lg font-bold">
-                {item.title.eng_name ?? item.title.name}
-              </Text>
-              <Text className="text-zinc-300 font-medium">
-                Volume {item.chapter.volume} Chapter {item.chapter.number}
-              </Text>
-            </View>
-          </Pressable>
+          <DownloadCard item={item} key={index} />
         ))}
       </SafeAreaView>
     </ScrollView>

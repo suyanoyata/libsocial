@@ -146,6 +146,7 @@ export default function RootLayout() {
                   name="(modals)"
                 />
                 <Stack.Screen name="manga-reader" options={{ headerShown: false }} />
+                <Stack.Screen name="downloaded-reader" options={{ headerShown: false }} />
               </Stack>
             </ThemeProvider>
           </TamaguiProvider>

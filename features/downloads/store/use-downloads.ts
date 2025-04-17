@@ -6,11 +6,13 @@ import { ReaderChapter } from "@/features/manga-reader/types/reader-chapter";
 import { Title } from "@/features/shared/types/title";
 import { deleteAsync, documentDirectory, readDirectoryAsync } from "expo-file-system";
 
-type DownloadedChapter = { title: Title; chapter: ReaderChapter };
+export type DownloadedChapter = { title: Title; chapter: ReaderChapter };
 
 export interface DownloadsStore {
   items: DownloadedChapter[];
   get: (slug_url: string, volume: string, chapter: string) => DownloadedChapter | null;
+  deleteChapter: (slug_url: string, volume: string, chapter: string) => void;
+  isChapterDownloaded: (slug_url: string, volume: string, chapter: string) => boolean;
   add: (title: Title, chapter: ReaderChapter) => void;
   clear: () => void;
 }
@@ -29,12 +31,34 @@ export const useDownloads = create<DownloadsStore>()(
 
         return item ? item : null;
       },
+      deleteChapter: async (slug_url, volume, chapter) => {
+        if (!documentDirectory) return;
+
+        await deleteAsync(`${documentDirectory}${slug_url}/v${volume}-c${chapter}`, {
+          idempotent: true,
+        });
+
+        set({
+          items: get().items.filter(
+            (state) =>
+              state.chapter.number !== chapter &&
+              state.chapter.volume !== volume &&
+              state.title.slug_url !== slug_url
+          ),
+        });
+      },
+      isChapterDownloaded: (slug_url, volume, chapter) => {
+        const item = get().items.find(
+          (state) =>
+            state.title.slug_url === slug_url &&
+            state.chapter.volume === volume &&
+            state.chapter.number === chapter
+        );
+
+        return !!item;
+      },
       add: (title, chapter) => {
         set((state) => {
-          if (state.items.length >= 5) {
-            state.items.shift();
-          }
-
           return {
             items: [...state.items, { title, chapter }],
           };

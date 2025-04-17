@@ -3,21 +3,20 @@ import { Download } from "lucide-react-native";
 import { ActivityIndicator, Pressable } from "react-native";
 
 import { toast } from "sonner-native";
-import { api } from "@/lib/axios";
 
 import { useMutation } from "@tanstack/react-query";
 
 import { Chapter } from "@/features/shared/types/chapter";
-import { ReaderChapter } from "@/features/manga-reader/types/reader-chapter";
 import { useDownloads } from "@/features/downloads/store/use-downloads";
-import { Title } from "@/features/shared/types/title";
 
 import * as FileSystem from "expo-file-system";
-import { throwable } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated";
-import { Text } from "@/components/ui/text";
+
 import { useState } from "react";
+import { getTitleWithChapters } from "@/features/downloads/api/get-title-with-chapters";
+import { handleFolderCreate } from "@/features/downloads/lib/handle-folder-create";
 
 export const DownloadChapterButton = ({
   slug_url,
@@ -26,6 +25,8 @@ export const DownloadChapterButton = ({
   slug_url: string;
   chapter: Chapter;
 }) => {
+  const isDownloaded = useDownloads((state) => state.isChapterDownloaded);
+
   const add = useDownloads((state) => state.add);
 
   const progress = useSharedValue(0);
@@ -43,50 +44,22 @@ export const DownloadChapterButton = ({
     mutationFn: async () => {
       progress.value = 0;
 
-      const {
-        data: { data: title },
-      } = await api.get<{ data: Title }>(`/manga/${slug_url}/`);
+      const { chapterData, title } = await getTitleWithChapters(slug_url, chapter);
 
-      const {
-        data: { data: chapterData },
-      } = await api.get<{ data: ReaderChapter }>(
-        `/manga/${slug_url}/chapter?volume=${chapter.volume}&number=${chapter.number}`
-      );
+      const total = chapterData.pages.length;
 
-      if (chapterData.pages.length == 0) {
+      if (total == 0) {
         throw new Error("No pages in this chapter");
       }
 
       const folderName = `v${chapter.volume}-c${chapter.number}`;
 
-      // #region Check if folder exists, if not create
-      const { error: slugFolderFails } = await throwable(
-        FileSystem.readDirectoryAsync(`${FileSystem.documentDirectory}${slug_url}`)
-      );
+      const folder = await handleFolderCreate(slug_url, folderName, total);
 
-      if (slugFolderFails) {
-        await FileSystem.makeDirectoryAsync(`${FileSystem.documentDirectory}${slug_url}`);
+      if (folder == "exists") {
+        return "This chapter is already downloaded";
       }
 
-      const { data, error: chapterFolderFails } = await throwable(
-        FileSystem.readDirectoryAsync(`${FileSystem.documentDirectory}${slug_url}/${folderName}`)
-      );
-
-      // Check if chapter is already downloaded
-      if (data?.length == chapterData.pages.length) {
-        return {
-          message: "This chapter is already downloaded",
-        };
-      }
-
-      if (chapterFolderFails) {
-        await FileSystem.makeDirectoryAsync(
-          `${FileSystem.documentDirectory}${slug_url}/${folderName}`
-        );
-      }
-      // #endregion
-
-      const total = chapterData.pages.length;
       let completed = 0;
 
       const downloadResponse = await Promise.all(
@@ -99,7 +72,7 @@ export const DownloadChapterButton = ({
 
           completed += 1;
 
-          bottom.value = withTiming(0, { duration: 1200 });
+          bottom.value = 0;
 
           toast.loading(
             `Downloading... ${completed} / ${total} (${Math.round((completed / total) * 100)}%)`,
@@ -108,7 +81,9 @@ export const DownloadChapterButton = ({
             }
           );
 
-          progress.value = withTiming((completed / total) * 108, { duration: 300 });
+          progress.value = withTiming((completed / total) * 108, {
+            duration: 400,
+          });
 
           return uri;
         })
@@ -148,13 +123,23 @@ export const DownloadChapterButton = ({
     setToastId(toastId);
   };
 
+  const isChapterDownloaded = isDownloaded(slug_url, chapter.volume, chapter.number);
+
   return (
     <>
-      <Pressable disabled={isPending} className="ml-auto" onPress={() => downloadChapter()}>
+      <Pressable
+        disabled={isPending || isChapterDownloaded}
+        className="ml-auto"
+        onPress={() => downloadChapter()}
+      >
         {isPending ? (
           <ActivityIndicator size="small" className="scale-90" />
         ) : (
-          <Download className="text-zinc-600" size={18} strokeWidth={2.8} />
+          <Download
+            className={cn(!isChapterDownloaded ? "text-zinc-600" : "text-orange-400")}
+            size={18}
+            strokeWidth={2.8}
+          />
         )}
       </Pressable>
       <Animated.View
