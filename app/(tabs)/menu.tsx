@@ -15,13 +15,19 @@ export default function Menu() {
     <SafeAreaView className="mx-4 gap-2">
       <ActionMenuOption
         buttonVariant="destructive"
-        note="This will clear all previous network requests, such as catalog, search results data, image servers, etc... Your search and reading history will remain."
+        note="This will clear all previous network requests, such as catalog, search results data and so on... Your downloaded chapters, search and reading history will remain."
         actionText="Clear"
         action={() => queryClient.clear()}
       >
         Clear network caches
       </ActionMenuOption>
-      <ActionMenuOption actionText="Open" debugOnly action={() => RNFlipboardFlex.showExplorer()}>
+      <ActionMenuOption
+        note={!RNFlipboardFlex ? "FLEXTool is unavailable." : undefined}
+        disabled={!RNFlipboardFlex}
+        actionText="Open"
+        debugOnly
+        action={() => RNFlipboardFlex?.showExplorer()}
+      >
         Open FLEXTool
       </ActionMenuOption>
       <Text className="text-zinc-700 text-center">
