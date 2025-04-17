@@ -4,6 +4,7 @@ import { Text } from "@/components/ui/text";
 import { View } from "react-native";
 
 export const ActionMenuOption = ({
+  disabled,
   children: text,
   note,
   actionText,
@@ -11,6 +12,7 @@ export const ActionMenuOption = ({
   buttonVariant,
   debugOnly = false,
 }: {
+  disabled?: boolean;
   children: string;
   note?: string;
   actionText: string;
@@ -23,7 +25,13 @@ export const ActionMenuOption = ({
     <View>
       <View className="flex-row items-center mt-2">
         <Text className="text-zinc-200 font-medium flex-1">{text}</Text>
-        <Button variant={buttonVariant} size="sm" onPress={action}>
+        <Button
+          disabled={disabled}
+          variant={buttonVariant}
+          className="disabled:opacity-50"
+          size="sm"
+          onPress={action}
+        >
           {actionText}
         </Button>
       </View>

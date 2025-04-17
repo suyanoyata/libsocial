@@ -1,10 +1,9 @@
 import * as React from "react";
 import { Pressable, PressableProps } from "react-native";
 import { Text } from "@/components/ui/text";
-import * as Haptics from "expo-haptics";
 
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "@/lib/utils";
+import { cn, withImpact } from "@/lib/utils";
 
 const buttonVariants = cva(
   "p-2.5 px-4 rounded-lg items-center justify-center shadow-sm flex-row gap-1",
@@ -61,11 +60,10 @@ const Button = React.forwardRef<Pressable, ButtonProps>(
       <Pressable
         ref={ref}
         className={cn(buttonVariants({ variant, size, className }))}
-        onPress={() => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
-          props.onPress && props.onPress();
-        }}
         {...props}
+        onPress={() => {
+          withImpact(() => props.onPress && props.onPress());
+        }}
       >
         {iconLeft}
         {asChild ? (

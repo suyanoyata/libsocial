@@ -10,8 +10,6 @@ import { SortAsc, SortDesc } from "lucide-react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { FlashList, FlashListProps } from "@shopify/flash-list";
 
-import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
-
 import { cn } from "@/lib/utils";
 
 interface Props<T> extends FlashListProps<T> {
@@ -40,7 +38,6 @@ export const ContentCollectionView = <T,>({
         <Text className="text-4xl font-extrabold text-white/80">{title}</Text>
         <Button
           onPress={() => {
-            impactAsync(ImpactFeedbackStyle.Soft);
             startReversing(() => reverseCallback());
           }}
           variant="ghost"

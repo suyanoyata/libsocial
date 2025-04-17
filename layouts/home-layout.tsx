@@ -1,4 +1,5 @@
 import { useHomeTitles } from "@/features/home/api/use-home-titles";
+import { withImpact } from "@/lib/utils";
 import { router } from "expo-router";
 import { Search } from "lucide-react-native";
 import { Pressable, RefreshControl, ScrollView, TextInput, View } from "react-native";
@@ -24,7 +25,7 @@ export const HomeLayout = ({ children }: { children?: React.ReactNode }) => {
         <Pressable
           className="flex-1 absolute top-0 left-0 h-14 w-full z-30"
           style={{ height: 64 + top }}
-          onPress={() => router.push("/quick-search")}
+          onPress={() => withImpact(() => router.push("/quick-search"))}
         />
       </View>
       <ScrollView

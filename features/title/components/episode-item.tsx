@@ -3,8 +3,6 @@ import { Pressable } from "react-native";
 import { Text } from "@/components/ui/text";
 import { Bookmark, EyeIcon, EyeOff } from "lucide-react-native";
 
-import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
-
 import { memo, useCallback, useLayoutEffect, useMemo, useState, useTransition } from "react";
 import { router, useFocusEffect } from "expo-router";
 
@@ -13,6 +11,7 @@ import { useWatchTracker } from "@/store/use-watch-tracker";
 
 import { TitleEpisodeBase } from "@/features/title/types/title-episodes-response";
 
+import { withImpact } from "@/lib/utils";
 import { actionToast } from "@/features/title/lib/action-toast";
 import Animated, { BounceIn } from "react-native-reanimated";
 
@@ -58,18 +57,18 @@ export const Episode = memo(
 
           setWatch(true);
 
-          startTransition(() => {
-            impactAsync(ImpactFeedbackStyle.Soft);
-
-            addCallback();
-            router.navigate({
-              pathname: "/anime-watch",
-              params: {
-                slug_url,
-                episodeIndex: index,
-              },
-            });
-          });
+          withImpact(() =>
+            startTransition(() => {
+              addCallback();
+              router.navigate({
+                pathname: "/anime-watch",
+                params: {
+                  slug_url,
+                  episodeIndex: index,
+                },
+              });
+            })
+          );
         }}
         className="flex-row items-center gap-2 h-11 bg-zinc-900 active:bg-zinc-800 mb-2 px-4 rounded-lg"
       >

@@ -9,6 +9,8 @@ import { Text } from "@/components/ui/text";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ChevronLeft, Cog } from "lucide-react-native";
 
+import { withImpact } from "@/lib/utils";
+
 export const ReaderHeader = ({ chapter, title }: { chapter: ReaderChapter; title: Title }) => {
   const { top } = useSafeAreaInsets();
 
@@ -29,7 +31,7 @@ export const ReaderHeader = ({ chapter, title }: { chapter: ReaderChapter; title
       <Cog
         hitSlop={10}
         onPress={() => {
-          router.navigate("/reader-properties");
+          withImpact(() => router.navigate("/reader-properties"));
         }}
         color="#a1a1aa"
       />

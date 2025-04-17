@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from "clsx";
+import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -34,4 +35,8 @@ export async function throwable<T, E = unknown>(
   } catch (error) {
     return { error: error as E };
   }
+}
+
+export function withImpact(callback: () => void) {
+  impactAsync(ImpactFeedbackStyle.Soft).then(() => callback());
 }

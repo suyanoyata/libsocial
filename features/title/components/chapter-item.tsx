@@ -1,21 +1,23 @@
 import { Pressable } from "react-native";
-
 import { Text } from "@/components/ui/text";
-
-import { Chapter as ChapterType } from "@/features/shared/types/chapter";
-import { router, useFocusEffect } from "expo-router";
-import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
-import { useTitleReadChapter } from "@/store/use-chapters-tracker";
-import { Bookmark, EyeIcon, EyeOff } from "lucide-react-native";
-import { memo, useCallback, useLayoutEffect, useMemo, useState, useTransition } from "react";
-import { useReadingTracker } from "@/store/use-reading-tracker";
-import { biggest } from "@/lib/utils";
 import Animated, { BounceIn } from "react-native-reanimated";
 
-import { actionToast } from "@/features/title/lib/action-toast";
-import { useQueryClient } from "@tanstack/react-query";
-import { Title } from "@/features/shared/types/title";
+import { Bookmark, EyeIcon, EyeOff } from "lucide-react-native";
+
 import { DownloadChapterButton } from "@/features/downloads/components/download-chapter-button";
+
+import { router, useFocusEffect } from "expo-router";
+import { memo, useCallback, useLayoutEffect, useMemo, useState, useTransition } from "react";
+
+import { biggest, withImpact } from "@/lib/utils";
+import { actionToast } from "@/features/title/lib/action-toast";
+
+import { useTitleReadChapter } from "@/store/use-chapters-tracker";
+import { useReadingTracker } from "@/store/use-reading-tracker";
+import { useQueryClient } from "@tanstack/react-query";
+
+import { Title } from "@/features/shared/types/title";
+import { Chapter as ChapterType } from "@/features/shared/types/chapter";
 
 export const Chapter = memo(
   ({ slug_url, index, chapter }: { slug_url: string; index: number; chapter: ChapterType }) => {
@@ -85,14 +87,15 @@ export const Chapter = memo(
           setRead(true);
 
           startTransition(() => {
-            impactAsync(ImpactFeedbackStyle.Soft);
-            router.navigate({
-              pathname: "/manga-reader",
-              params: {
-                slug_url,
-                index,
-              },
-            });
+            withImpact(() =>
+              router.navigate({
+                pathname: "/manga-reader",
+                params: {
+                  slug_url,
+                  index,
+                },
+              })
+            );
           });
         }}
         className="flex-row items-center gap-2 h-11 bg-zinc-900 active:bg-zinc-800 mb-2 px-4 rounded-lg relative overflow-hidden"

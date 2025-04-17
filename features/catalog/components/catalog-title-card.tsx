@@ -1,5 +1,4 @@
-import { Link, router } from "expo-router";
-import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
+import { router } from "expo-router";
 
 import { Text } from "@/components/ui/text";
 
@@ -9,6 +8,7 @@ import { TransitionedImage } from "@/features/shared/components/transitioned-ima
 import { Pressable } from "react-native";
 import { useProperties } from "@/store/use-properties";
 import { memo } from "react";
+import { withImpact } from "@/lib/utils";
 
 export const CatalogTitleCard = memo(
   ({ title }: { title: BaseTitle }) => {
@@ -16,14 +16,15 @@ export const CatalogTitleCard = memo(
     return (
       <Pressable
         onPress={() => {
-          impactAsync(ImpactFeedbackStyle.Soft);
-          router.navigate({
-            pathname: "/title-info",
-            params: {
-              slug_url: title.slug_url,
-              site: title.site,
-            },
-          });
+          withImpact(() =>
+            router.navigate({
+              pathname: "/title-info",
+              params: {
+                slug_url: title.slug_url,
+                site: title.site,
+              },
+            })
+          );
         }}
         className="w-full my-1 p-2"
       >

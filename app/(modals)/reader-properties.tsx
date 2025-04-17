@@ -1,12 +1,14 @@
 import { SwitchMenuOption } from "@/components/ui/switch-menu-option";
 import { Text } from "@/components/ui/text";
 
+import useDebounce from "@/hooks/use-debounce";
 import { useProperties } from "@/store/use-properties";
 import { useEffect, useState } from "react";
 
 import { Slider } from "@tamagui/slider";
 import { View } from "react-native";
-import useDebounce from "@/hooks/use-debounce";
+
+import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
 
 export default function ReaderProperties() {
   const {
@@ -25,6 +27,10 @@ export default function ReaderProperties() {
     setReaderImagePadding(throttlePadding);
   }, [throttlePadding]);
 
+  useEffect(() => {
+    impactAsync(ImpactFeedbackStyle.Soft);
+  }, [padding]);
+
   return (
     <View className="mx-4 flex-1 gap-2">
       <Text className="text-zinc-200 mt-2">Distance between images: {padding}px</Text>
@@ -38,10 +44,10 @@ export default function ReaderProperties() {
       >
         <Slider.Track
           style={{
-            backgroundColor: "#a1a1aa",
+            backgroundColor: "#2f2f2f",
           }}
         >
-          <Slider.TrackActive style={{ backgroundColor: "#a1a1aa" }} />
+          <Slider.TrackActive style={{ backgroundColor: "#afa1aa" }} />
         </Slider.Track>
         <Slider.Thumb
           style={{
