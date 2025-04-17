@@ -38,14 +38,16 @@ export const useDownloads = create<DownloadsStore>()(
           idempotent: true,
         });
 
-        set({
-          items: get().items.filter(
-            (state) =>
-              state.chapter.number !== chapter &&
-              state.chapter.volume !== volume &&
-              state.title.slug_url !== slug_url
+        set((state) => ({
+          items: state.items.filter(
+            (item) =>
+              !(
+                item.chapter.number == chapter &&
+                item.chapter.volume == volume &&
+                item.title.slug_url == slug_url
+              )
           ),
-        });
+        }));
       },
       isChapterDownloaded: (slug_url, volume, chapter) => {
         const item = get().items.find(
