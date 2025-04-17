@@ -15,10 +15,7 @@ export const CatalogHeader = () => {
   const { setSearch } = useFilterStore();
 
   return (
-    <View
-      style={{ paddingTop: top + 8, paddingBottom: 10 }}
-      className="bg-zinc-950 px-3.5 flex-row"
-    >
+    <View style={{ paddingTop: top + 8, paddingBottom: 10 }} className="bg-zinc-950 px-2 flex-row">
       <View className="bg-zinc-900 px-4 py-2 h-10 items-center flex-row font-medium rounded-md flex-1">
         <TextInput
           onChangeText={setSearch}

@@ -72,7 +72,7 @@ export const Catalog = () => {
         style={{
           height,
         }}
-        className="flex-1 mx-2 overflow-hidden rounded-sm"
+        className="flex-1 overflow-hidden rounded-sm"
       >
         {data && (
           <FlashList
