@@ -24,6 +24,7 @@ export const ReaderImage = memo(
         onInteractionStart={() => setFocused(true)}
         onResetAnimationEnd={() => setFocused(false)}
         style={{ zIndex: focused ? 10 : 5 }}
+        isPanEnabled={focused}
       >
         <FastImage
           resizeMode="contain"
