@@ -70,7 +70,7 @@ export const Episode = memo(
             })
           );
         }}
-        className="flex-row items-center gap-2 h-11 bg-zinc-900 active:bg-zinc-800 mb-2 px-4 rounded-lg"
+        className="content-list-view-item"
       >
         <Pressable
           hitSlop={10}
@@ -96,10 +96,10 @@ export const Episode = memo(
               <Bookmark size={20} className="text-red-500 fill-red-500" />
             </Animated.View>
           ) : (
-            <WatchIcon className="text-zinc-500" size={20} />
+            <WatchIcon strokeWidth={2.8} className="text-zinc-500" size={20} />
           )}
         </Pressable>
-        <Text className="text-zinc-200">Episode {episode.number}</Text>
+        <Text className="text-secondary font-medium">Episode {episode.number}</Text>
       </Pressable>
     );
   }

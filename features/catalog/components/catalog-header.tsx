@@ -15,25 +15,26 @@ export const CatalogHeader = () => {
   const { setSearch } = useFilterStore();
 
   return (
-    <View style={{ paddingTop: top + 8, paddingBottom: 10 }} className="bg-zinc-950 px-2 flex-row">
-      <View className="bg-zinc-900 px-4 py-2 h-10 items-center flex-row font-medium rounded-md flex-1">
+    <View
+      style={{ paddingTop: top + 8, paddingBottom: 10 }}
+      className="bg-accent-darken px-2 flex-row"
+    >
+      <View className="bg-accent px-4 py-2 h-10 items-center flex-row font-medium rounded-md flex-1">
         <TextInput
           onChangeText={setSearch}
           placeholder="Search..."
-          placeholderTextColor="#52525b"
-          className="text-zinc-400 font-medium flex-1 pl-5"
+          className="text-muted placeholder:text-muted font-medium flex-1 pl-5"
         />
-        <Search className="text-zinc-400 absolute left-1.5" size={20} />
+        <Search className="text-muted absolute left-1.5" size={20} />
       </View>
       <Button
         variant="ghost"
-        className="w-[50px] rounded-full ml-2"
-        textClassName="text-zinc-400"
+        className="w-[50px] rounded-full ml-2 active:bg-white/20"
         onPress={() => {
           router.push("/catalog-filters-view");
         }}
       >
-        <Filter className="text-zinc-400" size={18} />
+        <Filter className="text-muted" size={18} />
       </Button>
     </View>
   );

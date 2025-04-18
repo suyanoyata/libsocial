@@ -3,25 +3,22 @@ import { FadeView } from "@/components/ui/fade-view";
 import { useRoute } from "@react-navigation/native";
 import { FlatList, useWindowDimensions, View } from "react-native";
 
-import { useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 import { useProperties } from "@/store/use-properties";
 
-import { useQuery } from "@tanstack/react-query";
 import { useDeferredRender } from "@/hooks/use-deferred-render";
-import { documentDirectory, readDirectoryAsync } from "expo-file-system";
 import { Text } from "@/components/ui/text";
-import FastImage from "@d11/react-native-fast-image";
-import { MenuView } from "@react-native-menu/menu";
 import { ReaderHeader } from "@/features/manga-reader/components/reader-header";
 import { BackButton } from "@/components/ui/back-button";
 import { useDownloads } from "@/features/downloads/store/use-downloads";
 import { ReaderImage } from "@/features/manga-reader/components/reader-image";
 
+import MenuView from "react-native-context-menu-view";
+
 export const DownloadedReader = () => {
   const route = useRoute();
 
-  // #region Local images fetching
   const { slug_url, volume, chapter } = route.params as {
     slug_url: string;
     volume: string;
@@ -30,30 +27,14 @@ export const DownloadedReader = () => {
 
   const get = useDownloads((state) => state.get);
 
-  // const chapterBaseUrl = useMemo(() => {
-  //   return `${documentDirectory}${slug_url}/v${volume}-c${chapter}`;
-  // }, [slug_url, volume, chapter]);
-
-  // const { data } = useQuery({
-  //   queryKey: ["downloaded-chapter", slug_url, volume, chapter],
-  //   queryFn: async () => {
-  //     const data = await readDirectoryAsync(chapterBaseUrl);
-
-  //     return data.sort().map((item) => {
-  //       return chapterBaseUrl + "/" + item;
-  //     });
-  //   },
-  // });
-
   const data = get(slug_url, volume, chapter);
-  // #endregion
 
   const { width, height } = useWindowDimensions();
   const [currentPage, setCurrentPage] = useState(1);
 
   const shouldRender = useDeferredRender();
 
-  const { readerImagePadding, readerDisplayCurrentPage, showReaderScrollbar } = useProperties();
+  const { readerDisplayCurrentPage, showReaderScrollbar } = useProperties();
 
   const flatListRef = useRef<FlatList>(null);
 
@@ -67,7 +48,9 @@ export const DownloadedReader = () => {
     return (
       <View className="items-center justify-center flex-1">
         <BackButton />
-        <Text className="text-white/80">Couldn't find this chapter, try re-downloading it</Text>
+        <Text className="text-secondary font-medium">
+          Couldn't find this chapter, try re-downloading it
+        </Text>
       </View>
     );
   }
@@ -78,12 +61,13 @@ export const DownloadedReader = () => {
     <FadeView withEnter className="flex-1 items-center justify-center">
       {readerDisplayCurrentPage && (
         <MenuView
-          onPressAction={(event) =>
+          dropdownMenuMode
+          onPress={(event) => {
             flatListRef.current?.scrollToIndex({
-              index: parseInt(event.nativeEvent.event),
+              index: event.nativeEvent.index,
               animated: true,
-            })
-          }
+            });
+          }}
           style={{
             position: "absolute",
             left: 16,
@@ -103,9 +87,6 @@ export const DownloadedReader = () => {
         </MenuView>
       )}
       <FlatList
-        contentContainerStyle={{
-          gap: readerImagePadding,
-        }}
         viewabilityConfig={{
           minimumViewTime: 3,
           waitForInteraction: false,

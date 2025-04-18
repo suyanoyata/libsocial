@@ -21,7 +21,7 @@ export const SwitchMenuOption = memo(
     return (
       <View>
         <View className="flex-row items-center">
-          <Text className="text-zinc-200 font-medium flex-1">{text}</Text>
+          <Text className="text-secondary font-medium flex-1">{text}</Text>
           <Switch value={value} onValueChange={(value) => setValue(value)} />
         </View>
         {note && value == true && <Text className="text-zinc-600 text-sm font-medium">{note}</Text>}

@@ -4,7 +4,7 @@ import "react-native-gesture-handler";
 import { SplashScreen, Stack } from "expo-router";
 import { QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
-import { DarkTheme, ThemeProvider } from "@react-navigation/native";
+import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
 
 import { createFont, createTamagui, TamaguiProvider } from "@tamagui/core";
 import { defaultConfig } from "@tamagui/config/v4";
@@ -18,7 +18,7 @@ import {
 } from "expo-updates";
 import { useCallback, useEffect, useState } from "react";
 
-import { AppState, View } from "react-native";
+import { AppState, useColorScheme, View } from "react-native";
 
 import { enableFreeze, enableScreens } from "react-native-screens";
 
@@ -125,15 +125,17 @@ export default function RootLayout() {
     AppState.addEventListener("change", focusCallback);
   }, []);
 
+  const isDark = useColorScheme() === "dark";
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <PersistQueryClientProvider
         persistOptions={{ persister: clientPersister }}
         client={queryClient}
       >
-        <View className="bg-black flex-1">
+        <View className="bg-primary flex-1">
           <TamaguiProvider config={config}>
-            <ThemeProvider value={DarkTheme}>
+            <ThemeProvider value={isDark ? DarkTheme : DefaultTheme}>
               <Stack
                 screenOptions={{
                   headerShown: true,
@@ -144,6 +146,12 @@ export default function RootLayout() {
                 <Stack.Screen
                   options={{ presentation: "modal", headerShown: false }}
                   name="(modals)"
+                />
+                <Stack.Screen
+                  name="title-info"
+                  options={{
+                    headerShown: false,
+                  }}
                 />
                 <Stack.Screen name="manga-reader" options={{ headerShown: false }} />
                 <Stack.Screen name="downloaded-reader" options={{ headerShown: false }} />

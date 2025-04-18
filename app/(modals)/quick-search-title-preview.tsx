@@ -35,7 +35,7 @@ export default function QuickSearchTitlePreview() {
 
   return (
     <ScrollView
-      className="bg-black flex-1"
+      className="bg-primary flex-1"
       style={{
         paddingBottom: bottom + 8,
       }}
@@ -74,7 +74,9 @@ export default function QuickSearchTitlePreview() {
               </View>
             </ImageBackground>
             <View className="mx-2 gap-1 mt-2">
-              <Text className="text-4xl text-zinc-200 font-bold">{data.eng_name ?? data.name}</Text>
+              <Text className="text-4xl text-secondary font-bold">
+                {data.eng_name ?? data.name}
+              </Text>
               <TitleSummary>{data.summary}</TitleSummary>
               <Genres genres={data.genres} />
             </View>

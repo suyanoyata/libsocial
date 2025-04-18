@@ -24,8 +24,8 @@ export default function CatalogFiltersView() {
         }}
         className="flex-row items-center justify-between py-3 w-full"
       >
-        <Text className="text-zinc-200 font-medium">Genres</Text>
-        <Text className="text-zinc-400 font-semibold">{genres.length} selected</Text>
+        <Text className="text-secondary font-semibold">Genres</Text>
+        <Text className="text-muted font-medium">{genres.length} selected</Text>
       </Button>
       <Button
         disabled={genres.length == 0}

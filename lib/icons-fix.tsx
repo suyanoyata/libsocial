@@ -11,6 +11,8 @@ import {
   Star,
   Download,
   Trash2,
+  Cog,
+  ChevronLeft,
 } from "lucide-react-native";
 import { cssInterop } from "nativewind";
 
@@ -41,4 +43,6 @@ export const iconFix = () =>
     Star,
     Download,
     Trash2,
+    ChevronLeft,
+    Cog,
   ]);

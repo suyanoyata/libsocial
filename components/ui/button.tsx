@@ -10,8 +10,9 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-white shadow active:bg-white/80",
-        ghost: "bg-transparent active:bg-zinc-800/80 hover:bg-zinc-800",
+        default: "bg-white dark:shadow active:bg-white/80",
+        ghost:
+          "bg-transparent active:bg-zinc-100/80 dark:active:bg-zinc-800/80 shadow-none dark:shadow-sm active:bg-zinc-200",
         destructive: "bg-red-500 active:bg-red-400 hover:bg-red-400",
       },
       size: {
@@ -30,7 +31,7 @@ const textVariants = cva("text-black", {
   variants: {
     variant: {
       default: "text-black",
-      ghost: "text-zinc-200 font-medium",
+      ghost: "text-secondary font-medium",
       destructive: "text-white",
     },
     size: {

@@ -55,7 +55,7 @@ export const TransitionedImage = ({
             width,
             height,
           }}
-          className="bg-zinc-900 absolute top-0 left-0 z-10"
+          className="bg-muted absolute top-0 left-0 z-10"
         />
       )}
       <FastImage

@@ -10,6 +10,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type BackButtonProps = ViewStyle & {
   className?: string;
+  textClassName?: string;
+  iconClassName?: string;
   position?: "absolute" | "static";
 };
 
@@ -32,8 +34,8 @@ export const BackButton = ({ position = "absolute", ...props }: BackButtonProps)
       {...props}
     >
       <View className="flex-row gap-1 items-center z-20">
-        <ChevronLeft color="white" strokeWidth={2.25} />
-        <Text className="text-white text-lg font-medium">Back</Text>
+        <ChevronLeft className={cn("text-primary", props.iconClassName)} strokeWidth={2.25} />
+        <Text className={cn("text-primary text-lg font-medium", props.textClassName)}>Back</Text>
       </View>
     </Link>
   );

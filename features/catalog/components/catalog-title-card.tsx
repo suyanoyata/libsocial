@@ -34,7 +34,7 @@ export const CatalogTitleCard = memo(
           width={catalogImageWidth - 15}
           recycleId={title.id}
         />
-        <Text className="text-sm font-medium text-zinc-200 mt-0.5" numberOfLines={2}>
+        <Text className="text-sm font-medium text-primary mt-0.5" numberOfLines={2}>
           {title.eng_name != "" ? title.eng_name : title.name}
         </Text>
       </Pressable>

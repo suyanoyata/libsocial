@@ -24,7 +24,7 @@ export const ActionMenuOption = ({
   return (
     <View>
       <View className="flex-row items-center mt-2">
-        <Text className="text-zinc-200 font-medium flex-1">{text}</Text>
+        <Text className="text-secondary font-medium flex-1">{text}</Text>
         <Button
           disabled={disabled}
           variant={buttonVariant}
@@ -35,7 +35,7 @@ export const ActionMenuOption = ({
           {actionText}
         </Button>
       </View>
-      {note && <Text className="text-zinc-600 text-sm font-medium mt-1">{note}</Text>}
+      {note && <Text className="text-muted text-sm font-medium mt-1">{note}</Text>}
     </View>
   );
 };

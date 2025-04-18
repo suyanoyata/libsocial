@@ -6,7 +6,7 @@ import { useProperties } from "@/store/use-properties";
 import { useEffect, useState } from "react";
 
 import { Slider } from "@tamagui/slider";
-import { View } from "react-native";
+import { useColorScheme, View } from "react-native";
 
 import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
 
@@ -31,9 +31,16 @@ export default function ReaderProperties() {
     impactAsync(ImpactFeedbackStyle.Soft);
   }, [padding]);
 
+  const isDark = useColorScheme() === "dark";
+
+  const styles = {
+    active: isDark ? "#afa1aa" : "#fb923c",
+    thumb: isDark ? "#2f2f2f" : "#d4d4d8",
+  };
+
   return (
     <View className="mx-4 flex-1 gap-2">
-      <Text className="text-zinc-200 mt-2">Distance between images: {padding}px</Text>
+      <Text className="text-secondary mt-2">Distance between images: {padding}px</Text>
       <Slider
         value={[padding]}
         onValueChange={(value) => setPadding(value[0])}
@@ -44,10 +51,10 @@ export default function ReaderProperties() {
       >
         <Slider.Track
           style={{
-            backgroundColor: "#2f2f2f",
+            backgroundColor: styles.thumb,
           }}
         >
-          <Slider.TrackActive style={{ backgroundColor: "#afa1aa" }} />
+          <Slider.TrackActive style={{ backgroundColor: styles.active }} />
         </Slider.Track>
         <Slider.Thumb
           style={{

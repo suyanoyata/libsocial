@@ -32,23 +32,20 @@ export const ContentCollectionView = <T,>({
 
   const [isReversing, startReversing] = useTransition();
 
+  const Icon = descending ? SortAsc : SortDesc;
+
   return (
     <Animated.View entering={FadeIn} className={cn("flex-1")}>
       <View className="flex-row justify-between items-center mb-2">
-        <Text className="text-4xl font-extrabold text-white/80">{title}</Text>
+        <Text className="text-4xl font-extrabold text-secondary">{title}</Text>
         <Button
           onPress={() => {
             startReversing(() => reverseCallback());
           }}
           variant="ghost"
           className="rounded-full w-28"
-          iconLeft={
-            !descending ? (
-              <SortDesc className="text-zinc-200" size={18} />
-            ) : (
-              <SortAsc className="text-zinc-200" size={18} />
-            )
-          }
+          textClassName="text-secondary"
+          iconLeft={<Icon className="text-secondary" size={18} />}
         >
           Order
         </Button>

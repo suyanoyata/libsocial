@@ -30,7 +30,7 @@ export const ClearDownloadedChapters = () => {
 
   return (
     <Pressable onPress={deleteEverything}>
-      <Trash2 className="text-zinc-300" />
+      <Trash2 className="text-secondary" />
     </Pressable>
   );
 };

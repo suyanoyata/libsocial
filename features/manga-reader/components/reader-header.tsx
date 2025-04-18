@@ -17,14 +17,14 @@ export const ReaderHeader = ({ chapter, title }: { chapter: ReaderChapter; title
   return (
     <View
       style={{ paddingTop: top + 8, paddingBottom: 8 }}
-      className="px-3 flex-row items-center gap-2 bg-black"
+      className="px-3 flex-row items-center gap-2 bg-primary"
     >
       <ChevronLeft onPress={() => router.back()} size={24} strokeWidth={3} color="#a1a1aa" />
       <View className="flex-1">
-        <Text className="text-zinc-200 font-medium text-base">
+        <Text className="text-secondary font-medium text-base">
           Volume {chapter.volume} Chapter {chapter.number}
         </Text>
-        <Text numberOfLines={1} className="text-zinc-400 font-medium text-sm">
+        <Text numberOfLines={1} className="text-muted font-medium text-sm">
           {title.eng_name != "" ? title.eng_name : title.name}
         </Text>
       </View>
@@ -33,7 +33,7 @@ export const ReaderHeader = ({ chapter, title }: { chapter: ReaderChapter; title
         onPress={() => {
           withImpact(() => router.navigate("/reader-properties"));
         }}
-        color="#a1a1aa"
+        className="text-muted"
       />
     </View>
   );

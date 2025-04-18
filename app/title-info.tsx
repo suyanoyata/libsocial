@@ -15,6 +15,7 @@ import { TitleAbout } from "@/features/title/ui/title-about";
 import { titleInfoRouteSchema } from "@/features/title/types/title-info-route";
 import withBubble from "@/components/ui/withBubble";
 import { Unplug } from "lucide-react-native";
+import { BackButton } from "@/components/ui/back-button";
 
 export default function TitleInfo() {
   const router = useRoute();
@@ -50,8 +51,9 @@ export default function TitleInfo() {
 
     return (
       <View className="items-center justify-center flex-1">
+        <BackButton />
         <Icon />
-        <Text className="text-white/80 text-base font-medium mt-2">Something went wrong</Text>
+        <Text className="text-secondary text-base font-medium mt-2">Something went wrong</Text>
       </View>
     );
   }
@@ -59,6 +61,7 @@ export default function TitleInfo() {
   if (!data) {
     return (
       <View className="items-center justify-center flex-1">
+        <BackButton />
         <ActivityIndicator />
       </View>
     );
@@ -68,6 +71,7 @@ export default function TitleInfo() {
 
   return (
     <FadeView withEnter className="flex-1">
+      <BackButton iconClassName="text-white" textClassName="text-white" />
       <ScrollView showsVerticalScrollIndicator={false}>
         <ImageBackground
           source={{ uri: data.background.url }}
@@ -102,7 +106,7 @@ export default function TitleInfo() {
           </View>
         </ImageBackground>
         <View className="mx-2 gap-0.5 mt-2 flex-1">
-          <Text className="text-4xl text-zinc-200 font-bold" numberOfLines={2}>
+          <Text className="text-4xl text-secondary font-bold" numberOfLines={2}>
             {data.eng_name != "" ? data.eng_name : data.name}
           </Text>
           <TitleAbout data={data} />

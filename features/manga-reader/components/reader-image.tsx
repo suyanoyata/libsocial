@@ -16,6 +16,8 @@ export const ReaderImage = memo(
   ({ url, ratio }: ReaderImageProps) => {
     const { width } = useWindowDimensions();
 
+    const paddingBottom = useProperties((state) => state.readerImagePadding);
+
     const [focused, setFocused] = useState(false);
 
     return (
@@ -23,7 +25,7 @@ export const ReaderImage = memo(
         onPinchStart={() => setFocused(true)}
         onInteractionStart={() => setFocused(true)}
         onResetAnimationEnd={() => setFocused(false)}
-        style={{ zIndex: focused ? 10 : 5 }}
+        style={{ zIndex: focused ? 10 : 5, paddingBottom }}
         isPanEnabled={focused}
       >
         <FastImage

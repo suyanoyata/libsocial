@@ -18,7 +18,7 @@ import { useTitleInfo } from "@/features/title/api/use-title-info";
 import { useChapters } from "@/features/title/api/use-chapters";
 
 import { Text } from "@/components/ui/text";
-import { MenuView } from "@react-native-menu/menu";
+import MenuView from "react-native-context-menu-view";
 
 import { preloadNextChapter } from "@/features/manga-reader/lib/preload-chapter";
 import { BackButton } from "@/components/ui/back-button";
@@ -40,7 +40,7 @@ export const MangaReaderUI = () => {
 
   const shouldRender = useDeferredRender();
 
-  const { readerImagePadding, readerDisplayCurrentPage, showReaderScrollbar } = useProperties();
+  const { readerDisplayCurrentPage, showReaderScrollbar } = useProperties();
 
   const { addItem } = useReadingTracker();
   const { add } = useTitleReadChapter();
@@ -134,8 +134,8 @@ export const MangaReaderUI = () => {
       <View className="flex-1 items-center justify-center">
         <BackButton />
         <ErrorIcon />
-        <Text className="text-white/80 mt-2">Something went wrong</Text>
-        <Text className="text-white/60 mt-2 text-sm font-medium">
+        <Text className="text-primary mt-2 font-medium">Something went wrong</Text>
+        <Text className="text-muted mt-2 text-sm font-semibold">
           Chapter is licensed or not found
         </Text>
       </View>
@@ -172,12 +172,13 @@ export const MangaReaderUI = () => {
   if (!shouldRender) return null;
 
   return (
-    <FadeView withEnter className="flex-1 items-center justify-center">
+    <FadeView withEnter className="flex-1 items-center justify-center bg-primary">
       {readerDisplayCurrentPage && (
         <MenuView
-          onPressAction={(event) =>
+          dropdownMenuMode
+          onPress={(event) =>
             flatListRef.current?.scrollToIndex({
-              index: parseInt(event.nativeEvent.event),
+              index: event.nativeEvent.index,
               animated: true,
             })
           }
@@ -201,9 +202,6 @@ export const MangaReaderUI = () => {
       )}
       <FlatList
         ref={flatListRef}
-        contentContainerStyle={{
-          gap: readerImagePadding,
-        }}
         viewabilityConfig={{
           minimumViewTime: 3,
           waitForInteraction: false,

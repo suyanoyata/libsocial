@@ -30,9 +30,7 @@ export const LastWatchTitles = () => {
   return (
     <Animated.View entering={FadeIn} className="mx-2">
       <View className="flex-row items-center justify-between mt-3">
-        <Text className="text-3xl max-sm:text-2xl font-extrabold text-white">
-          You've stopped at
-        </Text>
+        <Text className="recent-viewed-title">You've stopped at</Text>
         <Button
           textClassName="max-sm:text-sm"
           onPress={() => reset()}

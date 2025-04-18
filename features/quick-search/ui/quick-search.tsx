@@ -37,7 +37,7 @@ export const QuickSearchUI = () => {
       {!search && (
         <FadeView withExit className="absolute items-center justify-center flex-1 top-1/2 w-full">
           <SearchIcon />
-          <Text className="text-white text-sm mt-2">Type something in search</Text>
+          <Text className="text-secondary text-sm mt-2">Type something in search</Text>
         </FadeView>
       )}
       <QuickSearchFetching q={query} live={search} />
@@ -48,7 +48,9 @@ export const QuickSearchUI = () => {
           className="absolute items-center justify-center flex-1 top-[45%] w-full"
         >
           <SearchIcon />
-          <Text className="text-white/70 mt-2">No results found for "{search}"</Text>
+          <Text className="text-muted mt-2">
+            No results found for <Text className="text-secondary">"{search}"</Text>
+          </Text>
         </FadeView>
       )}
     </View>

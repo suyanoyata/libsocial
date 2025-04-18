@@ -12,7 +12,7 @@ export const TitleSummary = ({ children: summary }: { children: string }) => {
     <View>
       <Text
         onLayout={(event) => setHeight(event.nativeEvent.layout.height)}
-        className="text-zinc-200 text-sm"
+        className="text-secondary text-sm"
         numberOfLines={lines}
       >
         {summary}

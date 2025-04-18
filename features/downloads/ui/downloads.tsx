@@ -26,11 +26,11 @@ export default function Downloads() {
   if (items.length == 0) {
     return (
       <View className="items-center justify-center flex-1">
-        <Text className="text-zinc-400 font-medium text-center mx-3 leading-7">
+        <Text className="text-muted font-medium text-center mx-3 leading-7">
           You don't have any downloaded chapters. To download them go to any manga chapters and
           press on{" "}
           <View className="h-4">
-            <Download className="text-white" size={20} strokeWidth={3} />
+            <Download className="text-secondary" size={20} strokeWidth={3} />
           </View>{" "}
           icon.
         </Text>

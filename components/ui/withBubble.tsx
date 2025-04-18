@@ -4,7 +4,7 @@ import { View } from "react-native";
 
 const withBubble = <P extends object>(WrappedComponent: React.ComponentType<P>) => {
   return (props: P) => (
-    <View className="size-16 bg-white/20 items-center justify-center rounded-full">
+    <View className="size-16 bg-muted items-center justify-center rounded-full">
       <WrappedComponent
         {...props}
         color="white"

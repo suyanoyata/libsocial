@@ -17,7 +17,7 @@ export const Header = (props: Options) => {
       style={{ paddingTop: top - 8 }}
       className="relative items-center justify-center flex-row mx-3"
     >
-      <Text className="font-bold text-zinc-300 text-center text-lg">
+      <Text className="font-bold text-secondary text-center text-lg">
         {props.options.title ?? props.route.name}
       </Text>
       {props.headerRight && (

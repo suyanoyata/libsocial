@@ -21,8 +21,7 @@ export const QuickSearchInput = ({
       <TextInput
         clearButtonMode="always"
         inputAccessoryViewID="quick-search"
-        placeholderTextColor="#52525b"
-        className="bg-zinc-900 px-2 py-2.5 mt-2 rounded-md text-zinc-200 font-medium"
+        className="bg-muted-darken px-2 py-2.5 mt-2 rounded-md placeholder:text-secondary text-secondary font-medium"
         placeholder="Start searching..."
         value={search}
         onEndEditing={() => addToHistory(search)}
@@ -31,7 +30,7 @@ export const QuickSearchInput = ({
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerClassName="flex-row gap-2 bg-black py-2"
+        contentContainerClassName="flex-row gap-2 dark:bg-black bg-zinc-100 py-2"
       >
         {history.map((item, index) => (
           <Button
@@ -42,10 +41,12 @@ export const QuickSearchInput = ({
               addToHistory(item);
             }}
             key={index}
-            className="bg-zinc-900 active:bg-zinc-800"
-            iconRight={<X onPress={() => deleteFromHistory(item)} color="white" size={18} />}
+            className="bg-muted-darken active:opacity-80"
+            iconRight={
+              <X onPress={() => deleteFromHistory(item)} className="text-secondary" size={18} />
+            }
           >
-            <Text className="text-white">{item}</Text>
+            <Text className="text-secondary">{item}</Text>
           </Button>
         ))}
       </ScrollView>

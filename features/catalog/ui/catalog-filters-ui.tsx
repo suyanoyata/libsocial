@@ -28,7 +28,7 @@ const GenreRender = memo(
     return (
       <Pressable onPress={handlePress} className="flex-row items-center gap-2">
         <Checkbox checked={checked} />
-        <Text className="text-zinc-200 font-medium text-base">{item.name}</Text>
+        <Text className="text-secondary font-medium text-base">{item.name}</Text>
       </Pressable>
     );
   },

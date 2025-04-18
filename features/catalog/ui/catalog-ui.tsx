@@ -1,7 +1,7 @@
 import { FlashList } from "@shopify/flash-list";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { RefreshControl, useWindowDimensions, View } from "react-native";
+import { RefreshControl, useColorScheme, useWindowDimensions, View } from "react-native";
 import { useFilterStore } from "@/features/catalog/store/use-filter-store";
 import useDebounce from "@/hooks/use-debounce";
 
@@ -61,6 +61,8 @@ export const Catalog = () => {
     </View>
   );
 
+  const isDark = useColorScheme() === "dark";
+
   const keyExtractor = (item: BaseTitle) => String(item.id);
 
   if (Math.floor(width / containerWidth) != catalogColumns || initialRender) return null;
@@ -77,7 +79,11 @@ export const Catalog = () => {
         {data && (
           <FlashList
             refreshControl={
-              <RefreshControl tintColor="white" refreshing={isFetching} onRefresh={refetch} />
+              <RefreshControl
+                tintColor={isDark ? "white" : "black"}
+                refreshing={isFetching}
+                onRefresh={refetch}
+              />
             }
             removeClippedSubviews
             data={catalogItems}

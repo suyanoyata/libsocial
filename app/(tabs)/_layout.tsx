@@ -1,5 +1,5 @@
 import { Download, Home, LayoutGrid, MenuIcon, Trash2 } from "lucide-react-native";
-import { Pressable, View } from "react-native";
+import { Pressable, useColorScheme, View } from "react-native";
 import { Tabs } from "expo-router";
 
 import { Header } from "@/components/ui/header";
@@ -10,7 +10,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useGenresConstants } from "@/features/shared/api/use-filter-constants";
 
-import { MenuView } from "@react-native-menu/menu";
+import MenuView from "react-native-context-menu-view";
 
 import { api } from "@/lib/axios";
 import { cn } from "@/lib/utils";
@@ -23,6 +23,8 @@ export default function TabsLayout() {
   const { siteId, setSiteId } = useProperties();
   const queryClient = useQueryClient();
   const { top } = useSafeAreaInsets();
+
+  const isDark = useColorScheme() === "dark";
 
   const handleAction = useCallback(
     (event: string) => {
@@ -48,14 +50,14 @@ export default function TabsLayout() {
         },
         tabBarStyle: {
           backgroundColor: "#00000000",
-          // backgroundColor: "#09090b",
           borderTopWidth: 0,
         },
+        tabBarButton: (props) => <Pressable {...props} />,
         tabBarLabelPosition: "beside-icon",
         headerShown: false,
         tabBarShowLabel: false,
         tabBarInactiveTintColor: "rgb(100,100,100)",
-        tabBarActiveTintColor: "white",
+        tabBarActiveTintColor: isDark ? "white" : "black",
       }}
     >
       <Tabs.Screen
@@ -64,15 +66,31 @@ export default function TabsLayout() {
           sceneStyle: {},
           tabBarIcon: ({ color }) => (
             <MenuView
-              themeVariant="dark"
-              shouldOpenOnLongPress
+              dropdownMenuMode={false}
+              disableShadow
               actions={[
-                { id: "1", title: "Manga", image: "bookmark.fill", imageColor: "white" },
-                { id: "5", title: "Anime", image: "play.fill", imageColor: "white" },
+                {
+                  title: "Manga",
+                  systemIcon: "bookmark.fill",
+                  iconColor: isDark ? "white" : "black",
+                },
+                {
+                  title: "Anime",
+                  systemIcon: "play.fill",
+                  iconColor: isDark ? "white" : "black",
+                },
               ]}
-              onPressAction={(value) => handleAction(value.nativeEvent.event)}
+              onPress={(value) => {
+                if (value.nativeEvent.index == 1) {
+                  handleAction("5");
+                } else {
+                  handleAction("1");
+                }
+              }}
             >
-              <Home color={color} />
+              <View className="pointer-events-none">
+                <Home color={color} />
+              </View>
             </MenuView>
           ),
         }}
@@ -92,10 +110,12 @@ export default function TabsLayout() {
           header: (props) => <Header {...props} headerRight={<ClearDownloadedChapters />} />,
           headerShown: true,
           tabBarIcon: ({ color }) => (
-            <Download color={color} className={cn(siteId == "5" && "text-zinc-800")} />
+            <Download
+              color={color}
+              className={cn(siteId == "5" && "dark:text-zinc-800 text-zinc-300")}
+            />
           ),
-          tabBarButton: (props) =>
-            siteId == "5" ? <View {...props} /> : <Pressable {...props} className="bg-red-400" />,
+          tabBarButton: (props) => (siteId == "5" ? <View {...props} /> : <Pressable {...props} />),
         }}
       />
       <Tabs.Screen

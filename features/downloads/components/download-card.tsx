@@ -23,16 +23,18 @@ export const DownloadCard = ({ item }: { item: DownloadedChapter }) => {
           },
         });
       }}
-      className="bg-zinc-900 overflow-hidden rounded-lg flex-row active:bg-zinc-800/70"
+      className="bg-muted-darken active:opacity-90 overflow-hidden rounded-lg flex-row"
     >
       <TransitionedImage width={120} height={160} source={{ uri: item.title.cover.default }} />
       <View className="p-2 flex-1 relative">
-        <Text className="text-zinc-300 font-medium text-base">{item.title.name}</Text>
-        <Text className="text-white/50 font-medium text-sm" numberOfLines={4}>
+        <Text className="text-primary font-medium text-base">
+          {item.title.eng_name ?? item.title.name}
+        </Text>
+        <Text className="text-secondary font-medium text-sm" numberOfLines={4}>
           {item.title.summary}
         </Text>
         <View className="mt-auto">
-          <Text className="text-zinc-200 text-sm font-medium">You have 3 chapters downloaded</Text>
+          <Text className="text-muted text-sm font-medium">You have 3 chapters downloaded</Text>
         </View>
       </View>
     </Pressable>

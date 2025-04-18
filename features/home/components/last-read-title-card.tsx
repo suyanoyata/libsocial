@@ -38,7 +38,7 @@ export const LastReadTitleCard = ({ item }: { item: LastReadItem }) => {
           });
         }
       }}
-      className="bg-zinc-900 rounded-lg overflow-hidden flex-row w-[300px] active:bg-zinc-800/70"
+      className="recent-viewed-card-bg"
     >
       <Pressable
         onPress={() => {
@@ -51,22 +51,20 @@ export const LastReadTitleCard = ({ item }: { item: LastReadItem }) => {
       </Pressable>
       <FastImage source={{ uri: item.cover.default }} style={{ width: 100, height: 140 }} />
       <View className="p-2 flex-1">
-        <Text className="text-zinc-200 text-base font-semibold w-[90%]" numberOfLines={2}>
+        <Text className="recent-viewed-card" numberOfLines={2}>
           {item.title}
         </Text>
         {!allChaptersRead ? (
-          <View className="h-1.5 rounded-full bg-zinc-700 mt-auto overflow-hidden">
+          <View className="recent-viewed-card-progress-bg">
             <View
-              className="bg-white h-1.5"
+              className="recent-viewed-card-progress-bg-active"
               style={{
                 width: `${(item.lastReadChapter / item.overallChapters) * 100}%`,
               }}
             />
           </View>
         ) : (
-          <Text className="text-zinc-400 font-medium text-sm mt-auto">
-            You've read all chapters
-          </Text>
+          <Text className="recent-viewed-card-note">You've read all chapters</Text>
         )}
       </View>
     </Pressable>

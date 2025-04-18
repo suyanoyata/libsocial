@@ -27,7 +27,7 @@ export const AnimeHeaderInfo = () => {
         }}
       />
       <View className="flex-1">
-        <Text numberOfLines={2} className="text-zinc-300 font-bold text-2xl">
+        <Text numberOfLines={2} className="text-secondary font-bold text-2xl">
           {data.eng_name}
         </Text>
         <Text className="text-xs text-zinc-500" numberOfLines={4}>

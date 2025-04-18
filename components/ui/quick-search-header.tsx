@@ -8,12 +8,13 @@ import { ChevronRight } from "lucide-react-native";
 export const QuickSearchHeader = () => {
   return (
     <View className="flex-row flex items-center justify-between absolute top-2 left-0 mx-2 w-[97vw]">
-      <BackButton position="static" />
+      <BackButton position="static" iconClassName="text-white" textClassName="text-white" />
       <Button
         className="active:bg-white/5"
         onPress={() => {
           DeviceEventEmitter.emit("title-info-navigate");
         }}
+        textClassName="text-white"
         iconRight={<ChevronRight color="white" size={18} />}
         variant="ghost"
       >

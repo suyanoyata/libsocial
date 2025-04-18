@@ -98,7 +98,7 @@ export const Chapter = memo(
             );
           });
         }}
-        className="flex-row items-center gap-2 h-11 bg-zinc-900 active:bg-zinc-800 mb-2 px-4 rounded-lg relative overflow-hidden"
+        className="content-list-view-item relative overflow-hidden"
       >
         <Pressable
           hitSlop={10}
@@ -113,10 +113,10 @@ export const Chapter = memo(
               <Bookmark size={20} className="text-red-500 fill-red-500" />
             </Animated.View>
           ) : (
-            <ReadIcon className="text-zinc-500" size={20} />
+            <ReadIcon strokeWidth={2.8} className="text-zinc-500" size={20} />
           )}
         </Pressable>
-        <Text className="text-zinc-200">
+        <Text className="text-secondary font-medium">
           Volume {chapter.volume} Chapter {chapter.number}
         </Text>
         <DownloadChapterButton slug_url={slug_url} chapter={chapter} />

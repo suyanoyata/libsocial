@@ -23,12 +23,12 @@ export const QuickSearchCard = ({ item }: { item: BaseTitle }) => {
           params: { slug_url: item.slug_url, site: item.site },
         });
       }}
-      className="mb-2 mx-2 bg-zinc-900 overflow-hidden rounded-lg flex-row active:bg-zinc-800/70"
+      className="mb-2 mx-2 bg-muted-darken active:opacity-90 overflow-hidden rounded-lg flex-row"
     >
       <FastImage source={{ uri: item.cover.default }} style={{ width: 120, height: 160 }} />
       <View className="p-2 flex-1 relative">
-        <Text className="text-zinc-300 font-medium text-base">{item.name}</Text>
-        <Text className="text-white/50 font-medium text-sm" numberOfLines={4}>
+        <Text className="text-primary font-medium text-base">{item.eng_name ?? item.name}</Text>
+        <Text className="text-muted font-medium text-sm" numberOfLines={4}>
           {item.summary}
         </Text>
         <View className="mt-auto pointer-events-none">

@@ -70,6 +70,7 @@ export const AnimePlayer = () => {
                 }
               }}
               variant="ghost"
+              textClassName="text-white"
               className="bg-orange-500 active:bg-orange-500"
               size="sm"
             >
@@ -80,24 +81,23 @@ export const AnimePlayer = () => {
         <VideoView
           player={player}
           style={{
-            width,
-            height: width / 1.77777,
+            width: width - 12,
+            height: (width - 16) / 1.77777,
           }}
         />
       </Animated.View>
       {!isLoaded && (
         <Animated.View
           exiting={FadeOut}
-          className="bg-zinc-800 absolute top-0 left-0 items-center justify-center"
+          className="bg-muted absolute top-0 left-0 items-center justify-center"
           style={{
             width,
             height: width / 1.77777,
           }}
         >
           {data && data?.source && <ActivityIndicator color="gray" />}
-
           {data && !data?.source && (
-            <Text className="text-zinc-200 font-medium text-sm">Can't play this type of media</Text>
+            <Text className="text-muted font-medium text-sm">Can't play this type of media</Text>
           )}
         </Animated.View>
       )}
