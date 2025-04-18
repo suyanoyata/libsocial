@@ -57,7 +57,21 @@ export const DownloadChapterButton = ({
       const folder = await handleFolderCreate(slug_url, folderName, total);
 
       if (folder == "exists") {
-        return "This chapter is already downloaded";
+        const downloadResponse = await FileSystem.readDirectoryAsync(
+          `${FileSystem.documentDirectory}${slug_url}/${folderName}`
+        );
+
+        add(title, {
+          ...chapterData,
+          pages: downloadResponse.sort().map((url, index) => ({
+            url,
+            ratio: chapterData.pages[index].ratio,
+          })),
+        });
+
+        return {
+          message: "This chapter is already downloaded",
+        };
       }
 
       let completed = 0;
@@ -103,7 +117,7 @@ export const DownloadChapterButton = ({
 
   const downloadChapter = () => {
     const toastId = toast.promise(mutateAsync(), {
-      loading: `Downloading...`,
+      loading: `Download requested...`,
       success: (data) => {
         if (data?.message) {
           return data.message;
@@ -113,8 +127,12 @@ export const DownloadChapterButton = ({
 
         return `Volume ${data.chapter.volume} Chapter ${data.chapter.number} has been downloaded`;
       },
-      error: () => {
+      error: (e) => {
         bottom.value = withTiming(-3, { duration: 500 });
+
+        if (__DEV__) {
+          console.log(e);
+        }
 
         return `Something went wrong, try again later`;
       },
