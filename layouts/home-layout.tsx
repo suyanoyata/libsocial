@@ -22,13 +22,14 @@ export const HomeLayout = ({ children }: { children?: React.ReactNode }) => {
   return (
     <View className="flex-1">
       <View
-        style={{ paddingTop: top + 8, paddingBottom: 16 }}
+        style={{ paddingTop: top + 4, paddingBottom: 16 }}
         className="bg-accent-darken relative"
       >
         <View className="bg-accent px-4 py-2 h-10 items-center flex-row font-medium rounded-md mx-2 z-10">
           <TextInput
             editable={false}
             placeholder="Search..."
+            placeholderTextColor="#a1a1aa"
             className="placeholder:text-muted font-medium flex-1 pl-5"
           />
           <Search className="text-muted absolute left-1.5" size={20} />

@@ -16,7 +16,7 @@ export const ReaderHeader = ({ chapter, title }: { chapter: ReaderChapter; title
 
   return (
     <View
-      style={{ paddingTop: top + 8, paddingBottom: 8 }}
+      style={{ paddingTop: top, paddingBottom: 8 }}
       className="px-3 flex-row items-center gap-2 bg-primary"
     >
       <ChevronLeft onPress={() => router.back()} size={24} strokeWidth={3} color="#a1a1aa" />

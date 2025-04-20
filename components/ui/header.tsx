@@ -1,6 +1,6 @@
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { View } from "react-native";
+import { Platform, View } from "react-native";
 import { Text } from "@/components/ui/text";
 
 import { BottomTabHeaderProps } from "@react-navigation/bottom-tabs/src/types";
@@ -14,14 +14,17 @@ export const Header = (props: Options) => {
 
   return (
     <View
-      style={{ paddingTop: top - 8 }}
+      style={{ paddingTop: Platform.select({ ios: 8, android: top - 8 }) }}
       className="relative items-center justify-center flex-row mx-3"
     >
       <Text className="font-bold text-secondary text-center text-lg">
         {props.options.title ?? props.route.name}
       </Text>
       {props.headerRight && (
-        <View style={{ paddingTop: top - 8 }} className="absolute right-3">
+        <View
+          style={{ paddingTop: Platform.select({ ios: 8, android: top - 8 }) }}
+          className="absolute right-3"
+        >
           {props.headerRight}
         </View>
       )}

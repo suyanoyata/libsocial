@@ -21,7 +21,7 @@ export const BackButton = ({ position = "absolute", ...props }: BackButtonProps)
   const marginTop = () => {
     if (position == "static") return 0;
 
-    if (Platform.OS == "ios") return top;
+    if (Platform.OS == "ios") return top - 2;
 
     return 10;
   };
