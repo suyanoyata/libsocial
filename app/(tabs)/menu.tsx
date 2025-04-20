@@ -22,6 +22,7 @@ export default function Menu() {
         Clear network caches
       </ActionMenuOption>
       <ActionMenuOption
+        platform="ios"
         note={!RNFlipboardFlex ? "FLEXTool is unavailable." : undefined}
         disabled={!RNFlipboardFlex}
         actionText="Open"
@@ -30,7 +31,7 @@ export default function Menu() {
       >
         Open FLEXTool
       </ActionMenuOption>
-      <Text className="text-zinc-700 text-center">
+      <Text className="text-muted text-sm text-center mt-4">
         client version: {process.env.EXPO_PUBLIC_VERSION}
       </Text>
     </SafeAreaView>

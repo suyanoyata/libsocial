@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 
-import { View } from "react-native";
+import { Platform, View } from "react-native";
 
 export const ActionMenuOption = ({
   disabled,
@@ -10,6 +10,7 @@ export const ActionMenuOption = ({
   actionText,
   action,
   buttonVariant,
+  platform,
   debugOnly = false,
 }: {
   disabled?: boolean;
@@ -17,9 +18,12 @@ export const ActionMenuOption = ({
   note?: string;
   actionText: string;
   action: () => void;
+  platform?: "ios" | "android";
   buttonVariant?: "destructive";
   debugOnly?: boolean;
 }) => {
+  if (platform !== undefined && platform !== Platform.OS) return null;
+
   if (!__DEV__ && debugOnly) return null;
   return (
     <View>
