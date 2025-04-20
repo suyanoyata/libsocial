@@ -4,7 +4,7 @@ import { ReaderChapterNavigation } from "@/features/manga-reader/components/read
 import { ReaderHeader } from "@/features/manga-reader/components/reader-header";
 
 import { useRoute } from "@react-navigation/native";
-import { ActivityIndicator, FlatList, useWindowDimensions, View } from "react-native";
+import { FlatList, useWindowDimensions, View } from "react-native";
 
 import { useReadingTracker } from "@/store/use-reading-tracker";
 
@@ -30,6 +30,7 @@ import { SearchX } from "lucide-react-native";
 import { useQueryClient } from "@tanstack/react-query";
 import { useDeferredRender } from "@/hooks/use-deferred-render";
 import { useReaderScrollTo } from "@/features/manga-reader/hooks/use-reader-scroll-to";
+import { ActivityIndicator } from "@/components/ui/activity-indicator";
 
 export const MangaReaderUI = () => {
   const route = useRoute();
@@ -154,8 +155,8 @@ export const MangaReaderUI = () => {
     return (
       <View className="flex-1 items-center justify-center">
         <BackButton />
-        <ActivityIndicator size="small" color="white" />
-        <Text className="text-zinc-200 mt-2">Chapter is downloading, hang on...</Text>
+        <ActivityIndicator />
+        {__DEV__ && <Text className="text-zinc-200 mt-2">Chapter is downloading, hang on...</Text>}
       </View>
     );
   }

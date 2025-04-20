@@ -3,7 +3,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 
-import { ActivityIndicator, ImageBackground, Platform, ScrollView, View } from "react-native";
+import { ImageBackground, Platform, ScrollView, View } from "react-native";
 import FastImage from "@d11/react-native-fast-image";
 import { BlurView } from "expo-blur";
 
@@ -16,6 +16,7 @@ import { titleInfoRouteSchema } from "@/features/title/types/title-info-route";
 import withBubble from "@/components/ui/withBubble";
 import { Unplug } from "lucide-react-native";
 import { BackButton } from "@/components/ui/back-button";
+import { ActivityIndicator } from "@/components/ui/activity-indicator";
 
 export default function TitleInfo() {
   const router = useRoute();

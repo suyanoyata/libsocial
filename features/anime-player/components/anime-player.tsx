@@ -1,6 +1,6 @@
 import { useEpisodesAPI } from "@/features/title/api/use-episodes-api";
 
-import { ActivityIndicator, useWindowDimensions, View } from "react-native";
+import { useWindowDimensions, View } from "react-native";
 import { useEffect, useState } from "react";
 
 import { useVideoPlayer, VideoView } from "expo-video";
@@ -11,6 +11,7 @@ import Animated, { FadeIn, FadeInDown, FadeOut, FadeOutDown } from "react-native
 import { Text } from "@/components/ui/text";
 import { useEventListener } from "expo";
 import { Button } from "@/components/ui/button";
+import { ActivityIndicator } from "@/components/ui/activity-indicator";
 
 export const AnimePlayer = () => {
   const { width } = useWindowDimensions();
@@ -95,7 +96,7 @@ export const AnimePlayer = () => {
             height: width / 1.77777,
           }}
         >
-          {data && data?.source && <ActivityIndicator color="gray" />}
+          {data && data?.source && <ActivityIndicator />}
           {data && !data?.source && (
             <Text className="text-muted font-medium text-sm">Can't play this type of media</Text>
           )}

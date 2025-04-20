@@ -1,6 +1,6 @@
 import { Download } from "lucide-react-native";
 
-import { ActivityIndicator, Pressable } from "react-native";
+import { Pressable } from "react-native";
 
 import { toast } from "sonner-native";
 
@@ -17,6 +17,7 @@ import Animated, { useSharedValue, useAnimatedStyle, withTiming } from "react-na
 import { useState } from "react";
 import { getTitleWithChapters } from "@/features/downloads/api/get-title-with-chapters";
 import { handleFolderCreate } from "@/features/downloads/lib/handle-folder-create";
+import { ActivityIndicator } from "@/components/ui/activity-indicator";
 
 export const DownloadChapterButton = ({
   slug_url,
@@ -151,7 +152,7 @@ export const DownloadChapterButton = ({
         onPress={() => downloadChapter()}
       >
         {isPending ? (
-          <ActivityIndicator size="small" className="scale-90" />
+          <ActivityIndicator />
         ) : (
           <Download
             className={cn(!isChapterDownloaded ? "text-zinc-600" : "text-orange-400")}

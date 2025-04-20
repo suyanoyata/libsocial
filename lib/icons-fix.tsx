@@ -13,6 +13,7 @@ import {
   Trash2,
   Cog,
   ChevronLeft,
+  Loader,
 } from "lucide-react-native";
 import { cssInterop } from "nativewind";
 
@@ -45,4 +46,5 @@ export const iconFix = () =>
     Trash2,
     ChevronLeft,
     Cog,
+    Loader,
   ]);

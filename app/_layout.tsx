@@ -26,12 +26,14 @@ import { clientPersister } from "@/lib/persistent-query-storage";
 import { iconFix } from "@/lib/icons-fix";
 
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { setBackgroundColorAsync } from "expo-system-ui";
+// import { setBackgroundColorAsync } from "expo-system-ui";
 
 import { useSyncQueries } from "tanstack-query-dev-tools-expo-plugin";
 
 import { Toaster } from "sonner-native";
 import { BackButton } from "@/components/ui/back-button";
+
+import { StatusBar } from "expo-status-bar";
 
 enableFreeze();
 enableScreens();
@@ -70,7 +72,7 @@ const config = createTamagui({
 
 iconFix();
 
-setBackgroundColorAsync("black");
+// setBackgroundColorAsync("black");
 
 SplashScreen.preventAutoHideAsync();
 
@@ -167,6 +169,7 @@ export default function RootLayout() {
         visibleToasts={1}
         duration={1500}
       />
+      <StatusBar />
     </GestureHandlerRootView>
   );
 }

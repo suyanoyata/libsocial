@@ -1,3 +1,4 @@
+import { ActivityIndicator } from "@/components/ui/activity-indicator";
 import { Text } from "@/components/ui/text";
 import withBubble from "@/components/ui/withBubble";
 import { AnimeEpisodeSwitcher } from "@/features/anime-player/components/anime-episode-switcher";
@@ -14,7 +15,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Unplug } from "lucide-react-native";
 import { useEffect, useMemo } from "react";
 
-import { ActivityIndicator, SafeAreaView, View } from "react-native";
+import { SafeAreaView, View } from "react-native";
 
 export const AnimeWatchView = () => {
   const route = useRoute();
