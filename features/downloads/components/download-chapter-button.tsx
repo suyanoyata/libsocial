@@ -18,6 +18,7 @@ import { useState } from "react";
 import { getTitleWithChapters } from "@/features/downloads/api/get-title-with-chapters";
 import { handleFolderCreate } from "@/features/downloads/lib/handle-folder-create";
 import { ActivityIndicator } from "@/components/ui/activity-indicator";
+import { notificationAsync, NotificationFeedbackType } from "expo-haptics";
 
 export const DownloadChapterButton = ({
   slug_url,
@@ -126,6 +127,8 @@ export const DownloadChapterButton = ({
 
         bottom.value = withTiming(-3, { duration: 500 });
 
+        notificationAsync(NotificationFeedbackType.Success);
+
         return `Volume ${data.chapter.volume} Chapter ${data.chapter.number} has been downloaded`;
       },
       error: (e) => {
@@ -134,6 +137,8 @@ export const DownloadChapterButton = ({
         if (__DEV__) {
           console.log(e);
         }
+
+        notificationAsync(NotificationFeedbackType.Error);
 
         return `Something went wrong, try again later`;
       },
@@ -149,7 +154,7 @@ export const DownloadChapterButton = ({
       <Pressable
         disabled={isPending || isChapterDownloaded}
         className="ml-auto"
-        onPress={() => downloadChapter()}
+        onPress={downloadChapter}
       >
         {isPending ? (
           <ActivityIndicator />

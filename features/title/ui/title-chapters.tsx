@@ -5,9 +5,11 @@ import { useChapters } from "@/features/title/api/use-chapters";
 import { useMemo, useState } from "react";
 
 import { Chapter as ChapterType } from "@/features/shared/types/chapter";
+import { ActivityIndicator } from "@/components/ui/activity-indicator";
+import { View } from "react-native";
 
 export const TitleChapters = ({ slug_url, site }: { slug_url: string; site: number }) => {
-  const { data } = useChapters(slug_url, site);
+  const { data, isPending } = useChapters(slug_url, site);
 
   const [descending, setDescending] = useState(false);
 
@@ -21,7 +23,15 @@ export const TitleChapters = ({ slug_url, site }: { slug_url: string; site: numb
 
   const keyExtractor = (item: ChapterType) => item.id.toString();
 
-  if (String(site) == "5" || !data) return null;
+  if (String(site) == "5") return null;
+
+  if (!data && isPending) {
+    return (
+      <View className="items-center justify-center flex-1">
+        <ActivityIndicator />
+      </View>
+    );
+  }
 
   return (
     <ContentCollectionView

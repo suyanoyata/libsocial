@@ -49,7 +49,7 @@ export const QuickSearchUI = () => {
         >
           <SearchIcon />
           <Text className="text-muted mt-2">
-            No results found for <Text className="text-secondary">"{search}"</Text>
+            No results found for <Text className="text-secondary">"{search.trim()}"</Text>
           </Text>
         </FadeView>
       )}

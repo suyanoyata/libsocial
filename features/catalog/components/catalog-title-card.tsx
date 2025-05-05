@@ -30,8 +30,8 @@ export const CatalogTitleCard = memo(
       >
         <TransitionedImage
           source={{ uri: title.cover.default }}
-          height={catalogImageWidth * 1.36}
-          width={catalogImageWidth - 15}
+          height={(catalogImageWidth + 10) * 1.36}
+          width={catalogImageWidth - 14}
           recycleId={title.id}
         />
         <Text className="text-sm font-medium text-primary mt-0.5" numberOfLines={2}>

@@ -25,6 +25,7 @@ export const TitleAbout = ({ data }: { data: Title }) => {
       className="mt-2"
     >
       <Button
+        disabled={data?.isLicensed}
         onPress={() => {
           router.push({
             pathname: "/(modals)/title-contents",
@@ -35,10 +36,10 @@ export const TitleAbout = ({ data }: { data: Title }) => {
           });
         }}
         iconLeft={<Icon size={18} color="white" fill="white" />}
-        className="bg-orange-500 active:bg-orange-400 mb-3"
+        className="bg-orange-500 active:bg-orange-400 mb-3 disabled:opacity-60 disabled:bg-red-500"
         textClassName="text-white font-medium"
       >
-        {text}
+        {data?.isLicensed ? "Sorry, this content is licensed" : text}
       </Button>
       <TitleSummary>{data.summary}</TitleSummary>
       <Genres genres={data.genres} />

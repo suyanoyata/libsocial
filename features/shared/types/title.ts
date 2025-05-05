@@ -15,6 +15,7 @@ export type BaseTitle = {
   model: string;
   genres: Genre[];
   summary: string;
+  isLicensed?: boolean;
 };
 
 export type Genre = {

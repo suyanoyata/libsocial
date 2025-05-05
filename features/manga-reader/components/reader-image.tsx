@@ -1,7 +1,7 @@
 import { useProperties } from "@/store/use-properties";
 import { memo, useState } from "react";
 
-import { useWindowDimensions, View } from "react-native";
+import { useWindowDimensions } from "react-native";
 
 import FastImage from "@d11/react-native-fast-image";
 

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 import { useVideoPlayer, VideoView } from "expo-video";
 import { useAnimeStore } from "@/features/anime-player/context/anime-context";
+
 import { useEpisode } from "@/features/anime-player/api/use-episode";
 
 import Animated, { FadeIn, FadeInDown, FadeOut, FadeOutDown } from "react-native-reanimated";
@@ -96,8 +97,11 @@ export const AnimePlayer = () => {
             height: width / 1.77777,
           }}
         >
-          {data && data?.source && <ActivityIndicator />}
-          {data && !data?.source && (
+          {player.status == "loading" && <ActivityIndicator />}
+          {player.status == "error" && data && !data.source && (
+            <Text className="text-muted font-medium text-sm">Can't find this upload</Text>
+          )}
+          {data && data.source && player.status == "error" && (
             <Text className="text-muted font-medium text-sm">Can't play this type of media</Text>
           )}
         </Animated.View>

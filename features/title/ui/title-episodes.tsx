@@ -5,9 +5,11 @@ import { useEpisodesAPI } from "@/features/title/api/use-episodes-api";
 import { useMemo, useState } from "react";
 
 import { TitleEpisodeBase } from "@/features/title/types/title-episodes-response";
+import { View } from "react-native";
+import { ActivityIndicator } from "@/components/ui/activity-indicator";
 
 export const TitleEpisodes = ({ slug_url, site }: { slug_url: string; site: number }) => {
-  const { data } = useEpisodesAPI(slug_url);
+  const { data, isPending } = useEpisodesAPI(slug_url);
 
   const [descending, setDescending] = useState(false);
 
@@ -21,7 +23,13 @@ export const TitleEpisodes = ({ slug_url, site }: { slug_url: string; site: numb
     <Episode slug_url={slug_url} episode={item} index={item.item_number} />
   );
 
-  if (!data) return null;
+  if (!data && isPending) {
+    return (
+      <View className="items-center justify-center flex-1">
+        <ActivityIndicator />
+      </View>
+    );
+  }
 
   return (
     <ContentCollectionView

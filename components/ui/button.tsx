@@ -6,10 +6,11 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn, withImpact } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "p-2.5 px-4 rounded-lg items-center justify-center shadow-sm flex-row gap-1",
+  "p-2.5 px-4 rounded-lg items-center justify-center dark:shadow-sm flex-row gap-1",
   {
     variants: {
       variant: {
+        accent: "bg-orange-400 active:bg-orange-400/80 dark:bg-orange-500 active:bg-orange-500/80",
         default: "bg-white dark:shadow active:bg-white/80",
         ghost:
           "bg-transparent active:bg-zinc-100/80 dark:active:bg-zinc-800/80 shadow-none dark:shadow-sm active:bg-zinc-200",
@@ -30,6 +31,7 @@ const buttonVariants = cva(
 const textVariants = cva("text-black", {
   variants: {
     variant: {
+      accent: "text-white",
       default: "text-black",
       ghost: "text-secondary font-medium",
       destructive: "text-white",

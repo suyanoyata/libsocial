@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { Slider } from "@tamagui/slider";
 import { useColorScheme, View } from "react-native";
 
-import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
+import { selectionAsync } from "expo-haptics";
 
 export default function ReaderProperties() {
   const {
@@ -27,10 +27,6 @@ export default function ReaderProperties() {
     setReaderImagePadding(throttlePadding);
   }, [throttlePadding]);
 
-  useEffect(() => {
-    impactAsync(ImpactFeedbackStyle.Soft);
-  }, [padding]);
-
   const isDark = useColorScheme() === "dark";
 
   const styles = {
@@ -43,7 +39,10 @@ export default function ReaderProperties() {
       <Text className="text-secondary mt-2">Distance between images: {padding}px</Text>
       <Slider
         value={[padding]}
-        onValueChange={(value) => setPadding(value[0])}
+        onValueChange={(value) => {
+          selectionAsync();
+          setPadding(value[0]);
+        }}
         style={{ marginVertical: 1 * 8 }}
         defaultValue={[0]}
         max={15}

@@ -11,10 +11,12 @@ import { defaultConfig } from "@tamagui/config/v4";
 
 import { useFonts } from "expo-font";
 import {
+  setUpdateURLAndRequestHeadersOverride,
   addUpdatesStateChangeListener,
   checkForUpdateAsync,
   fetchUpdateAsync,
   reloadAsync,
+  isEnabled,
 } from "expo-updates";
 import { useCallback, useEffect, useState } from "react";
 
@@ -26,7 +28,6 @@ import { clientPersister } from "@/lib/persistent-query-storage";
 import { iconFix } from "@/lib/icons-fix";
 
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-// import { setBackgroundColorAsync } from "expo-system-ui";
 
 import { useSyncQueries } from "tanstack-query-dev-tools-expo-plugin";
 
@@ -34,6 +35,16 @@ import { Toaster } from "sonner-native";
 import { BackButton } from "@/components/ui/back-button";
 
 import { StatusBar } from "expo-status-bar";
+
+if (isEnabled) {
+  setUpdateURLAndRequestHeadersOverride({
+    updateUrl: "https://u.expo.dev/531f523a-eb44-4472-9cf4-fa2e3db53424",
+    requestHeaders: {
+      "expo-channel-name": "production",
+      "expo-platform": "ios",
+    },
+  });
+}
 
 enableFreeze();
 enableScreens();
@@ -71,8 +82,6 @@ const config = createTamagui({
 });
 
 iconFix();
-
-// setBackgroundColorAsync("black");
 
 SplashScreen.preventAutoHideAsync();
 

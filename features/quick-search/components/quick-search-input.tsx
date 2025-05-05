@@ -24,8 +24,8 @@ export const QuickSearchInput = ({
         className="bg-muted-darken px-2 py-2.5 mt-2 rounded-md placeholder:text-secondary text-secondary font-medium"
         placeholder="Start searching..."
         value={search}
-        onEndEditing={() => addToHistory(search)}
-        onChangeText={(value) => setSearch(value)}
+        onEndEditing={() => addToHistory(search.trim())}
+        onChangeText={setSearch}
       />
       <ScrollView
         horizontal

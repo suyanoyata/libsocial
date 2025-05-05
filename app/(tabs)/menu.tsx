@@ -31,7 +31,7 @@ export default function Menu() {
       >
         Open FLEXTool
       </ActionMenuOption>
-      <Text className="text-muted text-sm text-center mt-4">
+      <Text className="text-muted text-center mt-4">
         client version: {process.env.EXPO_PUBLIC_VERSION}
       </Text>
     </SafeAreaView>

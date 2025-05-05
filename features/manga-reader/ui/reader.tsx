@@ -72,7 +72,7 @@ export const MangaReaderUI = () => {
   );
 
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout | null = null;
+    let timeoutId: NodeJS.Timeout | number | null = null;
 
     if (isError) return;
 
@@ -165,7 +165,7 @@ export const MangaReaderUI = () => {
     return (
       <View className="flex-1 items-center justify-center">
         <BackButton />
-        <ActivityIndicator size="small" color="white" />
+        <ActivityIndicator />
       </View>
     );
   }

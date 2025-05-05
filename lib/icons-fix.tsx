@@ -14,6 +14,8 @@ import {
   Cog,
   ChevronLeft,
   Loader,
+  ChevronRight,
+  Plus,
 } from "lucide-react-native";
 import { cssInterop } from "nativewind";
 
@@ -33,6 +35,7 @@ export function interopIcons(icons: LucideIcon[]) {
 
 export const iconFix = () =>
   interopIcons([
+    Plus,
     X,
     Eye,
     EyeOff,
@@ -45,6 +48,7 @@ export const iconFix = () =>
     Download,
     Trash2,
     ChevronLeft,
+    ChevronRight,
     Cog,
     Loader,
   ]);

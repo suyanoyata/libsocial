@@ -7,6 +7,7 @@ import { router } from "expo-router";
 import { Button } from "@/components/ui/button";
 
 import { Chapter } from "@/features/shared/types/chapter";
+import { ChevronLeft, ChevronRight } from "lucide-react-native";
 
 export const ReaderChapterNavigation = ({
   chapters,
@@ -28,6 +29,8 @@ export const ReaderChapterNavigation = ({
     <View className="flex-row m-2 gap-2" style={{ paddingBottom: bottom }}>
       {previousChapter && (
         <Button
+          iconLeft={<ChevronLeft strokeWidth={3} size={18} className="text-white" />}
+          variant="accent"
           onPress={() =>
             router.replace({
               pathname: "/manga-reader",
@@ -44,6 +47,8 @@ export const ReaderChapterNavigation = ({
       )}
       {nextChapter && (
         <Button
+          iconRight={<ChevronRight strokeWidth={3} size={18} className="text-white" />}
+          variant="accent"
           onPress={() =>
             router.replace({
               pathname: "/manga-reader",
