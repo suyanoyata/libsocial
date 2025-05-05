@@ -5,7 +5,6 @@ import { TitleRelationsCard } from "@/features/title/components/title-relations-
 import { TitleRelationsPlaceholder } from "@/features/title/components/title-relations-placeholder";
 
 import {
-  RelationsData,
   RelationsResponse,
   TitleRelationsProps,
 } from "@/features/title/types/title-relations-type";
@@ -17,6 +16,7 @@ import { useMemo } from "react";
 
 import { FlatList, View } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import { AddRelationsButton } from "@/features/title/components/title-add-relations";
 
 export const TitleRelations = ({ label, slug_url, endpoint }: TitleRelationsProps) => {
   const { data, isPending } = useQuery<RelationsResponse>({
@@ -24,26 +24,16 @@ export const TitleRelations = ({ label, slug_url, endpoint }: TitleRelationsProp
     queryFn: async () => (await api.get(`/manga/${slug_url}/${endpoint}`)).data.data,
   });
 
-  const relationData = useMemo<RelationsData[]>(() => {
-    if (!data) return [];
-    return data.map((item) => ({
-      cover: item.media.cover.md,
-      reason: endpoint == "relations" ? item.related_type.label : item.similar,
-      title: item.media.eng_name != "" ? item.media.eng_name : item.media.name,
-      slug_url: item.media.slug_url,
-      type: item.media.type.label,
-      status: item.media.status.label,
-      site: item.media.site.toString(),
-    }));
-  }, [data]);
-
   if ((!isPending && !data) || (data && data.length == 0)) return null;
 
   return (
-    <Animated.View className="my-2 relative h-[185px]">
-      <Text className="text-zinc-300 text-2xl font-bold mb-2">{label}</Text>
+    <Animated.View entering={FadeIn} exiting={FadeOut} className="my-2 relative h-[185px]">
+      <View className="flex items-center justify-between flex-row mb-2">
+        <Text className="text-secondary text-2xl font-bold">{label}</Text>
+        <AddRelationsButton />
+      </View>
       <View>
-        {relationData.length == 0 ? (
+        {data?.length == 0 ? (
           <PulseView className="absolute left-0 top-0 z-30" exiting={FadeOut}>
             <FlatList
               horizontal
@@ -60,7 +50,7 @@ export const TitleRelations = ({ label, slug_url, endpoint }: TitleRelationsProp
               horizontal
               showsHorizontalScrollIndicator={false}
               contentContainerClassName="gap-4 overflow-hidden rounded-lg"
-              data={relationData}
+              data={data}
               renderItem={({ item }) => <TitleRelationsCard item={item} />}
             />
           </Animated.View>

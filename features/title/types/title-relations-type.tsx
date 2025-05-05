@@ -5,34 +5,22 @@ export type TitleRelationsProps = {
 };
 
 export type RelationsData = {
-  cover: string;
   reason: string;
-  title: string;
-  slug_url: string;
-  type: string;
-  status: string;
-  site: string;
-};
-
-export type RelationsResponse = {
-  media: {
-    cover: {
-      md: string;
-      default: string;
-    };
+  relatedManga: {
+    id: number;
+    name: string;
     eng_name: string;
     slug_url: string;
-    name: string;
-    type: {
-      label: string;
-    };
-    status: {
-      label: string;
-    };
+    otherNames: string[];
+    summary: string;
+    model: string;
     site: number;
+    isLicensed: boolean;
+    cover: {
+      default: string;
+      thumbnail: string;
+    };
   };
-  related_type: {
-    label: string;
-  };
-  similar: string;
-}[];
+};
+
+export type RelationsResponse = RelationsData[];

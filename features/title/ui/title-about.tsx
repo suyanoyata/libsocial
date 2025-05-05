@@ -10,6 +10,7 @@ import { Genres } from "@/features/title/components/genres";
 import { TitleSummary } from "@/features/title/components/title-summary";
 
 import { Title } from "@/features/shared/types/title";
+import { TitleRelations } from "@/features/title/ui/title-relations";
 
 export const TitleAbout = ({ data }: { data: Title }) => {
   const { bottom } = useSafeAreaInsets();
@@ -43,8 +44,8 @@ export const TitleAbout = ({ data }: { data: Title }) => {
       </Button>
       <TitleSummary>{data.summary}</TitleSummary>
       <Genres genres={data.genres} />
-      {/* <TitleRelations label="Связанное" slug_url={data.slug_url} endpoint="relations" />
-      <TitleRelations label="Похожие" slug_url={data.slug_url} endpoint="similar" /> */}
+      <TitleRelations label="Related" slug_url={data.slug_url} endpoint="relations" />
+      {/* <TitleRelations label="Похожие" slug_url={data.slug_url} endpoint="similar" /> */}
     </View>
   );
 };
