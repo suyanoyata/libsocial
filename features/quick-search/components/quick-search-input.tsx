@@ -3,9 +3,8 @@ import { ScrollView, TextInput, View } from "react-native";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 
-import { X } from "lucide-react-native";
-
 import { useQuickSearchHistory } from "@/features/quick-search/hooks/use-quick-search-history";
+import { Icon } from "@/components/icon";
 
 export const QuickSearchInput = ({
   search,
@@ -43,7 +42,12 @@ export const QuickSearchInput = ({
             key={index}
             className="bg-muted-darken active:opacity-80"
             iconRight={
-              <X onPress={() => deleteFromHistory(item)} className="text-secondary" size={18} />
+              <Icon
+                name="X"
+                onPress={() => deleteFromHistory(item)}
+                className="text-secondary"
+                size={18}
+              />
             }
           >
             <Text className="text-secondary">{item}</Text>

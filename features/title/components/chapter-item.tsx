@@ -2,8 +2,6 @@ import { Pressable } from "react-native";
 import { Text } from "@/components/ui/text";
 import Animated, { BounceIn } from "react-native-reanimated";
 
-import { Bookmark, EyeIcon, EyeOff } from "lucide-react-native";
-
 import { DownloadChapterButton } from "@/features/downloads/components/download-chapter-button";
 
 import { router, useFocusEffect } from "expo-router";
@@ -18,6 +16,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import { Title } from "@/features/shared/types/title";
 import { Chapter as ChapterType } from "@/features/shared/types/chapter";
+import { Icon } from "@/components/icon";
 
 export const Chapter = memo(
   ({ slug_url, index, chapter }: { slug_url: string; index: number; chapter: ChapterType }) => {
@@ -77,7 +76,7 @@ export const Chapter = memo(
       );
     }, [read]);
 
-    const ReadIcon = useMemo(() => (read ? EyeIcon : EyeOff), [read]);
+    const ReadIcon = useMemo(() => (read ? "Eye" : "EyeOff"), [read]);
 
     return (
       <Pressable
@@ -110,10 +109,10 @@ export const Chapter = memo(
         >
           {isCurrentLastReadChapter ? (
             <Animated.View entering={BounceIn.duration(500)}>
-              <Bookmark size={20} className="text-red-500 fill-red-500" />
+              <Icon name="Bookmark" size={20} className="text-red-500 fill-red-500" />
             </Animated.View>
           ) : (
-            <ReadIcon strokeWidth={2.8} className="text-zinc-500" size={20} />
+            <Icon name={ReadIcon} strokeWidth={2.8} className="text-zinc-500" size={20} />
           )}
         </Pressable>
         <Text className="text-secondary font-medium">

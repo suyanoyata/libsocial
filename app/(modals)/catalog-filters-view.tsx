@@ -5,7 +5,6 @@ import { router } from "expo-router";
 
 import { useFilterStore } from "@/features/catalog/store/use-filter-store";
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { cn } from "@/lib/utils";
 
@@ -32,7 +31,7 @@ export default function CatalogFiltersView() {
         onPress={reset}
         className={cn("mt-auto", genres.length == 0 && "opacity-80 active:bg-red-500")}
         variant="destructive"
-        iconLeft={<Trash2 color="white" size={18} />}
+        iconLeft="Trash2"
       >
         Clear all
       </Button>

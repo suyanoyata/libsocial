@@ -1,5 +1,5 @@
+import { Icon } from "@/components/icon";
 import { useDownloads } from "@/features/downloads/store/use-downloads";
-import { Trash2 } from "lucide-react-native";
 import { Alert, Pressable } from "react-native";
 
 export const ClearDownloadedChapters = () => {
@@ -30,7 +30,7 @@ export const ClearDownloadedChapters = () => {
 
   return (
     <Pressable onPress={deleteEverything}>
-      <Trash2 className="text-secondary" />
+      <Icon name="Trash2" className="text-secondary" />
     </Pressable>
   );
 };

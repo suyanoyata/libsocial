@@ -8,7 +8,7 @@ import { Text } from "@/components/ui/text";
 
 import { LastReadItem, useReadingTracker } from "@/store/use-reading-tracker";
 
-import { X } from "lucide-react-native";
+import { Icon } from "@/components/icon";
 
 export const LastReadTitleCard = ({ item }: { item: LastReadItem }) => {
   const { removeItem } = useReadingTracker();
@@ -47,7 +47,7 @@ export const LastReadTitleCard = ({ item }: { item: LastReadItem }) => {
         hitSlop={8}
         className="absolute top-2 right-2 text-zinc-500 z-10"
       >
-        <X className="text-zinc-400" strokeWidth={2.2} size={20} />
+        <Icon name="X" className="text-zinc-400" strokeWidth={2.2} size={20} />
       </Pressable>
       <FastImage source={{ uri: item.cover.default }} style={{ width: 100, height: 140 }} />
       <View className="p-2 flex-1">

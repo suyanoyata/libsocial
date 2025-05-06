@@ -1,7 +1,7 @@
+import { Icon } from "@/components/icon";
 import { useHomeTitles } from "@/features/home/api/use-home-titles";
 import { withImpact } from "@/lib/utils";
 import { router } from "expo-router";
-import { Search } from "lucide-react-native";
 import {
   Pressable,
   RefreshControl,
@@ -32,7 +32,7 @@ export const HomeLayout = ({ children }: { children?: React.ReactNode }) => {
             placeholderTextColor="#a1a1aa"
             className="placeholder:text-muted font-medium flex-1 pl-5"
           />
-          <Search className="text-muted absolute left-1.5" size={20} />
+          <Icon name="Search" className="text-muted absolute left-1.5" size={20} />
         </View>
         <Pressable
           className="flex-1 absolute top-0 left-0 h-14 w-full z-30"

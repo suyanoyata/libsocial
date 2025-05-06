@@ -1,4 +1,4 @@
-import { Bookmark, EyeIcon, EyeOff } from "lucide-react-native";
+import { Icon } from "@/components/icon";
 import { toast } from "sonner-native";
 
 export const actionToast = (
@@ -7,7 +7,7 @@ export const actionToast = (
   description: string,
   isFinished: boolean
 ) => {
-  const ReadIcon = isFinished ? EyeOff : EyeIcon;
+  const ReadIcon = isFinished ? "EyeOff" : "Eye";
 
   if (type == "watch") {
     return toast.success(
@@ -24,9 +24,9 @@ export const actionToast = (
         },
         description,
         icon: indexBiggerThanSaved ? (
-          <Bookmark className="text-red-400 fill-red-400" />
+          <Icon name="Bookmark" className="text-red-400 fill-red-400" />
         ) : (
-          <ReadIcon className="text-zinc-400" strokeWidth={3} />
+          <Icon name={ReadIcon} className="text-zinc-400" strokeWidth={3} />
         ),
       }
     );
@@ -42,9 +42,9 @@ export const actionToast = (
       },
       description,
       icon: indexBiggerThanSaved ? (
-        <Bookmark className="text-red-400 fill-red-400" />
+        <Icon name="Bookmark" className="text-red-400 fill-red-400" />
       ) : (
-        <ReadIcon className="text-zinc-400" strokeWidth={3} />
+        <Icon name={ReadIcon} className="text-zinc-400" strokeWidth={3} />
       ),
     }
   );

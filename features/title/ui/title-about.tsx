@@ -11,6 +11,7 @@ import { TitleSummary } from "@/features/title/components/title-summary";
 
 import { Title } from "@/features/shared/types/title";
 import { TitleRelations } from "@/features/title/ui/title-relations";
+import { Icon } from "@/components/icon";
 
 export const TitleAbout = ({ data }: { data: Title }) => {
   const { bottom } = useSafeAreaInsets();
@@ -36,15 +37,25 @@ export const TitleAbout = ({ data }: { data: Title }) => {
             },
           });
         }}
-        iconLeft={<Icon size={18} color="white" fill="white" />}
-        className="bg-orange-500 active:bg-orange-400 mb-3 disabled:opacity-60 disabled:bg-red-500"
-        textClassName="text-white font-medium"
+        className="mb-3"
+        iconLeft={
+          <Icon
+            size={18}
+            className="dark:fill-violet-700 dark:text-violet-700 disabled:fill-red-400 disabled:dark:fill-red-700 text-white fill-white"
+          />
+        }
+        variant={data?.isLicensed ? "destructive" : "accent"}
       >
         {data?.isLicensed ? "Sorry, this content is licensed" : text}
       </Button>
       <TitleSummary>{data.summary}</TitleSummary>
       <Genres genres={data.genres} />
-      <TitleRelations label="Related" slug_url={data.slug_url} endpoint="relations" />
+      <TitleRelations
+        label="Related"
+        slug_url={data.slug_url}
+        endpoint="relations"
+        site={data.site}
+      />
       {/* <TitleRelations label="Похожие" slug_url={data.slug_url} endpoint="similar" /> */}
     </View>
   );

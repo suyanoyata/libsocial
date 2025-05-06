@@ -1,23 +1,10 @@
-import {
-  X,
-  LucideIcon,
-  Eye,
-  EyeOff,
-  Search,
-  Filter,
-  SortDesc,
-  SortAsc,
-  Bookmark,
-  Star,
-  Download,
-  Trash2,
-  Cog,
-  ChevronLeft,
-  Loader,
-  ChevronRight,
-  Plus,
-} from "lucide-react-native";
+import { Loader, LucideIcon, Unplug } from "lucide-react-native";
+
+import FontAwesomeIcon from "react-native-vector-icons/FontAwesome6";
+import FeatherIcon from "react-native-vector-icons/Feather";
+
 import { cssInterop } from "nativewind";
+import { Icon } from "@/components/icon";
 
 export function interopIcons(icons: LucideIcon[]) {
   icons.map((icon) =>
@@ -34,21 +21,4 @@ export function interopIcons(icons: LucideIcon[]) {
 }
 
 export const iconFix = () =>
-  interopIcons([
-    Plus,
-    X,
-    Eye,
-    EyeOff,
-    Search,
-    Filter,
-    SortDesc,
-    SortAsc,
-    Bookmark,
-    Star,
-    Download,
-    Trash2,
-    ChevronLeft,
-    ChevronRight,
-    Cog,
-    Loader,
-  ]);
+  interopIcons([Icon, Loader, Unplug, FontAwesomeIcon as any, FeatherIcon as any]);

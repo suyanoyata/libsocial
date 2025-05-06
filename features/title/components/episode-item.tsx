@@ -1,7 +1,6 @@
 import { Pressable } from "react-native";
 
 import { Text } from "@/components/ui/text";
-import { Bookmark, EyeIcon, EyeOff } from "lucide-react-native";
 
 import { memo, useCallback, useLayoutEffect, useMemo, useState, useTransition } from "react";
 import { router, useFocusEffect } from "expo-router";
@@ -14,6 +13,7 @@ import { TitleEpisodeBase } from "@/features/title/types/title-episodes-response
 import { withImpact } from "@/lib/utils";
 import { actionToast } from "@/features/title/lib/action-toast";
 import Animated, { BounceIn } from "react-native-reanimated";
+import { Icon } from "@/components/icon";
 
 export const Episode = memo(
   ({
@@ -30,7 +30,7 @@ export const Episode = memo(
     const { add, isEpisodeExists, removeEpisode, get } = useWatchTracker();
 
     const [watch, setWatch] = useState(isEpisodeExists(slug_url, index));
-    const WatchIcon = !watch ? EyeOff : EyeIcon;
+    const WatchIcon = !watch ? "EyeOff" : "Eye";
 
     const [isPending, startTransition] = useTransition();
 
@@ -93,10 +93,10 @@ export const Episode = memo(
         >
           {isLastWatchedEpisode ? (
             <Animated.View entering={BounceIn.duration(500)}>
-              <Bookmark size={20} className="text-red-500 fill-red-500" />
+              <Icon name="Bookmark" size={20} className="text-red-500 fill-red-500" />
             </Animated.View>
           ) : (
-            <WatchIcon strokeWidth={2.8} className="text-zinc-500" size={20} />
+            <Icon name={WatchIcon} strokeWidth={2.8} className="text-zinc-500" size={20} />
           )}
         </Pressable>
         <Text className="text-secondary font-medium">Episode {episode.number}</Text>

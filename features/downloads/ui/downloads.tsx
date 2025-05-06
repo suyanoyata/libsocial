@@ -8,7 +8,7 @@ import { Text } from "@/components/ui/text";
 import { useDownloads } from "@/features/downloads/store/use-downloads";
 
 import { DownloadCard } from "@/features/downloads/components/download-card";
-import { Download } from "lucide-react-native";
+import { Icon } from "@/components/icon";
 
 export default function Downloads() {
   const { push } = useRouter();
@@ -30,7 +30,7 @@ export default function Downloads() {
           You don't have any downloaded chapters. To download them go to any manga chapters and
           press on{" "}
           <View className="h-4">
-            <Download className="text-secondary" size={20} strokeWidth={3} />
+            <Icon name="Download" className="text-secondary" size={20} strokeWidth={3} />
           </View>{" "}
           icon.
         </Text>
