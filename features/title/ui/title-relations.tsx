@@ -18,19 +18,17 @@ import { FlatList, View } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import { AddRelationsButton } from "@/features/title/components/title-add-relations";
 
-export const TitleRelations = ({ label, slug_url, endpoint }: TitleRelationsProps) => {
+export const TitleRelations = ({ label, slug_url, endpoint, site }: TitleRelationsProps) => {
   const { data, isPending } = useQuery<RelationsResponse>({
     queryKey: [`title-${endpoint}`, slug_url],
     queryFn: async () => (await api.get(`/manga/${slug_url}/${endpoint}`)).data.data,
   });
 
-  if ((!isPending && !data) || (data && data.length == 0)) return null;
-
   return (
     <Animated.View entering={FadeIn} exiting={FadeOut} className="my-2 relative h-[185px]">
       <View className="flex items-center justify-between flex-row mb-2">
         <Text className="text-secondary text-2xl font-bold">{label}</Text>
-        <AddRelationsButton />
+        <AddRelationsButton slug_url={slug_url} site={site} />
       </View>
       <View>
         {data?.length == 0 ? (

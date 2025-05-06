@@ -35,6 +35,7 @@ import { Toaster } from "sonner-native";
 import { BackButton } from "@/components/ui/back-button";
 
 import { StatusBar } from "expo-status-bar";
+import { ApiAuthenticationProvider } from "@/features/auth/provider/api-authentication-provider";
 
 if (isEnabled) {
   setUpdateURLAndRequestHeadersOverride({
@@ -147,26 +148,28 @@ export default function RootLayout() {
         <View className="bg-primary flex-1">
           <TamaguiProvider config={config}>
             <ThemeProvider value={isDark ? DarkTheme : DefaultTheme}>
-              <Stack
-                screenOptions={{
-                  headerShown: true,
-                  header: () => <BackButton />,
-                }}
-              >
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen
-                  options={{ presentation: "modal", headerShown: false }}
-                  name="(modals)"
-                />
-                <Stack.Screen
-                  name="title-info"
-                  options={{
-                    headerShown: false,
+              <ApiAuthenticationProvider>
+                <Stack
+                  screenOptions={{
+                    headerShown: true,
+                    header: () => <BackButton />,
                   }}
-                />
-                <Stack.Screen name="manga-reader" options={{ headerShown: false }} />
-                <Stack.Screen name="downloaded-reader" options={{ headerShown: false }} />
-              </Stack>
+                >
+                  <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                  <Stack.Screen
+                    options={{ presentation: "modal", headerShown: false }}
+                    name="(modals)"
+                  />
+                  <Stack.Screen
+                    name="title-info"
+                    options={{
+                      headerShown: false,
+                    }}
+                  />
+                  <Stack.Screen name="manga-reader" options={{ headerShown: false }} />
+                  <Stack.Screen name="downloaded-reader" options={{ headerShown: false }} />
+                </Stack>
+              </ApiAuthenticationProvider>
             </ThemeProvider>
           </TamaguiProvider>
         </View>
