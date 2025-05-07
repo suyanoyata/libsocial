@@ -1,24 +1,24 @@
-import { useProperties } from "@/store/use-properties";
-import { memo, useState } from "react";
+import { useProperties } from "@/store/use-properties"
+import { memo, useState } from "react"
 
-import { useWindowDimensions } from "react-native";
+import { useWindowDimensions } from "react-native"
 
-import FastImage from "@d11/react-native-fast-image";
+import FastImage from "@d11/react-native-fast-image"
 
-import { Zoomable } from "@likashefqet/react-native-image-zoom";
+import { Zoomable } from "@likashefqet/react-native-image-zoom"
 
 type ReaderImageProps = {
-  url: string;
-  ratio: number;
-};
+  url: string
+  ratio: number
+}
 
 export const ReaderImage = memo(
   ({ url, ratio }: ReaderImageProps) => {
-    const { width } = useWindowDimensions();
+    const { width } = useWindowDimensions()
 
-    const paddingBottom = useProperties((state) => state.readerImagePadding);
+    const paddingBottom = useProperties((state) => state.readerImagePadding)
 
-    const [focused, setFocused] = useState(false);
+    const [focused, setFocused] = useState(false)
 
     return (
       <Zoomable
@@ -40,7 +40,7 @@ export const ReaderImage = memo(
           }}
         />
       </Zoomable>
-    );
+    )
   },
-  (prevProps, nextProps) => prevProps.url === nextProps.url
-);
+  (prevProps, nextProps) => prevProps.url === nextProps.url,
+)

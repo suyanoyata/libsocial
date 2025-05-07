@@ -1,16 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
 
-import { View, ViewProps } from "react-native";
-import FastImage, { Source } from "@d11/react-native-fast-image";
+import { View, ViewProps } from "react-native"
+import FastImage, { Source } from "@d11/react-native-fast-image"
 
-import Animated, { FadeOut } from "react-native-reanimated";
+import Animated, { FadeOut } from "react-native-reanimated"
 
 type TransitionedImageProps = ViewProps & {
-  width: number;
-  height: number;
-  source: Source;
-  recycleId?: any;
-};
+  width: number
+  height: number
+  source: Source
+  recycleId?: any
+}
 
 /**
  *
@@ -25,19 +25,19 @@ export const TransitionedImage = ({
   recycleId,
   ...props
 }: TransitionedImageProps) => {
-  const [showImage, setShowImage] = useState(false);
+  const [showImage, setShowImage] = useState(false)
 
   const onImageLoad = () => {
-    setShowImage(true);
-  };
+    setShowImage(true)
+  }
 
   const onError = () => {
-    setShowImage(false);
-  };
+    setShowImage(false)
+  }
 
   useEffect(() => {
-    return () => setShowImage(false);
-  }, [recycleId]);
+    return () => setShowImage(false)
+  }, [recycleId])
 
   return (
     <View
@@ -65,5 +65,5 @@ export const TransitionedImage = ({
         style={{ width, height, zIndex: 1 }}
       />
     </View>
-  );
-};
+  )
+}

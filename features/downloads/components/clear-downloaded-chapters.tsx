@@ -1,10 +1,10 @@
-import { Icon } from "@/components/icon";
-import { useDownloads } from "@/features/downloads/store/use-downloads";
-import { Alert, Pressable } from "react-native";
+import { Icon } from "@/components/icon"
+import { useDownloads } from "@/features/downloads/store/use-downloads"
+import { Alert, Pressable } from "react-native"
 
 export const ClearDownloadedChapters = () => {
-  const clear = useDownloads((state) => state.clear);
-  const count = useDownloads((state) => state.items.length);
+  const clear = useDownloads((state) => state.clear)
+  const count = useDownloads((state) => state.items.length)
 
   const deleteEverything = () => {
     Alert.alert(
@@ -18,19 +18,19 @@ export const ClearDownloadedChapters = () => {
         {
           text: "Delete",
           onPress: () => {
-            clear();
+            clear()
           },
           style: "destructive",
         },
-      ]
-    );
-  };
+      ],
+    )
+  }
 
-  if (count == 0) return;
+  if (count == 0) return
 
   return (
     <Pressable onPress={deleteEverything}>
       <Icon name="Trash2" className="text-secondary" />
     </Pressable>
-  );
-};
+  )
+}

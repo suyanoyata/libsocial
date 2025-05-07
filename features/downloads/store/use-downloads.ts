@@ -1,20 +1,32 @@
-import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
-import { zustandStorage } from "@/lib/persistent-zustand-storage";
+import { create } from "zustand"
+import { createJSONStorage, persist } from "zustand/middleware"
+import { zustandStorage } from "@/lib/persistent-zustand-storage"
 
-import { ReaderChapter } from "@/features/manga-reader/types/reader-chapter";
-import { Title } from "@/features/shared/types/title";
-import { deleteAsync, documentDirectory, readDirectoryAsync } from "expo-file-system";
+import { ReaderChapter } from "@/features/manga-reader/types/reader-chapter"
+import { Title } from "@/features/shared/types/title"
+import {
+  deleteAsync,
+  documentDirectory,
+  readDirectoryAsync,
+} from "expo-file-system"
 
-export type DownloadedChapter = { title: Title; chapter: ReaderChapter };
+export type DownloadedChapter = { title: Title; chapter: ReaderChapter }
 
 export interface DownloadsStore {
-  items: DownloadedChapter[];
-  get: (slug_url: string, volume: string, chapter: string) => DownloadedChapter | null;
-  deleteChapter: (slug_url: string, volume: string, chapter: string) => void;
-  isChapterDownloaded: (slug_url: string, volume: string, chapter: string) => boolean;
-  add: (title: Title, chapter: ReaderChapter) => void;
-  clear: () => void;
+  items: DownloadedChapter[]
+  get: (
+    slug_url: string,
+    volume: string,
+    chapter: string,
+  ) => DownloadedChapter | null
+  deleteChapter: (slug_url: string, volume: string, chapter: string) => void
+  isChapterDownloaded: (
+    slug_url: string,
+    volume: string,
+    chapter: string,
+  ) => boolean
+  add: (title: Title, chapter: ReaderChapter) => void
+  clear: () => void
 }
 
 export const useDownloads = create<DownloadsStore>()(
@@ -26,17 +38,20 @@ export const useDownloads = create<DownloadsStore>()(
           (state) =>
             state.title.slug_url === slug_url &&
             state.chapter.volume === volume &&
-            state.chapter.number === chapter
-        );
+            state.chapter.number === chapter,
+        )
 
-        return item ? item : null;
+        return item ? item : null
       },
       deleteChapter: async (slug_url, volume, chapter) => {
-        if (!documentDirectory) return;
+        if (!documentDirectory) return
 
-        await deleteAsync(`${documentDirectory}${slug_url}/v${volume}-c${chapter}`, {
-          idempotent: true,
-        });
+        await deleteAsync(
+          `${documentDirectory}${slug_url}/v${volume}-c${chapter}`,
+          {
+            idempotent: true,
+          },
+        )
 
         set((state) => ({
           items: state.items.filter(
@@ -45,46 +60,46 @@ export const useDownloads = create<DownloadsStore>()(
                 item.chapter.number == chapter &&
                 item.chapter.volume == volume &&
                 item.title.slug_url == slug_url
-              )
+              ),
           ),
-        }));
+        }))
       },
       isChapterDownloaded: (slug_url, volume, chapter) => {
         const item = get().items.find(
           (state) =>
             state.title.slug_url === slug_url &&
             state.chapter.volume === volume &&
-            state.chapter.number === chapter
-        );
+            state.chapter.number === chapter,
+        )
 
-        return !!item;
+        return !!item
       },
       add: (title, chapter) => {
         set((state) => {
           return {
             items: [...state.items, { title, chapter }],
-          };
-        });
+          }
+        })
       },
       clear: async () => {
-        if (!documentDirectory) return;
+        if (!documentDirectory) return
 
         const directory = (await readDirectoryAsync(documentDirectory)).filter(
-          (dirname) => dirname !== "mmkv"
-        );
+          (dirname) => dirname !== "mmkv",
+        )
 
         await Promise.all(
           directory.map(async (dirname) => {
-            await deleteAsync(`${documentDirectory}${dirname}`);
-          })
-        );
+            await deleteAsync(`${documentDirectory}${dirname}`)
+          }),
+        )
 
-        set({ items: [] });
+        set({ items: [] })
       },
     }),
     {
       name: "libsocial.client.downloads",
       storage: createJSONStorage(() => zustandStorage),
-    }
-  )
-);
+    },
+  ),
+)

@@ -1,21 +1,21 @@
-import { useMemo, useTransition } from "react";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useMemo, useTransition } from "react"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
-import { useWindowDimensions, View } from "react-native";
+import { useWindowDimensions, View } from "react-native"
 
-import { Text } from "@/components/ui/text";
-import { Button } from "@/components/ui/button";
+import { Text } from "@/components/ui/text"
+import { Button } from "@/components/ui/button"
 
-import Animated, { FadeIn } from "react-native-reanimated";
-import { FlashList, FlashListProps } from "@shopify/flash-list";
+import Animated, { FadeIn } from "react-native-reanimated"
+import { FlashList, FlashListProps } from "@shopify/flash-list"
 
-import { cn } from "@/lib/utils";
-import { Icon } from "@/components/icon";
+import { cn } from "@/lib/utils"
+import { Icon } from "@/components/icon"
 
 interface Props<T> extends FlashListProps<T> {
-  title: string;
-  descending: boolean;
-  reverseCallback: () => void;
+  title: string
+  descending: boolean
+  reverseCallback: () => void
 }
 
 export const ContentCollectionView = <T,>({
@@ -24,15 +24,15 @@ export const ContentCollectionView = <T,>({
   reverseCallback,
   ...props
 }: Props<T>) => {
-  const { width, height } = useWindowDimensions();
+  const { width, height } = useWindowDimensions()
 
-  const contentHeight = useMemo(() => height - 121, [height]);
+  const contentHeight = useMemo(() => height - 121, [height])
 
-  const { bottom } = useSafeAreaInsets();
+  const { bottom } = useSafeAreaInsets()
 
-  const [isReversing, startReversing] = useTransition();
+  const [isReversing, startReversing] = useTransition()
 
-  const iconName = descending ? "ArrowUpNarrowWide" : "ArrowDownNarrowWide";
+  const iconName = descending ? "ArrowUpNarrowWide" : "ArrowDownNarrowWide"
 
   return (
     <Animated.View entering={FadeIn} className={cn("flex-1")}>
@@ -40,7 +40,7 @@ export const ContentCollectionView = <T,>({
         <Text className="text-4xl font-extrabold text-secondary">{title}</Text>
         <Button
           onPress={() => {
-            startReversing(() => reverseCallback());
+            startReversing(() => reverseCallback())
           }}
           variant="ghost"
           className="rounded-full w-28"
@@ -57,7 +57,7 @@ export const ContentCollectionView = <T,>({
         <FlashList
           className={cn(
             `gap-2 flex-1 pt-2 opacity-100 overflow-hidden`,
-            isReversing && "opacity-50"
+            isReversing && "opacity-50",
           )}
           contentContainerStyle={{
             paddingBottom: bottom + 14,
@@ -74,5 +74,5 @@ export const ContentCollectionView = <T,>({
         />
       </View>
     </Animated.View>
-  );
-};
+  )
+}

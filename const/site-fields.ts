@@ -5,4 +5,4 @@ export const siteIds = {
   "5": {
     type: "anime",
   },
-};
+}

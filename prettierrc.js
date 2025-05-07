@@ -5,6 +5,6 @@ const config = {
   singleQuote: true,
   jsxSingleQuote: true,
   printWidth: 90,
-};
+}
 
-module.exports = config;
+module.exports = config

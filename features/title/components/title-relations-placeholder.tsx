@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { View } from "react-native"
 
 export const TitleRelationsPlaceholder = () => {
   return (
@@ -10,5 +10,5 @@ export const TitleRelationsPlaceholder = () => {
         <View className="bg-zinc-600 h-[12px] w-[120px] rounded-md mt-auto" />
       </View>
     </View>
-  );
-};
+  )
+}

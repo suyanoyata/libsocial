@@ -1,31 +1,41 @@
-import { Text } from "@/components/ui/text";
-import { PulseView } from "@/components/ui/pulse-view";
+import { Text } from "@/components/ui/text"
+import { PulseView } from "@/components/ui/pulse-view"
 
-import { TitleRelationsCard } from "@/features/title/components/title-relations-card";
-import { TitleRelationsPlaceholder } from "@/features/title/components/title-relations-placeholder";
+import { TitleRelationsCard } from "@/features/title/components/title-relations-card"
+import { TitleRelationsPlaceholder } from "@/features/title/components/title-relations-placeholder"
 
 import {
   RelationsResponse,
   TitleRelationsProps,
-} from "@/features/title/types/title-relations-type";
+} from "@/features/title/types/title-relations-type"
 
-import { api } from "@/lib/axios";
+import { api } from "@/lib/axios"
 
-import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query"
+import { useMemo } from "react"
 
-import { FlatList, View } from "react-native";
-import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
-import { AddRelationsButton } from "@/features/title/components/title-add-relations";
+import { FlatList, View } from "react-native"
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated"
+import { AddRelationsButton } from "@/features/title/components/title-add-relations"
 
-export const TitleRelations = ({ label, slug_url, endpoint, site }: TitleRelationsProps) => {
+export const TitleRelations = ({
+  label,
+  slug_url,
+  endpoint,
+  site,
+}: TitleRelationsProps) => {
   const { data, isPending } = useQuery<RelationsResponse>({
     queryKey: [`title-${endpoint}`, slug_url],
-    queryFn: async () => (await api.get(`/manga/${slug_url}/${endpoint}`)).data.data,
-  });
+    queryFn: async () =>
+      (await api.get(`/manga/${slug_url}/${endpoint}`)).data.data,
+  })
 
   return (
-    <Animated.View entering={FadeIn} exiting={FadeOut} className="my-2 relative h-[185px]">
+    <Animated.View
+      entering={FadeIn}
+      exiting={FadeOut}
+      className="my-2 relative h-[185px]"
+    >
       <View className="flex items-center justify-between flex-row mb-2">
         <Text className="text-secondary text-2xl font-bold">{label}</Text>
         <AddRelationsButton slug_url={slug_url} site={site} />
@@ -55,5 +65,5 @@ export const TitleRelations = ({ label, slug_url, endpoint, site }: TitleRelatio
         )}
       </View>
     </Animated.View>
-  );
-};
+  )
+}

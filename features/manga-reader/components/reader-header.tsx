@@ -1,18 +1,24 @@
-import { ReaderChapter } from "@/features/manga-reader/types/reader-chapter";
-import { Title } from "@/features/shared/types/title";
+import { ReaderChapter } from "@/features/manga-reader/types/reader-chapter"
+import { Title } from "@/features/shared/types/title"
 
-import { router } from "expo-router";
-import { View } from "react-native";
+import { router } from "expo-router"
+import { View } from "react-native"
 
-import { Text } from "@/components/ui/text";
+import { Text } from "@/components/ui/text"
 
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
-import { withImpact } from "@/lib/utils";
-import { Icon } from "@/components/icon";
+import { withImpact } from "@/lib/utils"
+import { Icon } from "@/components/icon"
 
-export const ReaderHeader = ({ chapter, title }: { chapter: ReaderChapter; title: Title }) => {
-  const { top } = useSafeAreaInsets();
+export const ReaderHeader = ({
+  chapter,
+  title,
+}: {
+  chapter: ReaderChapter
+  title: Title
+}) => {
+  const { top } = useSafeAreaInsets()
 
   return (
     <View
@@ -38,10 +44,10 @@ export const ReaderHeader = ({ chapter, title }: { chapter: ReaderChapter; title
         name="Cog"
         hitSlop={10}
         onPress={() => {
-          withImpact(() => router.navigate("/reader-properties"));
+          withImpact(() => router.navigate("/reader-properties"))
         }}
         className="text-muted"
       />
     </View>
-  );
-};
+  )
+}

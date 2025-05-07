@@ -1,37 +1,42 @@
-import { FadeView } from "@/components/ui/fade-view";
-import { Text } from "@/components/ui/text";
+import { FadeView } from "@/components/ui/fade-view"
+import { Text } from "@/components/ui/text"
 
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useTitleInfo } from "@/features/title/api/use-title-info";
-import { useRoute } from "@react-navigation/native";
+import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { useTitleInfo } from "@/features/title/api/use-title-info"
+import { useRoute } from "@react-navigation/native"
 
-import { BlurView } from "expo-blur";
-import FastImage from "@d11/react-native-fast-image";
+import { BlurView } from "expo-blur"
+import FastImage from "@d11/react-native-fast-image"
 
-import { DeviceEventEmitter, ImageBackground, ScrollView, View } from "react-native";
+import {
+  DeviceEventEmitter,
+  ImageBackground,
+  ScrollView,
+  View,
+} from "react-native"
 
-import { TitleSummary } from "@/features/title/components/title-summary";
-import { Genres } from "@/features/title/components/genres";
-import { useEffect } from "react";
-import { router } from "expo-router";
+import { TitleSummary } from "@/features/title/components/title-summary"
+import { Genres } from "@/features/title/components/genres"
+import { useEffect } from "react"
+import { router } from "expo-router"
 
 export default function QuickSearchTitlePreview() {
-  const route = useRoute();
-  const { slug_url, site } = route.params as { slug_url: string; site: string };
+  const route = useRoute()
+  const { slug_url, site } = route.params as { slug_url: string; site: string }
 
-  const { data } = useTitleInfo(slug_url, site);
-  const { bottom } = useSafeAreaInsets();
+  const { data } = useTitleInfo(slug_url, site)
+  const { bottom } = useSafeAreaInsets()
 
   useEffect(() => {
     DeviceEventEmitter.addListener("title-info-navigate", (event) => {
       router.replace({
         pathname: "/title-info",
         params: { slug_url, site },
-      });
-    });
+      })
+    })
 
-    return () => DeviceEventEmitter.removeAllListeners("title-info-navigate");
-  }, []);
+    return () => DeviceEventEmitter.removeAllListeners("title-info-navigate")
+  }, [])
 
   return (
     <ScrollView
@@ -84,5 +89,5 @@ export default function QuickSearchTitlePreview() {
         </FadeView>
       )}
     </ScrollView>
-  );
+  )
 }

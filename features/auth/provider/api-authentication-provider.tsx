@@ -1,14 +1,18 @@
-import { useEffect } from "react";
-import { getCookie, useSession } from "@/features/auth/lib/auth";
+import { useEffect } from "react"
+import { getCookie, useSession } from "@/features/auth/lib/auth"
 
-import { api } from "@/lib/axios";
+import { api } from "@/lib/axios"
 
-export const ApiAuthenticationProvider = ({ children }: { children?: React.ReactNode }) => {
-  const { data } = useSession();
+export const ApiAuthenticationProvider = ({
+  children,
+}: {
+  children?: React.ReactNode
+}) => {
+  const { data } = useSession()
 
   useEffect(() => {
-    api.defaults.headers.Cookie = getCookie();
-  }, [data]);
+    api.defaults.headers.Cookie = getCookie()
+  }, [data])
 
-  return children;
-};
+  return children
+}

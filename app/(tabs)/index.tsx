@@ -1,18 +1,18 @@
-import { HomeLayout } from "@/layouts/home-layout";
-import { PopularTitles } from "@/features/home/ui/popular-titles";
-import { LastReadTitles } from "@/features/home/ui/last-read-titles";
-import { useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
-import { LastWatchTitles } from "@/features/home/ui/last-watch-titles";
+import { HomeLayout } from "@/layouts/home-layout"
+import { PopularTitles } from "@/features/home/ui/popular-titles"
+import { LastReadTitles } from "@/features/home/ui/last-read-titles"
+import { useQueryClient } from "@tanstack/react-query"
+import { useEffect } from "react"
+import { LastWatchTitles } from "@/features/home/ui/last-watch-titles"
 
 export default function Home() {
-  const client = useQueryClient();
+  const client = useQueryClient()
 
   useEffect(() => {
     client.prefetchQuery({
       queryKey: ["home-titles"],
-    });
-  }, []);
+    })
+  }, [])
 
   return (
     <HomeLayout>
@@ -20,5 +20,5 @@ export default function Home() {
       <LastWatchTitles />
       <LastReadTitles />
     </HomeLayout>
-  );
+  )
 }

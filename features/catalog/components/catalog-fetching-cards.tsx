@@ -1,18 +1,22 @@
-import { useWindowDimensions, View } from "react-native";
-import { FlashList } from "@shopify/flash-list";
+import { useWindowDimensions, View } from "react-native"
+import { FlashList } from "@shopify/flash-list"
 
-import { useProperties } from "@/store/use-properties";
+import { useProperties } from "@/store/use-properties"
 
-import { PulseView } from "@/components/ui/pulse-view";
+import { PulseView } from "@/components/ui/pulse-view"
 
-import { TitleCardPlaceholder } from "@/features/home/components/title-card-placeholder";
-import { getItemStyle } from "@/features/catalog/lib/item-position-align";
+import { TitleCardPlaceholder } from "@/features/home/components/title-card-placeholder"
+import { getItemStyle } from "@/features/catalog/lib/item-position-align"
 
-export const FetchingNextPageCards = ({ isFetching }: { isFetching: boolean }) => {
-  const { width, height } = useWindowDimensions();
-  const { catalogColumns } = useProperties();
+export const FetchingNextPageCards = ({
+  isFetching,
+}: {
+  isFetching: boolean
+}) => {
+  const { width, height } = useWindowDimensions()
+  const { catalogColumns } = useProperties()
 
-  if (!isFetching) return null;
+  if (!isFetching) return null
 
   return (
     <PulseView className="flex-1 -mt-8">
@@ -39,5 +43,5 @@ export const FetchingNextPageCards = ({ isFetching }: { isFetching: boolean }) =
         )}
       />
     </PulseView>
-  );
-};
+  )
+}

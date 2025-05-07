@@ -1,30 +1,38 @@
-import { View, ScrollView } from "react-native";
+import { View, ScrollView } from "react-native"
 
-import { Text } from "@/components/ui/text";
+import { Text } from "@/components/ui/text"
 
-import Animated, { FadeIn } from "react-native-reanimated";
+import Animated, { FadeIn } from "react-native-reanimated"
 
-import { Button } from "@/components/ui/button";
-import { LastReadTitleCard } from "@/features/home/components/last-read-title-card";
+import { Button } from "@/components/ui/button"
+import { LastReadTitleCard } from "@/features/home/components/last-read-title-card"
 
-import { useMemo } from "react";
-import { useReadingTracker } from "@/store/use-reading-tracker";
-import { useProperties } from "@/store/use-properties";
+import { useMemo } from "react"
+import { useReadingTracker } from "@/store/use-reading-tracker"
+import { useProperties } from "@/store/use-properties"
 
 export const LastReadTitles = () => {
-  const { lastReadItems, reset } = useReadingTracker();
+  const { lastReadItems, reset } = useReadingTracker()
 
-  const { siteId } = useProperties();
+  const { siteId } = useProperties()
 
-  const visibleItems = useMemo(() => lastReadItems.filter((i) => i.hide == false), [lastReadItems]);
+  const visibleItems = useMemo(
+    () => lastReadItems.filter((i) => i.hide == false),
+    [lastReadItems],
+  )
 
-  if (visibleItems.length == 0 || siteId == "5") return null;
+  if (visibleItems.length == 0 || siteId == "5") return null
 
   return (
     <Animated.View entering={FadeIn}>
       <View className="flex-row items-center justify-between mx-2 mt-3">
         <Text className="recent-viewed-title">You've stopped at</Text>
-        <Button size="sm" onPress={() => reset()} iconLeft="Trash2" variant="destructive">
+        <Button
+          size="sm"
+          onPress={() => reset()}
+          iconLeft="Trash2"
+          variant="destructive"
+        >
           Clear all
         </Button>
       </View>
@@ -39,5 +47,5 @@ export const LastReadTitles = () => {
         ))}
       </ScrollView>
     </Animated.View>
-  );
-};
+  )
+}

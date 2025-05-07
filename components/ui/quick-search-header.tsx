@@ -1,16 +1,20 @@
-import { DeviceEventEmitter, View } from "react-native";
+import { DeviceEventEmitter, View } from "react-native"
 
-import { Button } from "@/components/ui/button";
-import { BackButton } from "@/components/ui/back-button";
+import { Button } from "@/components/ui/button"
+import { BackButton } from "@/components/ui/back-button"
 
 export const QuickSearchHeader = () => {
   return (
     <View className="flex-row flex items-center justify-between absolute top-2 left-0 mx-2 w-[97vw]">
-      <BackButton position="static" iconClassName="text-white" textClassName="text-white" />
+      <BackButton
+        position="static"
+        iconClassName="text-white"
+        textClassName="text-white"
+      />
       <Button
         className="active:bg-white/5"
         onPress={() => {
-          DeviceEventEmitter.emit("title-info-navigate");
+          DeviceEventEmitter.emit("title-info-navigate")
         }}
         textClassName="text-white"
         iconRight="ChevronRight"
@@ -19,5 +23,5 @@ export const QuickSearchHeader = () => {
         Learn More
       </Button>
     </View>
-  );
-};
+  )
+}

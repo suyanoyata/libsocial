@@ -1,15 +1,15 @@
-import { Genre } from "@/features/shared/types/title";
-import { TitleGenre } from "@/features/title/components/title-genre";
-import { cn } from "@/lib/utils";
-import { Text, View } from "react-native";
+import { Genre } from "@/features/shared/types/title"
+import { TitleGenre } from "@/features/title/components/title-genre"
+import { cn } from "@/lib/utils"
+import { Text, View } from "react-native"
 
 export const Genres = ({
   genres,
   className,
 }: // ageRestriction,
 {
-  genres: Genre[];
-  className?: string;
+  genres: Genre[]
+  className?: string
   // ageRestriction: { id: number; label: string };
 }) => {
   return (
@@ -33,5 +33,5 @@ export const Genres = ({
         />
       ))}
     </View>
-  );
-};
+  )
+}

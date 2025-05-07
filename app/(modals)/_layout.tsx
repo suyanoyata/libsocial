@@ -1,9 +1,9 @@
-import { Stack } from "expo-router";
+import { Stack } from "expo-router"
 
-import { View } from "react-native";
+import { View } from "react-native"
 
-import { BackButton } from "@/components/ui/back-button";
-import { QuickSearchHeader } from "@/components/ui/quick-search-header";
+import { BackButton } from "@/components/ui/back-button"
+import { QuickSearchHeader } from "@/components/ui/quick-search-header"
 
 // Provided here screens will be non-modal unless it's first in stack
 export default function ModalLayout() {
@@ -27,5 +27,5 @@ export default function ModalLayout() {
         }}
       />
     </Stack>
-  );
+  )
 }

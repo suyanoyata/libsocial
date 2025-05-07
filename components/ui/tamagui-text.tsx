@@ -1,5 +1,5 @@
-import { cssInterop } from "nativewind";
-import { Text } from "tamagui";
+import { cssInterop } from "nativewind"
+import { Text } from "tamagui"
 
 function interopComponent(component: any) {
   cssInterop(component, {
@@ -12,9 +12,9 @@ function interopComponent(component: any) {
         opacity: true,
       },
     },
-  });
+  })
 }
 
-interopComponent(Text);
+interopComponent(Text)
 
-export { Text as TamaguiText };
+export { Text as TamaguiText }

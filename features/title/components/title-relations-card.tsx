@@ -1,10 +1,10 @@
-import { Text } from "@/components/ui/text";
-import { RelationsData } from "@/features/title/types/title-relations-type";
-import i18n from "@/i18n";
-import FastImage from "@d11/react-native-fast-image";
-import { router } from "expo-router";
-import { Pressable, View } from "react-native";
-import Animated, { FadeIn } from "react-native-reanimated";
+import { Text } from "@/components/ui/text"
+import { RelationsData } from "@/features/title/types/title-relations-type"
+import i18n from "@/i18n"
+import FastImage from "@d11/react-native-fast-image"
+import { router } from "expo-router"
+import { Pressable, View } from "react-native"
+import Animated, { FadeIn } from "react-native-reanimated"
 
 export const TitleRelationsCard = ({ item }: { item: RelationsData }) => {
   return (
@@ -35,11 +35,14 @@ export const TitleRelationsCard = ({ item }: { item: RelationsData }) => {
             {/* @ts-ignore */}
             {i18n.t(`related.${item.reason}`)}
           </Text>
-          <Text className="text-secondary text-base font-semibold" numberOfLines={2}>
+          <Text
+            className="text-secondary text-base font-semibold"
+            numberOfLines={2}
+          >
             {item.relatedManga.eng_name ?? item.relatedManga.name}
           </Text>
         </View>
       </Pressable>
     </Animated.View>
-  );
-};
+  )
+}

@@ -1,12 +1,12 @@
-import { View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { View } from "react-native"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
-import { Text } from "@/components/ui/text";
+import { Text } from "@/components/ui/text"
 
-import { SignInDiscord } from "@/features/auth/components/sign-in-discord";
+import { SignInDiscord } from "@/features/auth/components/sign-in-discord"
 
 export default function ConnectAccountPrompt() {
-  const { bottom } = useSafeAreaInsets();
+  const { bottom } = useSafeAreaInsets()
 
   return (
     <View className="m-3 gap-2 flex-1" style={{ paddingBottom: bottom }}>
@@ -18,5 +18,5 @@ export default function ConnectAccountPrompt() {
       </Text>
       <SignInDiscord />
     </View>
-  );
+  )
 }

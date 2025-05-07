@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { View } from "react-native"
 
 export const TitleCardPlaceholder = () => {
   return (
@@ -10,5 +10,5 @@ export const TitleCardPlaceholder = () => {
       <View className="bg-muted h-4 w-[120px] rounded-md" />
       <View className="bg-muted bg-zinc-400/50 h-4 mt-2 w-[80px] rounded-md" />
     </View>
-  );
-};
+  )
+}

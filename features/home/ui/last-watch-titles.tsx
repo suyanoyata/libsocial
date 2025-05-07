@@ -1,30 +1,32 @@
-import { View, FlatList } from "react-native";
+import { View, FlatList } from "react-native"
 
-import { Text } from "@/components/ui/text";
+import { Text } from "@/components/ui/text"
 
-import Animated, { FadeIn } from "react-native-reanimated";
+import Animated, { FadeIn } from "react-native-reanimated"
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 
-import { LastWatchItem, useWatchTracker } from "@/store/use-watch-tracker";
-import { useProperties } from "@/store/use-properties";
-import { LastWatchedTitleCard } from "@/features/home/components/last-watched-title-card";
-import { useMemo } from "react";
+import { LastWatchItem, useWatchTracker } from "@/store/use-watch-tracker"
+import { useProperties } from "@/store/use-properties"
+import { LastWatchedTitleCard } from "@/features/home/components/last-watched-title-card"
+import { useMemo } from "react"
 
 export const LastWatchTitles = () => {
-  const { lastWatchItems, reset } = useWatchTracker();
+  const { lastWatchItems, reset } = useWatchTracker()
 
-  const { siteId } = useProperties();
+  const { siteId } = useProperties()
 
-  const renderItem = ({ item }: { item: LastWatchItem }) => <LastWatchedTitleCard item={item} />;
-  const keyExtractor = (item: LastWatchItem) => item.slug_url;
+  const renderItem = ({ item }: { item: LastWatchItem }) => (
+    <LastWatchedTitleCard item={item} />
+  )
+  const keyExtractor = (item: LastWatchItem) => item.slug_url
 
   const visibleItems = useMemo(
     () => lastWatchItems.filter((i) => i.hide == false),
-    [lastWatchItems]
-  );
+    [lastWatchItems],
+  )
 
-  if (visibleItems.length == 0 || siteId != "5") return null;
+  if (visibleItems.length == 0 || siteId != "5") return null
 
   return (
     <Animated.View entering={FadeIn} className="mx-2">
@@ -50,5 +52,5 @@ export const LastWatchTitles = () => {
         />
       </View>
     </Animated.View>
-  );
-};
+  )
+}

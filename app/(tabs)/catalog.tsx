@@ -1,3 +1,3 @@
-import { Catalog } from "@/features/catalog/ui/catalog-ui";
+import { Catalog } from "@/features/catalog/ui/catalog-ui"
 
-export default Catalog;
+export default Catalog

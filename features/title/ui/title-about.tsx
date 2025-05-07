@@ -1,23 +1,23 @@
-import { View } from "react-native";
-import { router } from "expo-router";
+import { View } from "react-native"
+import { router } from "expo-router"
 
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
-import { Bookmark, Play } from "lucide-react-native";
+import { Bookmark, Play } from "lucide-react-native"
 
-import { Button } from "@/components/ui/button";
-import { Genres } from "@/features/title/components/genres";
-import { TitleSummary } from "@/features/title/components/title-summary";
+import { Button } from "@/components/ui/button"
+import { Genres } from "@/features/title/components/genres"
+import { TitleSummary } from "@/features/title/components/title-summary"
 
-import { Title } from "@/features/shared/types/title";
-import { TitleRelations } from "@/features/title/ui/title-relations";
-import { Icon } from "@/components/icon";
+import { Title } from "@/features/shared/types/title"
+import { TitleRelations } from "@/features/title/ui/title-relations"
+import { Icon } from "@/components/icon"
 
 export const TitleAbout = ({ data }: { data: Title }) => {
-  const { bottom } = useSafeAreaInsets();
+  const { bottom } = useSafeAreaInsets()
 
-  const Icon = data.site == "5" ? Play : Bookmark;
-  const text = data.site == "5" ? "Start Watching" : "Start Reading";
+  const Icon = data.site == "5" ? Play : Bookmark
+  const text = data.site == "5" ? "Start Watching" : "Start Reading"
 
   return (
     <View
@@ -35,7 +35,7 @@ export const TitleAbout = ({ data }: { data: Title }) => {
               slug_url: data.slug_url,
               site: data.site,
             },
-          });
+          })
         }}
         className="mb-3"
         iconLeft={
@@ -59,5 +59,5 @@ export const TitleAbout = ({ data }: { data: Title }) => {
       />
       {/* <TitleRelations label="Похожие" slug_url={data.slug_url} endpoint="similar" /> */}
     </View>
-  );
-};
+  )
+}

@@ -1,23 +1,23 @@
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
-import { Platform, View } from "react-native";
-import { Text } from "@/components/ui/text";
+import { Platform, View } from "react-native"
+import { Text } from "@/components/ui/text"
 
-type Layout = { width: number; height: number };
+type Layout = { width: number; height: number }
 
 type Options = {
-  layout: Layout;
+  layout: Layout
   route: {
-    name: string;
-  };
+    name: string
+  }
   options: {
-    title?: string;
-  };
-  headerRight?: React.ReactNode;
-};
+    title?: string
+  }
+  headerRight?: React.ReactNode
+}
 
 export const Header = (props: Options) => {
-  const { top } = useSafeAreaInsets();
+  const { top } = useSafeAreaInsets()
 
   return (
     <View
@@ -36,5 +36,5 @@ export const Header = (props: Options) => {
         </View>
       )}
     </View>
-  );
-};
+  )
+}

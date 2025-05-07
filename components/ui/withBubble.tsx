@@ -1,8 +1,10 @@
-import React from "react";
+import React from "react"
 
-import { View } from "react-native";
+import { View } from "react-native"
 
-const withBubble = <P extends object>(WrappedComponent: React.ComponentType<P>) => {
+const withBubble = <P extends object>(
+  WrappedComponent: React.ComponentType<P>,
+) => {
   return (props: P) => (
     <View className="size-16 bg-muted items-center justify-center rounded-full">
       <WrappedComponent
@@ -14,7 +16,7 @@ const withBubble = <P extends object>(WrappedComponent: React.ComponentType<P>) 
         }}
       />
     </View>
-  );
-};
+  )
+}
 
-export default withBubble;
+export default withBubble

@@ -1,49 +1,49 @@
-import { Pressable, useColorScheme, View } from "react-native";
-import { Tabs } from "expo-router";
+import { Pressable, useColorScheme, View } from "react-native"
+import { Tabs } from "expo-router"
 
-import { Header } from "@/components/ui/header";
+import { Header } from "@/components/ui/header"
 
-import { useCallback } from "react";
-import { useProperties } from "@/store/use-properties";
-import { useQueryClient } from "@tanstack/react-query";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useGenresConstants } from "@/features/shared/api/use-filter-constants";
+import { useCallback } from "react"
+import { useProperties } from "@/store/use-properties"
+import { useQueryClient } from "@tanstack/react-query"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { useGenresConstants } from "@/features/shared/api/use-filter-constants"
 
-import MenuView from "react-native-context-menu-view";
+import MenuView from "react-native-context-menu-view"
 
-import { api } from "@/lib/axios";
-import { cn } from "@/lib/utils";
+import { api } from "@/lib/axios"
+import { cn } from "@/lib/utils"
 
-import { useSession } from "@/features/auth/lib/auth";
-import FastImage from "@d11/react-native-fast-image";
-import { TabIcon } from "@/components/navigation/tab-icon";
-import { Text } from "@/components/ui/text";
-import { Icon } from "@/components/icon";
+import { useSession } from "@/features/auth/lib/auth"
+import FastImage from "@d11/react-native-fast-image"
+import { TabIcon } from "@/components/navigation/tab-icon"
+import { Text } from "@/components/ui/text"
+import { Icon } from "@/components/icon"
 
 export default function TabsLayout() {
-  useGenresConstants();
+  useGenresConstants()
 
-  const { siteId, setSiteId } = useProperties();
-  const queryClient = useQueryClient();
-  const { top } = useSafeAreaInsets();
+  const { siteId, setSiteId } = useProperties()
+  const queryClient = useQueryClient()
+  const { top } = useSafeAreaInsets()
 
-  const isDark = useColorScheme() === "dark";
+  const isDark = useColorScheme() === "dark"
 
   const handleAction = useCallback(
     (event: string) => {
-      if (event === siteId) return;
+      if (event === siteId) return
 
-      api.defaults.headers["Site-Id"] = event;
-      setSiteId(event);
-      queryClient.clear();
+      api.defaults.headers["Site-Id"] = event
+      setSiteId(event)
+      queryClient.clear()
       queryClient.refetchQueries({
         queryKey: ["home-titles"],
-      });
+      })
     },
-    [siteId]
-  );
+    [siteId],
+  )
 
-  const { data } = useSession();
+  const { data } = useSession()
 
   return (
     <Tabs
@@ -62,12 +62,12 @@ export default function TabsLayout() {
             <Text
               className={cn(
                 "text-xs font-medium",
-                focused ? "text-violet-700 dark:text-violet-200" : "text-muted"
+                focused ? "text-violet-700 dark:text-violet-200" : "text-muted",
               )}
             >
               {children}
             </Text>
-          );
+          )
         },
         tabBarButton: (props) => <Pressable className="gap-2" {...props} />,
         headerShown: false,
@@ -97,9 +97,9 @@ export default function TabsLayout() {
               ]}
               onPress={(value) => {
                 if (value.nativeEvent.index == 1) {
-                  handleAction("5");
+                  handleAction("5")
                 } else {
-                  handleAction("1");
+                  handleAction("1")
                 }
               }}
             >
@@ -115,7 +115,9 @@ export default function TabsLayout() {
         options={{
           title: "Catalog",
           sceneStyle: {},
-          tabBarIcon: ({ focused }) => <TabIcon icon="LayoutGrid" focused={focused} />,
+          tabBarIcon: ({ focused }) => (
+            <TabIcon icon="LayoutGrid" focused={focused} />
+          ),
         }}
       />
       <Tabs.Screen
@@ -124,10 +126,15 @@ export default function TabsLayout() {
           title: "Bookmarks",
           headerTitle: "Bookmarks",
           header: (props) => (
-            <Header headerRight={<Icon name="Download" className="text-muted" />} {...props} />
+            <Header
+              headerRight={<Icon name="Download" className="text-muted" />}
+              {...props}
+            />
           ),
           headerShown: true,
-          tabBarIcon: ({ focused }) => <TabIcon icon="Bookmark" focused={focused} />,
+          tabBarIcon: ({ focused }) => (
+            <TabIcon icon="Bookmark" focused={focused} />
+          ),
         }}
       />
       <Tabs.Screen
@@ -152,5 +159,5 @@ export default function TabsLayout() {
         }}
       />
     </Tabs>
-  );
+  )
 }

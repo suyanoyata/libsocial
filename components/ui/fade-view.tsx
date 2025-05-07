@@ -1,11 +1,11 @@
-import { ViewProps } from "react-native";
-import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import { ViewProps } from "react-native"
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated"
 
 type FadeViewProps = ViewProps & {
-  children?: React.ReactNode;
-  withEnter?: boolean;
-  withExit?: boolean;
-};
+  children?: React.ReactNode
+  withEnter?: boolean
+  withExit?: boolean
+}
 
 export const FadeView = ({
   children,
@@ -21,5 +21,5 @@ export const FadeView = ({
     >
       {children}
     </Animated.View>
-  );
-};
+  )
+}

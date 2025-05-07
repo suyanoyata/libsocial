@@ -1,17 +1,17 @@
-import { View } from "react-native";
-import { Text } from "@/components/ui/text";
+import { View } from "react-native"
+import { Text } from "@/components/ui/text"
 
-import { router } from "expo-router";
+import { router } from "expo-router"
 
-import { useFilterStore } from "@/features/catalog/store/use-filter-store";
-import { Button } from "@/components/ui/button";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { cn } from "@/lib/utils";
+import { useFilterStore } from "@/features/catalog/store/use-filter-store"
+import { Button } from "@/components/ui/button"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { cn } from "@/lib/utils"
 
 export default function CatalogFiltersView() {
-  const { genres, reset } = useFilterStore();
+  const { genres, reset } = useFilterStore()
 
-  const { bottom } = useSafeAreaInsets();
+  const { bottom } = useSafeAreaInsets()
 
   return (
     <View className="mt-3 mx-2 flex-1" style={{ paddingBottom: bottom + 12 }}>
@@ -19,7 +19,7 @@ export default function CatalogFiltersView() {
         asChild
         variant="ghost"
         onPress={() => {
-          router.push("/catalog-filters-genres");
+          router.push("/catalog-filters-genres")
         }}
         className="flex-row items-center justify-between py-3 w-full"
       >
@@ -29,12 +29,15 @@ export default function CatalogFiltersView() {
       <Button
         disabled={genres.length == 0}
         onPress={reset}
-        className={cn("mt-auto", genres.length == 0 && "opacity-80 active:bg-red-500")}
+        className={cn(
+          "mt-auto",
+          genres.length == 0 && "opacity-80 active:bg-red-500",
+        )}
         variant="destructive"
         iconLeft="Trash2"
       >
         Clear all
       </Button>
     </View>
-  );
+  )
 }

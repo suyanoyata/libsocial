@@ -1,23 +1,23 @@
-import FastImage from "@d11/react-native-fast-image";
-import { router } from "expo-router";
+import FastImage from "@d11/react-native-fast-image"
+import { router } from "expo-router"
 
-import { useMemo } from "react";
-import { View, Pressable } from "react-native";
+import { useMemo } from "react"
+import { View, Pressable } from "react-native"
 
-import { Text } from "@/components/ui/text";
+import { Text } from "@/components/ui/text"
 
-import { LastWatchItem, useWatchTracker } from "@/store/use-watch-tracker";
-import { Icon } from "@/components/icon";
+import { LastWatchItem, useWatchTracker } from "@/store/use-watch-tracker"
+import { Icon } from "@/components/icon"
 
 export const LastWatchedTitleCard = ({ item }: { item: LastWatchItem }) => {
-  const { hide } = useWatchTracker();
+  const { hide } = useWatchTracker()
 
   const allEpisodesWatched = useMemo(
     () => item.lastWatchedEpisode === item.overallEpisodes,
-    [item]
-  );
+    [item],
+  )
 
-  if (item.hide == true) return;
+  if (item.hide == true) return
 
   return (
     <Pressable
@@ -29,7 +29,7 @@ export const LastWatchedTitleCard = ({ item }: { item: LastWatchItem }) => {
             site: "5",
             withDelay: allEpisodesWatched ? undefined : "1",
           },
-        });
+        })
         // if (!allEpisodesWatched) {
         //   router.push({
         //     pathname: "/manga-reader",
@@ -44,14 +44,17 @@ export const LastWatchedTitleCard = ({ item }: { item: LastWatchItem }) => {
     >
       <Pressable
         onPress={() => {
-          hide(item.slug_url);
+          hide(item.slug_url)
         }}
         hitSlop={8}
         className="absolute top-2 right-2 text-zinc-500 z-10"
       >
         <Icon name="X" className="text-zinc-400" strokeWidth={2.2} size={20} />
       </Pressable>
-      <FastImage source={{ uri: item.cover.default }} style={{ width: 100, height: 140 }} />
+      <FastImage
+        source={{ uri: item.cover.default }}
+        style={{ width: 100, height: 140 }}
+      />
       <View className="p-2 flex-1">
         <Text className="recent-viewed-card" numberOfLines={2}>
           {item.title}
@@ -66,9 +69,11 @@ export const LastWatchedTitleCard = ({ item }: { item: LastWatchItem }) => {
             />
           </View>
         ) : (
-          <Text className="recent-viewed-card-note">You've watched all episodes</Text>
+          <Text className="recent-viewed-card-note">
+            You've watched all episodes
+          </Text>
         )}
       </View>
     </Pressable>
-  );
-};
+  )
+}

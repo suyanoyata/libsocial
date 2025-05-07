@@ -1,3 +1,3 @@
-import { DownloadedReader } from "@/features/downloads/ui/downloaded-reader";
+import { DownloadedReader } from "@/features/downloads/ui/downloaded-reader"
 
-export default DownloadedReader;
+export default DownloadedReader

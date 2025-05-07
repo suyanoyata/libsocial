@@ -1,9 +1,15 @@
-import { Button } from "@/components/ui/button";
-import { useSession } from "@/features/auth/lib/auth";
-import { router } from "expo-router";
+import { Button } from "@/components/ui/button"
+import { useSession } from "@/features/auth/lib/auth"
+import { router } from "expo-router"
 
-export const AddRelationsButton = ({ slug_url, site }: { slug_url: string; site: string }) => {
-  const { data } = useSession();
+export const AddRelationsButton = ({
+  slug_url,
+  site,
+}: {
+  slug_url: string
+  site: string
+}) => {
+  const { data } = useSession()
 
   return (
     <Button
@@ -11,7 +17,7 @@ export const AddRelationsButton = ({ slug_url, site }: { slug_url: string; site:
         if (!data) {
           return router.push({
             pathname: "/sign-in-prompt-modal",
-          });
+          })
         }
 
         if (!data.user.isAnonymous) {
@@ -21,12 +27,12 @@ export const AddRelationsButton = ({ slug_url, site }: { slug_url: string; site:
               slug_url,
               site,
             },
-          });
+          })
         }
 
         router.push({
           pathname: "/connect-account-prompt-modal",
-        });
+        })
       }}
       variant="ghost"
       size="sm"
@@ -34,5 +40,5 @@ export const AddRelationsButton = ({ slug_url, site }: { slug_url: string; site:
     >
       Add relation
     </Button>
-  );
-};
+  )
+}

@@ -1,3 +1,3 @@
-import Downloads from "@/features/downloads/ui/downloads";
+import Downloads from "@/features/downloads/ui/downloads"
 
-export default Downloads;
+export default Downloads

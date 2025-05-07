@@ -19,4 +19,4 @@ export const tabs = {
       value: "episodes",
     },
   ],
-};
+}

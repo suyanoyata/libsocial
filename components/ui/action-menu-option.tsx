@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button";
-import { Text } from "@/components/ui/text";
+import { Button } from "@/components/ui/button"
+import { Text } from "@/components/ui/text"
 
-import { Platform, View } from "react-native";
+import { Platform, View } from "react-native"
 
 export const ActionMenuOption = ({
   disabled,
@@ -13,18 +13,18 @@ export const ActionMenuOption = ({
   platform,
   debugOnly = false,
 }: {
-  disabled?: boolean;
-  children: string;
-  note?: string;
-  actionText: string;
-  action: () => void;
-  platform?: "ios" | "android";
-  buttonVariant?: "destructive";
-  debugOnly?: boolean;
+  disabled?: boolean
+  children: string
+  note?: string
+  actionText: string
+  action: () => void
+  platform?: "ios" | "android"
+  buttonVariant?: "destructive"
+  debugOnly?: boolean
 }) => {
-  if (platform !== undefined && platform !== Platform.OS) return null;
+  if (platform !== undefined && platform !== Platform.OS) return null
 
-  if (!__DEV__ && debugOnly) return null;
+  if (!__DEV__ && debugOnly) return null
   return (
     <View>
       <View className="flex-row items-center mt-2">
@@ -39,7 +39,9 @@ export const ActionMenuOption = ({
           {actionText}
         </Button>
       </View>
-      {note && <Text className="text-muted text-sm font-medium mt-1">{note}</Text>}
+      {note && (
+        <Text className="text-muted text-sm font-medium mt-1">{note}</Text>
+      )}
     </View>
-  );
-};
+  )
+}

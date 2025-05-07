@@ -1,48 +1,48 @@
-import { FadeView } from "@/components/ui/fade-view";
+import { FadeView } from "@/components/ui/fade-view"
 
-import { useRoute } from "@react-navigation/native";
-import { FlatList, useWindowDimensions, View } from "react-native";
+import { useRoute } from "@react-navigation/native"
+import { FlatList, useWindowDimensions, View } from "react-native"
 
-import { useRef, useState } from "react";
+import { useRef, useState } from "react"
 
-import { useProperties } from "@/store/use-properties";
+import { useProperties } from "@/store/use-properties"
 
-import { useDeferredRender } from "@/hooks/use-deferred-render";
-import { Text } from "@/components/ui/text";
-import { ReaderHeader } from "@/features/manga-reader/components/reader-header";
-import { BackButton } from "@/components/ui/back-button";
-import { useDownloads } from "@/features/downloads/store/use-downloads";
-import { ReaderImage } from "@/features/manga-reader/components/reader-image";
+import { useDeferredRender } from "@/hooks/use-deferred-render"
+import { Text } from "@/components/ui/text"
+import { ReaderHeader } from "@/features/manga-reader/components/reader-header"
+import { BackButton } from "@/components/ui/back-button"
+import { useDownloads } from "@/features/downloads/store/use-downloads"
+import { ReaderImage } from "@/features/manga-reader/components/reader-image"
 
-import MenuView from "react-native-context-menu-view";
+import MenuView from "react-native-context-menu-view"
 
 export const DownloadedReader = () => {
-  const route = useRoute();
+  const route = useRoute()
 
   const { slug_url, volume, chapter } = route.params as {
-    slug_url: string;
-    volume: string;
-    chapter: string;
-  };
+    slug_url: string
+    volume: string
+    chapter: string
+  }
 
-  const get = useDownloads((state) => state.get);
+  const get = useDownloads((state) => state.get)
 
-  const data = get(slug_url, volume, chapter);
+  const data = get(slug_url, volume, chapter)
 
-  const { width, height } = useWindowDimensions();
-  const [currentPage, setCurrentPage] = useState(1);
+  const { width, height } = useWindowDimensions()
+  const [currentPage, setCurrentPage] = useState(1)
 
-  const shouldRender = useDeferredRender();
+  const shouldRender = useDeferredRender()
 
-  const { readerDisplayCurrentPage, showReaderScrollbar } = useProperties();
+  const { readerDisplayCurrentPage, showReaderScrollbar } = useProperties()
 
-  const flatListRef = useRef<FlatList>(null);
+  const flatListRef = useRef<FlatList>(null)
 
-  const keyExtractor = (item: { url: string; ratio: number }) => item.url;
+  const keyExtractor = (item: { url: string; ratio: number }) => item.url
 
   const renderItem = ({ item }: { item: { url: string; ratio: number } }) => (
     <ReaderImage url={item.url} ratio={item.ratio} />
-  );
+  )
 
   if (!data) {
     return (
@@ -52,10 +52,10 @@ export const DownloadedReader = () => {
           Couldn't find this chapter, try re-downloading it
         </Text>
       </View>
-    );
+    )
   }
 
-  if (!shouldRender) return null;
+  if (!shouldRender) return null
 
   return (
     <FadeView withEnter className="flex-1 items-center justify-center">
@@ -66,7 +66,7 @@ export const DownloadedReader = () => {
             flatListRef.current?.scrollToIndex({
               index: event.nativeEvent.index,
               animated: true,
-            });
+            })
           }}
           style={{
             position: "absolute",
@@ -94,7 +94,7 @@ export const DownloadedReader = () => {
         }}
         onViewableItemsChanged={(event) => {
           if (event.changed[0].index && event.changed[0].isViewable) {
-            setCurrentPage(event.changed[0].index);
+            setCurrentPage(event.changed[0].index)
           }
         }}
         ref={flatListRef}
@@ -104,11 +104,13 @@ export const DownloadedReader = () => {
         stickyHeaderIndices={[0]}
         stickyHeaderHiddenOnScroll
         showsVerticalScrollIndicator={showReaderScrollbar}
-        ListHeaderComponent={() => <ReaderHeader title={data.title} chapter={data.chapter} />}
+        ListHeaderComponent={() => (
+          <ReaderHeader title={data.title} chapter={data.chapter} />
+        )}
         style={{ width, height }}
         data={data.chapter.pages}
         renderItem={renderItem}
       />
     </FadeView>
-  );
-};
+  )
+}

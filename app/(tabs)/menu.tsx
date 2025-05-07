@@ -1,24 +1,26 @@
-import { ActionMenuOption } from "@/components/ui/action-menu-option";
+import { ActionMenuOption } from "@/components/ui/action-menu-option"
 
-import { Text } from "@/components/ui/text";
-import { AuthFlow } from "@/features/auth/ui/auth-flow";
-import { useDownloads } from "@/features/downloads/store/use-downloads";
+import { Text } from "@/components/ui/text"
+import { AuthFlow } from "@/features/auth/ui/auth-flow"
+import { useDownloads } from "@/features/downloads/store/use-downloads"
 
-import { useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query"
 
-import { SafeAreaView, NativeModules } from "react-native";
+import { SafeAreaView, NativeModules } from "react-native"
 
 export default function Menu() {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
-  const clear = useDownloads((state) => state.clear);
+  const clear = useDownloads((state) => state.clear)
 
-  const { RNFlipboardFlex } = NativeModules;
+  const { RNFlipboardFlex } = NativeModules
 
   return (
     <SafeAreaView className="mx-4 gap-2">
       <AuthFlow />
-      <Text className="text-3xl text-primary font-extrabold -mb-2 mt-2">Settings</Text>
+      <Text className="text-3xl text-primary font-extrabold -mb-2 mt-2">
+        Settings
+      </Text>
       <ActionMenuOption
         platform="ios"
         note={!RNFlipboardFlex ? "FLEXTool is unavailable." : undefined}
@@ -50,5 +52,5 @@ export default function Menu() {
         client version: {process.env.EXPO_PUBLIC_VERSION}
       </Text>
     </SafeAreaView>
-  );
+  )
 }

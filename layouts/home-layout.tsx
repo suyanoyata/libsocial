@@ -1,7 +1,7 @@
-import { Icon } from "@/components/icon";
-import { useHomeTitles } from "@/features/home/api/use-home-titles";
-import { withImpact } from "@/lib/utils";
-import { router } from "expo-router";
+import { Icon } from "@/components/icon"
+import { useHomeTitles } from "@/features/home/api/use-home-titles"
+import { withImpact } from "@/lib/utils"
+import { router } from "expo-router"
 import {
   Pressable,
   RefreshControl,
@@ -9,15 +9,15 @@ import {
   TextInput,
   useColorScheme,
   View,
-} from "react-native";
+} from "react-native"
 
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 export const HomeLayout = ({ children }: { children?: React.ReactNode }) => {
-  const { top } = useSafeAreaInsets();
-  const { isRefetching, refetch } = useHomeTitles();
+  const { top } = useSafeAreaInsets()
+  const { isRefetching, refetch } = useHomeTitles()
 
-  const isDark = useColorScheme() == "dark";
+  const isDark = useColorScheme() == "dark"
 
   return (
     <View className="flex-1">
@@ -32,7 +32,11 @@ export const HomeLayout = ({ children }: { children?: React.ReactNode }) => {
             placeholderTextColor="#a1a1aa"
             className="placeholder:text-muted font-medium flex-1 pl-5"
           />
-          <Icon name="Search" className="text-muted absolute left-1.5" size={20} />
+          <Icon
+            name="Search"
+            className="text-muted absolute left-1.5"
+            size={20}
+          />
         </View>
         <Pressable
           className="flex-1 absolute top-0 left-0 h-14 w-full z-30"
@@ -53,5 +57,5 @@ export const HomeLayout = ({ children }: { children?: React.ReactNode }) => {
         {children}
       </ScrollView>
     </View>
-  );
-};
+  )
+}

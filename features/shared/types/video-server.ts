@@ -1,1 +1,1 @@
-export type VideoServer = { id: number; label: string; url: string };
+export type VideoServer = { id: number; label: string; url: string }

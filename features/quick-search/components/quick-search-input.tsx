@@ -1,19 +1,19 @@
-import { ScrollView, TextInput, View } from "react-native";
+import { ScrollView, TextInput, View } from "react-native"
 
-import { Button } from "@/components/ui/button";
-import { Text } from "@/components/ui/text";
+import { Button } from "@/components/ui/button"
+import { Text } from "@/components/ui/text"
 
-import { useQuickSearchHistory } from "@/features/quick-search/hooks/use-quick-search-history";
-import { Icon } from "@/components/icon";
+import { useQuickSearchHistory } from "@/features/quick-search/hooks/use-quick-search-history"
+import { Icon } from "@/components/icon"
 
 export const QuickSearchInput = ({
   search,
   setSearch,
 }: {
-  search: string;
-  setSearch: (value: string) => void;
+  search: string
+  setSearch: (value: string) => void
 }) => {
-  const { history, addToHistory, deleteFromHistory } = useQuickSearchHistory();
+  const { history, addToHistory, deleteFromHistory } = useQuickSearchHistory()
 
   return (
     <View className="px-2">
@@ -36,8 +36,8 @@ export const QuickSearchInput = ({
             size="sm"
             variant="ghost"
             onPress={() => {
-              setSearch(item);
-              addToHistory(item);
+              setSearch(item)
+              addToHistory(item)
             }}
             key={index}
             className="bg-muted-darken active:opacity-80"
@@ -55,5 +55,5 @@ export const QuickSearchInput = ({
         ))}
       </ScrollView>
     </View>
-  );
-};
+  )
+}

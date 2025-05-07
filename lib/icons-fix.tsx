@@ -1,10 +1,10 @@
-import { Bookmark, Loader, LucideIcon, Play, Unplug } from "lucide-react-native";
+import { Bookmark, Loader, LucideIcon, Play, Unplug } from "lucide-react-native"
 
-import FontAwesomeIcon from "react-native-vector-icons/FontAwesome6";
-import FeatherIcon from "react-native-vector-icons/Feather";
+import FontAwesomeIcon from "react-native-vector-icons/FontAwesome6"
+import FeatherIcon from "react-native-vector-icons/Feather"
 
-import { cssInterop } from "nativewind";
-import { Icon } from "@/components/icon";
+import { cssInterop } from "nativewind"
+import { Icon } from "@/components/icon"
 
 export function interopIcons(icons: LucideIcon[]) {
   icons.map((icon) =>
@@ -16,9 +16,17 @@ export function interopIcons(icons: LucideIcon[]) {
           opacity: true,
         },
       },
-    })
-  );
+    }),
+  )
 }
 
 export const iconFix = () =>
-  interopIcons([Icon, Loader, Unplug, Play, Bookmark, FontAwesomeIcon as any, FeatherIcon as any]);
+  interopIcons([
+    Icon,
+    Loader,
+    Unplug,
+    Play,
+    Bookmark,
+    FontAwesomeIcon as any,
+    FeatherIcon as any,
+  ])

@@ -1,62 +1,64 @@
-import { useTitleInfo } from "@/features/title/api/use-title-info";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useRoute } from "@react-navigation/native";
-import { useEffect, useState } from "react";
+import { useTitleInfo } from "@/features/title/api/use-title-info"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { useRoute } from "@react-navigation/native"
+import { useEffect, useState } from "react"
 
-import { ImageBackground, Platform, ScrollView, View } from "react-native";
-import FastImage from "@d11/react-native-fast-image";
-import { BlurView } from "expo-blur";
+import { ImageBackground, Platform, ScrollView, View } from "react-native"
+import FastImage from "@d11/react-native-fast-image"
+import { BlurView } from "expo-blur"
 
-import { FadeView } from "@/components/ui/fade-view";
-import { Text } from "@/components/ui/text";
+import { FadeView } from "@/components/ui/fade-view"
+import { Text } from "@/components/ui/text"
 
-import { TitleAbout } from "@/features/title/ui/title-about";
+import { TitleAbout } from "@/features/title/ui/title-about"
 
-import { titleInfoRouteSchema } from "@/features/title/types/title-info-route";
-import withBubble from "@/components/ui/withBubble";
-import { Unplug } from "lucide-react-native";
-import { BackButton } from "@/components/ui/back-button";
-import { ActivityIndicator } from "@/components/ui/activity-indicator";
+import { titleInfoRouteSchema } from "@/features/title/types/title-info-route"
+import withBubble from "@/components/ui/withBubble"
+import { Unplug } from "lucide-react-native"
+import { BackButton } from "@/components/ui/back-button"
+import { ActivityIndicator } from "@/components/ui/activity-indicator"
 
 export default function TitleInfo() {
-  const router = useRoute();
+  const router = useRoute()
 
-  const [shouldRender, setShouldRender] = useState(false);
+  const [shouldRender, setShouldRender] = useState(false)
 
   const { slug_url, site, withDelay } = router.params as {
-    slug_url: string;
-    site: string;
-    withDelay: string | undefined;
-  };
+    slug_url: string
+    site: string
+    withDelay: string | undefined
+  }
 
-  const { error } = titleInfoRouteSchema.safeParse({ slug_url, site });
+  const { error } = titleInfoRouteSchema.safeParse({ slug_url, site })
 
-  const { top } = useSafeAreaInsets();
+  const { top } = useSafeAreaInsets()
 
-  const { data } = useTitleInfo(slug_url, site);
+  const { data } = useTitleInfo(slug_url, site)
 
   useEffect(() => {
     if (!withDelay && data) {
-      setShouldRender(true);
+      setShouldRender(true)
     }
 
     if (withDelay && data) {
       setTimeout(() => {
-        setShouldRender(true);
-      }, 500);
+        setShouldRender(true)
+      }, 500)
     }
-  }, [withDelay, data]);
+  }, [withDelay, data])
 
   if (error) {
-    const Icon = withBubble(Unplug);
+    const Icon = withBubble(Unplug)
 
     return (
       <View className="items-center justify-center flex-1">
         <BackButton />
         <Icon />
-        <Text className="text-secondary text-base font-medium mt-2">Something went wrong</Text>
+        <Text className="text-secondary text-base font-medium mt-2">
+          Something went wrong
+        </Text>
       </View>
-    );
+    )
   }
 
   if (!data) {
@@ -65,10 +67,10 @@ export default function TitleInfo() {
         <BackButton />
         <ActivityIndicator />
       </View>
-    );
+    )
   }
 
-  if (!shouldRender) return null;
+  if (!shouldRender) return null
 
   return (
     <FadeView withEnter className="flex-1">
@@ -114,5 +116,5 @@ export default function TitleInfo() {
         </View>
       </ScrollView>
     </FadeView>
-  );
+  )
 }

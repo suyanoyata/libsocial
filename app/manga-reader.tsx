@@ -1,3 +1,3 @@
-import { MangaReaderUI } from "@/features/manga-reader/ui/reader";
+import { MangaReaderUI } from "@/features/manga-reader/ui/reader"
 
-export default MangaReaderUI;
+export default MangaReaderUI

@@ -1,96 +1,96 @@
-import { FadeView } from "@/components/ui/fade-view";
+import { FadeView } from "@/components/ui/fade-view"
 
-import { ReaderChapterNavigation } from "@/features/manga-reader/components/reader-chapter-navigation";
-import { ReaderHeader } from "@/features/manga-reader/components/reader-header";
+import { ReaderChapterNavigation } from "@/features/manga-reader/components/reader-chapter-navigation"
+import { ReaderHeader } from "@/features/manga-reader/components/reader-header"
 
-import { useRoute } from "@react-navigation/native";
-import { FlatList, useWindowDimensions, View } from "react-native";
+import { useRoute } from "@react-navigation/native"
+import { FlatList, useWindowDimensions, View } from "react-native"
 
-import { useReadingTracker } from "@/store/use-reading-tracker";
+import { useReadingTracker } from "@/store/use-reading-tracker"
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react"
 
-import { useTitleReadChapter } from "@/store/use-chapters-tracker";
-import { useProperties } from "@/store/use-properties";
+import { useTitleReadChapter } from "@/store/use-chapters-tracker"
+import { useProperties } from "@/store/use-properties"
 
-import { useChapter } from "@/features/manga-reader/api/use-chapter";
-import { useTitleInfo } from "@/features/title/api/use-title-info";
-import { useChapters } from "@/features/title/api/use-chapters";
+import { useChapter } from "@/features/manga-reader/api/use-chapter"
+import { useTitleInfo } from "@/features/title/api/use-title-info"
+import { useChapters } from "@/features/title/api/use-chapters"
 
-import { Text } from "@/components/ui/text";
-import MenuView from "react-native-context-menu-view";
+import { Text } from "@/components/ui/text"
+import MenuView from "react-native-context-menu-view"
 
-import { preloadNextChapter } from "@/features/manga-reader/lib/preload-chapter";
-import { BackButton } from "@/components/ui/back-button";
+import { preloadNextChapter } from "@/features/manga-reader/lib/preload-chapter"
+import { BackButton } from "@/components/ui/back-button"
 
-import { ReaderImage } from "@/features/manga-reader/components/reader-image";
-import withBubble from "@/components/ui/withBubble";
-import { SearchX } from "lucide-react-native";
+import { ReaderImage } from "@/features/manga-reader/components/reader-image"
+import withBubble from "@/components/ui/withBubble"
+import { SearchX } from "lucide-react-native"
 
-import { useQueryClient } from "@tanstack/react-query";
-import { useDeferredRender } from "@/hooks/use-deferred-render";
-import { useReaderScrollTo } from "@/features/manga-reader/hooks/use-reader-scroll-to";
-import { ActivityIndicator } from "@/components/ui/activity-indicator";
+import { useQueryClient } from "@tanstack/react-query"
+import { useDeferredRender } from "@/hooks/use-deferred-render"
+import { useReaderScrollTo } from "@/features/manga-reader/hooks/use-reader-scroll-to"
+import { ActivityIndicator } from "@/components/ui/activity-indicator"
 
 export const MangaReaderUI = () => {
-  const route = useRoute();
+  const route = useRoute()
 
-  const { width, height } = useWindowDimensions();
-  const [offset, setOffset] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
+  const { width, height } = useWindowDimensions()
+  const [offset, setOffset] = useState(0)
+  const [currentPage, setCurrentPage] = useState(1)
 
-  const shouldRender = useDeferredRender();
+  const shouldRender = useDeferredRender()
 
-  const { readerDisplayCurrentPage, showReaderScrollbar } = useProperties();
+  const { readerDisplayCurrentPage, showReaderScrollbar } = useProperties()
 
-  const { addItem } = useReadingTracker();
-  const { add } = useTitleReadChapter();
+  const { addItem } = useReadingTracker()
+  const { add } = useTitleReadChapter()
 
   const { slug_url, index } = route.params as {
-    slug_url: string;
-    index: string;
-  };
+    slug_url: string
+    index: string
+  }
 
-  const chapterIndex = Number(index);
+  const chapterIndex = Number(index)
 
   useEffect(() => {
     setTimeout(() => {
-      add(slug_url, chapterIndex);
-    }, 50);
-  }, []);
+      add(slug_url, chapterIndex)
+    }, 50)
+  }, [])
 
-  const { data: title } = useTitleInfo(slug_url, "1");
-  const { data: chapters } = useChapters(slug_url, title?.site);
+  const { data: title } = useTitleInfo(slug_url, "1")
+  const { data: chapters } = useChapters(slug_url, title?.site)
 
-  const nextChapter = chapters && chapters[chapterIndex + 1];
+  const nextChapter = chapters && chapters[chapterIndex + 1]
 
-  const { flatListRef, scroll } = useReaderScrollTo(slug_url, chapterIndex);
+  const { flatListRef, scroll } = useReaderScrollTo(slug_url, chapterIndex)
 
   const { data, refetch, isFetching, isError } = useChapter(
     slug_url,
-    chapters && chapters[chapterIndex]
-  );
+    chapters && chapters[chapterIndex],
+  )
 
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout | number | null = null;
+    let timeoutId: NodeJS.Timeout | number | null = null
 
-    if (isError) return;
+    if (isError) return
 
     if (!isFetching && data && data.pages.length == 0) {
       timeoutId = setTimeout(() => {
-        refetch();
-      }, 500);
+        refetch()
+      }, 500)
     }
 
     return () => {
       if (timeoutId) {
-        clearTimeout(timeoutId);
+        clearTimeout(timeoutId)
       }
-    };
-  }, [data, isFetching, isError]);
+    }
+  }, [data, isFetching, isError])
 
   useEffect(() => {
-    if (!title || !chapters) return;
+    if (!title || !chapters) return
 
     addItem({
       slug_url,
@@ -102,45 +102,47 @@ export const MangaReaderUI = () => {
       },
       site: Number(title.site),
       scrollTo: offset,
-    });
-  }, [slug_url, title, data, offset]);
+    })
+  }, [slug_url, title, data, offset])
 
   useEffect(() => {
-    if (data) scroll();
-  }, [data]);
+    if (data) scroll()
+  }, [data])
 
-  const keyExtractor = (item: { url: string; ratio: number }) => item.url;
+  const keyExtractor = (item: { url: string; ratio: number }) => item.url
 
   const renderItem = ({ item }: { item: { url: string; ratio: number } }) => (
     <ReaderImage url={item.url} ratio={item.ratio} />
-  );
+  )
 
-  const client = useQueryClient();
+  const client = useQueryClient()
 
   const shouldDownloadNextChapter = useMemo(() => {
-    const threshold = 0.5;
+    const threshold = 0.5
 
-    return data && currentPage / data?.pages.length > threshold;
-  }, [data, currentPage]);
+    return data && currentPage / data?.pages.length > threshold
+  }, [data, currentPage])
 
   useEffect(() => {
     if (shouldDownloadNextChapter) {
-      preloadNextChapter(client, slug_url, nextChapter);
+      preloadNextChapter(client, slug_url, nextChapter)
     }
-  }, [shouldDownloadNextChapter]);
+  }, [shouldDownloadNextChapter])
 
   if (isError) {
-    const ErrorIcon = withBubble(SearchX);
+    const ErrorIcon = withBubble(SearchX)
     return (
       <View className="flex-1 items-center justify-center">
         <BackButton />
         <ErrorIcon />
-        <Text className="text-primary mt-2 font-medium">Something went wrong</Text>
+        <Text className="text-primary mt-2 font-medium">
+          Something went wrong
+        </Text>
         <Text className="text-muted mt-2 text-sm font-semibold">
           Chapter is licensed or not found
         </Text>
       </View>
-    );
+    )
   }
 
   if (!chapters || !title) {
@@ -148,7 +150,7 @@ export const MangaReaderUI = () => {
       <View className="flex-1 items-center justify-center">
         <ActivityIndicator />
       </View>
-    );
+    )
   }
 
   if (data && data.pages.length == 0) {
@@ -156,9 +158,13 @@ export const MangaReaderUI = () => {
       <View className="flex-1 items-center justify-center">
         <BackButton />
         <ActivityIndicator />
-        {__DEV__ && <Text className="text-zinc-200 mt-2">Chapter is downloading, hang on...</Text>}
+        {__DEV__ && (
+          <Text className="text-zinc-200 mt-2">
+            Chapter is downloading, hang on...
+          </Text>
+        )}
       </View>
-    );
+    )
   }
 
   if (!data) {
@@ -167,13 +173,16 @@ export const MangaReaderUI = () => {
         <BackButton />
         <ActivityIndicator />
       </View>
-    );
+    )
   }
 
-  if (!shouldRender) return null;
+  if (!shouldRender) return null
 
   return (
-    <FadeView withEnter className="flex-1 items-center justify-center bg-primary">
+    <FadeView
+      withEnter
+      className="flex-1 items-center justify-center bg-primary"
+    >
       {readerDisplayCurrentPage && (
         <MenuView
           dropdownMenuMode
@@ -210,24 +219,31 @@ export const MangaReaderUI = () => {
         }}
         onViewableItemsChanged={(event) => {
           if (event.changed[0].index && event.changed[0].isViewable) {
-            setCurrentPage(event.changed[0].index);
+            setCurrentPage(event.changed[0].index)
           }
         }}
         keyExtractor={keyExtractor}
-        onMomentumScrollEnd={(event) => setOffset(event.nativeEvent.contentOffset.y)}
+        onMomentumScrollEnd={(event) =>
+          setOffset(event.nativeEvent.contentOffset.y)
+        }
         maxToRenderPerBatch={6}
         initialNumToRender={5}
         stickyHeaderIndices={[0]}
         stickyHeaderHiddenOnScroll
         showsVerticalScrollIndicator={showReaderScrollbar}
-        ListHeaderComponent={() => <ReaderHeader chapter={data} title={title} />}
+        ListHeaderComponent={() => (
+          <ReaderHeader chapter={data} title={title} />
+        )}
         ListFooterComponent={() => (
-          <ReaderChapterNavigation chapterIndex={chapterIndex} chapters={chapters} />
+          <ReaderChapterNavigation
+            chapterIndex={chapterIndex}
+            chapters={chapters}
+          />
         )}
         style={{ width, height }}
         data={data.pages}
         renderItem={renderItem}
       />
     </FadeView>
-  );
-};
+  )
+}

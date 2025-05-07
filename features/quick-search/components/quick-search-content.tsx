@@ -1,13 +1,19 @@
-import { ScrollView, View } from "react-native";
+import { ScrollView, View } from "react-native"
 
-import { QuickSearchCard } from "@/features/quick-search/components/quick-search-card";
+import { QuickSearchCard } from "@/features/quick-search/components/quick-search-card"
 
-import { useQuickSearch } from "@/features/quick-search/api/use-quick-search";
-import { FlashList } from "@shopify/flash-list";
-import { FadeView } from "@/components/ui/fade-view";
+import { useQuickSearch } from "@/features/quick-search/api/use-quick-search"
+import { FlashList } from "@shopify/flash-list"
+import { FadeView } from "@/components/ui/fade-view"
 
-export const QuickSearchContent = ({ q, live }: { q: string; live: string }) => {
-  const { data } = useQuickSearch(q);
+export const QuickSearchContent = ({
+  q,
+  live,
+}: {
+  q: string
+  live: string
+}) => {
+  const { data } = useQuickSearch(q)
 
   if (data && q == live) {
     return (
@@ -20,6 +26,6 @@ export const QuickSearchContent = ({ q, live }: { q: string; live: string }) => 
           renderItem={({ item }) => <QuickSearchCard item={item} />}
         />
       </FadeView>
-    );
+    )
   }
-};
+}

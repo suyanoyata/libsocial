@@ -1,33 +1,39 @@
-import { useEpisodesAPI } from "@/features/title/api/use-episodes-api";
+import { useEpisodesAPI } from "@/features/title/api/use-episodes-api"
 
-import { useWindowDimensions, View } from "react-native";
-import { useEffect, useState } from "react";
+import { useWindowDimensions, View } from "react-native"
+import { useEffect, useState } from "react"
 
-import { useVideoPlayer, VideoView } from "expo-video";
-import { useAnimeStore } from "@/features/anime-player/context/anime-context";
+import { useVideoPlayer, VideoView } from "expo-video"
+import { useAnimeStore } from "@/features/anime-player/context/anime-context"
 
-import { useEpisode } from "@/features/anime-player/api/use-episode";
+import { useEpisode } from "@/features/anime-player/api/use-episode"
 
-import Animated, { FadeIn, FadeInDown, FadeOut, FadeOutDown } from "react-native-reanimated";
-import { Text } from "@/components/ui/text";
-import { useEventListener } from "expo";
-import { Button } from "@/components/ui/button";
-import { ActivityIndicator } from "@/components/ui/activity-indicator";
+import Animated, {
+  FadeIn,
+  FadeInDown,
+  FadeOut,
+  FadeOutDown,
+} from "react-native-reanimated"
+import { Text } from "@/components/ui/text"
+import { useEventListener } from "expo"
+import { Button } from "@/components/ui/button"
+import { ActivityIndicator } from "@/components/ui/activity-indicator"
 
 export const AnimePlayer = () => {
-  const { width } = useWindowDimensions();
-  const [isLoaded, setLoaded] = useState(false);
+  const { width } = useWindowDimensions()
+  const [isLoaded, setLoaded] = useState(false)
 
-  const { slug_url, selectedEpisodeIndex, setEpisodeIndex } = useAnimeStore();
+  const { slug_url, selectedEpisodeIndex, setEpisodeIndex } = useAnimeStore()
 
-  const { data: episodes } = useEpisodesAPI(slug_url);
-  const { data } = useEpisode(episodes && episodes[selectedEpisodeIndex - 1].id);
+  const { data: episodes } = useEpisodesAPI(slug_url)
+  const { data } = useEpisode(episodes && episodes[selectedEpisodeIndex - 1].id)
 
-  const [shouldDisplayNextEpisode, setShouldDisplayNextEpisode] = useState(false);
+  const [shouldDisplayNextEpisode, setShouldDisplayNextEpisode] =
+    useState(false)
 
   useEffect(() => {
-    setLoaded(false);
-  }, [selectedEpisodeIndex]);
+    setLoaded(false)
+  }, [selectedEpisodeIndex])
 
   const player = useVideoPlayer(
     {
@@ -37,47 +43,54 @@ export const AnimePlayer = () => {
       },
     },
     (player) => {
-      player.timeUpdateEventInterval = 1;
-      player.play();
-    }
-  );
+      player.timeUpdateEventInterval = 1
+      player.play()
+    },
+  )
 
   useEventListener(player, "statusChange", (event) => {
     if (event.status == "readyToPlay") {
-      setLoaded(true);
+      setLoaded(true)
     }
-  });
+  })
 
   useEventListener(player, "timeUpdate", (event) => {
-    if (!isLoaded) return null;
+    if (!isLoaded) return null
 
-    setShouldDisplayNextEpisode(event.currentTime >= player.duration - (data?.endingLength ?? 90));
-  });
+    setShouldDisplayNextEpisode(
+      event.currentTime >= player.duration - (data?.endingLength ?? 90),
+    )
+  })
 
   return (
     <View className="mt-3 mx-2 relative overflow-hidden rounded-xl">
       <Animated.View entering={FadeIn}>
-        {shouldDisplayNextEpisode && episodes && selectedEpisodeIndex + 1 <= episodes.length && (
-          <Animated.View
-            className="absolute right-8 bottom-8 z-20"
-            entering={FadeInDown}
-            exiting={FadeOutDown}
-          >
-            <Button
-              onPress={() => {
-                if (episodes && selectedEpisodeIndex + 1 <= episodes?.length) {
-                  setEpisodeIndex(selectedEpisodeIndex + 1);
-                  setShouldDisplayNextEpisode(false);
-                  setLoaded(false);
-                }
-              }}
-              variant="tonal"
-              size="sm"
+        {shouldDisplayNextEpisode &&
+          episodes &&
+          selectedEpisodeIndex + 1 <= episodes.length && (
+            <Animated.View
+              className="absolute right-8 bottom-8 z-20"
+              entering={FadeInDown}
+              exiting={FadeOutDown}
             >
-              Next episode
-            </Button>
-          </Animated.View>
-        )}
+              <Button
+                onPress={() => {
+                  if (
+                    episodes &&
+                    selectedEpisodeIndex + 1 <= episodes?.length
+                  ) {
+                    setEpisodeIndex(selectedEpisodeIndex + 1)
+                    setShouldDisplayNextEpisode(false)
+                    setLoaded(false)
+                  }
+                }}
+                variant="tonal"
+                size="sm"
+              >
+                Next episode
+              </Button>
+            </Animated.View>
+          )}
         <VideoView
           player={player}
           style={{
@@ -97,13 +110,17 @@ export const AnimePlayer = () => {
         >
           {player.status == "loading" && <ActivityIndicator />}
           {player.status == "error" && data && !data.source && (
-            <Text className="text-muted font-medium text-sm">Can't find this upload</Text>
+            <Text className="text-muted font-medium text-sm">
+              Can't find this upload
+            </Text>
           )}
           {data && data.source && player.status == "error" && (
-            <Text className="text-muted font-medium text-sm">Can't play this type of media</Text>
+            <Text className="text-muted font-medium text-sm">
+              Can't play this type of media
+            </Text>
           )}
         </Animated.View>
       )}
     </View>
-  );
-};
+  )
+}

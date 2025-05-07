@@ -1,18 +1,18 @@
-import { useAnimeStore } from "@/features/anime-player/context/anime-context";
+import { useAnimeStore } from "@/features/anime-player/context/anime-context"
 
-import { useTitleInfo } from "@/features/title/api/use-title-info";
+import { useTitleInfo } from "@/features/title/api/use-title-info"
 
-import FastImage from "@d11/react-native-fast-image";
-import { Text } from "@/components/ui/text";
+import FastImage from "@d11/react-native-fast-image"
+import { Text } from "@/components/ui/text"
 
-import { View } from "react-native";
+import { View } from "react-native"
 
 export const AnimeHeaderInfo = () => {
-  const { slug_url } = useAnimeStore();
+  const { slug_url } = useAnimeStore()
 
-  const { data } = useTitleInfo(slug_url, "5");
+  const { data } = useTitleInfo(slug_url, "5")
 
-  if (!data) return;
+  if (!data) return
 
   return (
     <View className="mx-2 flex-row gap-2 mt-12">
@@ -35,5 +35,5 @@ export const AnimeHeaderInfo = () => {
         </Text>
       </View>
     </View>
-  );
-};
+  )
+}

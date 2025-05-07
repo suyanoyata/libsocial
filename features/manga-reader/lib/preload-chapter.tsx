@@ -1,38 +1,43 @@
-import { QueryClient } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query"
 
-import FastImage from "@d11/react-native-fast-image";
+import FastImage from "@d11/react-native-fast-image"
 
-import { api } from "@/lib/axios";
+import { api } from "@/lib/axios"
 
-import { ReaderChapter } from "@/features/manga-reader/types/reader-chapter";
-import { Chapter } from "@/features/shared/types/chapter";
+import { ReaderChapter } from "@/features/manga-reader/types/reader-chapter"
+import { Chapter } from "@/features/shared/types/chapter"
 
 export const preloadNextChapter = async (
   client: QueryClient,
   slug_url: string,
-  nextChapter?: Chapter
+  nextChapter?: Chapter,
 ) => {
   const didLoadNextChapter = !!client.getQueryData<ReaderChapter>([
     "manga-chapter-reader",
     slug_url,
     nextChapter?.volume,
     nextChapter?.number,
-  ]);
+  ])
 
-  if (didLoadNextChapter) return;
+  if (didLoadNextChapter) return
 
   if (nextChapter?.volume && nextChapter?.number) {
     const {
       data: { data },
     } = await api.get<{ data: ReaderChapter }>(
-      `/manga/${slug_url}/chapter?volume=${nextChapter.volume}&number=${nextChapter.number}`
-    );
+      `/manga/${slug_url}/chapter?volume=${nextChapter.volume}&number=${nextChapter.number}`,
+    )
 
     client.setQueryData<ReaderChapter>(
-      ["manga-chapter-reader", slug_url, nextChapter.volume, nextChapter.number],
-      data
-    );
+      [
+        "manga-chapter-reader",
+        slug_url,
+        nextChapter.volume,
+        nextChapter.number,
+      ],
+      data,
+    )
 
-    FastImage.preload(data.pages.map((page) => ({ uri: page.url })));
+    FastImage.preload(data.pages.map((page) => ({ uri: page.url })))
   }
-};
+}

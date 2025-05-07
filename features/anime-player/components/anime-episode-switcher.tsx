@@ -1,20 +1,20 @@
-import { FlatList } from "react-native";
-import { Button } from "@/components/ui/button";
+import { FlatList } from "react-native"
+import { Button } from "@/components/ui/button"
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
-import { useAnimeStore } from "@/features/anime-player/context/anime-context";
-import { useEpisodesAPI } from "@/features/title/api/use-episodes-api";
+import { useAnimeStore } from "@/features/anime-player/context/anime-context"
+import { useEpisodesAPI } from "@/features/title/api/use-episodes-api"
 
-import { TitleEpisodeBase } from "@/features/title/types/title-episodes-response";
+import { TitleEpisodeBase } from "@/features/title/types/title-episodes-response"
 
 export const AnimeEpisodeSwitcher = () => {
-  const { slug_url, selectedEpisodeIndex, setEpisodeIndex } = useAnimeStore();
+  const { slug_url, selectedEpisodeIndex, setEpisodeIndex } = useAnimeStore()
 
-  const { data } = useEpisodesAPI(slug_url);
+  const { data } = useEpisodesAPI(slug_url)
 
   const renderItem = ({ item }: { item: TitleEpisodeBase }) => {
-    const isSelected = item.item_number === selectedEpisodeIndex;
+    const isSelected = item.item_number === selectedEpisodeIndex
 
     return (
       <Button
@@ -23,10 +23,10 @@ export const AnimeEpisodeSwitcher = () => {
       >
         Episode {item.number}
       </Button>
-    ) 
-  };
+    )
+  }
 
-  const keyExtractor = (item: TitleEpisodeBase) => item.id.toString();
+  const keyExtractor = (item: TitleEpisodeBase) => item.id.toString()
 
   return (
     <FlatList
@@ -38,5 +38,5 @@ export const AnimeEpisodeSwitcher = () => {
       data={data}
       renderItem={renderItem}
     />
-  );
-};
+  )
+}

@@ -1,17 +1,17 @@
-import { ScrollView } from "react-native";
+import { ScrollView } from "react-native"
 
-import { PulseView } from "@/components/ui/pulse-view";
+import { PulseView } from "@/components/ui/pulse-view"
 
-import { useHomeTitles } from "@/features/home/api/use-home-titles";
+import { useHomeTitles } from "@/features/home/api/use-home-titles"
 
-import { TitleCard } from "@/features/home/components/title-card";
-import { TitleCardPlaceholder } from "@/features/home/components/title-card-placeholder";
-import { FadeView } from "@/components/ui/fade-view";
+import { TitleCard } from "@/features/home/components/title-card"
+import { TitleCardPlaceholder } from "@/features/home/components/title-card-placeholder"
+import { FadeView } from "@/components/ui/fade-view"
 
 export const PopularTitles = () => {
-  const { data } = useHomeTitles();
+  const { data } = useHomeTitles()
 
-  const shouldRenderItems = !!data;
+  const shouldRenderItems = !!data
 
   return (
     <ScrollView
@@ -38,5 +38,5 @@ export const PopularTitles = () => {
         </PulseView>
       )}
     </ScrollView>
-  );
-};
+  )
+}

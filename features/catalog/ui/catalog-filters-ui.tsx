@@ -1,51 +1,53 @@
-import { Pressable, View } from "react-native";
-import { Text } from "@/components/ui/text";
+import { Pressable, View } from "react-native"
+import { Text } from "@/components/ui/text"
 
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@/components/ui/checkbox"
 
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useFilterStore } from "@/features/catalog/store/use-filter-store";
-import { useGenresConstants } from "@/features/shared/api/use-filter-constants";
+import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { useFilterStore } from "@/features/catalog/store/use-filter-store"
+import { useGenresConstants } from "@/features/shared/api/use-filter-constants"
 
-import { memo, useCallback } from "react";
-import Animated, { FadeIn } from "react-native-reanimated";
-import { useDeferredRender } from "@/hooks/use-deferred-render";
+import { memo, useCallback } from "react"
+import Animated, { FadeIn } from "react-native-reanimated"
+import { useDeferredRender } from "@/hooks/use-deferred-render"
 
 const GenreRender = memo(
   ({ item }: { item: { name: string; id: number } }) => {
-    const checked = useFilterStore((state) => state.genres.includes(item.id));
-    const addGenre = useFilterStore((state) => state.addGenre);
-    const removeGenre = useFilterStore((state) => state.removeGenre);
+    const checked = useFilterStore((state) => state.genres.includes(item.id))
+    const addGenre = useFilterStore((state) => state.addGenre)
+    const removeGenre = useFilterStore((state) => state.removeGenre)
 
     const handlePress = useCallback(() => {
       if (checked) {
-        removeGenre(item.id);
+        removeGenre(item.id)
       } else {
-        addGenre(item.id);
+        addGenre(item.id)
       }
-    }, [checked, item.id, removeGenre, addGenre]);
+    }, [checked, item.id, removeGenre, addGenre])
 
     return (
       <Pressable onPress={handlePress} className="flex-row items-center gap-2">
         <Checkbox checked={checked} />
-        <Text className="text-secondary font-medium text-base">{item.name}</Text>
+        <Text className="text-secondary font-medium text-base">
+          {item.name}
+        </Text>
       </Pressable>
-    );
+    )
   },
-  (prev, next) => prev.item.id === next.item.id
-);
+  (prev, next) => prev.item.id === next.item.id,
+)
 
 export const CatalogGenresFilter = () => {
-  const { data } = useGenresConstants();
+  const { data } = useGenresConstants()
 
-  const { bottom } = useSafeAreaInsets();
-  const enabled = useDeferredRender();
+  const { bottom } = useSafeAreaInsets()
+  const enabled = useDeferredRender()
 
   const renderItem = ({ item }: { item: { name: string; id: number } }) => (
     <GenreRender item={item} />
-  );
+  )
 
-  const keyExtractor = (item: { id: number }) => item.id.toString();
+  const keyExtractor = (item: { id: number }) => item.id.toString()
 
   return (
     <View className="flex-1 mt-3 mx-4">
@@ -71,5 +73,5 @@ export const CatalogGenresFilter = () => {
         />
       )}
     </View>
-  );
-};
+  )
+}

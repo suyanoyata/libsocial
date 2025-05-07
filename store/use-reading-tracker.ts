@@ -1,27 +1,27 @@
-import { zustandStorage } from "@/lib/persistent-zustand-storage";
-import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
+import { zustandStorage } from "@/lib/persistent-zustand-storage"
+import { create } from "zustand"
+import { createJSONStorage, persist } from "zustand/middleware"
 
 export type LastReadItem = {
-  slug_url: string;
-  title: string;
-  lastReadChapter: number;
-  overallChapters: number;
+  slug_url: string
+  title: string
+  lastReadChapter: number
+  overallChapters: number
   cover: {
-    default: string;
-  };
-  site: number;
-  scrollTo: number;
-  hide: boolean;
-};
+    default: string
+  }
+  site: number
+  scrollTo: number
+  hide: boolean
+}
 
 export interface ApplicationProperties {
-  lastReadItems: LastReadItem[];
-  addItem: (lastReadItem: Omit<LastReadItem, "hide">) => void;
-  get: (slug_url: string) => LastReadItem | undefined;
-  removeItem: (slug_url: string) => void;
-  reset: () => void;
-  updateLastReadChapter: (slug_url: string, chapterIndex: number) => void;
+  lastReadItems: LastReadItem[]
+  addItem: (lastReadItem: Omit<LastReadItem, "hide">) => void
+  get: (slug_url: string) => LastReadItem | undefined
+  removeItem: (slug_url: string) => void
+  reset: () => void
+  updateLastReadChapter: (slug_url: string, chapterIndex: number) => void
 }
 
 export const useReadingTracker = create<ApplicationProperties>()(
@@ -35,10 +35,10 @@ export const useReadingTracker = create<ApplicationProperties>()(
             ...lastReadItem,
             lastReadChapter: lastReadItem.lastReadChapter + 1,
             hide: false,
-          };
+          }
           const existingTitle = state.lastReadItems.find(
-            (item) => item.slug_url == lastReadItem.slug_url
-          );
+            (item) => item.slug_url == lastReadItem.slug_url,
+          )
 
           if (existingTitle) {
             if (
@@ -46,39 +46,39 @@ export const useReadingTracker = create<ApplicationProperties>()(
               (existingTitle.lastReadChapter == newItem.lastReadChapter &&
                 existingTitle.scrollTo > newItem.scrollTo)
             ) {
-              return { lastReadItems: state.lastReadItems };
+              return { lastReadItems: state.lastReadItems }
             }
 
             const filtered = state.lastReadItems.filter(
-              (item) => item.slug_url !== lastReadItem.slug_url
-            );
+              (item) => item.slug_url !== lastReadItem.slug_url,
+            )
 
-            filtered.unshift(newItem);
+            filtered.unshift(newItem)
 
-            return { lastReadItems: filtered };
+            return { lastReadItems: filtered }
           }
 
-          return { lastReadItems: [newItem, ...state.lastReadItems] };
+          return { lastReadItems: [newItem, ...state.lastReadItems] }
         }),
 
       get: (slug_url): LastReadItem | undefined => {
-        const items = get().lastReadItems;
+        const items = get().lastReadItems
 
-        return items.find((item) => slug_url == item.slug_url);
+        return items.find((item) => slug_url == item.slug_url)
       },
 
       removeItem: (slug_url) =>
         set((state) => {
           return {
             lastReadItems: state.lastReadItems.map((item) =>
-              item.slug_url == slug_url ? { ...item, hide: true } : item
+              item.slug_url == slug_url ? { ...item, hide: true } : item,
             ),
-          };
+          }
         }),
 
       reset: () => {
         zustandStorage.removeItem("libsocial.client.title-storage"),
-          set(() => ({ lastReadItems: [] }));
+          set(() => ({ lastReadItems: [] }))
       },
 
       updateLastReadChapter(slug_url, chapterIndex) {
@@ -89,17 +89,17 @@ export const useReadingTracker = create<ApplicationProperties>()(
                 ...item,
                 lastReadChapter: chapterIndex + 1,
                 hide: false,
-              };
+              }
             }
-            return item;
-          });
-          return { lastReadItems };
-        });
+            return item
+          })
+          return { lastReadItems }
+        })
       },
     }),
     {
       name: "libsocial.client.title-storage",
       storage: createJSONStorage(() => zustandStorage),
-    }
-  )
-);
+    },
+  ),
+)

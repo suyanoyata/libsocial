@@ -1,11 +1,11 @@
-import "i18next";
-import en from "@/i18n/en.json";
+import "i18next"
+import en from "@/i18n/en.json"
 
 declare module "i18next" {
   interface CustomTypeOptions {
-    defaultNS: "en";
+    defaultNS: "en"
     resources: {
-      en: typeof en;
-    };
+      en: typeof en
+    }
   }
 }

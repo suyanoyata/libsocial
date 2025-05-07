@@ -1,35 +1,41 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
-import { Platform, View, ViewStyle } from "react-native";
-import { Link } from "expo-router";
+import { Platform, View, ViewStyle } from "react-native"
+import { Link } from "expo-router"
 
-import { Text } from "@/components/ui/text";
+import { Text } from "@/components/ui/text"
 
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Icon } from "@/components/icon";
+import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { Icon } from "@/components/icon"
 
 type BackButtonProps = ViewStyle & {
-  className?: string;
-  textClassName?: string;
-  iconClassName?: string;
-  position?: "absolute" | "static";
-};
+  className?: string
+  textClassName?: string
+  iconClassName?: string
+  position?: "absolute" | "static"
+}
 
-export const BackButton = ({ position = "absolute", ...props }: BackButtonProps) => {
-  const { top } = useSafeAreaInsets();
+export const BackButton = ({
+  position = "absolute",
+  ...props
+}: BackButtonProps) => {
+  const { top } = useSafeAreaInsets()
 
   const marginTop = () => {
-    if (position == "static") return 0;
+    if (position == "static") return 0
 
-    if (Platform.OS == "ios") return top - 2;
+    if (Platform.OS == "ios") return top - 2
 
-    return 10;
-  };
+    return 10
+  }
 
   return (
     <Link
       href="../"
-      className={cn(position == "absolute" && "absolute top-2 left-2", props.className)}
+      className={cn(
+        position == "absolute" && "absolute top-2 left-2",
+        props.className,
+      )}
       style={{ marginTop: marginTop(), zIndex: 999 }}
       {...props}
     >
@@ -39,8 +45,15 @@ export const BackButton = ({ position = "absolute", ...props }: BackButtonProps)
           className={cn("text-primary", props.iconClassName)}
           strokeWidth={2.25}
         />
-        <Text className={cn("text-primary text-lg font-medium", props.textClassName)}>Back</Text>
+        <Text
+          className={cn(
+            "text-primary text-lg font-medium",
+            props.textClassName,
+          )}
+        >
+          Back
+        </Text>
       </View>
     </Link>
-  );
-};
+  )
+}
