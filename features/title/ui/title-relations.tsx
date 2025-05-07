@@ -12,7 +12,6 @@ import {
 import { api } from "@/lib/axios"
 
 import { useQuery } from "@tanstack/react-query"
-import { useMemo } from "react"
 
 import { FlatList, View } from "react-native"
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated"
@@ -24,10 +23,14 @@ export const TitleRelations = ({
   endpoint,
   site,
 }: TitleRelationsProps) => {
-  const { data, isPending } = useQuery<RelationsResponse>({
+  const { data } = useQuery<RelationsResponse>({
     queryKey: [`title-${endpoint}`, slug_url],
     queryFn: async () =>
-      (await api.get(`/manga/${slug_url}/${endpoint}`)).data.data,
+      (
+        await api.get(
+          `/${site == "5" ? "anime" : "manga"}/${slug_url}/${endpoint}`
+        )
+      ).data.data,
   })
 
   return (

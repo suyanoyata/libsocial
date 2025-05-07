@@ -7,7 +7,7 @@ export type TitleRelationsProps = {
 
 export type RelationsData = {
   reason: string
-  relatedManga: {
+  media: {
     id: number
     name: string
     eng_name: string

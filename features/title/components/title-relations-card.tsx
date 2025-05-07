@@ -14,8 +14,8 @@ export const TitleRelationsCard = ({ item }: { item: RelationsData }) => {
           router.push({
             pathname: "/title-info",
             params: {
-              slug_url: item.relatedManga.slug_url,
-              site: item.relatedManga.site,
+              slug_url: item.media.slug_url,
+              site: item.media.site,
             },
           })
         }
@@ -23,7 +23,7 @@ export const TitleRelationsCard = ({ item }: { item: RelationsData }) => {
       >
         <FastImage
           source={{
-            uri: item.relatedManga.cover.default,
+            uri: item.media.cover.default,
           }}
           style={{
             width: 100,
@@ -39,7 +39,7 @@ export const TitleRelationsCard = ({ item }: { item: RelationsData }) => {
             className="text-secondary text-base font-semibold"
             numberOfLines={2}
           >
-            {item.relatedManga.eng_name ?? item.relatedManga.name}
+            {item.media.eng_name ?? item.media.name}
           </Text>
         </View>
       </Pressable>

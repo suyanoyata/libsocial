@@ -1,5 +1,7 @@
 {
   "related": {
+    "prequel": "Prequel",
+    "sequel": "Sequel",
     "spinoff": "Spin-Off"
   }
 }

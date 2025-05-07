@@ -4,6 +4,7 @@ import { View } from "react-native"
 
 import { BackButton } from "@/components/ui/back-button"
 import { QuickSearchHeader } from "@/components/ui/quick-search-header"
+import { Header } from "@/components/ui/header"
 
 // Provided here screens will be non-modal unless it's first in stack
 export default function ModalLayout() {
@@ -19,6 +20,16 @@ export default function ModalLayout() {
         ),
       }}
     >
+      <Stack.Screen
+        name="relations-add-title"
+        options={{
+          headerShown: true,
+          title: "Add relation",
+          header: (props) => (
+            <Header showBackButton className="my-1" {...props} />
+          ),
+        }}
+      />
       <Stack.Screen
         name="quick-search-title-preview"
         options={{

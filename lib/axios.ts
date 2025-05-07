@@ -22,13 +22,13 @@ export const api = axios.create({
 api.interceptors.request.use(
   (request) => {
     logger.request(
-      `${request.method?.toUpperCase()} ${request.baseURL}${request.url}`,
+      `${request.method?.toUpperCase()} ${request.baseURL}${request.url}`
     )
     return request
   },
   (error) => {
     console.log(`Request rejected ${error}`)
-  },
+  }
 )
 api.interceptors.response.use(
   (response) => {
@@ -37,11 +37,11 @@ api.interceptors.response.use(
   function (error) {
     if (error.response) {
       logger.error(
-        `${error.response.status} ${JSON.stringify(error.response.data)}`,
+        `${error.response.status} ${JSON.stringify(error.response.data)}`
       )
     } else {
       logger.error(`Request rejected ${error}`)
     }
-    return Promise.reject(error)
-  },
+    return Promise.reject(error.response.data)
+  }
 )

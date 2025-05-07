@@ -25,7 +25,7 @@ const Benefit = ({
         className={cn(
           fill
             ? "dark:fill-violet-300 fill-violet-700 text-transparent"
-            : "dark:text-violet-300 text-violet-700",
+            : "dark:text-violet-300 text-violet-700"
         )}
       />
       <View className="gap-0.5 flex-1">
@@ -74,7 +74,7 @@ export default function SignInPromptModal() {
         className="mt-auto flex-row gap-2"
         style={{ paddingBottom: bottom }}
       >
-        <SignInDiscord />
+        <SignInDiscord fun={() => router.back()} />
         <SignInAnonymous className="flex-1" fun={() => router.back()} />
       </View>
     </View>

@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Text } from "@/components/ui/text"
 
 import { SignInDiscord } from "@/features/auth/components/sign-in-discord"
+import { router } from "expo-router"
 
 export default function ConnectAccountPrompt() {
   const { bottom } = useSafeAreaInsets()
@@ -16,7 +17,7 @@ export default function ConnectAccountPrompt() {
       <Text className="text-muted text-center font-medium mb-auto">
         This feature is not available for anonymous users
       </Text>
-      <SignInDiscord />
+      <SignInDiscord fun={() => router.back()} />
     </View>
   )
 }
