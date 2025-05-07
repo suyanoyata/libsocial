@@ -1,4 +1,4 @@
-import { Loader, LucideIcon, Unplug } from "lucide-react-native";
+import { Bookmark, Loader, LucideIcon, Play, Unplug } from "lucide-react-native";
 
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome6";
 import FeatherIcon from "react-native-vector-icons/Feather";
@@ -21,4 +21,4 @@ export function interopIcons(icons: LucideIcon[]) {
 }
 
 export const iconFix = () =>
-  interopIcons([Icon, Loader, Unplug, FontAwesomeIcon as any, FeatherIcon as any]);
+  interopIcons([Icon, Loader, Unplug, Play, Bookmark, FontAwesomeIcon as any, FeatherIcon as any]);

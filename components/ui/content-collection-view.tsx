@@ -6,11 +6,11 @@ import { useWindowDimensions, View } from "react-native";
 import { Text } from "@/components/ui/text";
 import { Button } from "@/components/ui/button";
 
-import { SortAsc, SortDesc } from "lucide-react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { FlashList, FlashListProps } from "@shopify/flash-list";
 
 import { cn } from "@/lib/utils";
+import { Icon } from "@/components/icon";
 
 interface Props<T> extends FlashListProps<T> {
   title: string;
@@ -32,7 +32,7 @@ export const ContentCollectionView = <T,>({
 
   const [isReversing, startReversing] = useTransition();
 
-  const Icon = descending ? SortAsc : SortDesc;
+  const iconName = descending ? "ArrowUpNarrowWide" : "ArrowDownNarrowWide";
 
   return (
     <Animated.View entering={FadeIn} className={cn("flex-1")}>
@@ -44,8 +44,7 @@ export const ContentCollectionView = <T,>({
           }}
           variant="ghost"
           className="rounded-full w-28"
-          textClassName="text-secondary"
-          iconLeft={<Icon className="text-secondary" size={18} />}
+          iconLeft={iconName}
         >
           Order
         </Button>

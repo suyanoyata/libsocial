@@ -1,6 +1,5 @@
 import { Loader } from "lucide-react-native";
 import { useEffect } from "react";
-import { View } from "react-native";
 import Animated, {
   cancelAnimation,
   Easing,

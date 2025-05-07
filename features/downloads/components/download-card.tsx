@@ -6,7 +6,6 @@ import { TransitionedImage } from "@/features/shared/components/transitioned-ima
 import { router } from "expo-router";
 
 import { DownloadedChapter, useDownloads } from "@/features/downloads/store/use-downloads";
-import { X } from "lucide-react-native";
 
 export const DownloadCard = ({ item }: { item: DownloadedChapter }) => {
   const deleteChapter = useDownloads((state) => state.deleteChapter);

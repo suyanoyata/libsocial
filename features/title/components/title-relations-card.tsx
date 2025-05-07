@@ -31,7 +31,7 @@ export const TitleRelationsCard = ({ item }: { item: RelationsData }) => {
           }}
         />
         <View className="flex-1 ml-2 my-2">
-          <Text className="text-sm text-accent font-medium">
+          <Text className="text-sm dark:text-violet-300 text-violet-400 font-medium">
             {/* @ts-ignore */}
             {i18n.t(`related.${item.reason}`)}
           </Text>

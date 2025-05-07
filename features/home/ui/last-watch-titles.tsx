@@ -1,5 +1,4 @@
-import { Trash2 } from "lucide-react-native";
-import { View, ScrollView, FlatList } from "react-native";
+import { View, FlatList } from "react-native";
 
 import { Text } from "@/components/ui/text";
 
@@ -32,9 +31,9 @@ export const LastWatchTitles = () => {
       <View className="flex-row items-center justify-between mt-3">
         <Text className="recent-viewed-title">You've stopped at</Text>
         <Button
-          textClassName="max-sm:text-sm"
+          size="sm"
           onPress={() => reset()}
-          iconLeft={<Trash2 size={18} color="white" />}
+          iconLeft="Trash2"
           variant="destructive"
         >
           Clear all

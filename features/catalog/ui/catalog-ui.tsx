@@ -23,7 +23,7 @@ export const Catalog = () => {
   const { search } = useFilterStore();
   const [query] = useDebounce(search, 500);
 
-  const { data, isFetchingNextPage, fetchNextPage, isFetching, refetch } = useCatalogAPI(query);
+  const { data, isFetchingNextPage, fetchNextPage, isRefetching, refetch } = useCatalogAPI(query);
 
   const { width, height } = useWindowDimensions();
   const { catalogColumns, setCatalogColumns, setCatalogImageWidth } = useProperties();
@@ -81,7 +81,7 @@ export const Catalog = () => {
             refreshControl={
               <RefreshControl
                 tintColor={isDark ? "white" : "black"}
-                refreshing={isFetching}
+                refreshing={isRefetching}
                 onRefresh={refetch}
               />
             }

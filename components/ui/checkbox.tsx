@@ -12,8 +12,8 @@ export const Checkbox = ({ checked, className, ...props }: Props) => {
   return (
     <Pressable
       className={cn(
-        "items-center justify-center size-6 bg-transparent rounded-md border border-orange-400 pointer-events-none",
-        checked && "bg-orange-400",
+        "items-center justify-center size-6 bg-transparent rounded-md border border-violet-400 pointer-events-none",
+        checked && "bg-violet-400",
         className
       )}
       {...props}

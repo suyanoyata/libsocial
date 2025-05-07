@@ -7,7 +7,6 @@ import { router } from "expo-router";
 import { SignInDiscord } from "@/features/auth/components/sign-in-discord";
 import { SignInAnonymous } from "@/features/auth/components/sign-in-anonymous";
 import { Icon } from "@/components/icon";
-import { ActivityIndicator } from "@/components/ui/activity-indicator";
 
 const Benefit = ({
   data,
@@ -67,7 +66,6 @@ export default function SignInPromptModal() {
         }}
         icon="HandHelping"
       />
-      <ActivityIndicator />
       <View className="mt-auto flex-row gap-2" style={{ paddingBottom: bottom }}>
         <SignInDiscord />
         <SignInAnonymous className="flex-1" fun={() => router.back()} />

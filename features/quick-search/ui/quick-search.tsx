@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { Text } from "@/components/ui/text";
 
 import { View } from "react-native";
-import { Search, X } from "lucide-react-native";
+import { Search } from "lucide-react-native";
 
 import { QuickSearchContent } from "@/features/quick-search/components/quick-search-content";
 import withBubble from "@/components/ui/withBubble";

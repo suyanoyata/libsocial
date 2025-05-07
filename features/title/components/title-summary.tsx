@@ -19,7 +19,7 @@ export const TitleSummary = ({ children: summary }: { children: string }) => {
       </Text>
       {lineHeight * 4 < height && (
         <Pressable onPress={() => setLines(lines == 4 ? 2000 : 4)} hitSlop={4}>
-          <Text className="text-orange-400 text-sm">{lines == 4 ? "Show more..." : "Less"}</Text>
+          <Text className="text-accent text-sm">{lines == 4 ? "Show more..." : "Less"}</Text>
         </Pressable>
       )}
     </View>

@@ -13,20 +13,18 @@ export const AnimeEpisodeSwitcher = () => {
 
   const { data } = useEpisodesAPI(slug_url);
 
-  const renderItem = ({ item }: { item: TitleEpisodeBase }) => (
-    <Button
-      onPress={() => setEpisodeIndex(item.item_number)}
-      variant="ghost"
-      className={cn(
-        "bg-inactive",
-        item.item_number === selectedEpisodeIndex &&
-          "bg-orange-500 active:bg-orange-500 dark:bg-orange-500 dark:active:bg-orange-500"
-      )}
-      textClassName={cn(item.item_number === selectedEpisodeIndex && "text-white")}
-    >
-      Episode {item.number}
-    </Button>
-  );
+  const renderItem = ({ item }: { item: TitleEpisodeBase }) => {
+    const isSelected = item.item_number === selectedEpisodeIndex;
+
+    return (
+      <Button
+        onPress={() => setEpisodeIndex(item.item_number)}
+        variant={isSelected ? "accent" : "tonal"}
+      >
+        Episode {item.number}
+      </Button>
+    ) 
+  };
 
   const keyExtractor = (item: TitleEpisodeBase) => item.id.toString();
 

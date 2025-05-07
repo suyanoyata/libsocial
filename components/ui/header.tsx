@@ -3,11 +3,18 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Platform, View } from "react-native";
 import { Text } from "@/components/ui/text";
 
-import { BottomTabHeaderProps } from "@react-navigation/bottom-tabs/src/types";
+type Layout = { width: number; height: number };
 
-interface Options extends BottomTabHeaderProps {
+type Options = {
+  layout: Layout;
+  route: {
+    name: string;
+  };
+  options: {
+    title?: string;
+  };
   headerRight?: React.ReactNode;
-}
+};
 
 export const Header = (props: Options) => {
   const { top } = useSafeAreaInsets();

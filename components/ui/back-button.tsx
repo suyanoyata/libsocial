@@ -1,12 +1,12 @@
 import { cn } from "@/lib/utils";
 
 import { Platform, View, ViewStyle } from "react-native";
-import { ChevronLeft } from "lucide-react-native";
 import { Link } from "expo-router";
 
 import { Text } from "@/components/ui/text";
 
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Icon } from "@/components/icon";
 
 type BackButtonProps = ViewStyle & {
   className?: string;
@@ -34,7 +34,11 @@ export const BackButton = ({ position = "absolute", ...props }: BackButtonProps)
       {...props}
     >
       <View className="flex-row gap-1 items-center z-20">
-        <ChevronLeft className={cn("text-primary", props.iconClassName)} strokeWidth={2.25} />
+        <Icon
+          name="ChevronLeft"
+          className={cn("text-primary", props.iconClassName)}
+          strokeWidth={2.25}
+        />
         <Text className={cn("text-primary text-lg font-medium", props.textClassName)}>Back</Text>
       </View>
     </Link>

@@ -1,4 +1,3 @@
-import { Trash2 } from "lucide-react-native";
 import { View, ScrollView } from "react-native";
 
 import { Text } from "@/components/ui/text";
@@ -25,12 +24,7 @@ export const LastReadTitles = () => {
     <Animated.View entering={FadeIn}>
       <View className="flex-row items-center justify-between mx-2 mt-3">
         <Text className="recent-viewed-title">You've stopped at</Text>
-        <Button
-          textClassName="max-sm:text-sm"
-          onPress={() => reset()}
-          iconLeft={<Trash2 size={18} color="white" />}
-          variant="destructive"
-        >
+        <Button size="sm" onPress={() => reset()} iconLeft="Trash2" variant="destructive">
           Clear all
         </Button>
       </View>

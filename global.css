@@ -7,7 +7,7 @@
 }
 
 .text-accent {
-  @apply dark:text-orange-400 text-orange-400;
+  @apply dark:text-violet-300 text-violet-600;
 }
 
 .text-secondary {
@@ -35,11 +35,11 @@
 }
 
 .bg-accent {
-  @apply bg-orange-100/60 dark:bg-zinc-900;
+  @apply bg-violet-100/60 dark:bg-zinc-900;
 }
 
 .bg-accent-darken {
-  @apply bg-orange-200/70 dark:bg-zinc-950;
+  @apply bg-violet-200/70 dark:bg-zinc-950;
 }
 
 .recent-viewed-title {
@@ -55,7 +55,7 @@
 }
 
 .recent-viewed-card-progress-bg-active {
-  @apply dark:bg-white bg-orange-400 h-1.5;
+  @apply dark:bg-violet-300 bg-violet-400 h-1.5;
 }
 
 .recent-viewed-card {

@@ -1,4 +1,3 @@
-import { Download, Home, LayoutGrid, MenuIcon, Trash2 } from "lucide-react-native";
 import { Pressable, useColorScheme, View } from "react-native";
 import { Tabs } from "expo-router";
 
@@ -15,7 +14,11 @@ import MenuView from "react-native-context-menu-view";
 import { api } from "@/lib/axios";
 import { cn } from "@/lib/utils";
 
-import { ClearDownloadedChapters } from "@/features/downloads/components/clear-downloaded-chapters";
+import { useSession } from "@/features/auth/lib/auth";
+import FastImage from "@d11/react-native-fast-image";
+import { TabIcon } from "@/components/navigation/tab-icon";
+import { Text } from "@/components/ui/text";
+import { Icon } from "@/components/icon";
 
 export default function TabsLayout() {
   useGenresConstants();
@@ -40,6 +43,8 @@ export default function TabsLayout() {
     [siteId]
   );
 
+  const { data } = useSession();
+
   return (
     <Tabs
       screenOptions={{
@@ -52,11 +57,20 @@ export default function TabsLayout() {
           backgroundColor: "#00000000",
           borderTopWidth: 0,
         },
-        tabBarButton: (props) => <Pressable {...props} />,
-        tabBarLabelPosition: "beside-icon",
+        tabBarLabel: ({ focused, children }) => {
+          return (
+            <Text
+              className={cn(
+                "text-xs font-medium",
+                focused ? "text-violet-700 dark:text-violet-200" : "text-muted"
+              )}
+            >
+              {children}
+            </Text>
+          );
+        },
+        tabBarButton: (props) => <Pressable className="gap-2" {...props} />,
         headerShown: false,
-        tabBarShowLabel: false,
-        tabBarInactiveTintColor: "rgb(100,100,100)",
         tabBarActiveTintColor: isDark ? "white" : "black",
       }}
     >
@@ -64,7 +78,8 @@ export default function TabsLayout() {
         name="index"
         options={{
           sceneStyle: {},
-          tabBarIcon: ({ color }) => (
+          title: "Home",
+          tabBarIcon: ({ focused }) => (
             <MenuView
               dropdownMenuMode={false}
               disableShadow
@@ -89,7 +104,7 @@ export default function TabsLayout() {
               }}
             >
               <View className="pointer-events-none">
-                <Home color={color} />
+                <TabIcon icon="House" focused={focused} />
               </View>
             </MenuView>
           ),
@@ -98,32 +113,42 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="catalog"
         options={{
+          title: "Catalog",
           sceneStyle: {},
-          tabBarIcon: ({ color }) => <LayoutGrid color={color} />,
+          tabBarIcon: ({ focused }) => <TabIcon icon="LayoutGrid" focused={focused} />,
         }}
       />
       <Tabs.Screen
-        name="downloads"
+        name="bookmarks"
         options={{
-          title: "Downloads",
-          headerTitle: "Downloads",
-          header: (props) => <Header {...props} headerRight={<ClearDownloadedChapters />} />,
-          headerShown: true,
-          tabBarIcon: ({ color }) => (
-            <Download
-              color={color}
-              className={cn(siteId == "5" && "dark:text-zinc-800 text-zinc-300")}
-            />
+          title: "Bookmarks",
+          headerTitle: "Bookmarks",
+          header: (props) => (
+            <Header headerRight={<Icon name="Download" className="text-muted" />} {...props} />
           ),
-          tabBarButton: (props) => (siteId == "5" ? <View {...props} /> : <Pressable {...props} />),
+          headerShown: true,
+          tabBarIcon: ({ focused }) => <TabIcon icon="Bookmark" focused={focused} />,
         }}
       />
       <Tabs.Screen
         name="menu"
         options={{
-          title: "Settings",
+          title: "Profile",
           headerShown: true,
-          tabBarIcon: ({ color }) => <MenuIcon color={color} />,
+          tabBarIcon: ({ focused }) =>
+            data?.user.image ? (
+              <View className={cn("size-8 rounded-full overflow-hidden")}>
+                <FastImage
+                  source={{ uri: data.user.image }}
+                  style={{
+                    height: 32,
+                    width: 32,
+                  }}
+                />
+              </View>
+            ) : (
+              <TabIcon icon="User" focused={focused} />
+            ),
         }}
       />
     </Tabs>

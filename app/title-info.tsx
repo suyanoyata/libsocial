@@ -111,8 +111,6 @@ export default function TitleInfo() {
             {data.eng_name != "" ? data.eng_name : data.name}
           </Text>
           <TitleAbout data={data} />
-          {/* <TitleChapters site={Number(data.site)} slug_url={slug_url} /> */}
-          {/* <TitleEpisodes site={data.site} slug_url={data.slug_url} /> */}
         </View>
       </ScrollView>
     </FadeView>

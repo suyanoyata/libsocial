@@ -160,7 +160,7 @@ export const DownloadChapterButton = ({
         ) : (
           <Icon
             name="Download"
-            className={cn(!isChapterDownloaded ? "text-zinc-600" : "text-orange-400")}
+            className={cn(!isChapterDownloaded ? "text-zinc-600" : "text-violet-400")}
             size={18}
             strokeWidth={2.8}
           />
@@ -168,7 +168,7 @@ export const DownloadChapterButton = ({
       </Pressable>
       <Animated.View
         style={progressStyle}
-        className="absolute left-0 w-full h-[3px] bg-orange-400"
+        className="absolute left-0 w-full h-[3px] bg-violet-400"
       />
     </>
   );

@@ -40,8 +40,9 @@ export const TitleAbout = ({ data }: { data: Title }) => {
         className="mb-3"
         iconLeft={
           <Icon
+            disabled={data.isLicensed}
             size={18}
-            className="dark:fill-violet-700 dark:text-violet-700 disabled:fill-red-400 disabled:dark:fill-red-700 text-white fill-white"
+            className="dark:fill-violet-700 disabled:fill-red-900 text-transparent"
           />
         }
         variant={data?.isLicensed ? "destructive" : "accent"}

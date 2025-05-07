@@ -30,7 +30,7 @@ export default function ReaderProperties() {
   const isDark = useColorScheme() === "dark";
 
   const styles = {
-    active: isDark ? "#afa1aa" : "#fb923c",
+    active: isDark ? "#a099e0" : "#8f80d4",
     thumb: isDark ? "#2f2f2f" : "#d4d4d8",
   };
 

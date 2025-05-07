@@ -71,9 +71,7 @@ export const AnimePlayer = () => {
                   setLoaded(false);
                 }
               }}
-              variant="ghost"
-              textClassName="text-white"
-              className="bg-orange-500 active:bg-orange-500"
+              variant="tonal"
               size="sm"
             >
               Next episode
