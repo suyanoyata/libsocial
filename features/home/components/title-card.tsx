@@ -25,7 +25,7 @@ export const TitleCard = ({ title }: { title: BaseTitle }) => {
       <View>
         <TransitionedImage
           source={{ uri: title.cover.default }}
-          width={120}
+          width={115}
           height={180}
         />
         <Text

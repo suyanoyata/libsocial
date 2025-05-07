@@ -21,6 +21,7 @@ import { getItemStyle } from "@/features/catalog/lib/item-position-align"
 import { FetchingNextPageCards } from "@/features/catalog/components/catalog-fetching-cards"
 import { CatalogHeader } from "@/features/catalog/components/catalog-header"
 import { CatalogTitleCard } from "@/features/catalog/components/catalog-title-card"
+import { ActivityIndicator } from "@/components/ui/activity-indicator"
 
 export const Catalog = () => {
   const [initialRender, setInitialRender] = useState(true)
@@ -35,7 +36,7 @@ export const Catalog = () => {
   const { catalogColumns, setCatalogColumns, setCatalogImageWidth } =
     useProperties()
 
-  const containerWidth = 125
+  const containerWidth = 130
 
   const ref = useRef<View>(null)
 
@@ -49,7 +50,7 @@ export const Catalog = () => {
   const catalogItems = useMemo(
     () =>
       data?.pages.reduce<BaseTitle[]>((acc, page) => acc.concat(page.data), []),
-    [data],
+    [data]
   )
 
   useEffect(() => {
@@ -71,7 +72,7 @@ export const Catalog = () => {
 
   const isDark = useColorScheme() === "dark"
 
-  const keyExtractor = (item: BaseTitle) => String(item.id)
+  const keyExtractor = (item: BaseTitle) => item.slug_url
 
   if (Math.floor(width / containerWidth) != catalogColumns || initialRender)
     return null
@@ -85,7 +86,7 @@ export const Catalog = () => {
         }}
         className="flex-1 overflow-hidden rounded-sm"
       >
-        {data && (
+        {data ? (
           <FlashList
             refreshControl={
               <RefreshControl
@@ -113,6 +114,10 @@ export const Catalog = () => {
               />
             }
           />
+        ) : (
+          <View className="flex-1 items-center justify-center">
+            <ActivityIndicator />
+          </View>
         )}
       </View>
     </>

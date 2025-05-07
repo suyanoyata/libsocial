@@ -11,7 +11,6 @@ import { TitleSummary } from "@/features/title/components/title-summary"
 
 import { Title } from "@/features/shared/types/title"
 import { TitleRelations } from "@/features/title/ui/title-relations"
-import { Icon } from "@/components/icon"
 
 export const TitleAbout = ({ data }: { data: Title }) => {
   const { bottom } = useSafeAreaInsets()
@@ -42,7 +41,7 @@ export const TitleAbout = ({ data }: { data: Title }) => {
           <Icon
             disabled={data.isLicensed}
             size={18}
-            className="dark:fill-violet-700 disabled:fill-red-900 text-transparent"
+            className="dark:fill-violet-700 fill-white disabled:fill-red-900 text-transparent"
           />
         }
         variant={data?.isLicensed ? "destructive" : "accent"}

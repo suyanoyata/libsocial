@@ -23,19 +23,19 @@ export const CatalogTitleCard = memo(
                 slug_url: title.slug_url,
                 site: title.site,
               },
-            }),
+            })
           )
         }}
         className="w-full my-1 p-2"
       >
         <TransitionedImage
           source={{ uri: title.cover.default }}
-          height={(catalogImageWidth + 10) * 1.36}
+          height={(catalogImageWidth + 2) * 1.36}
           width={catalogImageWidth - 14}
           recycleId={title.id}
         />
         <Text
-          className="text-sm font-medium text-primary mt-0.5"
+          className="text-sm font-medium text-primary mt-1"
           numberOfLines={2}
         >
           {title.eng_name != "" ? title.eng_name : title.name}
@@ -43,5 +43,5 @@ export const CatalogTitleCard = memo(
       </Pressable>
     )
   },
-  (prev, next) => prev.title.id === next.title.id,
+  (prev, next) => prev.title.id === next.title.id
 )

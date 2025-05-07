@@ -22,7 +22,7 @@ export const HomeLayout = ({ children }: { children?: React.ReactNode }) => {
   return (
     <View className="flex-1">
       <View
-        style={{ paddingTop: top + 4, paddingBottom: 16 }}
+        style={{ paddingTop: top + 4, paddingBottom: 12 }}
         className="bg-accent-darken relative"
       >
         <View className="bg-accent px-4 py-2 h-10 items-center flex-row font-medium rounded-md mx-2 z-10">
