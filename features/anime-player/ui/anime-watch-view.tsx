@@ -9,9 +9,10 @@ import { useAnimeStore } from "@/features/anime-player/context/anime-context"
 import { AnimeRouteSchema } from "@/features/anime-player/types/anime-route-params"
 
 import { useTitleInfo } from "@/features/title/api/use-title-info"
+import { api } from "@/lib/axios"
 import { useWatchTracker } from "@/store/use-watch-tracker"
 import { useRoute } from "@react-navigation/native"
-import { useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Unplug } from "lucide-react-native"
 import { useEffect, useMemo } from "react"
 
@@ -23,11 +24,22 @@ export const AnimeWatchView = () => {
 
   const { data, error } = useMemo(
     () => AnimeRouteSchema.safeParse(route.params),
-    [route.params],
+    [route.params]
   )
 
-  const { add } = useWatchTracker()
+  const { get, add } = useWatchTracker()
   const client = useQueryClient()
+
+  const { mutate } = useMutation({
+    mutationKey: ["update-watch-bookmark"],
+    mutationFn: async (data: { slug_url: string; index: number }) => {
+      return await api.put("/bookmarks", {
+        slug_url: data.slug_url,
+        type: "anime",
+        chapterIndex: data.index,
+      })
+    },
+  })
 
   useEffect(() => {
     if (!data) return
@@ -38,6 +50,18 @@ export const AnimeWatchView = () => {
 
   useEffect(() => {
     if (data) {
+      const localTitle = get(data.slug_url)
+
+      if (
+        localTitle &&
+        localTitle?.lastWatchedEpisode - 1 < selectedEpisodeIndex
+      ) {
+        mutate({
+          slug_url: data.slug_url,
+          index: selectedEpisodeIndex,
+        })
+      }
+
       add(client, data?.slug_url, selectedEpisodeIndex)
     }
   }, [data, selectedEpisodeIndex])

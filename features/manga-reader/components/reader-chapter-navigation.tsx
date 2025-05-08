@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 
 import { Chapter } from "@/features/shared/types/chapter"
 import { Icon } from "@/components/icon"
+import { useQueryClient } from "@tanstack/react-query"
 
 export const ReaderChapterNavigation = ({
   chapters,
@@ -17,6 +18,8 @@ export const ReaderChapterNavigation = ({
   chapterIndex: number
 }) => {
   const { bottom } = useSafeAreaInsets()
+
+  const client = useQueryClient()
 
   const route = useRoute()
 
@@ -53,7 +56,11 @@ export const ReaderChapterNavigation = ({
             <Icon name="ChevronRight" strokeWidth={3} className="text-white" />
           }
           variant="accent"
-          onPress={() =>
+          onPress={() => {
+            client.invalidateQueries({
+              queryKey: ["bookmarks"],
+            })
+
             router.replace({
               pathname: "/manga-reader",
               params: {
@@ -61,7 +68,7 @@ export const ReaderChapterNavigation = ({
                 index: chapterIndex + 1,
               },
             })
-          }
+          }}
           className="flex-1"
         >
           Next Chapter

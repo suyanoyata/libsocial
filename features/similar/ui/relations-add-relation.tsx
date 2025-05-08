@@ -1,4 +1,4 @@
-import { View } from "react-native"
+import { FlatList, View } from "react-native"
 
 import { TextInput } from "@/components/ui/text-input"
 import { ActivityIndicator } from "@/components/ui/activity-indicator"
@@ -13,6 +13,8 @@ import { useTitleInfo } from "@/features/title/api/use-title-info"
 import { useQuickSearch } from "@/features/quick-search/api/use-quick-search"
 
 import { RelationAddTitle } from "@/features/similar/components/relations-relation-add-title"
+import { BaseTitle } from "@/features/shared/types/title"
+import Animated, { FadeIn } from "react-native-reanimated"
 
 export default function TitleRelationsAdd() {
   const route = useRoute()
@@ -38,6 +40,14 @@ export default function TitleRelationsAdd() {
     })
   }, [data])
 
+  const renderItem = ({ item }: { item: BaseTitle }) => (
+    <RelationAddTitle
+      slug_url={slug_url}
+      disabled={item.slug_url == data?.slug_url}
+      data={item}
+    />
+  )
+
   if (!data) {
     return (
       <View className="items-center justify-center flex-1">
@@ -54,15 +64,11 @@ export default function TitleRelationsAdd() {
         placeholder="Search for title"
         className="w-full mt-2"
       />
-      {searchData &&
-        searchData.map((item) => (
-          <RelationAddTitle
-            key={item.slug_url}
-            slug_url={slug_url}
-            disabled={item.slug_url == data.slug_url}
-            data={item}
-          />
-        ))}
+      {searchData && (
+        <Animated.View entering={FadeIn} className="flex-1">
+          <FlatList data={searchData} renderItem={renderItem} />
+        </Animated.View>
+      )}
     </View>
   )
 }
