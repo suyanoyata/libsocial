@@ -40,7 +40,7 @@ export default function TabsLayout() {
         queryKey: ["home-titles"],
       })
     },
-    [siteId],
+    [siteId]
   )
 
   const { data } = useSession()
@@ -62,7 +62,7 @@ export default function TabsLayout() {
             <Text
               className={cn(
                 "text-xs font-medium",
-                focused ? "text-violet-700 dark:text-violet-200" : "text-muted",
+                focused ? "text-violet-700 dark:text-violet-200" : "text-muted"
               )}
             >
               {children}

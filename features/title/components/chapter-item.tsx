@@ -39,7 +39,7 @@ export const Chapter = memo(
     const add = useTitleReadChapter((state) => state.add)
     const remove = useTitleReadChapter((state) => state.remove)
     const getReadChapters = useTitleReadChapter(
-      (state) => state.getReadChapters,
+      (state) => state.getReadChapters
     )
 
     const client = useQueryClient()
@@ -96,8 +96,10 @@ export const Chapter = memo(
       actionToast(
         "read",
         lastRead!?.lastReadChapter <= index,
-        `Marked Volume ${chapter.volume} Chapter ${chapter.number} as ${read ? "unread" : "read"}`,
-        read,
+        `Marked Volume ${chapter.volume} Chapter ${chapter.number} as ${
+          read ? "unread" : "read"
+        }`,
+        read
       )
     }, [read])
 
@@ -118,7 +120,7 @@ export const Chapter = memo(
                   slug_url,
                   index,
                 },
-              }),
+              })
             )
           })
         }}
@@ -155,5 +157,5 @@ export const Chapter = memo(
         <DownloadChapterButton slug_url={slug_url} chapter={chapter} />
       </Pressable>
     )
-  },
+  }
 )

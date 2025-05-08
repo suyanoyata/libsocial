@@ -68,7 +68,7 @@ export const MangaReaderUI = () => {
 
   const { data, refetch, isFetching, isError } = useChapter(
     slug_url,
-    chapters && chapters[chapterIndex],
+    chapters && chapters[chapterIndex]
   )
 
   useEffect(() => {

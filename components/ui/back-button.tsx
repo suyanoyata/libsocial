@@ -34,7 +34,7 @@ export const BackButton = ({
       href="../"
       className={cn(
         position == "absolute" && "absolute top-2 left-2",
-        props.className,
+        props.className
       )}
       style={{ marginTop: marginTop(), zIndex: 999 }}
       {...props}
@@ -48,7 +48,7 @@ export const BackButton = ({
         <Text
           className={cn(
             "text-primary text-lg font-medium",
-            props.textClassName,
+            props.textClassName
           )}
         >
           Back

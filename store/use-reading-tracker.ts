@@ -37,7 +37,7 @@ export const useReadingTracker = create<ApplicationProperties>()(
             hide: false,
           }
           const existingTitle = state.lastReadItems.find(
-            (item) => item.slug_url == lastReadItem.slug_url,
+            (item) => item.slug_url == lastReadItem.slug_url
           )
 
           if (existingTitle) {
@@ -71,7 +71,7 @@ export const useReadingTracker = create<ApplicationProperties>()(
         set((state) => {
           return {
             lastReadItems: state.lastReadItems.map((item) =>
-              item.slug_url == slug_url ? { ...item, hide: true } : item,
+              item.slug_url == slug_url ? { ...item, hide: true } : item
             ),
           }
         }),
@@ -100,6 +100,6 @@ export const useReadingTracker = create<ApplicationProperties>()(
     {
       name: "libsocial.client.title-storage",
       storage: createJSONStorage(() => zustandStorage),
-    },
-  ),
+    }
+  )
 )

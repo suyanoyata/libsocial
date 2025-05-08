@@ -31,10 +31,10 @@ const buttonVariants = cva(
       variant: "default",
       size: "default",
     },
-  },
+  }
 )
 
-const textVariants = cva("text-black", {
+export const textVariants = cva("text-black", {
   variants: {
     variant: {
       link: "text-violet-700 dark:text-violet-300 font-semibold",
@@ -80,7 +80,7 @@ const Button = React.forwardRef<Pressable, ButtonProps>(
       iconRight,
       ...props
     },
-    ref,
+    ref
   ) => {
     return (
       <Pressable
@@ -120,7 +120,7 @@ const Button = React.forwardRef<Pressable, ButtonProps>(
         )}
       </Pressable>
     )
-  },
+  }
 )
 
 Button.displayName = "Button"

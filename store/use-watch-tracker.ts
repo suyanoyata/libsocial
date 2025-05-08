@@ -24,7 +24,7 @@ export interface WatchTrackerStore {
   add: (
     client: QueryClient,
     slug_url: LastWatchItem["slug_url"],
-    index: number,
+    index: number
   ) => void
   get: (slug_url: string) => LastWatchItem | undefined
   isEpisodeExists: (slug_url: string, episodeIndex: number) => boolean
@@ -113,17 +113,17 @@ export const useWatchTracker = create<WatchTrackerStore>()(
       removeEpisode: (slug_url, episodeIndex) => {
         set((state) => {
           const exists = state.lastWatchItems.find(
-            (value) => value.slug_url == slug_url,
+            (value) => value.slug_url == slug_url
           )
 
           if (!exists) return state
 
           const filtered = state.lastWatchItems.filter(
-            (value) => value.slug_url !== slug_url,
+            (value) => value.slug_url !== slug_url
           )
 
           const watchedEpisodeIndexes = exists.watchedEpisodeIndexes.filter(
-            (index) => index !== episodeIndex,
+            (index) => index !== episodeIndex
           )
           const lastWatchedEpisode = biggest(watchedEpisodeIndexes)
 
@@ -142,13 +142,13 @@ export const useWatchTracker = create<WatchTrackerStore>()(
       remove: (slug_url) => {
         set((state) => {
           const exists = state.lastWatchItems.find(
-            (value) => value.slug_url == slug_url,
+            (value) => value.slug_url == slug_url
           )
 
           if (!exists) return state
 
           const filtered = state.lastWatchItems.filter(
-            (value) => value.slug_url !== slug_url,
+            (value) => value.slug_url !== slug_url
           )
 
           return {
@@ -159,13 +159,13 @@ export const useWatchTracker = create<WatchTrackerStore>()(
       hide: (slug_url) => {
         set((state) => {
           const exists = state.lastWatchItems.find(
-            (value) => value.slug_url == slug_url,
+            (value) => value.slug_url == slug_url
           )
 
           if (!exists) return state
 
           const filtered = state.lastWatchItems.filter(
-            (value) => value.slug_url !== slug_url,
+            (value) => value.slug_url !== slug_url
           )
 
           return {
@@ -187,6 +187,6 @@ export const useWatchTracker = create<WatchTrackerStore>()(
     {
       name: "libsocial.client.watch-tracker-store",
       storage: createJSONStorage(() => zustandStorage),
-    },
-  ),
+    }
+  )
 )
