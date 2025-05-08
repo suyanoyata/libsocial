@@ -18,7 +18,7 @@ export const LastReadTitles = () => {
 
   const visibleItems = useMemo(
     () => lastReadItems.filter((i) => i.hide == false),
-    [lastReadItems],
+    [lastReadItems]
   )
 
   if (visibleItems.length == 0 || siteId == "5") return null

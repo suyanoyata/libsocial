@@ -1,5 +1,5 @@
 import { Text } from "@/components/ui/text"
-import { Button, textVariants } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import { ActivityIndicator } from "@/components/ui/activity-indicator"
 import { Genres } from "@/features/title/components/genres"
 
@@ -9,11 +9,9 @@ import FastImage from "@d11/react-native-fast-image"
 
 import i18n from "@/i18n"
 
-import { useMemo, useState } from "react"
-import { useQueryClient } from "@tanstack/react-query"
+import { useMemo } from "react"
 
 import { Icon } from "@/components/icon"
-import { cn } from "@/lib/utils"
 
 import { BaseTitle } from "@/features/shared/types/title"
 
@@ -30,10 +28,6 @@ export const RelationAddTitle = ({
   data: BaseTitle
   disabled?: boolean
 }) => {
-  const client = useQueryClient()
-
-  const [reason, setReason] = useState("")
-
   const { width } = useWindowDimensions()
 
   const genres = useMemo(
@@ -85,32 +79,10 @@ export const RelationAddTitle = ({
             {isPending ? (
               <ActivityIndicator size={18} />
             ) : (
-              <Icon
-                name="Plus"
-                className={cn(textVariants({ variant: "tonal" }))}
-              />
+              <Icon name="Plus" variant="tonal" />
             )}
           </Button>
         </MenuView>
-      </View>
-    </Pressable>
-  )
-
-  return (
-    <Pressable
-      className={
-        "bg-violet-100/60 dark:bg-violet-950/30 rounded-lg flex-row overflow-hidden gap-2 disabled:opacity-60 disabled:pointer-events-none relative"
-      }
-    >
-      <FastImage
-        source={{ uri: data.cover.default }}
-        style={{ width: 90, height: 140 }}
-      />
-      <View className="my-1 mb-3 flex-1">
-        <Text className="text-secondary font-semibold text-xl">
-          {data.eng_name ?? data.name}
-        </Text>
-        <Genres className="mt-auto" genres={genres} />
       </View>
     </Pressable>
   )

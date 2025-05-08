@@ -10,7 +10,6 @@ import Animated, { FadeIn } from "react-native-reanimated"
 import { FlashList, FlashListProps } from "@shopify/flash-list"
 
 import { cn } from "@/lib/utils"
-import { Icon } from "@/components/icon"
 
 interface Props<T> extends FlashListProps<T> {
   title: string
@@ -36,7 +35,7 @@ export const ContentCollectionView = <T,>({
 
   return (
     <Animated.View entering={FadeIn} className={cn("flex-1")}>
-      <View className="flex-row justify-between items-center mb-2">
+      <View className="flex-row justify-between items-center">
         <Text className="text-4xl font-extrabold text-secondary">{title}</Text>
         <Button
           onPress={() => {
@@ -57,7 +56,7 @@ export const ContentCollectionView = <T,>({
         <FlashList
           className={cn(
             `gap-2 flex-1 pt-2 opacity-100 overflow-hidden`,
-            isReversing && "opacity-50",
+            isReversing && "opacity-50"
           )}
           contentContainerStyle={{
             paddingBottom: bottom + 14,

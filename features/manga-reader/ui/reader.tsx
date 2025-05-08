@@ -159,7 +159,7 @@ export const MangaReaderUI = () => {
         <BackButton />
         <ActivityIndicator />
         {__DEV__ && (
-          <Text className="text-zinc-200 mt-2">
+          <Text className="text-muted mt-2">
             Chapter is downloading, hang on...
           </Text>
         )}

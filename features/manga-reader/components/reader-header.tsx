@@ -41,6 +41,7 @@ export const ReaderHeader = ({
         </Text>
       </View>
       <Icon
+        size={20}
         name="Cog"
         hitSlop={10}
         onPress={() => {

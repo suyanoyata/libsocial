@@ -2,17 +2,18 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 import { Platform, View } from "react-native"
 import { Text } from "@/components/ui/text"
-
-type Layout = { width: number; height: number }
+import { cn } from "@/lib/utils"
+import { BackButton } from "@/components/ui/back-button"
 
 type Options = {
-  layout: Layout
+  showBackButton?: boolean
   route: {
     name: string
   }
   options: {
     title?: string
   }
+  className?: string
   headerRight?: React.ReactNode
 }
 
@@ -22,8 +23,23 @@ export const Header = (props: Options) => {
   return (
     <View
       style={{ paddingTop: Platform.select({ ios: 8, android: top - 8 }) }}
-      className="relative items-center justify-center flex-row mx-3"
+      className={cn(
+        "relative items-center justify-center flex-row mx-3",
+        props.className
+      )}
     >
+      {props.showBackButton && (
+        <View
+          style={{ paddingTop: Platform.select({ ios: 8, android: top - 8 }) }}
+          className="absolute top-0.5 left-0"
+        >
+          <BackButton
+            iconClassName="text-secondary"
+            textClassName="text-secondary font-semibold"
+            position="static"
+          />
+        </View>
+      )}
       <Text className="font-bold text-secondary text-center text-lg">
         {props.options.title ?? props.route.name}
       </Text>

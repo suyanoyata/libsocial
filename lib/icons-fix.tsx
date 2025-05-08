@@ -5,6 +5,7 @@ import FeatherIcon from "react-native-vector-icons/Feather"
 
 import { cssInterop } from "nativewind"
 import { Icon } from "@/components/icon"
+import { BottomSheetModal } from "@gorhom/bottom-sheet"
 
 export function interopIcons(icons: LucideIcon[]) {
   icons.map((icon) =>
@@ -16,11 +17,33 @@ export function interopIcons(icons: LucideIcon[]) {
           opacity: true,
         },
       },
-    }),
+    })
   )
 }
 
-export const iconFix = () =>
+export function interopSheet(icons: any[]) {
+  icons.map((icon) =>
+    cssInterop(icon, {
+      backgroundClassName: {
+        target: "backgroundStyle",
+        nativeStyleToProp: {
+          color: true,
+          opacity: true,
+        },
+      },
+      indicatorClassName: {
+        target: "handleIndicatorStyle",
+        nativeStyleToProp: {
+          color: true,
+          opacity: true,
+        },
+      },
+    })
+  )
+}
+
+export const iconFix = () => {
+  interopSheet([BottomSheetModal])
   interopIcons([
     Icon,
     Loader,
@@ -30,3 +53,4 @@ export const iconFix = () =>
     FontAwesomeIcon as any,
     FeatherIcon as any,
   ])
+}

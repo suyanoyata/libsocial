@@ -1,3 +1,4 @@
+import { api } from "@/lib/axios"
 import { zustandStorage } from "@/lib/persistent-zustand-storage"
 import { create } from "zustand"
 import { createJSONStorage, persist } from "zustand/middleware"
@@ -41,6 +42,13 @@ export const useReadingTracker = create<ApplicationProperties>()(
           )
 
           if (existingTitle) {
+            if (existingTitle.lastReadChapter < newItem.lastReadChapter) {
+              api.put("/bookmarks", {
+                slug_url: newItem.slug_url,
+                type: "manga",
+                chapterIndex: newItem.lastReadChapter,
+              })
+            }
             if (
               existingTitle.lastReadChapter > newItem.lastReadChapter ||
               (existingTitle.lastReadChapter == newItem.lastReadChapter &&
@@ -50,7 +58,7 @@ export const useReadingTracker = create<ApplicationProperties>()(
             }
 
             const filtered = state.lastReadItems.filter(
-              (item) => item.slug_url !== lastReadItem.slug_url,
+              (item) => item.slug_url !== lastReadItem.slug_url
             )
 
             filtered.unshift(newItem)
