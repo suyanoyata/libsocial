@@ -36,8 +36,6 @@ export const SignInDiscord = ({
         fun(data as SignInDiscordProps)
       }
 
-      console.log(data)
-
       setTimeout(() => {
         const title = session?.user.isAnonymous
           ? "You've linked your Discord account"

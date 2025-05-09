@@ -12,7 +12,7 @@ export const {
   getCookie,
   ...authClient
 } = createAuthClient({
-  baseURL: "http://192.168.50.44:3000",
+  baseURL: "http://192.168.50.48:3000",
   scheme: "libsocial",
   plugins: [
     anonymousClient(),

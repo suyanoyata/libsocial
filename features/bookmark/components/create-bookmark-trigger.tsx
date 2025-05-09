@@ -1,15 +1,15 @@
-import { Button } from "@/components/ui/button"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { api } from "@/lib/axios"
-import { View } from "react-native"
-
-import {
-  Sheet,
-  SheetContent,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Icon } from "@/components/icon"
+
+import { useBookmarkAPI } from "@/features/bookmark/api/use-bookmark-api"
+
+import { cn } from "@/lib/utils"
+import { useState } from "react"
+import { BookmarkCreateSelectUI } from "@/features/bookmark/ui/bookmark-create-select"
+import { ActivityIndicator } from "@/components/ui/activity-indicator"
+import { textVariants } from "@/components/ui/button"
+import { useSession } from "@/features/auth/lib/auth"
+import { router } from "expo-router"
 
 export const CreateBookmarkTrigger = ({
   slug_url,
@@ -18,53 +18,52 @@ export const CreateBookmarkTrigger = ({
   slug_url: string
   site: string
 }) => {
-  const client = useQueryClient()
+  const [open, setOpen] = useState(false)
 
-  const { mutate } = useMutation({
-    mutationKey: ["create-bookmark"],
-    mutationFn: async () => {
-      return await api.post("/bookmarks", {
-        slug_url,
-        type: site == "5" ? "anime" : "manga",
-        name: "ongoing",
-      })
-    },
-    onSuccess() {
-      client.invalidateQueries({
-        queryKey: ["bookmarks"],
-      })
-    },
+  const type = site == "5" ? "anime" : "manga"
+
+  const { data, isFetching } = useBookmarkAPI({
+    slug_url,
+    type,
   })
 
-  return (
-    <Sheet>
-      <SheetTrigger variant="accent">
-        <Icon name="Bookmark" size={18} strokeWidth={2.7} variant="accent" />
-      </SheetTrigger>
-      <SheetContent>
-        <SheetTitle>Add bookmark</SheetTitle>
-        <View className="mb-safe mt-auto gap-3">
-          <Button onPress={mutate} variant="tonal" iconLeft="Plus">
-            Create
-          </Button>
-          <Button
-            onPress={async () => {
-              await api.delete(
-                `/bookmarks?slug_url=${slug_url}&type=${
-                  site == "5" ? "anime" : "manga"
-                }`
-              )
+  const { data: sessionData } = useSession()
 
-              client.invalidateQueries({
-                queryKey: ["bookmarks", site],
-              })
-            }}
-            variant="destructive"
-            iconLeft="Trash2"
-          >
-            Delete
-          </Button>
-        </View>
+  return (
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger
+        onPress={() => {
+          if (sessionData) {
+            setOpen(true)
+          } else {
+            router.push("/sign-in-prompt-modal")
+          }
+        }}
+        variant="accent"
+      >
+        {isFetching ? (
+          <ActivityIndicator
+            className={textVariants({ variant: "accent" })}
+            size={18}
+          />
+        ) : (
+          <Icon
+            name="Bookmark"
+            size={18}
+            strokeWidth={2.7}
+            variant="accent"
+            className={cn(
+              data?.id && "dark:fill-violet-900 fill-white font-semibold"
+            )}
+          />
+        )}
+      </SheetTrigger>
+      <SheetContent className="h-auto">
+        <BookmarkCreateSelectUI
+          setOpen={setOpen}
+          slug_url={slug_url}
+          type={type}
+        />
       </SheetContent>
     </Sheet>
   )

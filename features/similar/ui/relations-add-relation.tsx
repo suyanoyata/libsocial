@@ -29,7 +29,7 @@ export default function TitleRelationsAdd() {
 
   const controller = new AbortController()
 
-  const [_search, setSearch] = useState("")
+  const [_search, setSearch] = useState("Akame")
   const [search] = useDebounce(_search, 500)
 
   const { data: searchData } = useQuickSearch(search, controller.signal)

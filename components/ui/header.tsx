@@ -22,7 +22,9 @@ export const Header = (props: Options) => {
 
   return (
     <View
-      style={{ paddingTop: Platform.select({ ios: 8, android: top - 8 }) }}
+      style={{
+        paddingTop: Platform.select({ ios: 8, android: top - 8 }),
+      }}
       className={cn(
         "relative items-center justify-center flex-row mx-3",
         props.className

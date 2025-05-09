@@ -1,6 +1,9 @@
-import { api } from "@/lib/axios"
-import { zustandStorage } from "@/lib/persistent-zustand-storage"
+import { DeviceEventEmitter } from "react-native"
+
+import { BookmarkEvents } from "@/features/bookmark/const/bookmark-events"
+
 import { create } from "zustand"
+import { zustandStorage } from "@/lib/persistent-zustand-storage"
 import { createJSONStorage, persist } from "zustand/middleware"
 
 export type LastReadItem = {
@@ -43,10 +46,11 @@ export const useReadingTracker = create<ApplicationProperties>()(
 
           if (existingTitle) {
             if (existingTitle.lastReadChapter < newItem.lastReadChapter) {
-              api.put("/bookmarks", {
+              console.log("update to", newItem.lastReadChapter)
+              DeviceEventEmitter.emit(BookmarkEvents.UPDATE_READ_BOOKMARK, {
                 slug_url: newItem.slug_url,
                 type: "manga",
-                chapterIndex: newItem.lastReadChapter,
+                lastReadChapter: newItem.lastReadChapter,
               })
             }
             if (

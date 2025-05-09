@@ -1,7 +1,7 @@
 import { ActionMenuOption } from "@/components/ui/action-menu-option"
 
 import { Text } from "@/components/ui/text"
-import { AuthFlow } from "@/features/auth/ui/auth-flow"
+import { Profile } from "@/features/auth/ui/profile"
 import { useDownloads } from "@/features/downloads/store/use-downloads"
 
 import { useQueryClient } from "@tanstack/react-query"
@@ -17,7 +17,7 @@ export default function Menu() {
 
   return (
     <SafeAreaView className="mx-4 gap-2">
-      <AuthFlow />
+      <Profile />
       <Text className="text-3xl text-primary font-extrabold -mb-2 mt-2">
         Settings
       </Text>

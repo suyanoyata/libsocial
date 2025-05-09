@@ -12,7 +12,7 @@ export const TabIcon = ({
   return (
     <View
       className={cn(
-        focused && "bg-violet-100 dark:bg-violet-400/50 rounded-full p-2 px-6",
+        focused && "bg-violet-100 dark:bg-violet-400/50 rounded-full p-2 px-6"
       )}
     >
       <Icon
@@ -21,7 +21,7 @@ export const TabIcon = ({
         className={cn(
           focused
             ? "text-violet-600 dark:text-violet-300"
-            : "dark:text-zinc-600 text-zinc-400",
+            : "dark:text-zinc-600 text-zinc-400"
         )}
       />
     </View>

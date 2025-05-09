@@ -19,7 +19,7 @@ export const FetchingNextPageCards = ({
   if (!isFetching) return null
 
   return (
-    <PulseView className="flex-1 -mt-8">
+    <PulseView className="flex-1 mt-0 mx-2">
       <FlashList
         removeClippedSubviews
         data={Array.from({ length: 60 })}

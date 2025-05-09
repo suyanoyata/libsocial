@@ -79,7 +79,8 @@ export const RelationAddTitle = ({
             {isPending ? (
               <ActivityIndicator size={18} />
             ) : (
-              <Icon name="Plus" variant="tonal" />
+              // <Icon name="Plus" variant="tonal" />
+              <Icon name="Plus" size={18} strokeWidth={2.7} variant="tonal" />
             )}
           </Button>
         </MenuView>

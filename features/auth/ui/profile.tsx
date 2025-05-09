@@ -9,13 +9,13 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { SignInAnonymous } from "@/features/auth/components/sign-in-anonymous"
 import { SignOutButton } from "@/features/auth/components/sign-out"
 
-export const AuthFlow = () => {
+export const Profile = () => {
   const { data } = useSession()
 
   if (!data) {
     return (
-      <View>
-        <Text className="text-3xl text-primary font-extrabold mb-2 mt-4">
+      <View className="bg-muted-darken rounded-2xl p-2 py-3 mt-3">
+        <Text className="text-3xl text-secondary font-extrabold mb-4">
           Sign In with
         </Text>
         <View className="items-center flex-row gap-2">
@@ -43,8 +43,17 @@ export const AuthFlow = () => {
   }
 
   return (
-    <View className="mt-4 gap-2">
-      <SignOutButton />
+    // <View className="mt-4 gap-2">
+    //   <SignOutButton />
+    // </View>
+    <View className="bg-muted-darken rounded-2xl p-2 py-3 mt-3 active:bg-red-400">
+      <Text className="text-3xl text-secondary font-extrabold mb-4">
+        {data.user.name}
+      </Text>
+      {/* <View className="items-center flex-row gap-2">
+        <SignInDiscord />
+        <SignInAnonymous className="flex-1" />
+      </View> */}
     </View>
   )
 }

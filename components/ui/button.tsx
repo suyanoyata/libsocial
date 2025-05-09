@@ -25,6 +25,7 @@ const buttonVariants = cva(
       size: {
         default: "py-3",
         sm: "py-2 px-3",
+        icon: "w-11 h-8",
       },
     },
     defaultVariants: {
@@ -48,6 +49,7 @@ export const textVariants = cva("text-black", {
     size: {
       default: "",
       sm: "text-sm font-medium",
+      icon: "text-sm",
     },
   },
   defaultVariants: {
@@ -92,11 +94,7 @@ const Button = React.forwardRef<Pressable, ButtonProps>(
         }}
       >
         {typeof iconLeft === "string" ? (
-          <Icon
-            name={iconLeft}
-            strokeWidth={2.4}
-            className={cn(textVariants({ variant }))}
-          />
+          <Icon name={iconLeft} strokeWidth={2.4} variant={variant} />
         ) : (
           iconLeft
         )}

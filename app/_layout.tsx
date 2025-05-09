@@ -24,7 +24,13 @@ import {
 } from "expo-updates"
 import { useCallback, useEffect, useState } from "react"
 
-import { Appearance, AppState, useColorScheme, View } from "react-native"
+import {
+  Appearance,
+  AppState,
+  LogBox,
+  useColorScheme,
+  View,
+} from "react-native"
 
 import { enableFreeze, enableScreens } from "react-native-screens"
 
@@ -43,6 +49,8 @@ import { ApiAuthenticationProvider } from "@/features/auth/provider/api-authenti
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet"
 
 import { systemColorScheme } from "react-native-css-interop/dist/runtime/native/appearance-observables"
+import { BookmarkEventsProvider } from "@/features/bookmark/provider/bookmark-events-provider"
+import { Header } from "@/components/ui/header"
 
 if (isEnabled) {
   setUpdateURLAndRequestHeadersOverride({
@@ -53,6 +61,10 @@ if (isEnabled) {
     },
   })
 }
+
+// globalThis.__DEV__ = false
+
+LogBox.ignoreAllLogs()
 
 Appearance.addChangeListener(({ colorScheme }) =>
   systemColorScheme.set(colorScheme ?? "light")
@@ -160,37 +172,51 @@ export default function RootLayout() {
           <TamaguiProvider config={config}>
             <ThemeProvider value={isDark ? DarkTheme : DefaultTheme}>
               <ApiAuthenticationProvider>
-                <BottomSheetModalProvider>
-                  <Stack
-                    screenOptions={{
-                      headerShown: true,
-                      header: () => <BackButton />,
-                    }}
-                  >
-                    <Stack.Screen
-                      name="(tabs)"
-                      options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                      options={{ presentation: "modal", headerShown: false }}
-                      name="(modals)"
-                    />
-                    <Stack.Screen
-                      name="title-info"
-                      options={{
-                        headerShown: false,
+                <BookmarkEventsProvider>
+                  <BottomSheetModalProvider>
+                    <Stack
+                      screenOptions={{
+                        headerShown: true,
+                        header: () => <BackButton />,
                       }}
-                    />
-                    <Stack.Screen
-                      name="manga-reader"
-                      options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                      name="downloaded-reader"
-                      options={{ headerShown: false }}
-                    />
-                  </Stack>
-                </BottomSheetModalProvider>
+                    >
+                      <Stack.Screen
+                        name="(tabs)"
+                        options={{ headerShown: false }}
+                      />
+                      <Stack.Screen
+                        options={{ presentation: "modal", headerShown: false }}
+                        name="(modals)"
+                      />
+                      <Stack.Screen
+                        name="title-info"
+                        options={{
+                          headerShown: false,
+                        }}
+                      />
+                      <Stack.Screen
+                        name="manga-reader"
+                        options={{ headerShown: false }}
+                      />
+                      <Stack.Screen
+                        name="downloaded-reader"
+                        options={{ headerShown: false }}
+                      />
+                      <Stack.Screen
+                        name="downloads"
+                        options={{
+                          title: "Downloads",
+                          headerShown: true,
+                          header: (props) => (
+                            <View className="mt-safe">
+                              <Header showBackButton {...props} />
+                            </View>
+                          ),
+                        }}
+                      />
+                    </Stack>
+                  </BottomSheetModalProvider>
+                </BookmarkEventsProvider>
               </ApiAuthenticationProvider>
             </ThemeProvider>
           </TamaguiProvider>

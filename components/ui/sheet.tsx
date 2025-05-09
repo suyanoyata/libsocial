@@ -55,13 +55,15 @@ const Sheet = ({
   )
 }
 
-const SheetTrigger = ({ children, ...props }: ButtonProps) => {
+const SheetTrigger = ({ asChild, children, ...props }: ButtonProps) => {
   const { onOpenChange } = useSheetContext()
 
+  const Comp = asChild ? React.Fragment : Button
+
   return (
-    <Button onPress={() => onOpenChange(true)} {...props}>
+    <Comp onPress={() => onOpenChange(true)} {...props}>
       {children}
-    </Button>
+    </Comp>
   )
 }
 
@@ -89,6 +91,7 @@ const SheetContent = ({
   return (
     <BottomSheetModal
       onDismiss={() => onOpenChange(false)}
+      // @ts-ignore
       backgroundClassName="bg-primary"
       indicatorClassName="bg-muted"
       backdropComponent={(props) => (
@@ -103,7 +106,10 @@ const SheetContent = ({
       ref={bottomSheetModalRef}
     >
       <BottomSheetView
-        className={cn(!asChild && "flex-1 p-2 px-4 z-30 h-[80vh]", className)}
+        className={cn(
+          !asChild && "flex-1 p-2 px-4 z-30 h-[80vh] relative",
+          className
+        )}
       >
         {children}
       </BottomSheetView>
@@ -117,4 +123,4 @@ const SheetTitle = ({ children }: { children?: React.ReactNode }) => {
   )
 }
 
-export { Sheet, SheetTrigger, SheetContent, SheetTitle }
+export { Sheet, SheetTrigger, SheetContent, SheetTitle, useSheetContext }

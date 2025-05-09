@@ -1,4 +1,11 @@
-import { Bookmark, Loader, LucideIcon, Play, Unplug } from "lucide-react-native"
+import {
+  Bookmark,
+  Loader,
+  LucideIcon,
+  Play,
+  Plus,
+  Unplug,
+} from "lucide-react-native"
 
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome6"
 import FeatherIcon from "react-native-vector-icons/Feather"
@@ -48,7 +55,7 @@ export const iconFix = () => {
     Icon,
     Loader,
     Unplug,
-    Play,
+    Plus,
     Bookmark,
     FontAwesomeIcon as any,
     FeatherIcon as any,
