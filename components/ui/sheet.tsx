@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils"
 import {
   BottomSheetBackdrop,
   BottomSheetModal,
+  BottomSheetScrollView,
   BottomSheetView,
 } from "@gorhom/bottom-sheet"
 
@@ -68,15 +69,21 @@ const SheetTrigger = ({ asChild, children, ...props }: ButtonProps) => {
 }
 
 const SheetContent = ({
+  scrollable = false,
+  maxHeight = "80%",
   asChild,
   className,
   children,
 }: {
+  scrollable?: boolean
+  maxHeight?: string
   asChild?: boolean
   className?: string
   children?: React.ReactNode
 }) => {
   const { open, onOpenChange } = useSheetContext()
+
+  const Comp = scrollable ? BottomSheetScrollView : BottomSheetView
 
   const bottomSheetModalRef = React.useRef<BottomSheetModal>(null)
 
@@ -91,6 +98,8 @@ const SheetContent = ({
   return (
     <BottomSheetModal
       onDismiss={() => onOpenChange(false)}
+      snapPoints={scrollable ? [maxHeight] : undefined}
+      enableDynamicSizing={!scrollable}
       // @ts-ignore
       backgroundClassName="bg-primary"
       indicatorClassName="bg-muted"
@@ -105,14 +114,9 @@ const SheetContent = ({
       )}
       ref={bottomSheetModalRef}
     >
-      <BottomSheetView
-        className={cn(
-          !asChild && "flex-1 p-2 px-4 z-30 h-[80vh] relative",
-          className
-        )}
-      >
+      <Comp className={cn(!asChild && "flex-1 p-2 px-4 z-30", className)}>
         {children}
-      </BottomSheetView>
+      </Comp>
     </BottomSheetModal>
   )
 }
