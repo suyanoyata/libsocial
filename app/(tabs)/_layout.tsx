@@ -144,10 +144,16 @@ export default function TabsLayout() {
           headerShown: true,
           tabBarIcon: ({ focused }) =>
             data?.user.image ? (
-              <View className={cn("size-8 rounded-full overflow-hidden")}>
+              <View
+                className={cn(
+                  "size-10 rounded-full overflow-hidden items-center justify-center",
+                  focused && "bg-violet-600 dark:bg-violet-300"
+                )}
+              >
                 <FastImage
                   source={{ uri: data.user.image }}
                   style={{
+                    borderRadius: 999,
                     height: 32,
                     width: 32,
                   }}
