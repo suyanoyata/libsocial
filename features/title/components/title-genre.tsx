@@ -21,11 +21,14 @@ export const TitleGenre = ({ genre }: { genre: Genre }) => {
       onPress={handleGenrePress}
       className={cn(
         "bg-inactive active:opacity-80 dark:border-zinc-800 border-zinc-300 border rounded-lg p-1 px-2",
-        genre.adult && "bg-red-200/10",
+        genre.adult && "bg-red-200/10"
       )}
     >
       <Text
-        className={cn("text-primary text-sm", genre.adult && "text-red-400/90")}
+        className={cn(
+          "text-secondary font-medium text-sm",
+          genre.adult && "text-red-400/90"
+        )}
       >
         {genre.name}
       </Text>
