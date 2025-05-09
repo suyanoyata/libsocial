@@ -10,6 +10,7 @@ import { ActivityIndicator } from "@/components/ui/activity-indicator"
 import { textVariants } from "@/components/ui/button"
 import { useSession } from "@/features/auth/lib/auth"
 import { router } from "expo-router"
+import Animated, { BounceIn } from "react-native-reanimated"
 
 export const CreateBookmarkTrigger = ({
   slug_url,
@@ -32,6 +33,8 @@ export const CreateBookmarkTrigger = ({
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger
+        className="disabled:opacity-80"
+        disabled={isFetching}
         onPress={() => {
           if (sessionData) {
             setOpen(true)
@@ -47,15 +50,17 @@ export const CreateBookmarkTrigger = ({
             size={18}
           />
         ) : (
-          <Icon
-            name="Bookmark"
-            size={18}
-            strokeWidth={2.7}
-            variant="accent"
-            className={cn(
-              data?.id && "dark:fill-violet-900 fill-white font-semibold"
-            )}
-          />
+          <Animated.View entering={BounceIn.duration(500)}>
+            <Icon
+              name="Bookmark"
+              size={18}
+              strokeWidth={2.7}
+              variant="accent"
+              className={cn(
+                data?.id && "dark:fill-violet-900 fill-white font-semibold"
+              )}
+            />
+          </Animated.View>
         )}
       </SheetTrigger>
       <SheetContent className="h-auto">
