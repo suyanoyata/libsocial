@@ -51,7 +51,7 @@ export const DownloadChapterButton = ({
 
       const { chapterData, title } = await getTitleWithChapters(
         slug_url,
-        chapter,
+        chapter
       )
 
       const total = chapterData.pages.length
@@ -66,7 +66,7 @@ export const DownloadChapterButton = ({
 
       if (folder == "exists") {
         const downloadResponse = await FileSystem.readDirectoryAsync(
-          `${FileSystem.documentDirectory}${slug_url}/${folderName}`,
+          `${FileSystem.documentDirectory}${slug_url}/${folderName}`
         )
 
         add(title, {
@@ -89,7 +89,7 @@ export const DownloadChapterButton = ({
           const i = index + 1 > 9 ? index + 1 : `0${index + 1}`
           const { uri } = await FileSystem.downloadAsync(
             page.url,
-            `${FileSystem.documentDirectory}${slug_url}/${folderName}/${i}.jpg`,
+            `${FileSystem.documentDirectory}${slug_url}/${folderName}/${i}.jpg`
           )
 
           completed += 1
@@ -98,11 +98,11 @@ export const DownloadChapterButton = ({
 
           toast.loading(
             `Downloading... ${completed} / ${total} (${Math.round(
-              (completed / total) * 100,
+              (completed / total) * 100
             )}%)`,
             {
               id: toastId,
-            },
+            }
           )
 
           progress.value = withTiming((completed / total) * 108, {
@@ -110,7 +110,7 @@ export const DownloadChapterButton = ({
           })
 
           return uri
-        }),
+        })
       )
 
       add(title, {
@@ -158,7 +158,7 @@ export const DownloadChapterButton = ({
   const isChapterDownloaded = isDownloaded(
     slug_url,
     chapter.volume,
-    chapter.number,
+    chapter.number
   )
 
   return (
@@ -174,7 +174,7 @@ export const DownloadChapterButton = ({
           <Icon
             name="Download"
             className={cn(
-              !isChapterDownloaded ? "text-zinc-600" : "text-violet-400",
+              !isChapterDownloaded ? "text-zinc-600" : "text-violet-400"
             )}
             size={18}
             strokeWidth={2.8}
@@ -183,7 +183,7 @@ export const DownloadChapterButton = ({
       </Pressable>
       <Animated.View
         style={progressStyle}
-        className="absolute left-0 w-full h-[3px] bg-violet-400"
+        className="absolute left-0 w-full h-[3px] bg-violet-400 rounded-xl"
       />
     </>
   )
