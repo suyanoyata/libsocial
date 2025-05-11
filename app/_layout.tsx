@@ -26,6 +26,7 @@ import {
 import { useCallback, useEffect, useState } from "react"
 
 import {
+  Alert,
   Appearance,
   AppState,
   LogBox,
@@ -58,6 +59,8 @@ import {
   configureReanimatedLogger,
   ReanimatedLogLevel,
 } from "react-native-reanimated"
+import { Icon } from "@/components/icon"
+import { useDownloads } from "@/features/downloads/store/use-downloads"
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.error,
@@ -221,7 +224,35 @@ export default function RootLayout() {
                           headerShown: true,
                           header: (props) => (
                             <View className="mt-safe">
-                              <Header showBackButton {...props} />
+                              <Header
+                                showBackButton
+                                {...props}
+                                headerRight={
+                                  <Icon
+                                    onPress={() => {
+                                      Alert.alert(
+                                        "Are you sure?",
+                                        "You're about to delete all downloads",
+                                        [
+                                          {
+                                            text: "Cancel",
+                                          },
+                                          {
+                                            text: "Delete",
+                                            style: "destructive",
+                                            onPress: () =>
+                                              useDownloads.getState().clear(),
+                                          },
+                                        ]
+                                      )
+                                    }}
+                                    hitSlop={10}
+                                    name="Trash2"
+                                    size={20}
+                                    className="text-red-400"
+                                  />
+                                }
+                              />
                             </View>
                           ),
                         }}
