@@ -9,6 +9,7 @@ import {
 } from "@gorhom/bottom-sheet"
 
 import * as React from "react"
+import { Pressable } from "react-native"
 
 interface SheetConfig {
   open: boolean
@@ -59,7 +60,7 @@ const Sheet = ({
 const SheetTrigger = ({ asChild, children, ...props }: ButtonProps) => {
   const { onOpenChange } = useSheetContext()
 
-  const Comp = asChild ? React.Fragment : Button
+  const Comp = asChild ? Pressable : Button
 
   return (
     <Comp onPress={() => onOpenChange(true)} {...props}>
@@ -121,9 +122,17 @@ const SheetContent = ({
   )
 }
 
-const SheetTitle = ({ children }: { children?: React.ReactNode }) => {
+const SheetTitle = ({
+  children,
+  className,
+}: {
+  children?: React.ReactNode
+  className?: string
+}) => {
   return (
-    <Text className="text-4xl font-extrabold text-primary">{children}</Text>
+    <Text className={cn("text-4xl font-extrabold text-primary", className)}>
+      {children}
+    </Text>
   )
 }
 

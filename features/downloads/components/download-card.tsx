@@ -81,7 +81,7 @@ export const DownloadCard = ({ item }: { item: DownloadedChapter }) => {
                   },
                 })
               }}
-              className="h-11 mt-2 justify-between rounded-lg px-4 dark:bg-zinc-800 bg-zinc-100 items-center flex-row"
+              className="h-11 mt-2 justify-between rounded-lg px-4 dark:bg-zinc-900 bg-zinc-100 items-center flex-row"
             >
               <Text className="text-secondary font-medium">
                 Volume {item.chapter.volume} Chapter {item.chapter.number}

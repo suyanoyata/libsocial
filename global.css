@@ -67,5 +67,5 @@
 }
 
 .content-list-view-item {
-  @apply flex-row items-center gap-2 h-11 bg-muted-darken active:opacity-80 mb-2 px-4 rounded-lg;
+  @apply flex-row items-center gap-2 h-11 bg-muted-darken active:opacity-80 mt-2 px-4 rounded-lg;
 }

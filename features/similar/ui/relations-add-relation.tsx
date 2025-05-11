@@ -36,7 +36,7 @@ export default function TitleRelationsAdd() {
 
   const controller = new AbortController()
 
-  const [_search, setSearch] = useState("Akame")
+  const [_search, setSearch] = useState("")
   const [search] = useDebounce(_search, 500)
 
   const { data: searchData, isPending } = useQuickSearch(
@@ -111,6 +111,7 @@ export default function TitleRelationsAdd() {
   return (
     <View className="mx-2 mt-2 flex-1 gap-3" style={{ paddingBottom: bottom }}>
       <TextInput
+        clearButtonMode="always"
         value={_search}
         onChangeText={setSearch}
         placeholder="Search for title"

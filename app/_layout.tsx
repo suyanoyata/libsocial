@@ -134,6 +134,8 @@ export default function RootLayout() {
     "SF-Heavy": require("../assets/fonts/SFUIText-Heavy.ttf"),
   })
 
+  const items = useDownloads((state) => state.items)
+
   const [updating, setUpdating] = useState(false)
 
   useSyncQueries({ queryClient })
@@ -229,6 +231,7 @@ export default function RootLayout() {
                                 {...props}
                                 headerRight={
                                   <Icon
+                                    disabled={items.length == 0}
                                     onPress={() => {
                                       Alert.alert(
                                         "Are you sure?",
@@ -249,7 +252,7 @@ export default function RootLayout() {
                                     hitSlop={10}
                                     name="Trash2"
                                     size={20}
-                                    className="text-red-400"
+                                    className="text-red-400 disabled:hidden"
                                   />
                                 }
                               />
