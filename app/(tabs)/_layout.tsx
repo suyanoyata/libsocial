@@ -16,12 +16,15 @@ import { Text } from "@/components/ui/text"
 
 import { TabIcon } from "@/components/navigation/tab-icon"
 import { HomeTabIcon } from "@/components/navigation/home-icon"
+import { useProperties } from "@/store/use-properties"
 
 export default function TabsLayout() {
   useGenresConstants()
   const { top } = useSafeAreaInsets()
 
   const { data } = useSession()
+
+  const { siteId } = useProperties()
 
   return (
     <Tabs
@@ -79,11 +82,12 @@ export default function TabsLayout() {
             <Header
               headerRight={
                 <Icon
+                  disabled={siteId == "5"}
                   size={20}
                   hitSlop={10}
                   onPress={() => router.push("/downloads")}
                   name="Download"
-                  className="text-muted"
+                  className="text-muted disabled:opacity-0"
                 />
               }
               {...props}

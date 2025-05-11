@@ -1,7 +1,3 @@
-import { useEffect } from "react"
-import { useRouter } from "expo-router"
-import { useProperties } from "@/store/use-properties"
-
 import { SafeAreaView, ScrollView, View } from "react-native"
 
 import { Text } from "@/components/ui/text"
@@ -11,17 +7,7 @@ import { DownloadCard } from "@/features/downloads/components/download-card"
 import { Icon } from "@/components/icon"
 
 export default function Downloads() {
-  const { push } = useRouter()
-
-  const { siteId } = useProperties()
-
   const { items } = useDownloads()
-
-  useEffect(() => {
-    if (siteId == "5") {
-      push("/(tabs)")
-    }
-  }, [siteId])
 
   if (items.length == 0) {
     return (
