@@ -1,5 +1,10 @@
 import { clsx, type ClassValue } from "clsx"
-import { impactAsync, ImpactFeedbackStyle } from "expo-haptics"
+import {
+  impactAsync,
+  ImpactFeedbackStyle,
+  notificationAsync,
+  NotificationFeedbackType,
+} from "expo-haptics"
 import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
@@ -16,6 +21,10 @@ export const biggest = (arr: number[]) => {
   return Math.max(...arr)
 }
 
+export const capitalize = (str: string): string => {
+  return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
 type Success<T> = {
   data: T
   error?: never
@@ -27,7 +36,7 @@ type Failure<E> = {
 }
 
 export async function throwable<T, E = unknown>(
-  func: (() => T) | Promise<T>,
+  func: (() => T) | Promise<T>
 ): Promise<Success<T> | Failure<E>> {
   try {
     const data = await (func instanceof Promise
@@ -39,6 +48,16 @@ export async function throwable<T, E = unknown>(
   }
 }
 
-export function withImpact(callback: () => void) {
+function withImpact(callback: () => void) {
   impactAsync(ImpactFeedbackStyle.Soft).then(() => callback())
 }
+
+function withSuccessImpact(callback: () => void) {
+  notificationAsync(NotificationFeedbackType.Success).then(() => callback())
+}
+
+function withErrorImpact(callback: () => void) {
+  notificationAsync(NotificationFeedbackType.Error).then(() => callback())
+}
+
+export { withImpact, withSuccessImpact, withErrorImpact }

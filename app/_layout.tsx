@@ -22,12 +22,14 @@ import {
   reloadAsync,
   isEnabled,
 } from "expo-updates"
+
 import { useCallback, useEffect, useState } from "react"
 
 import {
   Appearance,
   AppState,
   LogBox,
+  Platform,
   useColorScheme,
   View,
 } from "react-native"
@@ -51,6 +53,16 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet"
 import { systemColorScheme } from "react-native-css-interop/dist/runtime/native/appearance-observables"
 import { BookmarkEventsProvider } from "@/features/bookmark/provider/bookmark-events-provider"
 import { Header } from "@/components/ui/header"
+
+import {
+  configureReanimatedLogger,
+  ReanimatedLogLevel,
+} from "react-native-reanimated"
+
+configureReanimatedLogger({
+  level: ReanimatedLogLevel.error,
+  strict: false,
+})
 
 if (isEnabled) {
   setUpdateURLAndRequestHeadersOverride({
@@ -223,8 +235,8 @@ export default function RootLayout() {
         </View>
       </PersistQueryClientProvider>
       <Toaster
-        offset={10}
-        theme="light"
+        offset={Platform.select({ ios: 30, android: 20 })}
+        theme="system"
         position="bottom-center"
         visibleToasts={1}
         duration={1500}

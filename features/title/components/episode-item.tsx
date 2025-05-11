@@ -1,4 +1,4 @@
-import { Pressable } from "react-native"
+import { DeviceEventEmitter, Pressable } from "react-native"
 
 import { Text } from "@/components/ui/text"
 
@@ -21,6 +21,7 @@ import { withImpact } from "@/lib/utils"
 import { actionToast } from "@/features/title/lib/action-toast"
 import Animated, { BounceIn } from "react-native-reanimated"
 import { Icon } from "@/components/icon"
+import { BookmarkEvents } from "@/features/bookmark/const/bookmark-events"
 
 export const Episode = memo(
   ({
@@ -49,7 +50,7 @@ export const Episode = memo(
 
     const watchCallback = useCallback(
       () => setWatch(isEpisodeExists(slug_url, index)),
-      [index],
+      [index]
     )
 
     useFocusEffect(watchCallback)
@@ -63,6 +64,17 @@ export const Episode = memo(
       <Pressable
         onPress={() => {
           if (isPending) return
+
+          const episode = get(slug_url)
+
+          if (episode && episode.lastWatchedEpisode < index) {
+            DeviceEventEmitter.emit(BookmarkEvents.UPDATE_WATCH_BOOKMARK, {
+              slug_url,
+              type: "anime",
+              index,
+            })
+          }
+
           router.back()
 
           setWatch(true)
@@ -77,7 +89,7 @@ export const Episode = memo(
                   episodeIndex: index,
                 },
               })
-            }),
+            })
           )
         }}
         className="content-list-view-item"
@@ -96,8 +108,10 @@ export const Episode = memo(
             actionToast(
               "watch",
               get(slug_url)!?.lastWatchedEpisode - 1 <= index,
-              `Marked Episode ${episode.number} as ${watch ? "unwatched" : "watched"}`,
-              watch,
+              `Marked Episode ${episode.number} as ${
+                watch ? "unwatched" : "watched"
+              }`,
+              watch
             )
           }}
         >
@@ -123,5 +137,5 @@ export const Episode = memo(
         </Text>
       </Pressable>
     )
-  },
+  }
 )

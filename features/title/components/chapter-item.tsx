@@ -1,4 +1,4 @@
-import { Pressable } from "react-native"
+import { DeviceEventEmitter, Pressable } from "react-native"
 import { Text } from "@/components/ui/text"
 import Animated, { BounceIn } from "react-native-reanimated"
 
@@ -8,6 +8,7 @@ import { router, useFocusEffect } from "expo-router"
 import {
   memo,
   useCallback,
+  useEffect,
   useLayoutEffect,
   useMemo,
   useState,
@@ -24,6 +25,7 @@ import { useQueryClient } from "@tanstack/react-query"
 import { Title } from "@/features/shared/types/title"
 import { Chapter as ChapterType } from "@/features/shared/types/chapter"
 import { Icon } from "@/components/icon"
+import { BookmarkEvents } from "@/features/bookmark/const/bookmark-events"
 
 export const Chapter = memo(
   ({
@@ -62,6 +64,16 @@ export const Chapter = memo(
 
     const isCurrentLastReadChapter =
       lastRead && lastRead.lastReadChapter - 1 == index
+
+    useEffect(() => {
+      if (isCurrentLastReadChapter) {
+        DeviceEventEmitter.emit(BookmarkEvents.UPDATE_READ_BOOKMARK, {
+          slug_url,
+          type: "manga",
+          lastReadChapter: chapter.item_number,
+        })
+      }
+    }, [isCurrentLastReadChapter])
 
     useFocusEffect(readCallback)
     useLayoutEffect(readCallback, [index])

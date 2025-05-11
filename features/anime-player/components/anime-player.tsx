@@ -1,7 +1,7 @@
 import { useEpisodesAPI } from "@/features/title/api/use-episodes-api"
 
 import { useWindowDimensions, View } from "react-native"
-import { useEffect, useState } from "react"
+import { memo, useEffect, useState } from "react"
 
 import { useVideoPlayer, VideoView } from "expo-video"
 import { useAnimeStore } from "@/features/anime-player/context/anime-context"
@@ -14,9 +14,11 @@ import Animated, {
   FadeOut,
   FadeOutDown,
 } from "react-native-reanimated"
+
 import { Text } from "@/components/ui/text"
-import { useEventListener } from "expo"
 import { Button } from "@/components/ui/button"
+
+import { useEventListener } from "expo"
 import { ActivityIndicator } from "@/components/ui/activity-indicator"
 
 export const AnimePlayer = () => {
@@ -26,7 +28,9 @@ export const AnimePlayer = () => {
   const { slug_url, selectedEpisodeIndex, setEpisodeIndex } = useAnimeStore()
 
   const { data: episodes } = useEpisodesAPI(slug_url)
-  const { data } = useEpisode(episodes && episodes[selectedEpisodeIndex - 1].id)
+  const { data, isPending } = useEpisode(
+    episodes && episodes[selectedEpisodeIndex - 1].id
+  )
 
   const [shouldDisplayNextEpisode, setShouldDisplayNextEpisode] =
     useState(false)
@@ -45,7 +49,7 @@ export const AnimePlayer = () => {
     (player) => {
       player.timeUpdateEventInterval = 1
       player.play()
-    },
+    }
   )
 
   useEventListener(player, "statusChange", (event) => {
@@ -58,8 +62,35 @@ export const AnimePlayer = () => {
     if (!isLoaded) return null
 
     setShouldDisplayNextEpisode(
-      event.currentTime >= player.duration - (data?.endingLength ?? 90),
+      event.currentTime >= player.duration - (data?.endingLength ?? 90)
     )
+  })
+
+  const Comp = memo(() => {
+    console.log(JSON.stringify({ player, data }, null, 2))
+
+    if (player.status == "loading" && isPending) {
+      return <ActivityIndicator />
+    }
+
+    if (!data?.source) {
+      return (
+        <Animated.Text
+          entering={FadeIn}
+          className="text-muted font-medium text-sm"
+        >
+          Can't find this upload
+        </Animated.Text>
+      )
+    }
+
+    if (player.status == "error" && data?.source) {
+      return (
+        <Text className="text-muted font-medium text-sm">
+          Can't play this type of media
+        </Text>
+      )
+    }
   })
 
   return (
@@ -108,17 +139,7 @@ export const AnimePlayer = () => {
             height: width / 1.77777,
           }}
         >
-          {player.status == "loading" && <ActivityIndicator />}
-          {player.status == "error" && data && !data.source && (
-            <Text className="text-muted font-medium text-sm">
-              Can't find this upload
-            </Text>
-          )}
-          {data && data.source && player.status == "error" && (
-            <Text className="text-muted font-medium text-sm">
-              Can't play this type of media
-            </Text>
-          )}
+          <Comp />
         </Animated.View>
       )}
     </View>

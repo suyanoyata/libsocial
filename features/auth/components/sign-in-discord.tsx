@@ -1,21 +1,13 @@
 import { ActivityIndicator } from "@/components/ui/activity-indicator"
 import { Button } from "@/components/ui/button"
-import { signIn, useSession } from "@/features/auth/lib/auth"
+import { authClient, signIn, useSession } from "@/features/auth/lib/auth"
+import { withSuccessImpact } from "@/lib/utils"
 import { useMutation } from "@tanstack/react-query"
 
 import Icon from "react-native-vector-icons/FontAwesome6"
 import { toast } from "sonner-native"
 
-type SignInDiscordProps = NonNullable<{
-  redirect: boolean
-  url: undefined
-}>
-
-export const SignInDiscord = ({
-  fun,
-}: {
-  fun?: (props: SignInDiscordProps) => void
-}) => {
+export const SignInDiscord = ({ fun }: { fun?: () => void }) => {
   const { data: session } = useSession()
 
   const { mutate, isPending } = useMutation({
@@ -24,16 +16,13 @@ export const SignInDiscord = ({
       const data = await signIn.social({
         provider: "discord",
         callbackURL: "/",
-        fetchOptions: {
-          throw: true,
-        },
       })
 
       return data
     },
-    onSuccess(data) {
+    async onSuccess() {
       if (fun) {
-        fun(data as SignInDiscordProps)
+        fun()
       }
 
       setTimeout(() => {
@@ -41,9 +30,11 @@ export const SignInDiscord = ({
           ? "You've linked your Discord account"
           : "Signed in with Discord"
 
-        toast.success(title, {
-          duration: 2000,
-        })
+        withSuccessImpact(() =>
+          toast.success(title, {
+            duration: 2000,
+          })
+        )
       }, 500)
     },
   })

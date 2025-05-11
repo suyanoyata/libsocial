@@ -1,8 +1,3 @@
-import { Button } from "@/components/ui/button"
-import { View } from "react-native"
-
-import { bookmarkOptions } from "@/features/bookmark/const/bookmark-options"
-
 import { useBookmarkAPI } from "@/features/bookmark/api/use-bookmark-api"
 
 import { useBookmarkCreate } from "@/features/bookmark/api/use-bookmark-create"
@@ -40,10 +35,13 @@ export const BookmarkCreateSelectUI = ({
         setOpen(false)
       }}
       onDelete={() => {
+        if (!data) return
+
         deleteBookmark({
           slug_url,
-          type,
+          id: data.id,
         })
+
         setOpen(false)
       }}
     />

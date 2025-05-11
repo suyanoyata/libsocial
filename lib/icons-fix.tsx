@@ -56,6 +56,7 @@ export const iconFix = () => {
     Loader,
     Unplug,
     Plus,
+    Play,
     Bookmark,
     FontAwesomeIcon as any,
     FeatherIcon as any,

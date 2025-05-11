@@ -89,11 +89,7 @@ export const Catalog = () => {
         {data ? (
           <FlashList
             refreshControl={
-              <RefreshControl
-                tintColor={isDark ? "white" : "black"}
-                refreshing={isRefetching}
-                onRefresh={refetch}
-              />
+              <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
             }
             removeClippedSubviews
             data={catalogItems}

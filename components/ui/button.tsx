@@ -7,7 +7,7 @@ import { cn, withImpact } from "@/lib/utils"
 import { Icon } from "@/components/icon"
 
 const buttonVariants = cva(
-  "p-2.5 px-4 items-center dark:shadow-none justify-center flex-row gap-1 rounded-full",
+  "p-2.5 px-4 items-center dark:shadow-none justify-center flex-row gap-1 rounded-full self-start",
   {
     variants: {
       variant: {

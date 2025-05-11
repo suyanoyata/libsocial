@@ -34,7 +34,7 @@ export const CatalogHeader = () => {
       </View>
       <Button
         variant="ghost"
-        className="w-[50px] rounded-full ml-2 active:bg-white/20"
+        className="rounded-full ml-2 active:bg-white/20"
         onPress={() => {
           router.push("/catalog-filters-view")
         }}

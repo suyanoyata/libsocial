@@ -5,6 +5,7 @@ import { useQueryClient } from "@tanstack/react-query"
 
 import { BookmarkEvents } from "@/features/bookmark/const/bookmark-events"
 import { api } from "@/lib/axios"
+import { Bookmark } from "@/features/bookmark/types/bookmark"
 
 interface BookmarkEventsProps {
   children?: React.ReactNode
@@ -30,10 +31,40 @@ export const BookmarkEventsProvider = ({ children }: BookmarkEventsProps) => {
     DeviceEventEmitter.addListener(
       BookmarkEvents.UPDATE_READ_BOOKMARK,
       async (data) => {
+        const bookmark = client.getQueryData<Bookmark>([
+          "bookmark",
+          data.slug_url,
+        ])
+
+        if (!bookmark) return
+
         await api.put("/bookmarks", {
-          slug_url: data.slug_url,
-          type: "manga",
+          id: bookmark.id,
           chapterIndex: data.lastReadChapter,
+        })
+
+        client.invalidateQueries({
+          queryKey: ["bookmarks"],
+        })
+        client.invalidateQueries({
+          queryKey: ["bookmark", data.slug_url],
+        })
+      }
+    )
+
+    DeviceEventEmitter.addListener(
+      BookmarkEvents.UPDATE_WATCH_BOOKMARK,
+      async (data) => {
+        const bookmark = client.getQueryData<Bookmark>([
+          "bookmark",
+          data.slug_url,
+        ])
+
+        if (!bookmark) return
+
+        await api.put("/bookmarks", {
+          id: bookmark.id,
+          episodeIndex: data.index,
         })
 
         client.invalidateQueries({

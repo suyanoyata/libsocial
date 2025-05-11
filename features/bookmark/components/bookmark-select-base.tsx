@@ -22,8 +22,9 @@ export const BookmarkSelectBase = ({
     <View className="mb-safe mt-auto gap-3">
       {bookmarkOptions.map((option) => (
         <Button
+          className="w-full"
           onPress={() => onSelect(option.value)}
-          variant="tonal"
+          variant={data?.mark == option.value ? "accent" : "tonal"}
           key={option.value}
           iconLeft={option.icon}
         >
@@ -31,7 +32,12 @@ export const BookmarkSelectBase = ({
         </Button>
       ))}
       {shouldShowDelete && data?.id && (
-        <Button onPress={onDelete} variant="destructive" iconLeft="Trash2">
+        <Button
+          className="w-full"
+          onPress={onDelete}
+          variant="destructive"
+          iconLeft="Trash2"
+        >
           Delete
         </Button>
       )}

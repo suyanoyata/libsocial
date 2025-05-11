@@ -46,7 +46,6 @@ export const useReadingTracker = create<ApplicationProperties>()(
 
           if (existingTitle) {
             if (existingTitle.lastReadChapter < newItem.lastReadChapter) {
-              console.log("update to", newItem.lastReadChapter)
               DeviceEventEmitter.emit(BookmarkEvents.UPDATE_READ_BOOKMARK, {
                 slug_url: newItem.slug_url,
                 type: "manga",

@@ -30,8 +30,8 @@ export default function CatalogFiltersView() {
         disabled={genres.length == 0}
         onPress={reset}
         className={cn(
-          "mt-auto",
-          genres.length == 0 && "opacity-80 active:bg-red-500",
+          "mt-auto w-full",
+          genres.length == 0 && "opacity-60 dark:opacity-40 active:bg-red-500"
         )}
         variant="destructive"
         iconLeft="Trash2"

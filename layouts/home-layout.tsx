@@ -29,7 +29,6 @@ export const HomeLayout = ({ children }: { children?: React.ReactNode }) => {
           <TextInput
             editable={false}
             placeholder="Search..."
-            placeholderTextColor="#a1a1aa"
             className="placeholder:text-muted font-medium flex-1 pl-5"
           />
           <Icon
@@ -46,11 +45,7 @@ export const HomeLayout = ({ children }: { children?: React.ReactNode }) => {
       </View>
       <ScrollView
         refreshControl={
-          <RefreshControl
-            tintColor={isDark ? "white" : "black"}
-            refreshing={isRefetching}
-            onRefresh={refetch}
-          />
+          <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
         }
         className="flex-1 pt-2"
       >

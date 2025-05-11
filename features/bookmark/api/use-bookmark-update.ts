@@ -5,19 +5,26 @@ import { api } from "@/lib/axios"
 import { useMutation } from "@tanstack/react-query"
 
 import { BookmarkEvents } from "@/features/bookmark/const/bookmark-events"
+import { useState } from "react"
+import { withSuccessImpact } from "@/lib/utils"
 
-export const useBookmarkUpdate = () => {
+export const useBookmarkUpdate = (slug_url: string) => {
+  const [toastId, setToastId] = useState<string | number>(0)
+
   return useMutation({
     mutationKey: ["update-bookmark"],
-    mutationFn: async (data: { slug_url: string; name: string }) => {
-      return await api.put("/bookmarks", {
-        ...data,
-        type: "manga",
-      })
+    mutationFn: async (data: { id: number; name: string }) => {
+      setToastId(toast.loading("Updating bookmark..."))
+
+      return await api.put("/bookmarks", data)
     },
-    onSuccess: (_, props) => {
-      DeviceEventEmitter.emit(BookmarkEvents.CREATE_BOOKMARK, props.slug_url)
-      toast.success("Bookmark updated")
+    onSuccess: () => {
+      DeviceEventEmitter.emit(BookmarkEvents.CREATE_BOOKMARK, slug_url)
+      withSuccessImpact(() =>
+        toast.success("Bookmark updated", {
+          id: toastId,
+        })
+      )
     },
   })
 }

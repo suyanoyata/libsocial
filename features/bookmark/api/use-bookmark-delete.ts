@@ -4,17 +4,24 @@ import { api } from "@/lib/axios"
 import { DeviceEventEmitter } from "react-native"
 import { BookmarkEvents } from "@/features/bookmark/const/bookmark-events"
 import { toast } from "sonner-native"
+import { useState } from "react"
+import { withSuccessImpact } from "@/lib/utils"
 
 export const useBookmarkDelete = () => {
+  const [toastId, setToastId] = useState<string | number>(0)
+
   return useMutation({
     mutationKey: ["delete-bookmark"],
-    mutationFn: async (data: { slug_url: string; type: string }) => {
-      return await api.delete(
-        `/bookmarks?slug_url=${data.slug_url}&type=${data.type}`
-      )
+    mutationFn: async (data: { slug_url: string; id: number }) => {
+      setToastId(toast.loading("Deleting bookmark..."))
+      return await api.delete(`/bookmarks?id=${data.id}`)
     },
     onSuccess: (_, props) => {
-      toast.success("Bookmark deleted")
+      withSuccessImpact(() =>
+        toast.success("Bookmark deleted", {
+          id: toastId,
+        })
+      )
       DeviceEventEmitter.emit(BookmarkEvents.DELETE_BOOKMARK, props.slug_url)
     },
   })

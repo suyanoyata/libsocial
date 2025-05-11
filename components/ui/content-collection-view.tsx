@@ -42,7 +42,7 @@ export const ContentCollectionView = <T,>({
             startReversing(() => reverseCallback())
           }}
           variant="ghost"
-          className="rounded-full w-28"
+          className="rounded-full"
           iconLeft={iconName}
         >
           Order
