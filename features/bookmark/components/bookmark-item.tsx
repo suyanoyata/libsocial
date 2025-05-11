@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useState } from "react"
+import { memo, useCallback, useEffect, useState } from "react"
 
 import FastImage from "@d11/react-native-fast-image"
-import { Pressable, ScrollView, View } from "react-native"
+import { Pressable, View } from "react-native"
 
 import { Button } from "@/components/ui/button"
 import { Text } from "@/components/ui/text"
@@ -19,7 +19,7 @@ import { useBookmarkUpdate } from "@/features/bookmark/api/use-bookmark-update"
 import { useBookmarkDelete } from "@/features/bookmark/api/use-bookmark-delete"
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated"
 
-export const BookmarkItem = ({ bookmark }: { bookmark: Bookmark }) => {
+export const BookmarkItem = memo(({ bookmark }: { bookmark: Bookmark }) => {
   const [open, setOpen] = useState(false)
 
   const { mutate, isPending } = useBookmarkUpdate(bookmark.media.slug_url)
@@ -51,10 +51,6 @@ export const BookmarkItem = ({ bookmark }: { bookmark: Bookmark }) => {
     }
   }, [isPending])
 
-  const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
-
-  const { media, last_seen, ...meta } = bookmark
-
   const mangaStatus = bookmark.last_seen
     ? `Continue from Chapter ${bookmark.last_seen.number}`
     : "Start reading"
@@ -66,62 +62,62 @@ export const BookmarkItem = ({ bookmark }: { bookmark: Bookmark }) => {
   const status = bookmark.type == "manga" ? mangaStatus : animeStatus
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <AnimatedPressable
-        entering={FadeIn}
-        exiting={FadeOut}
-        onPress={() => {
-          router.push({
-            pathname: "/title-info",
-            params: {
-              slug_url: bookmark.media.slug_url,
-              site: bookmark.media.site,
-            },
-          })
-        }}
-        className="mb-2 mx-2 bg-muted-darken active:opacity-90 overflow-hidden rounded-lg flex-row"
-      >
-        <FastImage
-          source={{ uri: bookmark.media.cover.default }}
-          style={{ width: 120, height: 160 }}
-        />
-        <View className="p-3 flex-1 relative flex-col">
-          <View className="absolute right-2 top-2">
-            <BookmarkItemActions
-              onDelete={() =>
-                deleteBookmark({
-                  id: bookmark.id,
-                  slug_url: bookmark.media.slug_url,
-                })
-              }
-              onEdit={() => setOpen(true)}
+    <Animated.View entering={FadeIn} exiting={FadeOut}>
+      <Sheet open={open} onOpenChange={setOpen}>
+        <Pressable
+          onPress={() => {
+            router.push({
+              pathname: "/title-info",
+              params: {
+                slug_url: bookmark.media.slug_url,
+                site: bookmark.media.site,
+              },
+            })
+          }}
+          className="mb-2 mx-2 bg-muted-darken active:opacity-90 overflow-hidden rounded-lg flex-row"
+        >
+          <FastImage
+            source={{ uri: bookmark.media.cover.default }}
+            style={{ width: 120, height: 160 }}
+          />
+          <View className="p-3 flex-1 relative flex-col">
+            <View className="absolute right-2 top-2">
+              <BookmarkItemActions
+                onDelete={() =>
+                  deleteBookmark({
+                    id: bookmark.id,
+                    slug_url: bookmark.media.slug_url,
+                  })
+                }
+                onEdit={() => setOpen(true)}
+              >
+                <Button hitSlop={20} asChild size="icon" variant="tonal">
+                  <Icon name="Ellipsis" size={18} variant="tonal" />
+                </Button>
+              </BookmarkItemActions>
+            </View>
+            <Text className="text-primary font-medium text-base mr-12">
+              {bookmark.media.eng_name ?? bookmark.media.name}
+            </Text>
+            <Button
+              className="mt-auto"
+              size="sm"
+              variant="link"
+              key={bookmark.id}
+              onPress={onStart}
             >
-              <Button hitSlop={20} asChild size="icon" variant="tonal">
-                <Icon name="Ellipsis" size={18} variant="tonal" />
-              </Button>
-            </BookmarkItemActions>
+              {status}
+            </Button>
           </View>
-          <Text className="text-primary font-medium text-base mr-12">
-            {bookmark.media.eng_name ?? bookmark.media.name}
-          </Text>
-          <Button
-            className="mt-auto"
-            size="sm"
-            variant="link"
-            key={bookmark.id}
-            onPress={onStart}
-          >
-            {status}
-          </Button>
-        </View>
-      </AnimatedPressable>
-      <SheetContent>
-        <BookmarkSelectBase
-          shouldShowDelete={false}
-          data={bookmark}
-          onSelect={(value) => mutate({ name: value, id: bookmark.id })}
-        />
-      </SheetContent>
-    </Sheet>
+        </Pressable>
+        <SheetContent>
+          <BookmarkSelectBase
+            shouldShowDelete={false}
+            data={bookmark}
+            onSelect={(value) => mutate({ name: value, id: bookmark.id })}
+          />
+        </SheetContent>
+      </Sheet>
+    </Animated.View>
   )
-}
+})

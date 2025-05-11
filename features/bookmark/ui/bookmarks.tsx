@@ -1,4 +1,4 @@
-import { RefreshControl, ScrollView, View } from "react-native"
+import { FlatList, RefreshControl, ScrollView, View } from "react-native"
 
 import { useSession } from "@/features/auth/lib/auth"
 
@@ -19,6 +19,7 @@ import ContextMenu from "react-native-context-menu-view"
 import withBubble from "@/components/ui/withBubble"
 import { useState } from "react"
 import { capitalize } from "@/lib/utils"
+import { Bookmark } from "@/features/bookmark/types/bookmark"
 
 export default function Bookmarks() {
   const { isPending } = useSession()
@@ -32,6 +33,10 @@ export default function Bookmarks() {
   } = useBookmarksAPI(filter)
 
   const Bookmark = withBubble(Icon)
+
+  const renderItem = ({ item: bookmark }: { item: Bookmark }) => (
+    <BookmarkItem bookmark={bookmark} />
+  )
 
   const Comp = () => {
     if (isPending || isBookmarksPending) {
@@ -61,17 +66,16 @@ export default function Bookmarks() {
     }
 
     return (
-      <ScrollView
+      <FlatList
+        data={bookmarks}
         refreshControl={
           <RefreshControl refreshing={false} onRefresh={refetch} />
         }
+        keyExtractor={(item) => String(item.id)}
+        renderItem={renderItem}
         contentContainerClassName="gap-2 mx-2"
         className="flex-1"
-      >
-        {bookmarks?.map((bookmark) => (
-          <BookmarkItem key={bookmark.id} bookmark={bookmark} />
-        ))}
-      </ScrollView>
+      />
     )
   }
 
