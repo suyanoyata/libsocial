@@ -1,4 +1,4 @@
-import { FlatList, RefreshControl, ScrollView, View } from "react-native"
+import { FlatList, RefreshControl, View } from "react-native"
 
 import { useSession } from "@/features/auth/lib/auth"
 
@@ -17,11 +17,11 @@ import { Icon } from "@/components/icon"
 import ContextMenu from "react-native-context-menu-view"
 
 import withBubble from "@/components/ui/withBubble"
-import { useState } from "react"
+import { memo, useState } from "react"
 import { capitalize } from "@/lib/utils"
 import { Bookmark } from "@/features/bookmark/types/bookmark"
 
-export default function Bookmarks() {
+function Bookmarks() {
   const { isPending } = useSession()
 
   const [filter, setFilter] = useState("")
@@ -95,9 +95,15 @@ export default function Bookmarks() {
         }}
         actions={[
           { title: "All" },
-          { title: "Ongoing" },
           { title: "Planned" },
+          { title: "Ongoing" },
           { title: "Finished" },
+          {
+            title: "Dropped",
+          },
+          {
+            title: "Favorite",
+          },
         ]}
       >
         <Button
@@ -112,3 +118,5 @@ export default function Bookmarks() {
     </Animated.View>
   )
 }
+
+export default memo(Bookmarks)
