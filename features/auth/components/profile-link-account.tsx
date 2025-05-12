@@ -1,41 +1,30 @@
 import { Button, textVariants } from "@/components/ui/button"
 import { signIn, useSession } from "@/features/auth/lib/auth"
-import { withSuccessImpact } from "@/lib/utils"
+import { withErrorImpact, withSuccessImpact } from "@/lib/utils"
 import { useMutation } from "@tanstack/react-query"
 
 import Icon from "react-native-vector-icons/FontAwesome6"
 import { toast } from "sonner-native"
 
-type LinkAccountWithDiscordProps = NonNullable<{
-  redirect: boolean
-  url: undefined
-}>
-
-export const LinkAccountWithDiscord = ({
-  fun,
-}: {
-  fun?: (props: LinkAccountWithDiscordProps) => void
-}) => {
+export const LinkAccountWithDiscord = () => {
   const { data: session } = useSession()
 
   const { mutate } = useMutation({
     mutationKey: ["sign-in-discord"],
     mutationFn: async () => {
-      const data = await signIn.social({
+      // FIXME: currently we are unable to add existing user to request
+      const { data, error } = await signIn.social({
         provider: "discord",
         callbackURL: "/",
-        fetchOptions: {
-          throw: true,
-        },
       })
+
+      if (error) {
+        throw error
+      }
 
       return data
     },
-    onSuccess(data) {
-      if (fun) {
-        fun(data as LinkAccountWithDiscordProps)
-      }
-
+    onSuccess() {
       setTimeout(() => {
         const title = session?.user.isAnonymous
           ? "You've linked your Discord account"
@@ -46,7 +35,10 @@ export const LinkAccountWithDiscord = ({
             duration: 2000,
           })
         )
-      }, 500)
+      }, 2000)
+    },
+    onError(error) {
+      withErrorImpact(() => toast.error(error.message))
     },
   })
 

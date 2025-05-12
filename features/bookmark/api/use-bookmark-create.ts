@@ -7,7 +7,7 @@ import { useMutation } from "@tanstack/react-query"
 import { useReadingTracker } from "@/store/use-reading-tracker"
 import { toast } from "sonner-native"
 import { useState } from "react"
-import { withSuccessImpact } from "@/lib/utils"
+import { withErrorImpact, withSuccessImpact } from "@/lib/utils"
 
 export const useBookmarkCreate = () => {
   const [id, setId] = useState<string | number>(0)
@@ -40,6 +40,13 @@ export const useBookmarkCreate = () => {
     onSuccess: (_, props) => {
       withSuccessImpact(() => toast.success("Bookmark created", { id }))
       DeviceEventEmitter.emit(BookmarkEvents.CREATE_BOOKMARK, props.slug_url)
+    },
+    onError: (error) => {
+      withErrorImpact(() =>
+        toast.error("Failed to create bookmark", {
+          id,
+        })
+      )
     },
   })
 }

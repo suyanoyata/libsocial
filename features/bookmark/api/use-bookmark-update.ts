@@ -6,7 +6,7 @@ import { useMutation } from "@tanstack/react-query"
 
 import { BookmarkEvents } from "@/features/bookmark/const/bookmark-events"
 import { useState } from "react"
-import { withSuccessImpact } from "@/lib/utils"
+import { withErrorImpact, withSuccessImpact } from "@/lib/utils"
 
 export const useBookmarkUpdate = (slug_url: string) => {
   const [toastId, setToastId] = useState<string | number>(0)
@@ -22,6 +22,13 @@ export const useBookmarkUpdate = (slug_url: string) => {
       DeviceEventEmitter.emit(BookmarkEvents.CREATE_BOOKMARK, slug_url)
       withSuccessImpact(() =>
         toast.success("Bookmark updated", {
+          id: toastId,
+        })
+      )
+    },
+    onError: () => {
+      withErrorImpact(() =>
+        toast.error("Couldn't update bookmark", {
           id: toastId,
         })
       )

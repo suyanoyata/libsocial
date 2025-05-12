@@ -42,7 +42,7 @@ export const Header = (props: Options) => {
           />
         </View>
       )}
-      <Text className="font-bold text-secondary text-center text-lg">
+      <Text className="font-bold text-secondary text-center text-lg line-clamp-1 max-w-[60%]">
         {props.options.title ?? props.route.name}
       </Text>
       {props.headerRight && (

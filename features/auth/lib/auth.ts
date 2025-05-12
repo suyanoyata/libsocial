@@ -7,6 +7,7 @@ import * as SecureStore from "expo-secure-store"
 export const {
   useSession,
   signIn,
+  signUp,
   signOut,
   linkSocial,
   getCookie,

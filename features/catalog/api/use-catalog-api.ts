@@ -6,31 +6,28 @@ import { api } from "@/lib/axios"
 import { useProperties } from "@/store/use-properties"
 
 export const useCatalogAPI = (query: string) => {
-  const { genres, caution } = useFilterStore()
+  const { genres } = useFilterStore()
   const { siteId } = useProperties()
 
   return useInfiniteQuery<{
     data: BaseTitle[]
   }>({
-    queryKey: ["catalog-search", query.trim(), genres, caution],
+    queryKey: ["catalog-search", query.trim(), genres],
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
-      let genreParams = genres.map((id) => `&genres[]=${id}`).join("")
-      let cautionParams = caution.map((id) => `&caution[]=${id}`).join("")
+      const params = new URLSearchParams()
 
-      let call = `/${
-        siteId == "5" ? "anime" : "manga"
-      }?q=${query.trim()}&site_id[]=${siteId}&page=${pageParam}`
+      genres.forEach((genre) => {
+        params.append("genres[]", String(genre))
+      })
 
-      if (genreParams.length > 0) {
-        call += genreParams
-      }
+      const { data } = await api.get(
+        `/${
+          siteId == "5" ? "anime" : "manga"
+        }?${params}&page=${pageParam}&q=${query.trim()}`
+      )
 
-      if (cautionParams.length > 0) {
-        call += cautionParams
-      }
-
-      return (await api.get(call)).data
+      return data
     },
     staleTime: 1000 * 60 * 1,
     getNextPageParam: (lastPage, allPages) => {
