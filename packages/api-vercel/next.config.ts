@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   devIndicators: {
     appIsrStatus: false,
   },
+  transpilePackages: ["api"],
 };
 
 export default nextConfig;

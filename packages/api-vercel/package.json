@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "api": "workspace:*",
     "autoprefixer": "^10.4.20",
     "next": "15.1.7",
     "postcss-rename": "^0.6.1",
