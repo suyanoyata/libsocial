@@ -1,0 +1,33 @@
+import { db } from "lib/db";
+
+class Service {
+  public async getEpisodes(slug_url: string) {
+    // check if anime exists
+    await db.episode.findFirstOrThrow({
+      where: {
+        slug_url,
+      },
+    });
+
+    const anime = await db.episode.findMany({
+      where: {
+        slug_url,
+      },
+      orderBy: {
+        item_number: "asc",
+      },
+    });
+
+    return anime;
+  }
+
+  public async getEpisode(episodeId: number){
+    return await db.episode.findFirstOrThrow({
+      where: {
+        id: episodeId
+      },
+    })
+  }
+}
+
+export const episodesService = new Service();

@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "hono/jsx",
+    "target": "ES2017",
+    "moduleResolution": "bundler",
+    "module": "ESNext",
+    "paths": {
+      "*": ["./*"]
+    }
+  },
+  "include": ["**/*.ts"]
+}
