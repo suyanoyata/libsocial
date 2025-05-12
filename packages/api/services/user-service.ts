@@ -1,5 +1,5 @@
 import { User } from "better-auth";
-import { db } from "lib/db";
+import { db } from "~/lib/db";
 
 class Service {
   public async mergeBookmarks(oldUserId: User["id"], newUserId: User["id"]) {

@@ -2,7 +2,7 @@ import {
   AgeRestrictionConstantSchema,
   GenreConstantSchema,
   ImageServersConstantSchema,
-} from "types/zod/constants";
+} from "~/types/zod/constants";
 
 export const constantFields = {
   imageServers: {

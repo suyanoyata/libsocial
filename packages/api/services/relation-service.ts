@@ -1,7 +1,7 @@
-import { db } from "lib/db";
+import { db } from "~/lib/db";
 import { RelatedReason } from "@prisma/client";
-import { mangaService } from "services";
-import { animeService } from "services";
+import { mangaService } from "~/services";
+import { animeService } from "~/services";
 
 class Service {
   public async checkRelationExistence(

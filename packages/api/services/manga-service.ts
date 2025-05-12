@@ -1,13 +1,13 @@
 import { Manga, RelatedReason } from "@prisma/client";
 
-import { Item } from "types/zod/manga";
-import { PaginatedResponse } from "types/zod/paginated-response";
+import { Item } from "~/types/zod/manga";
+import { PaginatedResponse } from "~/types/zod/paginated-response";
 
-import { db } from "lib/db";
-import { Logger } from "lib/logger";
+import { db } from "~/lib/db";
+import { Logger } from "~/lib/logger";
 
-import { pageLimit } from "const/db";
-import { translate } from "services/translate.service";
+import { pageLimit } from "~/const/db";
+import { translate } from "~/services/translate.service";
 
 const MangaLogger = new Logger("MangaService");
 

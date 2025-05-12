@@ -1,13 +1,17 @@
 import { Hono } from "hono";
 
-import { auth } from "lib/auth";
-import { Unauthorized } from "lib/http-errors";
+import { auth } from "~/lib/auth";
+import { Unauthorized } from "~/lib/http-errors";
 
 import { zValidator } from "@hono/zod-validator";
 
-import bookmarksService from "services/bookmarks-service";
-import { deleteBookmarkSchema, bookmarkSchema, updateBookmarkSchema } from "types/zod/bookmark";
-import { throwable } from "lib/utils";
+import bookmarksService from "~/services/bookmarks-service";
+import {
+  deleteBookmarkSchema,
+  bookmarkSchema,
+  updateBookmarkSchema,
+} from "~/types/zod/bookmark";
+import { throwable } from "~/lib/utils";
 import { User } from "better-auth";
 import { BookmarkName } from "@prisma/client";
 
@@ -55,7 +59,8 @@ app.get("/", async (c) => {
 });
 
 app.post("/", zValidator("json", bookmarkSchema), async (c) => {
-  const { name, type, slug_url, chapterIndex, episodeIndex } = c.req.valid("json");
+  const { name, type, slug_url, chapterIndex, episodeIndex } =
+    c.req.valid("json");
 
   const data = c.get("user");
 

@@ -1,4 +1,4 @@
-import { db } from "lib/db";
+import { db } from "~/lib/db";
 
 class Service {
   public async getEpisodes(slug_url: string) {
@@ -21,12 +21,12 @@ class Service {
     return anime;
   }
 
-  public async getEpisode(episodeId: number){
+  public async getEpisode(episodeId: number) {
     return await db.episode.findFirstOrThrow({
       where: {
-        id: episodeId
+        id: episodeId,
       },
-    })
+    });
   }
 }
 

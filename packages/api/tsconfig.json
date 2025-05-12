@@ -7,7 +7,7 @@
     "moduleResolution": "bundler",
     "module": "ESNext",
     "paths": {
-      "*": ["./*"]
+      "~/*": ["./*"]
     }
   },
   "include": ["**/*.ts"]

@@ -1,5 +1,5 @@
 import { Context, Hono } from "hono";
-import { ConstantsService } from "services";
+import { ConstantsService } from "~/services";
 
 const app = new Hono();
 

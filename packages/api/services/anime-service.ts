@@ -1,15 +1,15 @@
-import { pageLimit } from "const/db";
+import { pageLimit } from "~/const/db";
 
-import { db } from "lib/db";
-import { api } from "lib/axios";
-import { Logger } from "lib/logger";
+import { db } from "~/lib/db";
+import { api } from "~/lib/axios";
+import { Logger } from "~/lib/logger";
 
 import { Anime as AnimeModel } from "@prisma/client";
-import { Anime, AnimeEpisode, AnimeEpisodeSchema } from "types/zod";
-import { PaginatedResponse } from "types/zod/paginated-response";
+import { Anime, AnimeEpisode, AnimeEpisodeSchema } from "~/types/zod";
+import { PaginatedResponse } from "~/types/zod/paginated-response";
 
 import { z } from "zod";
-import { translate } from "services/translate.service";
+import { translate } from "~/services/translate.service";
 
 const AnimeLogger = new Logger("AnimeService");
 
@@ -116,7 +116,9 @@ class Service {
     ]);
   }
 
-  public async getTitles(page?: string): Promise<PaginatedResponse<AnimeModel[]>> {
+  public async getTitles(
+    page?: string
+  ): Promise<PaginatedResponse<AnimeModel[]>> {
     const p = (page != undefined ? Number(page) - 1 : 0) * pageLimit;
     const nextPage = (page != undefined ? Number(page) : 0) * pageLimit;
 
@@ -152,7 +154,11 @@ class Service {
     };
   }
 
-  public async getAnimeWithQueries(search: string, genres?: string[], page?: string) {
+  public async getAnimeWithQueries(
+    search: string,
+    genres?: string[],
+    page?: string
+  ) {
     const p = (page != undefined ? Number(page) - 1 : 0) * pageLimit;
     const nextPage = (page != undefined ? Number(page) : 1) * pageLimit;
 

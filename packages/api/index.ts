@@ -5,21 +5,21 @@ import { trimTrailingSlash } from "hono/trailing-slash";
 import { logger } from "hono/logger";
 import { cors } from "hono/cors";
 
-import constantController from "controllers/constant-controller";
+import constantController from "~/controllers/constant-controller";
 
-import { episodesService, mangaService } from "services";
+import { episodesService, mangaService } from "~/services";
 
 import {
   animeController,
   mangaController,
   bookmarkController,
-} from "controllers";
-import { animeService } from "services/anime-service";
-import { throwable } from "lib/utils";
+} from "~/controllers";
+import { animeService } from "~/services/anime-service";
+import { throwable } from "~/lib/utils";
 
-import { auth } from "lib/auth";
-import { AnonymousForbidden, Unauthorized } from "lib/http-errors";
-import { relationService } from "services/relation-service";
+import { auth } from "~/lib/auth";
+import { AnonymousForbidden, Unauthorized } from "~/lib/http-errors";
+import { relationService } from "~/services/relation-service";
 
 const app = new Hono().basePath("/api");
 

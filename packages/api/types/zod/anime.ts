@@ -1,6 +1,6 @@
 import { number, z } from "zod";
 
-import { GenreSchema } from "types/zod/base";
+import { GenreSchema } from "~/types/zod/base";
 
 export const AnimeSchema = z.object({
   id: z.number(),

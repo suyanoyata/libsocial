@@ -1,8 +1,12 @@
 import { BookmarkName, ModelName } from "@prisma/client";
 import { User } from "better-auth";
 
-import { db } from "lib/db";
-import { CreateBookmarkData, DeleteBookmarkData, UpdateBookmarkData } from "types/zod/bookmark";
+import { db } from "~/lib/db";
+import {
+  CreateBookmarkData,
+  DeleteBookmarkData,
+  UpdateBookmarkData,
+} from "~/types/zod/bookmark";
 
 class Service {
   public async getBookmark(
@@ -28,7 +32,11 @@ class Service {
     });
   }
 
-  public async getBookmarks(data: { userId: User["id"]; type: ModelName; name?: BookmarkName }) {
+  public async getBookmarks(data: {
+    userId: User["id"];
+    type: ModelName;
+    name?: BookmarkName;
+  }) {
     const bookmarks = await db.bookmark.findMany({
       where: {
         userId: data.userId,
@@ -60,7 +68,15 @@ class Service {
     });
 
     return bookmarks.map((bookmark) => {
-      const { lastRead, lastWatch, animeSlug_url, mangaSlug_url, manga, anime, ...rest } = bookmark;
+      const {
+        lastRead,
+        lastWatch,
+        animeSlug_url,
+        mangaSlug_url,
+        manga,
+        anime,
+        ...rest
+      } = bookmark;
 
       return {
         ...rest,
@@ -71,7 +87,10 @@ class Service {
     });
   }
 
-  public async getLatestBookmarks(data: { userId: User["id"]; type: ModelName }) {
+  public async getLatestBookmarks(data: {
+    userId: User["id"];
+    type: ModelName;
+  }) {
     return await db.bookmark.findMany({
       where: {
         ...data,
@@ -82,7 +101,9 @@ class Service {
     });
   }
 
-  private async createMangaBookmarkWithChapter(data: CreateBookmarkData & { userId: User["id"] }) {
+  private async createMangaBookmarkWithChapter(
+    data: CreateBookmarkData & { userId: User["id"] }
+  ) {
     const chapter = await db.chapter
       .findFirstOrThrow({
         where: {
@@ -107,7 +128,9 @@ class Service {
     });
   }
 
-  private async createMangaBookmark(data: CreateBookmarkData & { userId: User["id"] }) {
+  private async createMangaBookmark(
+    data: CreateBookmarkData & { userId: User["id"] }
+  ) {
     return await db.bookmark.create({
       data: {
         type: data.type,
@@ -118,7 +141,9 @@ class Service {
     });
   }
 
-  private async createAnimeBookmarkWithEpisode(data: CreateBookmarkData & { userId: User["id"] }) {
+  private async createAnimeBookmarkWithEpisode(
+    data: CreateBookmarkData & { userId: User["id"] }
+  ) {
     const episode = await db.episode
       .findFirstOrThrow({
         where: {
@@ -143,7 +168,9 @@ class Service {
     });
   }
 
-  private async createAnimeBookmark(data: CreateBookmarkData & { userId: User["id"] }) {
+  private async createAnimeBookmark(
+    data: CreateBookmarkData & { userId: User["id"] }
+  ) {
     return await db.bookmark.create({
       data: {
         type: data.type,
@@ -154,7 +181,9 @@ class Service {
     });
   }
 
-  public async createBookmark(data: CreateBookmarkData & { userId: User["id"] }) {
+  public async createBookmark(
+    data: CreateBookmarkData & { userId: User["id"] }
+  ) {
     const exists = await db.bookmark.findFirst({
       where: {
         OR: [

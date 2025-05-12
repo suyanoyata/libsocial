@@ -1,5 +1,5 @@
-import { constantFields } from "const/constant-fields";
-import { db } from "lib/db";
+import { constantFields } from "~/const/constant-fields";
+import { db } from "~/lib/db";
 
 class Service {
   public async getConstants(fields?: string[]) {

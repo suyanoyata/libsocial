@@ -5,7 +5,7 @@ import { PrismaClient } from "@prisma/client";
 
 import { anonymous } from "better-auth/plugins";
 import { expo } from "@better-auth/expo";
-import { userService } from "services/user-service";
+import { userService } from "~/services/user-service";
 
 const prisma = new PrismaClient();
 

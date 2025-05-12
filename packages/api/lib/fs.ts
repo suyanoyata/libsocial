@@ -1,6 +1,6 @@
 import { mkdir, readdir } from "node:fs/promises";
 
-import { Logger } from "lib/logger";
+import { Logger } from "~/lib/logger";
 
 const FileLogger = new Logger("FileService");
 

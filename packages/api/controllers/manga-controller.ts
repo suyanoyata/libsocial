@@ -1,18 +1,18 @@
 import { Hono } from "hono";
-import { Mangadex } from "const/api";
+import { Mangadex } from "~/const/api";
 
-import { ChapterService, mangaService } from "services";
+import { ChapterService, mangaService } from "~/services";
 
-import { ChapterControllerValidation } from "types/zod";
+import { ChapterControllerValidation } from "~/types/zod";
 
 import axios from "axios";
 
-import { throwable } from "lib/utils";
-import { api } from "lib/axios";
+import { throwable } from "~/lib/utils";
+import { api } from "~/lib/axios";
 
-import { queryFields } from "const/query-fields";
+import { queryFields } from "~/const/query-fields";
 
-import { MangaSchema } from "types/zod";
+import { MangaSchema } from "~/types/zod";
 
 const app = new Hono();
 

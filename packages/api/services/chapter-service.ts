@@ -1,19 +1,19 @@
-import { db } from "lib/db";
+import { db } from "~/lib/db";
 
-import { api } from "lib/axios";
-import { Logger } from "lib/logger";
-import { supabase } from "lib/supabase";
+import { api } from "~/lib/axios";
+import { Logger } from "~/lib/logger";
+import { supabase } from "~/lib/supabase";
 
-import { MangaBaseChapterSchema, RemoteChapter } from "types/zod/chapter";
+import { MangaBaseChapterSchema, RemoteChapter } from "~/types/zod/chapter";
 
-import { mangaService } from "services/manga-service";
+import { mangaService } from "~/services/manga-service";
 
 import axios from "axios";
 
 import { imageDimensionsFromData } from "image-dimensions";
 
-import { FileController } from "lib/fs";
-import { MangadexChapterData } from "types/mangadex-chapter";
+import { FileController } from "~/lib/fs";
+import { MangadexChapterData } from "~/types/mangadex-chapter";
 
 class Service {
   private ChapterServiceLogger = new Logger("ChapterService");
@@ -150,9 +150,8 @@ class Service {
 
     const { error } = await supabase().storage.getBucket(chapterId);
 
-    const { data: supabaseFileList, error: supabaseFileListError } = await supabase()
-      .storage.from(chapterId)
-      .list();
+    const { data: supabaseFileList, error: supabaseFileListError } =
+      await supabase().storage.from(chapterId).list();
 
     const mangadexFileList = chapterData;
 
@@ -181,7 +180,9 @@ class Service {
     if (!!supabaseFileList && pagesInDb !== supabaseFileList.length) {
       const res = await Promise.all(
         supabaseFileList.map(async (file) => {
-          const { data } = await supabase().storage.from(chapterId).download(file.name);
+          const { data } = await supabase()
+            .storage.from(chapterId)
+            .download(file.name);
 
           const bytes = await data!.bytes();
 
@@ -191,12 +192,15 @@ class Service {
             throw new Error(`Failed to get dimensions for ${file.name}`);
           }
 
-          const ratio = parseFloat((dimensions.width / dimensions.height).toFixed(4));
+          const ratio = parseFloat(
+            (dimensions.width / dimensions.height).toFixed(4)
+          );
 
           return {
             chapterId: Number(chapterId),
             image: file.name,
-            url: supabase().storage.from(chapterId).getPublicUrl(file.name).data.publicUrl,
+            url: supabase().storage.from(chapterId).getPublicUrl(file.name).data
+              .publicUrl,
             ratio,
           };
         })
@@ -231,7 +235,9 @@ class Service {
       ]);
     }
 
-    this.ChapterServiceLogger.log(`uploading ${filesToUpload.length}/${chapterData.length}`);
+    this.ChapterServiceLogger.log(
+      `uploading ${filesToUpload.length}/${chapterData.length}`
+    );
 
     await Promise.all([
       filesToUpload.map(async (image) => {
@@ -256,8 +262,11 @@ class Service {
             data: {
               chapterId: Number(chapterId),
               image,
-              url: supabase().storage.from(chapterId).getPublicUrl(image).data.publicUrl,
-              ratio: parseFloat((dimensions.width / dimensions.height).toFixed(4)),
+              url: supabase().storage.from(chapterId).getPublicUrl(image).data
+                .publicUrl,
+              ratio: parseFloat(
+                (dimensions.width / dimensions.height).toFixed(4)
+              ),
             },
           })
           .catch(() => {

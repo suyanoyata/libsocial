@@ -1,12 +1,12 @@
 import { Hono } from "hono";
-import { api } from "lib/axios";
+import { api } from "~/lib/axios";
 
-import { queryFields } from "const/query-fields";
+import { queryFields } from "~/const/query-fields";
 
-import { animeService } from "services";
-import { AnimeSchema } from "types/zod";
+import { animeService } from "~/services";
+import { AnimeSchema } from "~/types/zod";
 
-import { throwable } from "lib/utils";
+import { throwable } from "~/lib/utils";
 
 const app = new Hono();
 
@@ -37,7 +37,9 @@ app.get("/:slug_url", async (c) => {
 
   const anime = await api.get(`/anime/${slug_url}?${queryFields.anime}`);
 
-  const { data, error } = await throwable(() => AnimeSchema.parse(anime.data.data));
+  const { data, error } = await throwable(() =>
+    AnimeSchema.parse(anime.data.data)
+  );
 
   if (error) {
     return c.json({
