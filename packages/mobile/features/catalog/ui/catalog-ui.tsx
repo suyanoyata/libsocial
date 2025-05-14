@@ -1,6 +1,6 @@
 import { FlashList } from "@shopify/flash-list"
 
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import {
   RefreshControl,
   useColorScheme,
@@ -29,8 +29,13 @@ export const Catalog = () => {
   const { search } = useFilterStore()
   const [query] = useDebounce(search, 500)
 
-  const { data, isFetchingNextPage, fetchNextPage, isRefetching, refetch } =
-    useCatalogAPI(query)
+  const {
+    data: _data,
+    isFetchingNextPage,
+    fetchNextPage,
+    isRefetching,
+    refetch,
+  } = useCatalogAPI(query)
 
   const { width, height } = useWindowDimensions()
   const { catalogColumns, setCatalogColumns, setCatalogImageWidth } =
@@ -47,11 +52,11 @@ export const Catalog = () => {
     setInitialRender(false)
   }, [width])
 
-  const catalogItems = useMemo(
-    () =>
-      data?.pages.reduce<BaseTitle[]>((acc, page) => acc.concat(page.data), []),
-    [data]
-  )
+  const data =
+    _data?.pages.reduce<BaseTitle[]>(
+      (acc, curr) => acc.concat(curr.data),
+      []
+    ) ?? []
 
   useEffect(() => {
     ref.current?.measure((x, y, width) => {
@@ -88,15 +93,19 @@ export const Catalog = () => {
       >
         {data ? (
           <FlashList
+            className="pb-safe"
             refreshControl={
               <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
             }
             removeClippedSubviews
-            data={catalogItems}
+            data={data}
             onEndReachedThreshold={0.8}
             onEndReached={() => fetchNextPage()}
             estimatedListSize={{
               width,
+              height,
+            }}
+            style={{
               height,
             }}
             keyExtractor={keyExtractor}
@@ -106,7 +115,9 @@ export const Catalog = () => {
             renderItem={renderItem}
             ListFooterComponent={
               <FetchingNextPageCards
-                isFetching={isFetchingNextPage && data.pages.length >= 10}
+                isFetching={
+                  isFetchingNextPage && !!_data && _data.pages.length >= 10
+                }
               />
             }
           />

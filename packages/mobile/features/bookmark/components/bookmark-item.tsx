@@ -96,7 +96,10 @@ export const BookmarkItem = memo(({ bookmark }: { bookmark: Bookmark }) => {
                 </Button>
               </BookmarkItemActions>
             </View>
-            <Text className="text-primary font-medium text-base mr-12 line-clamp-2">
+            <Text
+              className="text-primary font-medium text-base mr-12 line-clamp-2"
+              numberOfLines={2}
+            >
               {bookmark.media.eng_name ?? bookmark.media.name}
             </Text>
             <Button

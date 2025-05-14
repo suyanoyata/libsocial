@@ -1,8 +1,9 @@
 import { useInfiniteQuery } from "@tanstack/react-query"
 
 import { BaseTitle } from "@/features/shared/types/title"
-import { useFilterStore } from "@/features/catalog/store/use-filter-store"
 import { api } from "@/lib/axios"
+
+import { useFilterStore } from "@/features/catalog/store/use-filter-store"
 import { useProperties } from "@/store/use-properties"
 
 export const useCatalogAPI = (query: string) => {
@@ -21,11 +22,17 @@ export const useCatalogAPI = (query: string) => {
         params.append("genres[]", String(genre))
       })
 
-      const { data } = await api.get(
-        `/${
-          siteId == "5" ? "anime" : "manga"
-        }?${params}&page=${pageParam}&q=${query.trim()}`
-      )
+      if (query) {
+        params.append("q", query)
+      }
+
+      if (pageParam) {
+        params.append("page", String(pageParam))
+      }
+
+      const endpoint = siteId === "1" ? "manga" : "anime"
+
+      const { data } = await api.get(`/${endpoint}?${params}`)
 
       return data
     },
@@ -36,6 +43,5 @@ export const useCatalogAPI = (query: string) => {
       }
       return undefined
     },
-    refetchInterval: false,
   })
 }
