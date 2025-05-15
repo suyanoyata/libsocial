@@ -5,7 +5,8 @@ import { icons, LucideProps } from "lucide-react-native"
 
 import { cssInterop } from "nativewind"
 
-import { useMemo } from "react"
+import { useEffect, useMemo } from "react"
+import { Text } from "@/components/ui/text"
 
 const iconVariants = cva("text-black", {
   variants: {
@@ -47,19 +48,20 @@ export const Icon = ({
   const LucideIcon = useMemo(() => {
     // @ts-ignore
     const Icon = icons[name]
+
     Icon.displayName = name
 
-    return cssInterop(Icon, {
+    cssInterop(Icon, {
       className: {
         target: "style",
         nativeStyleToProp: {
           color: true,
-          width: true,
-          height: true,
-          fill: true,
+          opacity: true,
         },
       },
     })
+
+    return Icon
   }, [name])
 
   return (

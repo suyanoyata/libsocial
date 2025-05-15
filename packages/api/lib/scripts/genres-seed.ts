@@ -1,6 +1,6 @@
 import axios from "axios";
-import { PrismaClient } from "@prisma/client";
-import { GenreConstantSchema } from "types/zod/constants";
+import { PrismaClient } from "~/lib/prisma";
+import { GenreConstantSchema } from "~/types/zod/constants";
 
 export const genresSeed = async (prisma: PrismaClient) => {
   const {

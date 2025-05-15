@@ -18,6 +18,7 @@ import { imageDimensionsFromData } from "image-dimensions";
 
 import { FileController } from "~/lib/fs";
 import { MangadexChapterData } from "~/types/mangadex-chapter";
+import { TRPCError } from "@trpc/server";
 
 class Service {
   private ChapterServiceLogger = new Logger("ChapterService");
@@ -55,26 +56,40 @@ class Service {
   }
 
   public async getChapter(data: MangaGetChapter) {
-    const manga = await db.manga.findUniqueOrThrow({
-      where: {
-        slug_url: data.slug_url,
-      },
-    });
+    const manga = await db.manga
+      .findUniqueOrThrow({
+        where: {
+          slug_url: data.slug_url,
+        },
+      })
+      .catch(() => {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Manga was not found",
+        });
+      });
 
-    const chapter = await db.chapter.findFirstOrThrow({
-      where: {
-        manga_id: manga.id,
-        number: data.number,
-        volume: data.volume,
-      },
-      include: {
-        pages: {
-          orderBy: {
-            image: "asc",
+    const chapter = await db.chapter
+      .findFirstOrThrow({
+        where: {
+          manga_id: manga.id,
+          number: data.number,
+          volume: data.volume,
+        },
+        include: {
+          pages: {
+            orderBy: {
+              image: "asc",
+            },
           },
         },
-      },
-    });
+      })
+      .catch(() => {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Can't find this content",
+        });
+      });
 
     return chapter;
   }

@@ -1,4 +1,4 @@
-import { Manga, RelatedReason } from "@prisma/client";
+import { Manga, RelatedReason } from "~/lib/prisma";
 
 import { Item } from "~/types/zod/manga";
 import { PaginatedResponse } from "~/types/zod/paginated-response";

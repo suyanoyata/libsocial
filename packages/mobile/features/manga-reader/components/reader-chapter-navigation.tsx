@@ -8,7 +8,9 @@ import { Button } from "@/components/ui/button"
 
 import { Chapter } from "@/features/shared/types/chapter"
 import { Icon } from "@/components/icon"
+
 import { useQueryClient } from "@tanstack/react-query"
+import { trpc } from "@/lib/trpc"
 
 export const ReaderChapterNavigation = ({
   chapters,
@@ -58,7 +60,7 @@ export const ReaderChapterNavigation = ({
           variant="accent"
           onPress={() => {
             client.invalidateQueries({
-              queryKey: ["bookmarks"],
+              queryKey: trpc.bookmarks.list.queryKey(),
             })
 
             router.replace({

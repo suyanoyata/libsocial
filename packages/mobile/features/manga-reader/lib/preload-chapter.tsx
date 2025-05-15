@@ -2,8 +2,6 @@ import { QueryClient } from "@tanstack/react-query"
 
 import FastImage from "@d11/react-native-fast-image"
 
-import { ReaderChapter } from "@/features/manga-reader/types/reader-chapter"
-
 import { Chapter } from "@/features/shared/types/chapter"
 import { trpc } from "@/lib/trpc"
 import { t } from "@/lib/trpc/trpc-client"
@@ -13,7 +11,7 @@ export const preloadNextChapter = async (
   slug_url: string,
   nextChapter?: Chapter
 ) => {
-  const didLoadNextChapter = !!client.getQueryData<ReaderChapter>(
+  const didLoadNextChapter = !!client.getQueryData(
     trpc.chapters.get.queryKey({
       slug_url,
       volume: nextChapter?.volume,
@@ -30,7 +28,7 @@ export const preloadNextChapter = async (
       number: nextChapter.number,
     })
 
-    client.setQueryData<ReaderChapter>(
+    client.setQueryData(
       trpc.chapters.get.queryKey({
         slug_url,
         volume: nextChapter?.volume,

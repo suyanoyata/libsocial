@@ -33,10 +33,11 @@ export const BookmarkEventsProvider = ({ children }: BookmarkEventsProps) => {
     DeviceEventEmitter.addListener(
       BookmarkEvents.UPDATE_READ_BOOKMARK,
       async (data) => {
-        const bookmark = client.getQueryData<Bookmark>([
-          "bookmark",
-          data.slug_url,
-        ])
+        const bookmark = client.getQueryData(
+          trpc.bookmarks.get.queryKey({
+            slug_url: data.slug_url,
+          })
+        )
 
         if (!bookmark) return
 
@@ -46,10 +47,10 @@ export const BookmarkEventsProvider = ({ children }: BookmarkEventsProps) => {
         })
 
         client.invalidateQueries({
-          queryKey: ["bookmarks"],
+          queryKey: trpc.bookmarks.list.queryKey(),
         })
         client.invalidateQueries({
-          queryKey: ["bookmark", data.slug_url],
+          queryKey: trpc.bookmarks.get.queryKey({ slug_url: data.slug_url }),
         })
       }
     )
@@ -57,20 +58,21 @@ export const BookmarkEventsProvider = ({ children }: BookmarkEventsProps) => {
     DeviceEventEmitter.addListener(
       BookmarkEvents.UPDATE_WATCH_BOOKMARK,
       async (data) => {
-        const bookmark = client.getQueryData<Bookmark>([
-          "bookmark",
-          data.slug_url,
-        ])
+        const bookmark = client.getQueryData(
+          trpc.bookmarks.get.queryKey({
+            slug_url: data.slug_url,
+          })
+        )
 
         if (!bookmark) return
 
         t.bookmarks.update.mutate({ id: bookmark.id, episodeIndex: data.index })
 
         client.invalidateQueries({
-          queryKey: ["bookmarks"],
+          queryKey: trpc.bookmarks.list.queryKey(),
         })
         client.invalidateQueries({
-          queryKey: ["bookmark", data.slug_url],
+          queryKey: trpc.bookmarks.get.queryKey({ slug_url: data.slug_url }),
         })
       }
     )

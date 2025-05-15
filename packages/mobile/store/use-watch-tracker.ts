@@ -3,9 +3,9 @@ import { createJSONStorage, persist } from "zustand/middleware"
 
 import { zustandStorage } from "@/lib/persistent-zustand-storage"
 import { biggest } from "@/lib/utils"
+
 import { QueryClient } from "@tanstack/react-query"
-import { Title } from "@/features/shared/types/title"
-import { TitleEpisodeBase } from "@/features/title/types/title-episodes-response"
+import { trpc } from "@/lib/trpc"
 
 export type LastWatchItem = {
   slug_url: string
@@ -40,20 +40,18 @@ export const useWatchTracker = create<WatchTrackerStore>()(
       lastWatchItems: [],
       add: (client, slug_url, index) => {
         set((state) => {
-          const title = client.getQueryData<Title>([
-            "title-info",
-            slug_url,
-            "5",
-          ])
-          const episodes = client.getQueryData<TitleEpisodeBase[]>([
-            "episodes",
-            slug_url,
-          ])
+          const title = client.getQueryData(
+            trpc.titles.get.title.queryKey({ slug_url, siteId: "5" })
+          )
+
+          const episodes = client.getQueryData(
+            trpc.episodes.list.queryKey(slug_url)
+          )
 
           if (!title || !episodes) return state
 
           const exists = state.lastWatchItems.find(
-            (value) => value.slug_url == title.slug_url,
+            (value) => value.slug_url == title.slug_url
           )
 
           const titleMeta = {

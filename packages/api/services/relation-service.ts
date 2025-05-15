@@ -1,5 +1,5 @@
 import { db } from "~/lib/db";
-import { RelatedReason } from "@prisma/client";
+import { RelatedReason } from "~/lib/prisma";
 import { mangaService } from "~/services";
 import { animeService } from "~/services";
 import { CreateRelationData } from "~/types/zod";

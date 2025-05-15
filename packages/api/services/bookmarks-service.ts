@@ -1,4 +1,4 @@
-import { BookmarkName, ModelName } from "@prisma/client";
+import { BookmarkName, ModelName } from "~/lib/prisma";
 import { TRPCError } from "@trpc/server";
 import { User } from "better-auth";
 

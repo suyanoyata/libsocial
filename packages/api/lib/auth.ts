@@ -1,7 +1,7 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "~/lib/prisma";
 
 import { anonymous } from "better-auth/plugins";
 import { expo } from "@better-auth/expo";

@@ -1,6 +1,6 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "~/lib/prisma";
 
-import { genresSeed } from "lib/scripts/genres-seed";
+import { genresSeed } from "~/lib/scripts/genres-seed";
 
 const prisma = new PrismaClient();
 

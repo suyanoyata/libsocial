@@ -55,7 +55,7 @@ export const ContentCollectionView = <T,>({
       >
         <FlashList
           className={cn(
-            `gap-2 flex-1 pt-2 opacity-100 overflow-hidden`,
+            `gap-2 flex-1 pt-0.5 opacity-100 overflow-hidden`,
             isReversing && "opacity-50"
           )}
           contentContainerStyle={{

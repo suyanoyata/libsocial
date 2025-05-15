@@ -4,7 +4,8 @@ import { db } from "~/lib/db";
 import { api } from "~/lib/axios";
 import { Logger } from "~/lib/logger";
 
-import { Anime as AnimeModel } from "@prisma/client";
+import { Anime as AnimeModel } from "~/lib/prisma";
+
 import {
   Anime,
   AnimeEpisode,

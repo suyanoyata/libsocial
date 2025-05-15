@@ -21,9 +21,9 @@ export function interopIcons(icons: LucideIcon[]) {
         target: "style",
         nativeStyleToProp: {
           color: true,
+          opacity: true,
           width: true,
           height: true,
-          fill: true,
         },
       },
     })
@@ -52,15 +52,14 @@ export function interopSheet(icons: any[]) {
 }
 
 export const iconFix = () => {
-  interopIcons([
-    Icon,
-    Loader,
-    Unplug,
-    Plus,
-    Play,
-    Bookmark,
-    FontAwesomeIcon as any,
-    FeatherIcon as any,
-  ])
+  // interopIcons([
+  //   Loader,
+  //   Unplug,
+  //   Plus,
+  //   Play,
+  //   Bookmark,
+  //   FontAwesomeIcon as any,
+  //   FeatherIcon as any,
+  // ])
   interopSheet([BottomSheetModal])
 }

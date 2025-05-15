@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "~/lib/prisma";
 
 export const db = new PrismaClient({
   omit: {

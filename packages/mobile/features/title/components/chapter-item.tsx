@@ -28,7 +28,7 @@ import { BookmarkEvents } from "@/features/bookmark/const/bookmark-events"
 
 import type { Chapter as ChapterType } from "api/router/chaptersRouter"
 import type { Title } from "api/router/titleRouter"
-import { Bookmark } from "lucide-react-native"
+import { trpc } from "@/lib/trpc"
 
 export const Chapter = memo(
   ({
@@ -84,11 +84,12 @@ export const Chapter = memo(
     const changeCallback = useCallback(() => {
       if (!read) {
         if (!getLastReadChapter(slug_url)) {
-          const data = client.getQueryData<Title>(["title-info", slug_url, "1"])
-          const chapters = client.getQueryData<ChapterType[]>([
-            "chapters",
-            slug_url,
-          ])
+          const data = client.getQueryData(
+            trpc.titles.get.title.queryKey({ slug_url })
+          )
+          const chapters = client.getQueryData(
+            trpc.chapters.list.queryKey(slug_url)
+          )
 
           if (!data || !chapters) return
 
@@ -151,8 +152,8 @@ export const Chapter = memo(
         >
           {isCurrentLastReadChapter ? (
             <Animated.View entering={BounceIn.duration(500)}>
-              <Bookmark
-                // name="Bookmark"
+              <Icon
+                name="Bookmark"
                 size={20}
                 className="text-red-500 fill-red-500"
               />
