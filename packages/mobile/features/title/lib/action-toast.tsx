@@ -5,7 +5,7 @@ export const actionToast = (
   type: "watch" | "read",
   indexBiggerThanSaved: boolean,
   description: string,
-  isFinished: boolean,
+  isFinished: boolean
 ) => {
   const ReadIcon = isFinished ? "EyeOff" : "Eye"
 
@@ -14,8 +14,8 @@ export const actionToast = (
       indexBiggerThanSaved
         ? "Bookmark changed"
         : isFinished
-          ? "Marked as unwatched"
-          : "Marked as watched",
+        ? "Marked as unwatched"
+        : "Marked as watched",
       {
         styles: {
           description: {
@@ -24,11 +24,11 @@ export const actionToast = (
         },
         description,
         icon: indexBiggerThanSaved ? (
-          <Icon name="Bookmark" className="text-red-400 fill-red-400" />
+          <Icon name="Bookmark" fill="text-red-400" />
         ) : (
           <Icon name={ReadIcon} className="text-zinc-400" strokeWidth={3} />
         ),
-      },
+      }
     )
   }
 
@@ -36,8 +36,8 @@ export const actionToast = (
     indexBiggerThanSaved
       ? "Bookmark changed"
       : isFinished
-        ? "Marked as unread"
-        : "Marked as read",
+      ? "Marked as unread"
+      : "Marked as read",
     {
       styles: {
         description: {
@@ -46,10 +46,10 @@ export const actionToast = (
       },
       description,
       icon: indexBiggerThanSaved ? (
-        <Icon name="Bookmark" className="text-red-400 fill-red-400" />
+        <Icon name="Bookmark" fill="text-red-400" />
       ) : (
         <Icon name={ReadIcon} className="text-zinc-400" strokeWidth={3} />
       ),
-    },
+    }
   )
 }

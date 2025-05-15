@@ -56,9 +56,7 @@ export const CreateBookmarkTrigger = ({
               size={18}
               strokeWidth={2.7}
               variant="accent"
-              className={cn(
-                data?.id && "dark:fill-violet-900 fill-white font-semibold"
-              )}
+              filled={!!data?.id}
             />
           </Animated.View>
         )}

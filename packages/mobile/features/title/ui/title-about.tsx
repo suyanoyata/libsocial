@@ -45,6 +45,7 @@ export const TitleAbout = ({ data }: { data: Title }) => {
               name={iconName}
               disabled={data.isLicensed}
               size={18}
+              filled
               variant="accent"
             />
           }

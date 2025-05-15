@@ -152,11 +152,7 @@ export const Chapter = memo(
         >
           {isCurrentLastReadChapter ? (
             <Animated.View entering={BounceIn.duration(500)}>
-              <Icon
-                name="Bookmark"
-                size={20}
-                className="text-red-500 fill-red-500"
-              />
+              <Icon name="Bookmark" size={20} fill="text-red-500" />
             </Animated.View>
           ) : (
             <Icon

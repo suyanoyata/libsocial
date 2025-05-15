@@ -22,10 +22,10 @@ const Benefit = ({
       <Icon
         name={icon}
         size={32}
+        filled={fill}
+        variant="tonal"
         className={cn(
-          fill
-            ? "dark:fill-violet-300 fill-violet-700 text-transparent"
-            : "dark:text-violet-300 text-violet-700"
+          fill ? "text-transparent" : "dark:text-violet-300 text-violet-700"
         )}
       />
       <View className="gap-0.5 flex-1">

@@ -37,6 +37,8 @@ interface IconProps extends LucideProps {
   name: string
   size?: number
   variant?: VariantProps<typeof iconVariants>["variant"]
+  fill?: string
+  filled?: boolean
   className?: string
 }
 
@@ -44,6 +46,8 @@ export const Icon = ({
   variant,
   name,
   className,
+  fill,
+  filled = false,
   size = 18,
   ...props
 }: IconProps) => {
@@ -53,23 +57,16 @@ export const Icon = ({
 
     Icon.displayName = name
 
-    cssInterop(Icon, {
-      className: {
-        target: "style",
-        nativeStyleToProp: {
-          color: true,
-          opacity: true,
-        },
-      },
-    })
-
-    return Icon
+    return withIconCss(Icon)
   }, [name])
+
+  const shouldFill = filled || !!fill
 
   return (
     <LucideIcon
       size={size}
       className={cn(variant && iconVariants({ variant }), className)}
+      fill={cn(shouldFill && (fill ? fill : iconVariants({ variant })))}
       {...props}
     />
   )

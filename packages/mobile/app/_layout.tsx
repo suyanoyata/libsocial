@@ -50,8 +50,13 @@ import {
   ReanimatedLogLevel,
 } from "react-native-reanimated"
 import { DownloadsIcon } from "@/components/navigation/downloads-icon"
+
 import { TRPCQueryProvider } from "@/providers/trpc-provider"
+
 import { useSession } from "@/lib/auth"
+
+import Svg, { Circle, Rect } from "react-native-svg"
+import { cssInterop } from "react-native-css-interop"
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.error,
@@ -151,8 +156,6 @@ export default function RootLayout() {
   useEffect(() => {
     AppState.addEventListener("change", focusCallback)
   }, [])
-
-  useEffect(() => {}, [])
 
   const isDark = useColorScheme() === "dark"
 
