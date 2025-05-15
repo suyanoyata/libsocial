@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { number, z } from "zod";
 
 export const MangaBaseChapterSchema = z.object({
   id: z.number(),
@@ -17,6 +17,13 @@ export const MangaChapterSchema = MangaBaseChapterSchema.merge(
     slug: z.string(),
   })
 );
+
+export const MangaGetChapterSchema = z.object({
+  slug_url: z.string(),
+  volume: z.coerce.string(),
+  number: z.coerce.string(),
+});
+export type MangaGetChapter = z.infer<typeof MangaGetChapterSchema>;
 
 export type MangaChapter = z.infer<typeof MangaChapterSchema>;
 export type RemoteChapter = MangaChapter & {

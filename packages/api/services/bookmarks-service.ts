@@ -1,4 +1,5 @@
 import { BookmarkName, ModelName } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 import { User } from "better-auth";
 
 import { db } from "~/lib/db";
@@ -16,20 +17,27 @@ class Service {
       type: ModelName;
     }
   ) {
-    return await db.bookmark.findFirst({
-      where: {
-        userId,
-        type: data.type,
-        OR: [
-          {
-            animeSlug_url: data.slug_url,
-          },
-          {
-            mangaSlug_url: data.slug_url,
-          },
-        ],
-      },
-    });
+    return await db.bookmark
+      .findFirstOrThrow({
+        where: {
+          userId,
+          type: data.type,
+          OR: [
+            {
+              animeSlug_url: data.slug_url,
+            },
+            {
+              mangaSlug_url: data.slug_url,
+            },
+          ],
+        },
+      })
+      .catch(() => {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "This bookmark doesn't exist",
+        });
+      });
   }
 
   public async getBookmarks(data: {
@@ -41,7 +49,7 @@ class Service {
       where: {
         userId: data.userId,
         type: data.type,
-        mark: data.name,
+        mark: data.name ?? undefined,
       },
       include: {
         anime: {
@@ -67,24 +75,28 @@ class Service {
       },
     });
 
-    return bookmarks.map((bookmark) => {
-      const {
-        lastRead,
-        lastWatch,
-        animeSlug_url,
-        mangaSlug_url,
-        manga,
-        anime,
-        ...rest
-      } = bookmark;
+    return bookmarks
+      .map((bookmark) => {
+        const {
+          lastRead,
+          lastWatch,
+          animeSlug_url,
+          mangaSlug_url,
+          manga,
+          anime,
+          ...rest
+        } = bookmark;
 
-      return {
-        ...rest,
-        media: anime ?? manga,
-        last_seen: lastRead ?? lastWatch,
-        slug_url: animeSlug_url ?? mangaSlug_url,
-      };
-    });
+        const media = anime ?? manga;
+
+        return {
+          ...rest,
+          media,
+          last_seen: lastRead ?? lastWatch,
+          slug_url: animeSlug_url ?? mangaSlug_url,
+        };
+      })
+      .filter((item) => item.media !== null);
   }
 
   public async getLatestBookmarks(data: {
@@ -290,12 +302,19 @@ class Service {
   }
 
   public async deleteBookmark(userId: User["id"], data: DeleteBookmarkData) {
-    return await db.bookmark.delete({
-      where: {
-        id: Number(data.id),
-        userId,
-      },
-    });
+    return await db.bookmark
+      .delete({
+        where: {
+          id: Number(data.id),
+          userId,
+        },
+      })
+      .catch(() => {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "This bookmark doesn't exist",
+        });
+      });
   }
 }
 

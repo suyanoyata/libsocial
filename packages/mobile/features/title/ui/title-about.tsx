@@ -3,21 +3,22 @@ import { router } from "expo-router"
 
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
-import { Bookmark, Play } from "lucide-react-native"
-
 import { Button } from "@/components/ui/button"
 import { Genres } from "@/features/title/components/genres"
 import { TitleSummary } from "@/features/title/components/title-summary"
 
-import { Title } from "@/features/shared/types/title"
-import { TitleRelations } from "@/features/title/ui/title-relations"
+import { TitleRelations } from "@/features/similar/ui/title-relations"
 import { CreateBookmarkTrigger } from "@/features/bookmark/components/create-bookmark-trigger"
+
+import type { Title } from "api/router/titleRouter"
+
+import { Icon } from "@/components/icon"
 
 export const TitleAbout = ({ data }: { data: Title }) => {
   const { bottom } = useSafeAreaInsets()
 
-  const Icon = data.site == "5" ? Play : Bookmark
-  const text = data.site == "5" ? "Start Watching" : "Start Reading"
+  const iconName = data.site == 5 ? "Play" : "Bookmark"
+  const text = data.site == 5 ? "Start Watching" : "Start Reading"
 
   return (
     <View
@@ -28,7 +29,7 @@ export const TitleAbout = ({ data }: { data: Title }) => {
     >
       <View className="flex-row w-full gap-2 mb-3">
         <Button
-          disabled={data?.isLicensed}
+          disabled={data.isLicensed}
           onPress={() => {
             router.push({
               pathname: "/(modals)/title-contents",
@@ -41,9 +42,10 @@ export const TitleAbout = ({ data }: { data: Title }) => {
           className="disabled:opacity-70 flex-1"
           iconLeft={
             <Icon
+              name={iconName}
               disabled={data.isLicensed}
               size={18}
-              className="dark:fill-violet-700 fill-white disabled:fill-red-900 text-transparent"
+              variant="accent"
             />
           }
           variant={data?.isLicensed ? "destructive" : "accent"}
@@ -57,10 +59,8 @@ export const TitleAbout = ({ data }: { data: Title }) => {
       <TitleRelations
         label="Related"
         slug_url={data.slug_url}
-        endpoint="relations"
         site={data.site}
       />
-      {/* <TitleRelations label="Похожие" slug_url={data.slug_url} endpoint="similar" /> */}
     </View>
   )
 }

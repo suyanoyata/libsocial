@@ -4,18 +4,20 @@ import { Chapter } from "@/features/title/components/chapter-item"
 import { useChapters } from "@/features/title/api/use-chapters"
 import { useMemo, useState } from "react"
 
-import { Chapter as ChapterType } from "@/features/shared/types/chapter"
 import { ActivityIndicator } from "@/components/ui/activity-indicator"
+
 import { View } from "react-native"
 
-export const TitleChapters = ({
-  slug_url,
-  site,
-}: {
-  slug_url: string
-  site: number
-}) => {
-  const { data, isPending } = useChapters(slug_url, site)
+import withBubble from "@/components/ui/withBubble"
+import { Icon as _Icon } from "@/components/icon"
+
+import { FadeView } from "@/components/ui/fade-view"
+import { Text } from "@/components/ui/text"
+
+import type { Chapter as ChapterType } from "api/router/chaptersRouter"
+
+export const TitleChapters = ({ slug_url }: { slug_url: string }) => {
+  const { data, isPending, isError } = useChapters(slug_url)
 
   const [descending, setDescending] = useState(false)
 
@@ -29,13 +31,24 @@ export const TitleChapters = ({
 
   const keyExtractor = (item: ChapterType) => item.id.toString()
 
-  if (String(site) == "5") return null
+  const Icon = withBubble(_Icon)
 
   if (!data && isPending) {
     return (
       <View className="items-center justify-center flex-1">
         <ActivityIndicator />
       </View>
+    )
+  }
+
+  if (isError) {
+    return (
+      <FadeView withEnter className="items-center justify-center flex-1">
+        <Icon name="Unplug" />
+        <Text className="text-secondary font-medium mt-2">
+          Something went wrong
+        </Text>
+      </FadeView>
     )
   }
 

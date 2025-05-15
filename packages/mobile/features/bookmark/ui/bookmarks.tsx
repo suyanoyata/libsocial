@@ -1,8 +1,6 @@
 import { FlatList, RefreshControl, View } from "react-native"
 
-import { useSession } from "@/features/auth/lib/auth"
-
-import { useBookmarksAPI } from "@/features/bookmark/api/use-bookmarks-api"
+import { useSession } from "@/lib/auth"
 
 import { BookmarkItem } from "@/features/bookmark/components/bookmark-item"
 import { ActivityIndicator } from "@/components/ui/activity-indicator"
@@ -19,7 +17,10 @@ import ContextMenu from "react-native-context-menu-view"
 import withBubble from "@/components/ui/withBubble"
 import { memo, useState } from "react"
 import { capitalize } from "@/lib/utils"
-import { Bookmark } from "@/features/bookmark/types/bookmark"
+
+import { useQuery } from "@tanstack/react-query"
+import { trpc } from "@/lib/trpc"
+import { BookmarkListItem } from "api/router/bookmarkRouter"
 
 function Bookmarks() {
   const { isPending } = useSession()
@@ -30,11 +31,11 @@ function Bookmarks() {
     data: bookmarks,
     isPending: isBookmarksPending,
     refetch,
-  } = useBookmarksAPI(filter)
+  } = useQuery(trpc.bookmarks.list.queryOptions(filter))
 
   const Bookmark = withBubble(Icon)
 
-  const renderItem = ({ item: bookmark }: { item: Bookmark }) => (
+  const renderItem = ({ item: bookmark }: { item: BookmarkListItem }) => (
     <BookmarkItem bookmark={bookmark} />
   )
 

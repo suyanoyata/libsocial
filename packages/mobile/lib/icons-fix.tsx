@@ -15,13 +15,15 @@ import { Icon } from "@/components/icon"
 import { BottomSheetModal } from "@gorhom/bottom-sheet"
 
 export function interopIcons(icons: LucideIcon[]) {
-  icons.map((icon) =>
+  return icons.map((icon) =>
     cssInterop(icon, {
       className: {
         target: "style",
         nativeStyleToProp: {
           color: true,
-          opacity: true,
+          width: true,
+          height: true,
+          fill: true,
         },
       },
     })
@@ -50,7 +52,6 @@ export function interopSheet(icons: any[]) {
 }
 
 export const iconFix = () => {
-  interopSheet([BottomSheetModal])
   interopIcons([
     Icon,
     Loader,
@@ -61,4 +62,5 @@ export const iconFix = () => {
     FontAwesomeIcon as any,
     FeatherIcon as any,
   ])
+  interopSheet([BottomSheetModal])
 }

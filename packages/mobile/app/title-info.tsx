@@ -55,7 +55,7 @@ export default function TitleInfo() {
         <BackButton />
         <Icon />
         <Text className="text-secondary text-base font-medium mt-2">
-          Something went wrong
+          This content is not available
         </Text>
       </View>
     )

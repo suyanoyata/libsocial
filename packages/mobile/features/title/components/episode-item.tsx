@@ -15,13 +15,13 @@ import { router, useFocusEffect } from "expo-router"
 import { useQueryClient } from "@tanstack/react-query"
 import { useWatchTracker } from "@/store/use-watch-tracker"
 
-import { TitleEpisodeBase } from "@/features/title/types/title-episodes-response"
-
 import { withImpact } from "@/lib/utils"
 import { actionToast } from "@/features/title/lib/action-toast"
 import Animated, { BounceIn } from "react-native-reanimated"
 import { Icon } from "@/components/icon"
 import { BookmarkEvents } from "@/features/bookmark/const/bookmark-events"
+
+import type { Episode as EpisodeType } from "api/router/episodesRouter"
 
 export const Episode = memo(
   ({
@@ -31,7 +31,7 @@ export const Episode = memo(
   }: {
     slug_url: string
     index: number
-    episode: TitleEpisodeBase
+    episode: EpisodeType
   }) => {
     const queryClient = useQueryClient()
 

@@ -1,6 +1,7 @@
 import { BaseTitle } from "@/features/shared/types/title"
 import i18n from "@/i18n"
 import { api } from "@/lib/axios"
+import { trpc } from "@/lib/trpc"
 import { withErrorImpact, withSuccessImpact } from "@/lib/utils"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { router } from "expo-router"
@@ -14,11 +15,14 @@ export const useCreateRelation = ({
   data: BaseTitle
 }) => {
   const client = useQueryClient()
+
+  return useMutation(trpc.titles.relations.add.mutationOptions())
+
   return useMutation({
     mutationKey: ["add-relation", slug_url, data.slug_url],
     mutationFn: async ({ reason }: { reason: string }) => {
       return await api.post(
-        `/${data.site == "5" ? "anime" : "manga"}/${slug_url}/relations`,
+        `/${data.site == 5 ? "anime" : "manga"}/${slug_url}/relations`,
         {
           slug_url: data.slug_url,
           reason,

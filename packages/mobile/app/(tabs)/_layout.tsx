@@ -3,7 +3,7 @@ import { router, Tabs } from "expo-router"
 
 import { Header } from "@/components/ui/header"
 
-import { useSession } from "@/features/auth/lib/auth"
+import { useSession } from "@/lib/auth"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { useGenresConstants } from "@/features/shared/api/use-filter-constants"
 

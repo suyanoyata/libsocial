@@ -7,9 +7,10 @@ import { Text } from "@/components/ui/text"
 
 import { BaseTitle } from "@/features/shared/types/title"
 import { impactAsync, ImpactFeedbackStyle } from "expo-haptics"
+
 import { TransitionedImage } from "@/features/shared/components/transitioned-image"
 
-export const TitleCard = ({ title }: { title: BaseTitle }) => {
+export const TitleCard = ({ title }: { title: Omit<BaseTitle, "genres"> }) => {
   return (
     <Link
       href={{

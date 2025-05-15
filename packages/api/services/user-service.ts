@@ -14,6 +14,19 @@ class Service {
       where: { id: oldUserId },
     });
   }
+
+  public async updateProfilePicture(
+    email: User["email"],
+    discordId: string,
+    avatarId: string
+  ) {
+    return await db.user.update({
+      where: { email },
+      data: {
+        image: `https://cdn.discordapp.com/avatars/${discordId}/${avatarId}.png`,
+      },
+    });
+  }
 }
 
 export const userService = new Service();

@@ -1,0 +1,299 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// shared models
+model Cover {
+  id        Int     @id @default(autoincrement())
+  thumbnail String
+  default   String
+  Manga     Manga[]
+  Anime     Anime[]
+
+  @@map("cover")
+}
+
+model AgeRestriction {
+  id       Int     @id @unique
+  label    String
+  site_ids Int[]
+  Manga    Manga[]
+  Anime    Anime[]
+
+  @@map("age_restriction")
+}
+
+model Genre {
+  id       Int     @id @unique
+  adult    Boolean @default(false)
+  name     String
+  site_ids Int[]
+  Manga    Manga[]
+  Anime    Anime[]
+
+  @@map("genre")
+}
+
+model Related {
+  id Int @id @default(autoincrement())
+
+  reason RelatedReason
+
+  anime Anime? @relation("base anime", fields: [anime_slug], references: [slug_url])
+  manga Manga? @relation("base manga", fields: [manga_slug], references: [slug_url])
+
+  relatedAnime Anime? @relation("related-to-anime", fields: [relatedAnimeSlug], references: [slug_url])
+  relatedManga Manga? @relation("related-to-manga", fields: [relatedMangaSlug], references: [slug_url])
+
+  anime_slug String?
+  manga_slug String?
+
+  relatedAnimeSlug String?
+  relatedMangaSlug String?
+
+  @@unique([manga_slug, relatedMangaSlug])
+  @@unique([anime_slug, relatedAnimeSlug])
+}
+
+model Background {
+  id    Int     @id @default(autoincrement())
+  url   String
+  Manga Manga[]
+  Anime Anime[]
+
+  @@map("background")
+}
+
+// anime related models
+model Anime {
+  id             Int            @unique
+  name           String
+  eng_name       String
+  slug_url       String         @id @unique
+  otherNames     String[]
+  summary        String?
+  model          ModelName
+  cover          Cover          @relation(fields: [coverId], references: [id])
+  ageRestriction AgeRestriction @relation(fields: [ageRestrictionId], references: [id])
+  site           Int
+  genres         Genre[]
+  background     Background     @relation(fields: [backgroundId], references: [id])
+
+  coverId          Int
+  ageRestrictionId Int
+  backgroundId     Int
+
+  Episode Episode[]
+
+  relatedFrom Related[]  @relation("base anime")
+  relatedTo   Related[]  @relation("related-to-anime")
+  Bookmark    Bookmark[]
+
+  @@map("anime")
+}
+
+model Episode {
+  anime Anime @relation(fields: [slug_url], references: [slug_url])
+
+  id               Int        @id @unique
+  name             String?
+  number           String
+  number_secondary String
+  slug_url         String
+  item_number      Int
+  source           String?
+  endingLength     Int?
+  Bookmark         Bookmark[]
+
+  @@unique([slug_url, item_number])
+  @@map("episode")
+}
+
+// manga related models
+model Manga {
+  id             Int            @unique
+  name           String
+  eng_name       String
+  slug_url       String         @id @unique
+  otherNames     String[]
+  summary        String?
+  model          ModelName
+  cover          Cover          @relation(fields: [coverId], references: [id])
+  ageRestriction AgeRestriction @relation(fields: [ageRestrictionId], references: [id])
+  items_count    ItemsCount     @relation(fields: [itemsCountId], references: [id])
+  site           Int
+  genres         Genre[]
+  background     Background     @relation(fields: [backgroundId], references: [id])
+  isLicensed     Boolean        @default(false)
+
+  coverId          Int
+  ageRestrictionId Int
+  itemsCountId     Int
+  backgroundId     Int
+
+  Chapter Chapter[]
+
+  relatedFrom Related[]  @relation("base manga")
+  relatedTo   Related[]  @relation("related-to-manga")
+  Bookmark    Bookmark[]
+
+  @@map("manga")
+}
+
+model ItemsCount {
+  id       Int     @id @unique @default(autoincrement())
+  uploaded Int
+  Manga    Manga[]
+
+  @@map("items_count")
+}
+
+model Chapter {
+  id               Int         @id @unique
+  created_at       DateTime    @default(now())
+  likes_count      Int         @default(0)
+  manga_id         Int
+  name             String?
+  number           String      @default("1")
+  item_number      Int
+  number_secondary String
+  slug             String
+  volume           String      @default("1")
+  pages            MangaPage[]
+  count            Int         @default(0)
+
+  manga    Manga      @relation(fields: [manga_id], references: [id])
+  Bookmark Bookmark[]
+
+  @@map("chapter")
+}
+
+model MangaPage {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  image      String
+  url        String
+  ratio      Float
+
+  Chapter   Chapter @relation(fields: [chapterId], references: [id])
+  chapterId Int
+
+  @@unique([image, chapterId])
+  @@map("manga_image")
+}
+
+model Bookmark {
+  id        Int          @id @default(autoincrement())
+  userId    String
+  mark      BookmarkName
+  type      ModelName
+  addedAt   DateTime     @default(now())
+  updatedAt DateTime     @default(now())
+  lastRead  Chapter?     @relation(fields: [chapterId], references: [id])
+  lastWatch Episode?     @relation(fields: [episodeId], references: [id])
+  anime     Anime?       @relation(fields: [animeSlug_url], references: [slug_url])
+  manga     Manga?       @relation(fields: [mangaSlug_url], references: [slug_url])
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  mangaSlug_url String?
+  animeSlug_url String?
+  chapterId     Int?
+  episodeId     Int?
+
+  @@unique([mangaSlug_url, userId])
+  @@unique([animeSlug_url, userId])
+  @@map("bookmark")
+}
+
+enum BookmarkName {
+  planned
+  ongoing
+  finished
+  dropped
+  favorite
+}
+
+enum ModelName {
+  manga
+  anime
+}
+
+enum SimilarReason {
+  genres
+  script
+}
+
+enum RelatedReason {
+  sequel
+  prequel
+  spinoff
+}
+
+model User {
+  id            String   @id @default(cuid())
+  name          String?
+  email         String   @unique
+  emailVerified Boolean?
+  image         String?
+  isAnonymous   Boolean?
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  sessions  Session[]
+  accounts  Account[]
+  Bookmark  Bookmark[]
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@map("verification")
+}

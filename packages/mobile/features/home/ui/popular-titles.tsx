@@ -1,15 +1,16 @@
 import { ScrollView } from "react-native"
 
+import { FadeView } from "@/components/ui/fade-view"
 import { PulseView } from "@/components/ui/pulse-view"
-
-import { useHomeTitles } from "@/features/home/api/use-home-titles"
 
 import { TitleCard } from "@/features/home/components/title-card"
 import { TitleCardPlaceholder } from "@/features/home/components/title-card-placeholder"
-import { FadeView } from "@/components/ui/fade-view"
+
+import { trpc } from "@/lib/trpc"
+import { useQuery } from "@tanstack/react-query"
 
 export const PopularTitles = () => {
-  const { data } = useHomeTitles()
+  const { data } = useQuery(trpc.titles.popular.queryOptions())
 
   const shouldRenderItems = !!data
 
@@ -25,9 +26,10 @@ export const PopularTitles = () => {
     >
       {shouldRenderItems && (
         <FadeView withEnter className="flex-row gap-2">
-          {data?.popular.map((title) => (
-            <TitleCard key={title.id} title={title} />
-          ))}
+          {data &&
+            data.data.map((title) => (
+              <TitleCard key={title.id} title={title} />
+            ))}
         </FadeView>
       )}
       {!shouldRenderItems && (

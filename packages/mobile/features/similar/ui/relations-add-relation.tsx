@@ -1,23 +1,27 @@
 import { FlatList, View } from "react-native"
+import Animated, { FadeIn } from "react-native-reanimated"
 
+import { Text } from "@/components/ui/text"
 import { TextInput } from "@/components/ui/text-input"
 import { ActivityIndicator } from "@/components/ui/activity-indicator"
 
 import { memo, useEffect, useMemo, useState } from "react"
+
 import { useNavigation } from "expo-router"
 import useDebounce from "@/hooks/use-debounce"
+
+import { useQuery } from "@tanstack/react-query"
 import { useRoute } from "@react-navigation/native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-
 import { useTitleInfo } from "@/features/title/api/use-title-info"
 import { useQuickSearch } from "@/features/quick-search/api/use-quick-search"
 
 import { RelationAddTitle } from "@/features/similar/components/relations-relation-add-title"
+
 import { BaseTitle } from "@/features/shared/types/title"
-import Animated, { FadeIn } from "react-native-reanimated"
-import { useQuery } from "@tanstack/react-query"
+
 import { RelationsResponse } from "@/features/title/types/title-relations-type"
-import { Text } from "@/components/ui/text"
+import { trpc } from "@/lib/trpc"
 
 export default function TitleRelationsAdd() {
   const route = useRoute()
@@ -28,21 +32,16 @@ export default function TitleRelationsAdd() {
 
   const { data } = useTitleInfo(slug_url, site)
 
-  const { data: relations } = useQuery<RelationsResponse>({
-    queryKey: ["title-relations", slug_url],
-  })
+  const { data: relations } = useQuery(
+    trpc.titles.relations.list.queryOptions({ slug_url })
+  )
 
   const { bottom } = useSafeAreaInsets()
-
-  const controller = new AbortController()
 
   const [_search, setSearch] = useState("")
   const [search] = useDebounce(_search, 500)
 
-  const { data: searchData, isPending } = useQuickSearch(
-    search,
-    controller.signal
-  )
+  const { data: searchData, isPending } = useQuickSearch(search)
 
   useEffect(() => {
     setOptions({
@@ -59,10 +58,12 @@ export default function TitleRelationsAdd() {
   )
 
   const response = useMemo(() => {
-    return searchData?.filter(
+    return searchData?.data.filter(
       (item) =>
         item.slug_url != data?.slug_url &&
-        !relations?.some((relation) => relation.media.slug_url == item.slug_url)
+        !relations?.some(
+          (relation) => relation.media!.slug_url == item.slug_url
+        )
     )
   }, [searchData])
 

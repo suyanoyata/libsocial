@@ -6,7 +6,7 @@ import { ActivityIndicator } from "@/components/ui/activity-indicator"
 import { SignInAnonymous } from "@/features/auth/components/sign-in-anonymous"
 import { SignInDiscord } from "@/features/auth/components/sign-in-discord"
 
-import { useSession } from "@/features/auth/lib/auth"
+import { useSession } from "@/lib/auth"
 
 export default function BookmarksView() {
   const { data, isPending } = useSession()

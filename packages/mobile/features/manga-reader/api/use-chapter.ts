@@ -1,26 +1,15 @@
 import { useQuery } from "@tanstack/react-query"
+import { trpc } from "@/lib/trpc"
 
-import { api } from "@/lib/axios"
 import { Chapter } from "@/features/shared/types/chapter"
-import { ReaderChapter } from "@/features/manga-reader/types/reader-chapter"
 
 export const useChapter = (slug_url: string, chapter?: Chapter) => {
-  return useQuery<ReaderChapter>({
-    queryKey: [
-      "manga-chapter-reader",
-      slug_url,
-      chapter?.volume,
-      chapter?.number,
-    ],
-    queryFn: async () => {
-      if (!chapter) throw new Error("No chapter is provided")
-
-      return (
-        await api.get(
-          `/manga/${slug_url}/chapter?volume=${chapter.volume}&number=${chapter.number}`,
-        )
-      ).data.data
-    },
-    enabled: !!chapter,
-  })
+  return useQuery(
+    trpc.chapters.get.queryOptions(
+      { ...chapter!, slug_url },
+      {
+        enabled: !!chapter?.number && !!chapter?.volume && !!slug_url,
+      }
+    )
+  )
 }

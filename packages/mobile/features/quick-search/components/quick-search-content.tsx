@@ -1,4 +1,4 @@
-import { ScrollView, View } from "react-native"
+import { View } from "react-native"
 
 import { QuickSearchCard } from "@/features/quick-search/components/quick-search-card"
 
@@ -20,7 +20,7 @@ export const QuickSearchContent = ({
       <FadeView withEnter className="flex-1">
         <FlashList
           estimatedItemSize={160}
-          data={data}
+          data={data.data}
           showsVerticalScrollIndicator={false}
           ListFooterComponent={() => <View className="h-8"></View>}
           renderItem={({ item }) => <QuickSearchCard item={item} />}

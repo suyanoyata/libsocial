@@ -22,10 +22,13 @@ import { useTitleReadChapter } from "@/store/use-chapters-tracker"
 import { useReadingTracker } from "@/store/use-reading-tracker"
 import { useQueryClient } from "@tanstack/react-query"
 
-import { Title } from "@/features/shared/types/title"
-import { Chapter as ChapterType } from "@/features/shared/types/chapter"
 import { Icon } from "@/components/icon"
+
 import { BookmarkEvents } from "@/features/bookmark/const/bookmark-events"
+
+import type { Chapter as ChapterType } from "api/router/chaptersRouter"
+import type { Title } from "api/router/titleRouter"
+import { Bookmark } from "lucide-react-native"
 
 export const Chapter = memo(
   ({
@@ -148,8 +151,8 @@ export const Chapter = memo(
         >
           {isCurrentLastReadChapter ? (
             <Animated.View entering={BounceIn.duration(500)}>
-              <Icon
-                name="Bookmark"
+              <Bookmark
+                // name="Bookmark"
                 size={20}
                 className="text-red-500 fill-red-500"
               />

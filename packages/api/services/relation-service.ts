@@ -2,6 +2,7 @@ import { db } from "~/lib/db";
 import { RelatedReason } from "@prisma/client";
 import { mangaService } from "~/services";
 import { animeService } from "~/services";
+import { CreateRelationData } from "~/types/zod";
 
 class Service {
   public async checkRelationExistence(
@@ -26,47 +27,40 @@ class Service {
     return !!title;
   }
 
-  public async addRelatedTitle(
-    slug_url: string,
-    type: string,
-    related: {
-      slug_url: string;
-      reason: RelatedReason;
-    }
-  ) {
-    const title = await db[type as "manga"].findFirst({
+  public async addRelatedTitle(data: CreateRelationData) {
+    const title = await db[data.type as "manga"].findFirst({
       where: {
-        slug_url,
-        site: type == "manga" ? 1 : 5,
+        slug_url: data.slug_url,
+        site: data.type == "manga" ? 1 : 5,
       },
     });
 
-    const relatedTitle = await db[type as "manga"].findFirst({
+    const relatedTitle = await db[data.type as "manga"].findFirst({
       where: {
-        slug_url: related.slug_url,
-        site: type == "manga" ? 1 : 5,
+        slug_url: data.related.slug_url,
+        site: data.type == "manga" ? 1 : 5,
       },
     });
 
-    if (!related || !relatedTitle) {
-      throw "Manga or related manga doesn't exist";
+    if (!relatedTitle) {
+      throw "Title or related title doesn't exist";
     }
 
     await db.related.create({
       data: {
-        reason: related.reason,
-        [type]: {
+        reason: data.related.reason,
+        [data.type]: {
           connect: { slug_url: title?.slug_url },
         },
         [`related${
-          String(type).charAt(0).toUpperCase() + String(type).slice(1)
+          String(data.type).charAt(0).toUpperCase() + String(data.type).slice(1)
         }`]: {
           connect: { slug_url: relatedTitle.slug_url },
         },
       },
     });
 
-    if (type == "manga") {
+    if (data.type == "manga") {
       return await mangaService.getManga(relatedTitle.slug_url);
     } else {
       return await animeService.getAnime(relatedTitle.slug_url);
@@ -99,10 +93,12 @@ class Service {
       },
     });
 
-    return data.map((item) => ({
-      reason: item.reason,
-      media: item.relatedAnime ?? item.relatedManga,
-    }));
+    return data
+      .map((item) => ({
+        reason: item.reason,
+        media: item.relatedAnime ?? item.relatedManga,
+      }))
+      .filter((item) => item.media !== null);
   }
 }
 

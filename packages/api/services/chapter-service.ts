@@ -4,7 +4,11 @@ import { api } from "~/lib/axios";
 import { Logger } from "~/lib/logger";
 import { supabase } from "~/lib/supabase";
 
-import { MangaBaseChapterSchema, RemoteChapter } from "~/types/zod/chapter";
+import {
+  MangaBaseChapterSchema,
+  MangaGetChapter,
+  RemoteChapter,
+} from "~/types/zod/chapter";
 
 import { mangaService } from "~/services/manga-service";
 
@@ -50,18 +54,18 @@ class Service {
     }));
   }
 
-  public async getChapter(slug_url: string, number: string, volume: string) {
+  public async getChapter(data: MangaGetChapter) {
     const manga = await db.manga.findUniqueOrThrow({
       where: {
-        slug_url,
+        slug_url: data.slug_url,
       },
     });
 
     const chapter = await db.chapter.findFirstOrThrow({
       where: {
         manga_id: manga.id,
-        number,
-        volume,
+        number: data.number,
+        volume: data.volume,
       },
       include: {
         pages: {

@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "trpc-api/*": ["packages/api/*"]
+    }
+  },
+  "references": [{ "path": "packages/api" }]
+}

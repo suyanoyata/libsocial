@@ -55,7 +55,7 @@ export const AnimeWatchView = () => {
     }
   }, [data, selectedEpisodeIndex])
 
-  const { data: titleInfo } = useTitleInfo(data?.slug_url, "5")
+  const { data: titleInfo } = useTitleInfo(data!.slug_url, "5")
 
   if (error) {
     const Icon = withBubble(Unplug)

@@ -7,6 +7,8 @@ import { anonymous } from "better-auth/plugins";
 import { expo } from "@better-auth/expo";
 import { userService } from "~/services/user-service";
 
+import axios from "axios";
+
 const prisma = new PrismaClient();
 
 export const auth = betterAuth({
@@ -15,6 +17,21 @@ export const auth = betterAuth({
   }),
   socialProviders: {
     discord: {
+      async getUserInfo(token) {
+        const { data } = await axios.get("https://discord.com/api/users/@me", {
+          headers: {
+            Authorization: `${token.tokenType} ${token.accessToken}`,
+          },
+        });
+
+        await userService.updateProfilePicture(
+          data.email,
+          data.id,
+          data.avatar
+        );
+
+        return { user: { ...data }, data };
+      },
       clientId: process.env.DISCORD_CLIENT_ID!,
       clientSecret: process.env.DISCORD_SECRET!,
     },

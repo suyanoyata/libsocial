@@ -3,10 +3,10 @@ import { View } from "react-native"
 
 import { bookmarkOptions } from "@/features/bookmark/const/bookmark-options"
 
-import { Bookmark } from "@/features/bookmark/types/bookmark"
+import type { BookmarkItem, BookmarkListItem } from "api/router/bookmarkRouter"
 
 interface BookmarkSelectProps {
-  data?: Bookmark | null
+  data?: BookmarkItem | BookmarkListItem | null
   onSelect: (value: string) => void
   onDelete?: () => void
   shouldShowDelete?: boolean

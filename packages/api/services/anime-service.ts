@@ -5,7 +5,12 @@ import { api } from "~/lib/axios";
 import { Logger } from "~/lib/logger";
 
 import { Anime as AnimeModel } from "@prisma/client";
-import { Anime, AnimeEpisode, AnimeEpisodeSchema } from "~/types/zod";
+import {
+  Anime,
+  AnimeEpisode,
+  AnimeEpisodeSchema,
+  CatalogSearchFormData,
+} from "~/types/zod";
 import { PaginatedResponse } from "~/types/zod/paginated-response";
 
 import { z } from "zod";
@@ -15,7 +20,7 @@ const AnimeLogger = new Logger("AnimeService");
 
 class Service {
   public async getAnime(slug_url: string) {
-    return db.anime.findFirst({
+    const data = await db.anime.findFirstOrThrow({
       where: {
         slug_url,
       },
@@ -26,6 +31,11 @@ class Service {
         background: true,
       },
     });
+
+    return {
+      ...data,
+      isLicensed: false,
+    };
   }
 
   public async getRemoteEpisodes(slug_url: string) {
@@ -116,9 +126,7 @@ class Service {
     ]);
   }
 
-  public async getTitles(
-    page?: string
-  ): Promise<PaginatedResponse<AnimeModel[]>> {
+  public async getTitles(page?: string) {
     const p = (page != undefined ? Number(page) - 1 : 0) * pageLimit;
     const nextPage = (page != undefined ? Number(page) : 0) * pageLimit;
 
@@ -154,21 +162,15 @@ class Service {
     };
   }
 
-  public async getAnimeWithQueries(
-    search: string,
-    genres?: string[],
-    page?: string
-  ) {
-    const p = (page != undefined ? Number(page) - 1 : 0) * pageLimit;
-    const nextPage = (page != undefined ? Number(page) : 1) * pageLimit;
-
-    console.log(p, nextPage);
+  public async getAnimeWithQueries(params: CatalogSearchFormData) {
+    const p = (params.cursor - 1) * pageLimit;
+    const nextPage = params.cursor * pageLimit;
 
     const animeFilters =
-      genres?.map((genreId) => ({
+      params.genres?.map((genreId) => ({
         genres: {
           some: {
-            id: Number(genreId),
+            id: genreId,
           },
         },
       })) ?? [];
@@ -207,13 +209,13 @@ class Service {
                 {
                   name: {
                     mode: "insensitive",
-                    contains: search,
+                    contains: params.q,
                   },
                 },
                 {
                   eng_name: {
                     mode: "insensitive",
-                    contains: search,
+                    contains: params.q,
                   },
                 },
               ],
@@ -222,7 +224,7 @@ class Service {
         },
       }),
       meta: {
-        current_page: page ? Number(page) : 1,
+        current_page: params.cursor,
         per_page: pageLimit,
         has_next_page: nextPageData > 1,
       },

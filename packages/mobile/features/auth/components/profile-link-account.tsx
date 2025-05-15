@@ -1,5 +1,5 @@
 import { Button, textVariants } from "@/components/ui/button"
-import { signIn, useSession } from "@/features/auth/lib/auth"
+import { signIn, useSession } from "@/lib/auth"
 import { withErrorImpact, withSuccessImpact } from "@/lib/utils"
 import { useMutation } from "@tanstack/react-query"
 

@@ -2,7 +2,6 @@ import "../global.css"
 import "react-native-gesture-handler"
 
 import { SplashScreen, Stack } from "expo-router"
-import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client"
 import {
   DarkTheme,
   DefaultTheme,
@@ -35,12 +34,9 @@ import {
 
 import { enableFreeze, enableScreens } from "react-native-screens"
 
-import { clientPersister } from "@/lib/persistent-query-storage"
 import { iconFix } from "@/lib/icons-fix"
 
 import { GestureHandlerRootView } from "react-native-gesture-handler"
-
-import { useSyncQueries } from "tanstack-query-dev-tools-expo-plugin"
 
 import { Toaster } from "sonner-native"
 import { BackButton } from "@/components/ui/back-button"
@@ -57,8 +53,8 @@ import {
   ReanimatedLogLevel,
 } from "react-native-reanimated"
 import { DownloadsIcon } from "@/components/navigation/downloads-icon"
-
-import { queryClient } from "@/lib/query-client"
+import { TRPCQueryProvider } from "@/providers/trpc-provider"
+import { useSession } from "@/lib/auth"
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.error,
@@ -122,13 +118,11 @@ export default function RootLayout() {
 
   const [updating, setUpdating] = useState(false)
 
-  useSyncQueries({ queryClient })
-
   useEffect(() => {
     addUpdatesStateChangeListener(async (listener) => {
       if (listener.context.isUpdatePending && !updating) {
         setUpdating(true)
-        queryClient.clear()
+        // queryClient.clear()
         await reloadAsync()
       }
     })
@@ -138,11 +132,13 @@ export default function RootLayout() {
     }
   }, [])
 
+  const { isPending } = useSession()
+
   useEffect(() => {
-    if (loaded) {
+    if (loaded && !isPending) {
       SplashScreen.hideAsync()
     }
-  }, [loaded])
+  }, [loaded, isPending])
 
   const focusCallback = useCallback(async (event: string) => {
     if (event == "background" || (event == "active" && !updating)) {
@@ -167,10 +163,7 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <PersistQueryClientProvider
-        persistOptions={{ persister: clientPersister }}
-        client={queryClient}
-      >
+      <TRPCQueryProvider>
         <View className="bg-primary flex-1">
           <TamaguiProvider config={config}>
             <ThemeProvider value={isDark ? DarkTheme : DefaultTheme}>
@@ -188,7 +181,10 @@ export default function RootLayout() {
                         options={{ headerShown: false }}
                       />
                       <Stack.Screen
-                        options={{ presentation: "modal", headerShown: false }}
+                        options={{
+                          presentation: "modal",
+                          headerShown: false,
+                        }}
                         name="(modals)"
                       />
                       <Stack.Screen
@@ -220,7 +216,7 @@ export default function RootLayout() {
             </ThemeProvider>
           </TamaguiProvider>
         </View>
-      </PersistQueryClientProvider>
+      </TRPCQueryProvider>
       <Toaster
         offset={Platform.select({ ios: 30, android: 20 })}
         theme="system"

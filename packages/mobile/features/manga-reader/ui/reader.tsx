@@ -60,7 +60,7 @@ export const MangaReaderUI = () => {
   }, [])
 
   const { data: title } = useTitleInfo(slug_url, "1")
-  const { data: chapters } = useChapters(slug_url, title?.site)
+  const { data: chapters } = useChapters(slug_url)
 
   const nextChapter = chapters && chapters[chapterIndex + 1]
 

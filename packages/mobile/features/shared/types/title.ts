@@ -1,9 +1,5 @@
 export type BaseTitle = {
   otherNames?: string[]
-  ageRestriction: {
-    id: number
-    label: string
-  }
   id: number
   name: string
   eng_name?: string
@@ -11,10 +7,10 @@ export type BaseTitle = {
   cover: {
     default: string
   }
-  site: string
+  site: number
   model: string
   genres: Genre[]
-  summary: string
+  summary: string | null
   isLicensed?: boolean
 }
 
@@ -22,17 +18,4 @@ export type Genre = {
   id: number
   name: string
   adult: boolean
-}
-
-export interface Title extends BaseTitle {
-  background: {
-    url: string
-  }
-  metadata: {
-    count: number
-  }
-  type: {
-    id: number
-    label: string
-  }
 }

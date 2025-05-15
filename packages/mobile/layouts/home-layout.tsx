@@ -1,23 +1,24 @@
-import { Icon } from "@/components/icon"
-import { useHomeTitles } from "@/features/home/api/use-home-titles"
-import { withImpact } from "@/lib/utils"
 import { router } from "expo-router"
+
+import { Icon } from "@/components/icon"
 import {
   Pressable,
   RefreshControl,
   ScrollView,
   TextInput,
-  useColorScheme,
   View,
 } from "react-native"
 
+import { useQuery } from "@tanstack/react-query"
+import { trpc } from "@/lib/trpc"
+
 import { useSafeAreaInsets } from "react-native-safe-area-context"
+
+import { withImpact } from "@/lib/utils"
 
 export const HomeLayout = ({ children }: { children?: React.ReactNode }) => {
   const { top } = useSafeAreaInsets()
-  const { isRefetching, refetch } = useHomeTitles()
-
-  const isDark = useColorScheme() == "dark"
+  const { isRefetching, refetch } = useQuery(trpc.titles.popular.queryOptions())
 
   return (
     <View className="flex-1">

@@ -53,6 +53,7 @@ export const AnimePlayer = () => {
   )
 
   useEventListener(player, "statusChange", (event) => {
+    // console.log(`status changed ${event.oldStatus} --> ${event.status}`)
     if (event.status == "readyToPlay") {
       setLoaded(true)
     }
@@ -67,9 +68,10 @@ export const AnimePlayer = () => {
   })
 
   const Comp = memo(() => {
-    console.log(JSON.stringify({ player, data }, null, 2))
-
-    if (player.status == "loading" && isPending) {
+    if (
+      (["idle", "loading"].includes(player.status) || isPending) &&
+      data?.source
+    ) {
       return <ActivityIndicator />
     }
 

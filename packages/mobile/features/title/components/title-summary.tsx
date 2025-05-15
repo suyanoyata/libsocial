@@ -3,7 +3,11 @@ import { View, Pressable } from "react-native"
 
 import { Text } from "@/components/ui/text"
 
-export const TitleSummary = ({ children: summary }: { children: string }) => {
+export const TitleSummary = ({
+  children: summary,
+}: {
+  children: React.ReactNode
+}) => {
   const [lines, setLines] = useState(4)
   const [height, setHeight] = useState<number>(0)
   const lineHeight = 16

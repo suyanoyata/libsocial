@@ -1,6 +1,12 @@
 import { z } from "zod";
 
-const bookmarkName = z.enum(["planned", "ongoing", "finished", "dropped", "favorite"]);
+const bookmarkName = z.enum([
+  "planned",
+  "ongoing",
+  "finished",
+  "dropped",
+  "favorite",
+]);
 
 const modelName = z.enum(["manga", "anime"]);
 
@@ -17,10 +23,16 @@ export const bookmarkSchema = z
       return !(data.episodeIndex && data.chapterIndex);
     },
     {
-      message: "You can provide either episodeIndex or chapterIndex, but not both",
+      message:
+        "You can provide either episodeIndex or chapterIndex, but not both",
       path: ["episodeIndex"],
     }
   );
+
+export const getBookmarkSchema = z.object({
+  slug_url: z.string(),
+  type: modelName,
+});
 
 export const updateBookmarkSchema = z
   .object({
@@ -34,13 +46,15 @@ export const updateBookmarkSchema = z
       return !(data.episodeIndex && data.chapterIndex);
     },
     {
-      message: "You can provide either episodeIndex or chapterIndex, but not both",
+      message:
+        "You can provide either episodeIndex or chapterIndex, but not both",
       path: ["episodeIndex"],
     }
   );
 
 export const deleteBookmarkSchema = z.object({
-  id: z.string(),
+  id: z.number(),
+  slug_url: z.string(), // <-- for refetching
 });
 
 export type CreateBookmarkData = z.infer<typeof bookmarkSchema>;

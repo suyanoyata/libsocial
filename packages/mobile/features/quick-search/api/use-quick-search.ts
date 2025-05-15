@@ -1,25 +1,18 @@
-import { BaseTitle } from "@/features/shared/types/title"
-import { api } from "@/lib/axios"
-import { useProperties } from "@/store/use-properties"
+import { trpc } from "@/lib/trpc"
 import { useQuery } from "@tanstack/react-query"
 
-export const useQuickSearch = (q: string, signal?: AbortSignal) => {
+import { useProperties } from "@/store/use-properties"
+
+export const useQuickSearch = (q: string) => {
   const { siteId } = useProperties()
 
-  return useQuery<BaseTitle[]>({
-    queryKey: ["quick-search", q, siteId],
-    queryFn: async () => {
-      if (!q) {
-        return []
+  return useQuery(
+    trpc.search.quick.queryOptions(
+      { q, siteId },
+      {
+        trpc: { abortOnUnmount: true },
+        enabled: !!q,
       }
-      return (
-        await api.get(
-          `/${siteId == "5" ? "anime" : "manga"}?q=${q}&site_id[]=1`,
-          {
-            signal,
-          },
-        )
-      ).data.data
-    },
-  })
+    )
+  )
 }

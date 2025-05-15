@@ -1,8 +1,7 @@
 export type TitleRelationsProps = {
   label: string
   slug_url: string
-  endpoint: "relations" | "similar"
-  site: string
+  site: number
 }
 
 export type RelationsData = {

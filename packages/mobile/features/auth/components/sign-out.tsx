@@ -1,6 +1,6 @@
 import { Icon } from "@/components/icon"
 import { Button } from "@/components/ui/button"
-import { signOut } from "@/features/auth/lib/auth"
+import { signOut } from "@/lib/auth"
 
 export const SignOutButton = () => {
   return (

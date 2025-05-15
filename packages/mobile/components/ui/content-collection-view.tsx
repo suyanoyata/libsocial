@@ -34,7 +34,7 @@ export const ContentCollectionView = <T,>({
   const iconName = descending ? "ArrowUpNarrowWide" : "ArrowDownNarrowWide"
 
   return (
-    <Animated.View entering={FadeIn} className={cn("flex-1")}>
+    <Animated.View entering={FadeIn} className="flex-1">
       <View className="flex-row justify-between items-center">
         <Text className="text-4xl font-extrabold text-secondary">{title}</Text>
         <Button

@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { getCookie, useSession } from "@/features/auth/lib/auth"
+import { getCookie, useSession } from "@/lib/auth"
 
 import { api } from "@/lib/axios"
 

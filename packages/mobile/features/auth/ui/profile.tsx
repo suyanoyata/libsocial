@@ -2,7 +2,7 @@ import { View } from "react-native"
 
 import { Text } from "@/components/ui/text"
 
-import { useSession } from "@/features/auth/lib/auth"
+import { useSession } from "@/lib/auth"
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 

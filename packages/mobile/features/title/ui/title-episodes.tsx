@@ -4,18 +4,20 @@ import { Episode } from "@/features/title/components/episode-item"
 import { useEpisodesAPI } from "@/features/title/api/use-episodes-api"
 import { useMemo, useState } from "react"
 
-import { TitleEpisodeBase } from "@/features/title/types/title-episodes-response"
-import { View } from "react-native"
 import { ActivityIndicator } from "@/components/ui/activity-indicator"
 
-export const TitleEpisodes = ({
-  slug_url,
-  site,
-}: {
-  slug_url: string
-  site: number
-}) => {
-  const { data, isPending } = useEpisodesAPI(slug_url)
+import { View } from "react-native"
+
+import { Icon as _Icon } from "@/components/icon"
+
+import withBubble from "@/components/ui/withBubble"
+import { FadeView } from "@/components/ui/fade-view"
+import { Text } from "@/components/ui/text"
+
+import type { Episode as EpisodeType } from "api/router/episodesRouter"
+
+export const TitleEpisodes = ({ slug_url }: { slug_url: string }) => {
+  const { data, isPending, isError } = useEpisodesAPI(slug_url)
 
   const [descending, setDescending] = useState(false)
 
@@ -23,17 +25,30 @@ export const TitleEpisodes = ({
     return descending ? data?.toReversed() : data
   }, [descending, data])
 
-  const keyExtractor = (item: TitleEpisodeBase) => item.id.toString()
+  const keyExtractor = (item: EpisodeType) => item.id.toString()
 
-  const renderItem = ({ item }: { item: TitleEpisodeBase }) => (
+  const renderItem = ({ item }: { item: EpisodeType }) => (
     <Episode slug_url={slug_url} episode={item} index={item.item_number} />
   )
+
+  const Icon = withBubble(_Icon)
 
   if (!data && isPending) {
     return (
       <View className="items-center justify-center flex-1">
         <ActivityIndicator />
       </View>
+    )
+  }
+
+  if (isError) {
+    return (
+      <FadeView withEnter className="items-center justify-center flex-1">
+        <Icon name="Unplug" />
+        <Text className="text-secondary font-medium mt-2">
+          Something went wrong
+        </Text>
+      </FadeView>
     )
   }
 

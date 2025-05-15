@@ -2,28 +2,14 @@ import { constantFields } from "~/const/constant-fields";
 import { db } from "~/lib/db";
 
 class Service {
-  public async getConstants(fields?: string[]) {
-    let response = {};
+  public async getConstants(field: string) {
+    const constantField = constantFields[field as "genres"];
 
-    if (!fields) return null;
+    if (!constantField) return null;
 
-    await Promise.all(
-      fields.map(async (field) => {
-        if (field == "imageServers") return null;
-        const constantField = constantFields[field as "genres"];
+    const data = await db[constantField.name as "genre"].findMany();
 
-        if (!constantField) return null;
-
-        const data = await db[constantField.name as "genre"].findMany();
-
-        response = {
-          ...response,
-          [field]: constantField.schema.parse(data),
-        };
-      })
-    );
-
-    return response;
+    return constantField.schema.parse(data);
   }
 }
 

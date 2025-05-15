@@ -3,13 +3,15 @@ import { Text } from "@/components/ui/text"
 
 import { Checkbox } from "@/components/ui/checkbox"
 
+import { useDeferredRender } from "@/hooks/use-deferred-render"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
+
 import { useFilterStore } from "@/features/catalog/store/use-filter-store"
 import { useGenresConstants } from "@/features/shared/api/use-filter-constants"
 
 import { memo, useCallback } from "react"
+
 import Animated, { FadeIn } from "react-native-reanimated"
-import { useDeferredRender } from "@/hooks/use-deferred-render"
 
 const GenreRender = memo(
   ({ item }: { item: { name: string; id: number } }) => {
@@ -34,7 +36,7 @@ const GenreRender = memo(
       </Pressable>
     )
   },
-  (prev, next) => prev.item.id === next.item.id,
+  (prev, next) => prev.item.id === next.item.id
 )
 
 export const CatalogGenresFilter = () => {

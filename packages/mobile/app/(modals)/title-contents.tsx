@@ -17,9 +17,9 @@ export default function Chapter() {
   return (
     <View className="mx-2 mt-2 flex-1">
       {site !== "5" ? (
-        <TitleChapters slug_url={slug_url} site={Number(site)} />
+        <TitleChapters slug_url={slug_url} />
       ) : (
-        <TitleEpisodes slug_url={slug_url} site={Number(site)} />
+        <TitleEpisodes slug_url={slug_url} />
       )}
     </View>
   )

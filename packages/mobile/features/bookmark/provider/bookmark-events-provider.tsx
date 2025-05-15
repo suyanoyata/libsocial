@@ -7,6 +7,8 @@ import { BookmarkEvents } from "@/features/bookmark/const/bookmark-events"
 import { api } from "@/lib/axios"
 import { Bookmark } from "@/features/bookmark/types/bookmark"
 
+import { trpc } from "@/lib/trpc"
+
 interface BookmarkEventsProps {
   children?: React.ReactNode
 }
@@ -19,11 +21,11 @@ export const BookmarkEventsProvider = ({ children }: BookmarkEventsProps) => {
       BookmarkEvents.CREATE_BOOKMARK,
       (slug_url: string) => {
         client.invalidateQueries({
-          queryKey: ["bookmarks"],
+          queryKey: trpc.bookmarks.list.queryKey(),
         })
 
         client.invalidateQueries({
-          queryKey: ["bookmark", slug_url],
+          queryKey: trpc.bookmarks.get.queryKey({ slug_url }),
         })
       }
     )
@@ -80,10 +82,11 @@ export const BookmarkEventsProvider = ({ children }: BookmarkEventsProps) => {
       BookmarkEvents.DELETE_BOOKMARK,
       (slug_url: string) => {
         client.invalidateQueries({
-          queryKey: ["bookmark", slug_url],
+          queryKey: trpc.bookmarks.list.queryKey(),
         })
-        client.invalidateQueries({
-          queryKey: ["bookmarks"],
+
+        client.removeQueries({
+          queryKey: trpc.bookmarks.get.queryKey({ slug_url }),
         })
       }
     )
@@ -91,6 +94,9 @@ export const BookmarkEventsProvider = ({ children }: BookmarkEventsProps) => {
     return () => {
       DeviceEventEmitter.removeAllListeners(BookmarkEvents.CREATE_BOOKMARK)
       DeviceEventEmitter.removeAllListeners(BookmarkEvents.UPDATE_READ_BOOKMARK)
+      DeviceEventEmitter.removeAllListeners(
+        BookmarkEvents.UPDATE_WATCH_BOOKMARK
+      )
       DeviceEventEmitter.removeAllListeners(BookmarkEvents.DELETE_BOOKMARK)
     }
   }, [])

@@ -8,12 +8,13 @@ import { Logger } from "~/lib/logger";
 
 import { pageLimit } from "~/const/db";
 import { translate } from "~/services/translate.service";
+import { CatalogSearchFormData } from "~/types/zod";
 
 const MangaLogger = new Logger("MangaService");
 
 class Service {
   public async getManga(slug_url: string) {
-    const data = await db.manga.findFirst({
+    const data = await db.manga.findFirstOrThrow({
       where: {
         slug_url,
         model: "manga",
@@ -34,10 +35,6 @@ class Service {
     const eng_name = data.eng_name ?? data.name;
     const summary = await translate(data.summary!);
 
-    // await db.genre.createMany({
-    //   data: data.genres,
-    //   skipDuplicates: true,
-    // });
     await Promise.all(
       data.genres.map(
         async (genre) =>
@@ -98,7 +95,7 @@ class Service {
     return this.getManga(data.slug_url);
   }
 
-  public async getTitles(page?: string): Promise<PaginatedResponse<Manga[]>> {
+  public async getTitles(page?: string) {
     const p = (page != undefined ? Number(page) - 1 : 0) * pageLimit;
     const nextPage = (page != undefined ? Number(page) : 0) * pageLimit;
 
@@ -149,19 +146,15 @@ class Service {
     };
   }
 
-  public async getMangaWithQueries(
-    search: string,
-    genres?: string[],
-    page?: string
-  ) {
-    const p = (page != undefined ? Number(page) - 1 : 0) * pageLimit;
-    const nextPage = (page != undefined ? Number(page) : 1) * pageLimit;
+  public async getMangaWithQueries(params: CatalogSearchFormData) {
+    const p = (params.cursor - 1) * pageLimit;
+    const nextPage = params.cursor * pageLimit;
 
     const genresFilters =
-      genres?.map((genreId) => ({
+      params.genres?.map((genreId) => ({
         genres: {
           some: {
-            id: Number(genreId),
+            id: genreId,
           },
         },
       })) ?? [];
@@ -200,13 +193,13 @@ class Service {
                 {
                   name: {
                     mode: "insensitive",
-                    contains: search,
+                    contains: params.q,
                   },
                 },
                 {
                   eng_name: {
                     mode: "insensitive",
-                    contains: search,
+                    contains: params.q,
                   },
                 },
               ],
@@ -215,7 +208,7 @@ class Service {
         },
       }),
       meta: {
-        current_page: page ? Number(page) : 1,
+        current_page: params.cursor,
         per_page: pageLimit,
         has_next_page: nextPageData > 1,
       },

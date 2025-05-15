@@ -8,7 +8,7 @@ import { useState } from "react"
 import { BookmarkCreateSelectUI } from "@/features/bookmark/ui/bookmark-create-select"
 import { ActivityIndicator } from "@/components/ui/activity-indicator"
 import { textVariants } from "@/components/ui/button"
-import { useSession } from "@/features/auth/lib/auth"
+import { useSession } from "@/lib/auth"
 import { router } from "expo-router"
 import Animated, { BounceIn } from "react-native-reanimated"
 
@@ -17,11 +17,11 @@ export const CreateBookmarkTrigger = ({
   site,
 }: {
   slug_url: string
-  site: string
+  site: number
 }) => {
   const [open, setOpen] = useState(false)
 
-  const type = site == "5" ? "anime" : "manga"
+  const type = site == 5 ? "anime" : "manga"
 
   const { data, isFetching } = useBookmarkAPI({
     slug_url,
