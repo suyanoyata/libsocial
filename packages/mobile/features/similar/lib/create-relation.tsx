@@ -1,11 +1,13 @@
-import { BaseTitle } from "@/features/shared/types/title"
 import i18n from "@/i18n"
-import { api } from "@/lib/axios"
-import { trpc } from "@/lib/trpc"
-import { withErrorImpact, withSuccessImpact } from "@/lib/utils"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { router } from "expo-router"
 import { toast } from "sonner-native"
+
+import { withErrorImpact, withSuccessImpact } from "@/lib/utils"
+
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { trpc } from "@/lib/trpc"
+
+import { BaseTitle } from "@/features/shared/types/title"
 
 export const useCreateRelation = ({
   slug_url,
@@ -16,43 +18,33 @@ export const useCreateRelation = ({
 }) => {
   const client = useQueryClient()
 
-  return useMutation(trpc.titles.relations.add.mutationOptions())
-
-  return useMutation({
-    mutationKey: ["add-relation", slug_url, data.slug_url],
-    mutationFn: async ({ reason }: { reason: string }) => {
-      return await api.post(
-        `/${data.site == 5 ? "anime" : "manga"}/${slug_url}/relations`,
-        {
-          slug_url: data.slug_url,
-          reason,
+  return useMutation(
+    trpc.titles.relations.add.mutationOptions({
+      onError(e) {
+        const error = e as unknown as {
+          error: string
         }
-      )
-    },
-    onError(e) {
-      const error = e as unknown as {
-        error: string
-      }
-      withErrorImpact(() =>
-        toast.error("Failed while adding relation", {
-          description: error.error,
-          duration: 2500,
+        withErrorImpact(() =>
+          toast.error("Failed while adding relation", {
+            description: error.error,
+            duration: 2500,
+          })
+        )
+      },
+      onSuccess() {
+        withSuccessImpact(() =>
+          toast.success("Success", {
+            description: `Added ${data.eng_name ?? data.name} as ${i18n.t(
+              // @ts-ignore
+              `related.${reason}`
+            )}`,
+          })
+        )
+        client.invalidateQueries({
+          queryKey: trpc.titles.relations.list.queryKey({ slug_url }),
         })
-      )
-    },
-    onSuccess() {
-      withSuccessImpact(() =>
-        toast.success("Success", {
-          description: `Added ${data.eng_name ?? data.name} as ${i18n.t(
-            // @ts-ignore
-            `related.${reason}`
-          )}`,
-        })
-      )
-      client.invalidateQueries({
-        queryKey: [`title-relations`, slug_url],
-      })
-      router.back()
-    },
-  })
+        router.back()
+      },
+    })
+  )
 }

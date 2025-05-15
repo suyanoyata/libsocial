@@ -2,40 +2,41 @@ import { QueryClient } from "@tanstack/react-query"
 
 import FastImage from "@d11/react-native-fast-image"
 
-import { api } from "@/lib/axios"
-
 import { ReaderChapter } from "@/features/manga-reader/types/reader-chapter"
+
 import { Chapter } from "@/features/shared/types/chapter"
+import { trpc } from "@/lib/trpc"
+import { t } from "@/lib/trpc/trpc-client"
 
 export const preloadNextChapter = async (
   client: QueryClient,
   slug_url: string,
-  nextChapter?: Chapter,
+  nextChapter?: Chapter
 ) => {
-  const didLoadNextChapter = !!client.getQueryData<ReaderChapter>([
-    "manga-chapter-reader",
-    slug_url,
-    nextChapter?.volume,
-    nextChapter?.number,
-  ])
+  const didLoadNextChapter = !!client.getQueryData<ReaderChapter>(
+    trpc.chapters.get.queryKey({
+      slug_url,
+      volume: nextChapter?.volume,
+      number: nextChapter?.number,
+    })
+  )
 
   if (didLoadNextChapter) return
 
   if (nextChapter?.volume && nextChapter?.number) {
-    const {
-      data: { data },
-    } = await api.get<{ data: ReaderChapter }>(
-      `/manga/${slug_url}/chapter?volume=${nextChapter.volume}&number=${nextChapter.number}`,
-    )
+    const data = await t.chapters.get.query({
+      slug_url,
+      volume: nextChapter.volume,
+      number: nextChapter.number,
+    })
 
     client.setQueryData<ReaderChapter>(
-      [
-        "manga-chapter-reader",
+      trpc.chapters.get.queryKey({
         slug_url,
-        nextChapter.volume,
-        nextChapter.number,
-      ],
-      data,
+        volume: nextChapter?.volume,
+        number: nextChapter?.number,
+      }),
+      data
     )
 
     FastImage.preload(data.pages.map((page) => ({ uri: page.url })))

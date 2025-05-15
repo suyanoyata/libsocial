@@ -4,10 +4,10 @@ import { useEffect } from "react"
 import { useQueryClient } from "@tanstack/react-query"
 
 import { BookmarkEvents } from "@/features/bookmark/const/bookmark-events"
-import { api } from "@/lib/axios"
 import { Bookmark } from "@/features/bookmark/types/bookmark"
 
 import { trpc } from "@/lib/trpc"
+import { t } from "@/lib/trpc/trpc-client"
 
 interface BookmarkEventsProps {
   children?: React.ReactNode
@@ -40,7 +40,7 @@ export const BookmarkEventsProvider = ({ children }: BookmarkEventsProps) => {
 
         if (!bookmark) return
 
-        await api.put("/bookmarks", {
+        t.bookmarks.update.mutate({
           id: bookmark.id,
           chapterIndex: data.lastReadChapter,
         })
@@ -64,10 +64,7 @@ export const BookmarkEventsProvider = ({ children }: BookmarkEventsProps) => {
 
         if (!bookmark) return
 
-        await api.put("/bookmarks", {
-          id: bookmark.id,
-          episodeIndex: data.index,
-        })
+        t.bookmarks.update.mutate({ id: bookmark.id, episodeIndex: data.index })
 
         client.invalidateQueries({
           queryKey: ["bookmarks"],

@@ -68,16 +68,18 @@ export const RelationAddTitle = ({
           onPress={(value) => {
             mutate({
               slug_url,
+              // @ts-ignore
               type: data.model,
               related: {
                 slug_url: data.slug_url,
-                reason: relationReasons[value.nativeEvent.index],
+                reason: relationReasons[value.nativeEvent.index] as "prequel",
               },
             })
           }}
           dropdownMenuMode
           disableShadow
           actions={relationReasons.map((relation) => ({
+            // @ts-ignore
             title: i18n.t(`related.${relation}`),
           }))}
         >

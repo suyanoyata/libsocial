@@ -42,7 +42,6 @@ import { Toaster } from "sonner-native"
 import { BackButton } from "@/components/ui/back-button"
 
 import { StatusBar } from "expo-status-bar"
-import { ApiAuthenticationProvider } from "@/features/auth/provider/api-authentication-provider"
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet"
 
 import { systemColorScheme } from "react-native-css-interop/dist/runtime/native/appearance-observables"
@@ -167,52 +166,50 @@ export default function RootLayout() {
         <View className="bg-primary flex-1">
           <TamaguiProvider config={config}>
             <ThemeProvider value={isDark ? DarkTheme : DefaultTheme}>
-              <ApiAuthenticationProvider>
-                <BookmarkEventsProvider>
-                  <BottomSheetModalProvider>
-                    <Stack
-                      screenOptions={{
-                        headerShown: true,
-                        header: () => <BackButton />,
+              <BookmarkEventsProvider>
+                <BottomSheetModalProvider>
+                  <Stack
+                    screenOptions={{
+                      headerShown: true,
+                      header: () => <BackButton />,
+                    }}
+                  >
+                    <Stack.Screen
+                      name="(tabs)"
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                      options={{
+                        presentation: "modal",
+                        headerShown: false,
                       }}
-                    >
-                      <Stack.Screen
-                        name="(tabs)"
-                        options={{ headerShown: false }}
-                      />
-                      <Stack.Screen
-                        options={{
-                          presentation: "modal",
-                          headerShown: false,
-                        }}
-                        name="(modals)"
-                      />
-                      <Stack.Screen
-                        name="title-info"
-                        options={{
-                          headerShown: false,
-                        }}
-                      />
-                      <Stack.Screen
-                        name="manga-reader"
-                        options={{ headerShown: false }}
-                      />
-                      <Stack.Screen
-                        name="downloaded-reader"
-                        options={{ headerShown: false }}
-                      />
-                      <Stack.Screen
-                        name="downloads"
-                        options={{
-                          title: "Downloads",
-                          headerShown: true,
-                          header: (props) => <DownloadsIcon {...props} />,
-                        }}
-                      />
-                    </Stack>
-                  </BottomSheetModalProvider>
-                </BookmarkEventsProvider>
-              </ApiAuthenticationProvider>
+                      name="(modals)"
+                    />
+                    <Stack.Screen
+                      name="title-info"
+                      options={{
+                        headerShown: false,
+                      }}
+                    />
+                    <Stack.Screen
+                      name="manga-reader"
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                      name="downloaded-reader"
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                      name="downloads"
+                      options={{
+                        title: "Downloads",
+                        headerShown: true,
+                        header: (props) => <DownloadsIcon {...props} />,
+                      }}
+                    />
+                  </Stack>
+                </BottomSheetModalProvider>
+              </BookmarkEventsProvider>
             </ThemeProvider>
           </TamaguiProvider>
         </View>

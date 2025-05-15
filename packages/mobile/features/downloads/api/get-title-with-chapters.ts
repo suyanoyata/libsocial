@@ -1,23 +1,19 @@
-import { api } from "@/lib/axios"
+import { t } from "@/lib/trpc/trpc-client"
 
-import { ReaderChapter } from "@/features/manga-reader/types/reader-chapter"
-
-import { Title } from "@/features/shared/types/title"
 import { Chapter } from "@/features/shared/types/chapter"
 
 export const getTitleWithChapters = async (
   slug_url: string,
-  chapter: Chapter,
+  chapter: Chapter
 ) => {
-  const {
-    data: { data: title },
-  } = await api.get<{ data: Title }>(`/manga/${slug_url}/`)
-
-  const {
-    data: { data: chapterData },
-  } = await api.get<{ data: ReaderChapter }>(
-    `/manga/${slug_url}/chapter?volume=${chapter.volume}&number=${chapter.number}`,
-  )
+  const [title, chapterData] = await Promise.all([
+    t.titles.get.title.query({ slug_url, siteId: "1" }),
+    t.chapters.get.query({
+      slug_url,
+      number: chapter.number,
+      volume: chapter.volume,
+    }),
+  ])
 
   return { title, chapterData }
 }
