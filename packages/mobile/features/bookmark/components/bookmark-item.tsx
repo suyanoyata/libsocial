@@ -20,7 +20,7 @@ import { Sheet, SheetContent } from "@/components/ui/sheet"
 import { useBookmarkUpdate } from "@/features/bookmark/api/use-bookmark-update"
 import { useBookmarkDelete } from "@/features/bookmark/api/use-bookmark-delete"
 
-import { BookmarkName } from "api/lib/prisma/client"
+import type { BookmarkName } from "api/lib/prisma/client"
 import type { BookmarkListItem } from "api/router/bookmarkRouter"
 
 export const BookmarkItem = memo(

@@ -6,7 +6,7 @@ import { useBookmarkDelete } from "@/features/bookmark/api/use-bookmark-delete"
 
 import { BookmarkSelectBase } from "@/features/bookmark/components/bookmark-select-base"
 
-import { BookmarkName } from "api/lib/prisma/client"
+import type { BookmarkName } from "api/lib/prisma/client"
 
 interface BookmarkCreateSelectProps {
   slug_url: string
