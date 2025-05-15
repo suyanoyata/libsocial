@@ -27,7 +27,6 @@ import { Icon } from "@/components/icon"
 import { BookmarkEvents } from "@/features/bookmark/const/bookmark-events"
 
 import type { Chapter as ChapterType } from "api/router/chaptersRouter"
-import type { Title } from "api/router/titleRouter"
 import { trpc } from "@/lib/trpc"
 
 export const Chapter = memo(
@@ -152,7 +151,12 @@ export const Chapter = memo(
         >
           {isCurrentLastReadChapter ? (
             <Animated.View entering={BounceIn.duration(500)}>
-              <Icon name="Bookmark" size={20} fill="text-red-500" />
+              <Icon
+                name="Bookmark"
+                size={18}
+                fill="text-red-500"
+                className="text-red-500"
+              />
             </Animated.View>
           ) : (
             <Icon

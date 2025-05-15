@@ -44,15 +44,13 @@ export const BookmarkCreateSelectUI = ({
               chapterIndex: existingTitle.lastReadChapter,
             })
           }
-
-          return createBookmark({
-            slug_url,
-            name: name as BookmarkName,
-            type,
-          })
         }
 
-        setOpen(false)
+        return createBookmark({
+          slug_url,
+          name: name as BookmarkName,
+          type,
+        })
       }}
       onDelete={() => {
         if (!data) return
