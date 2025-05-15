@@ -1,9 +1,9 @@
+import { FontAwesomeIcon } from "@/components/icon"
 import { Button, textVariants } from "@/components/ui/button"
 import { signIn, useSession } from "@/lib/auth"
 import { withErrorImpact, withSuccessImpact } from "@/lib/utils"
 import { useMutation } from "@tanstack/react-query"
 
-import Icon from "react-native-vector-icons/FontAwesome6"
 import { toast } from "sonner-native"
 
 export const LinkAccountWithDiscord = () => {
@@ -44,7 +44,7 @@ export const LinkAccountWithDiscord = () => {
 
   return (
     <Button onPress={mutate} variant="tonal">
-      <Icon
+      <FontAwesomeIcon
         name="discord"
         className={textVariants({ variant: "tonal" })}
         size={18}

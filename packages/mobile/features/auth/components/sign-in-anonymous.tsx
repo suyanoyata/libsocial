@@ -1,12 +1,12 @@
 import { User } from "better-auth"
 
-import FeatherIcon from "react-native-vector-icons/Feather"
 import { Button } from "@/components/ui/button"
 
 import { signIn } from "@/lib/auth"
 import { useMutation } from "@tanstack/react-query"
 import { ActivityIndicator } from "@/components/ui/activity-indicator"
 import { toast } from "sonner-native"
+import { FeatherIcon } from "@/components/icon"
 
 export const SignInAnonymous = ({
   fun,

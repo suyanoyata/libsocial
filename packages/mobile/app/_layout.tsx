@@ -34,8 +34,6 @@ import {
 
 import { enableFreeze, enableScreens } from "react-native-screens"
 
-import { iconFix } from "@/lib/icons-fix"
-
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 
 import { Toaster } from "sonner-native"
@@ -100,8 +98,6 @@ const config = createTamagui({
     body: systemFont,
   },
 })
-
-iconFix()
 
 SplashScreen.preventAutoHideAsync()
 

@@ -1,10 +1,10 @@
+import { FontAwesomeIcon } from "@/components/icon"
 import { ActivityIndicator } from "@/components/ui/activity-indicator"
 import { Button } from "@/components/ui/button"
 import { signIn, useSession } from "@/lib/auth"
 import { withSuccessImpact } from "@/lib/utils"
 import { useMutation } from "@tanstack/react-query"
 
-import Icon from "react-native-vector-icons/FontAwesome6"
 import { toast } from "sonner-native"
 
 export const SignInDiscord = ({ fun }: { fun?: () => void }) => {
@@ -45,7 +45,7 @@ export const SignInDiscord = ({ fun }: { fun?: () => void }) => {
       variant="accent"
       iconLeft={
         !isPending ? (
-          <Icon
+          <FontAwesomeIcon
             name="discord"
             className="dark:text-violet-900 text-white"
             size={18}

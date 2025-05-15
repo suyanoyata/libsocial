@@ -3,13 +3,31 @@ import { Text } from "@/components/ui/text"
 import { cn } from "@/lib/utils"
 import {
   BottomSheetBackdrop,
-  BottomSheetModal,
+  BottomSheetModal as _BottomSheetModal,
   BottomSheetScrollView,
   BottomSheetView,
 } from "@gorhom/bottom-sheet"
+import { cssInterop } from "nativewind"
 
 import * as React from "react"
 import { Pressable } from "react-native"
+
+const BottomSheetModal = cssInterop(_BottomSheetModal, {
+  backgroundClassName: {
+    target: "backgroundStyle",
+    nativeStyleToProp: {
+      color: true,
+      opacity: true,
+    },
+  },
+  indicatorClassName: {
+    target: "handleIndicatorStyle",
+    nativeStyleToProp: {
+      color: true,
+      opacity: true,
+    },
+  },
+})
 
 interface SheetConfig {
   open: boolean
@@ -86,7 +104,7 @@ const SheetContent = ({
 
   const Comp = scrollable ? BottomSheetScrollView : BottomSheetView
 
-  const bottomSheetModalRef = React.useRef<BottomSheetModal>(null)
+  const bottomSheetModalRef = React.useRef<_BottomSheetModal>(null)
 
   React.useEffect(() => {
     if (open) {

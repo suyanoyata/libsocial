@@ -1,12 +1,14 @@
 import { cva, VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
+import _FontAwesomeIcon from "react-native-vector-icons/FontAwesome6"
+import _FeatherIcon from "react-native-vector-icons/Feather"
 import { icons, LucideProps } from "lucide-react-native"
 
 import { cssInterop } from "nativewind"
 
-import { useEffect, useMemo } from "react"
-import { Text } from "@/components/ui/text"
+import { useMemo } from "react"
+import { withIconCss } from "@/lib/icons-fix"
 
 const iconVariants = cva("text-black", {
   variants: {
@@ -66,6 +68,44 @@ export const Icon = ({
 
   return (
     <LucideIcon
+      size={size}
+      className={cn(variant && iconVariants({ variant }), className)}
+      {...props}
+    />
+  )
+}
+
+export const FeatherIcon = ({
+  variant,
+  name,
+  className,
+  size = 18,
+  ...props
+}: IconProps) => {
+  const Icon = withIconCss(_FeatherIcon)
+
+  return (
+    <Icon
+      name={name}
+      size={size}
+      className={cn(variant && iconVariants({ variant }), className)}
+      {...props}
+    />
+  )
+}
+
+export const FontAwesomeIcon = ({
+  variant,
+  name,
+  className,
+  size = 18,
+  ...props
+}: IconProps) => {
+  const Icon = withIconCss(_FontAwesomeIcon)
+
+  return (
+    <Icon
+      name={name}
       size={size}
       className={cn(variant && iconVariants({ variant }), className)}
       {...props}
