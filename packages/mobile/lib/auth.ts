@@ -13,7 +13,7 @@ export const {
   getCookie,
   ...authClient
 } = createAuthClient({
-  baseURL: "http://192.168.50.48:3000",
+  baseURL: "https://libsocial-api.vercel.app",
   scheme: "libsocial",
   plugins: [
     anonymousClient(),

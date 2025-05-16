@@ -18,7 +18,7 @@ import { useTitleInfo } from "@/features/title/api/use-title-info"
 import { useChapters } from "@/features/title/api/use-chapters"
 
 import { Text } from "@/components/ui/text"
-import MenuView from "react-native-context-menu-view"
+import _MenuView from "react-native-context-menu-view"
 
 import { preloadNextChapter } from "@/features/manga-reader/lib/preload-chapter"
 import { BackButton } from "@/components/ui/back-button"
@@ -31,8 +31,23 @@ import { useQueryClient } from "@tanstack/react-query"
 import { useDeferredRender } from "@/hooks/use-deferred-render"
 import { useReaderScrollTo } from "@/features/manga-reader/hooks/use-reader-scroll-to"
 import { ActivityIndicator } from "@/components/ui/activity-indicator"
+import { cssInterop } from "nativewind"
 
 export const MangaReaderUI = () => {
+  const MenuView = useMemo(
+    () =>
+      cssInterop(_MenuView, {
+        className: {
+          target: "style",
+          nativeStyleToProp: {
+            // @ts-ignore
+            bottom: true,
+          },
+        },
+      }),
+    []
+  )
+
   const route = useRoute()
 
   const { width, height } = useWindowDimensions()
@@ -195,9 +210,9 @@ export const MangaReaderUI = () => {
           style={{
             position: "absolute",
             left: 16,
-            bottom: 16,
             zIndex: 20,
           }}
+          className="bottom-safe"
           actions={data.pages.map((_, index) => ({
             id: index.toString(),
             title: `${index + 1} / ${data.pages.length}`,
