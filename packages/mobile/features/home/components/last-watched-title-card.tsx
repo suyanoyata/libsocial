@@ -1,21 +1,50 @@
 import FastImage from "@d11/react-native-fast-image"
 import { router } from "expo-router"
 
-import { useMemo } from "react"
+import { useEffect, useMemo } from "react"
 import { View, Pressable } from "react-native"
 
 import { Text } from "@/components/ui/text"
 
 import { LastWatchItem, useWatchTracker } from "@/store/use-watch-tracker"
 import { Icon } from "@/components/icon"
+import Animated, {
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from "react-native-reanimated"
 
 export const LastWatchedTitleCard = ({ item }: { item: LastWatchItem }) => {
   const { hide } = useWatchTracker()
 
   const allEpisodesWatched = useMemo(
     () => item.lastWatchedEpisode === item.overallEpisodes,
-    [item],
+    [item]
   )
+
+  const progress = useSharedValue(0)
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    width: `${interpolate(progress.value, [0, 1], [0, 100])}%`,
+  }))
+
+  useEffect(() => {
+    const id = setTimeout(() => {
+      progress.value = withSpring(
+        item.lastWatchedEpisode / item.overallEpisodes,
+        {
+          mass: 3,
+          damping: 100,
+          stiffness: 180,
+        }
+      )
+    }, 200)
+
+    return () => {
+      clearTimeout(id)
+    }
+  }, [item])
 
   if (item.hide == true) return
 
@@ -61,11 +90,9 @@ export const LastWatchedTitleCard = ({ item }: { item: LastWatchItem }) => {
         </Text>
         {!allEpisodesWatched ? (
           <View className="recent-viewed-card-progress-bg">
-            <View
+            <Animated.View
               className="recent-viewed-card-progress-bg-active"
-              style={{
-                width: `${(item.lastWatchedEpisode / item.overallEpisodes) * 100}%`,
-              }}
+              style={[animatedStyle]}
             />
           </View>
         ) : (

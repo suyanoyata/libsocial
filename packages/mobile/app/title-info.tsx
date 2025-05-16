@@ -13,10 +13,10 @@ import { Text } from "@/components/ui/text"
 import { TitleAbout } from "@/features/title/ui/title-about"
 
 import { titleInfoRouteSchema } from "@/features/title/types/title-info-route"
-import withBubble from "@/components/ui/withBubble"
-import { Unplug } from "lucide-react-native"
 import { BackButton } from "@/components/ui/back-button"
 import { ActivityIndicator } from "@/components/ui/activity-indicator"
+
+import { FullscreenError } from "@/components/ui/fullscreen-error"
 
 export default function TitleInfo() {
   const router = useRoute()
@@ -48,17 +48,7 @@ export default function TitleInfo() {
   }, [withDelay, data])
 
   if (error) {
-    const Icon = withBubble(Unplug)
-
-    return (
-      <View className="items-center justify-center flex-1">
-        <BackButton />
-        <Icon />
-        <Text className="text-secondary text-base font-medium mt-2">
-          This content is not available
-        </Text>
-      </View>
-    )
+    return <FullscreenError />
   }
 
   if (!data) {

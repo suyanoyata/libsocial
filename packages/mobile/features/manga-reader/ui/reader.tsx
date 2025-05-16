@@ -24,14 +24,13 @@ import { preloadNextChapter } from "@/features/manga-reader/lib/preload-chapter"
 import { BackButton } from "@/components/ui/back-button"
 
 import { ReaderImage } from "@/features/manga-reader/components/reader-image"
-import withBubble from "@/components/ui/withBubble"
-import { SearchX } from "lucide-react-native"
 
 import { useQueryClient } from "@tanstack/react-query"
 import { useDeferredRender } from "@/hooks/use-deferred-render"
 import { useReaderScrollTo } from "@/features/manga-reader/hooks/use-reader-scroll-to"
 import { ActivityIndicator } from "@/components/ui/activity-indicator"
 import { cssInterop } from "nativewind"
+import { FullscreenError } from "@/components/ui/fullscreen-error"
 
 export const MangaReaderUI = () => {
   const MenuView = useMemo(
@@ -145,19 +144,7 @@ export const MangaReaderUI = () => {
   }, [shouldDownloadNextChapter])
 
   if (isError) {
-    const ErrorIcon = withBubble(SearchX)
-    return (
-      <View className="flex-1 items-center justify-center">
-        <BackButton />
-        <ErrorIcon />
-        <Text className="text-primary mt-2 font-medium">
-          Something went wrong
-        </Text>
-        <Text className="text-muted mt-2 text-sm font-semibold">
-          Chapter is licensed or not found
-        </Text>
-      </View>
-    )
+    return <FullscreenError>Chapter is licensed or not found</FullscreenError>
   }
 
   if (!chapters || !title) {

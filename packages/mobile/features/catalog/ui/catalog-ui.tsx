@@ -67,7 +67,7 @@ const Comp = () => {
   if (isPending) {
     return (
       <View className="flex-1 items-center justify-center">
-        <ActivityIndicator />
+        <ActivityIndicator lottie />
       </View>
     )
   }

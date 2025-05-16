@@ -8,11 +8,7 @@ import { ActivityIndicator } from "@/components/ui/activity-indicator"
 
 import { View } from "react-native"
 
-import withBubble from "@/components/ui/withBubble"
-import { Icon as _Icon } from "@/components/icon"
-
-import { FadeView } from "@/components/ui/fade-view"
-import { Text } from "@/components/ui/text"
+import { FullscreenError } from "@/components/ui/fullscreen-error"
 
 import type { Chapter as ChapterType } from "api/router/chaptersRouter"
 
@@ -31,24 +27,19 @@ export const TitleChapters = ({ slug_url }: { slug_url: string }) => {
 
   const keyExtractor = (item: ChapterType) => item.id.toString()
 
-  const Icon = withBubble(_Icon)
-
   if (!data && isPending) {
     return (
       <View className="items-center justify-center flex-1">
-        <ActivityIndicator />
+        <ActivityIndicator lottie />
       </View>
     )
   }
 
   if (isError) {
     return (
-      <FadeView withEnter className="items-center justify-center flex-1">
-        <Icon name="Unplug" />
-        <Text className="text-secondary font-medium mt-2">
-          Something went wrong
-        </Text>
-      </FadeView>
+      <FullscreenError shouldDisplayBack={false} fadeIn>
+        Something went wrong
+      </FullscreenError>
     )
   }
 

@@ -1,6 +1,5 @@
 import { ActivityIndicator } from "@/components/ui/activity-indicator"
-import { Text } from "@/components/ui/text"
-import withBubble from "@/components/ui/withBubble"
+import { FullscreenError } from "@/components/ui/fullscreen-error"
 import { AnimeEpisodeSwitcher } from "@/features/anime-player/components/anime-episode-switcher"
 import { AnimeHeaderInfo } from "@/features/anime-player/components/anime-header-info"
 import { AnimePlayer } from "@/features/anime-player/components/anime-player"
@@ -13,7 +12,6 @@ import { useTitleInfo } from "@/features/title/api/use-title-info"
 import { useWatchTracker } from "@/store/use-watch-tracker"
 import { useRoute } from "@react-navigation/native"
 import { useQueryClient } from "@tanstack/react-query"
-import { Unplug } from "lucide-react-native"
 import { useEffect, useMemo } from "react"
 
 import { DeviceEventEmitter, SafeAreaView, View } from "react-native"
@@ -58,16 +56,7 @@ export const AnimeWatchView = () => {
   const { data: titleInfo } = useTitleInfo(data!.slug_url, "5")
 
   if (error) {
-    const Icon = withBubble(Unplug)
-
-    return (
-      <View className="items-center justify-center flex-1">
-        <Icon />
-        <Text className="text-white/80 text-base font-medium mt-2">
-          Something went wrong
-        </Text>
-      </View>
-    )
+    return <FullscreenError>Something went wrong</FullscreenError>
   }
 
   if (!titleInfo) {

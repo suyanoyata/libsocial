@@ -8,13 +8,8 @@ import { ActivityIndicator } from "@/components/ui/activity-indicator"
 
 import { View } from "react-native"
 
-import { Icon as _Icon } from "@/components/icon"
-
-import withBubble from "@/components/ui/withBubble"
-import { FadeView } from "@/components/ui/fade-view"
-import { Text } from "@/components/ui/text"
-
 import type { Episode as EpisodeType } from "api/router/episodesRouter"
+import { FullscreenError } from "@/components/ui/fullscreen-error"
 
 export const TitleEpisodes = ({ slug_url }: { slug_url: string }) => {
   const { data, isPending, isError } = useEpisodesAPI(slug_url)
@@ -31,24 +26,19 @@ export const TitleEpisodes = ({ slug_url }: { slug_url: string }) => {
     <Episode slug_url={slug_url} episode={item} index={item.item_number} />
   )
 
-  const Icon = withBubble(_Icon)
-
   if (!data && isPending) {
     return (
       <View className="items-center justify-center flex-1">
-        <ActivityIndicator />
+        <ActivityIndicator lottie />
       </View>
     )
   }
 
   if (isError) {
     return (
-      <FadeView withEnter className="items-center justify-center flex-1">
-        <Icon name="Unplug" />
-        <Text className="text-secondary font-medium mt-2">
-          Something went wrong
-        </Text>
-      </FadeView>
+      <FullscreenError fadeIn shouldDisplayBack={false}>
+        Something went wrong
+      </FullscreenError>
     )
   }
 
