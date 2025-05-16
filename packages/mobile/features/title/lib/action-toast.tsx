@@ -46,7 +46,7 @@ export const actionToast = (
       },
       description,
       icon: indexBiggerThanSaved ? (
-        <Icon name="Bookmark" fill="text-red-400" />
+        <Icon name="Bookmark" fill="text-red-400" className="text-red-400" />
       ) : (
         <Icon name={ReadIcon} className="text-zinc-400" strokeWidth={3} />
       ),

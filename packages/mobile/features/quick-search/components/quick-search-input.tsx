@@ -2,7 +2,8 @@ import { ScrollView, TextInput, View } from "react-native"
 
 import { useQuickSearchHistory } from "@/features/quick-search/hooks/use-quick-search-history"
 import { Icon } from "@/components/icon"
-import { Chip } from "@/components/ui/chip"
+import { Chip as _Chip } from "@/components/ui/chip"
+import Animated, { LinearTransition } from "react-native-reanimated"
 
 export const QuickSearchInput = ({
   search,
@@ -12,6 +13,8 @@ export const QuickSearchInput = ({
   setSearch: (value: string) => void
 }) => {
   const { history, addToHistory, deleteFromHistory } = useQuickSearchHistory()
+
+  const Chip = Animated.createAnimatedComponent(_Chip)
 
   return (
     <View className="px-2">
@@ -23,12 +26,13 @@ export const QuickSearchInput = ({
         onEndEditing={() => addToHistory(search.trim())}
         onChangeText={setSearch}
       />
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerClassName="flex-row gap-2 dark:bg-black bg-zinc-100 py-2"
-      >
-        {history.map((item, index) => (
+      <Animated.FlatList
+        data={history}
+        keyExtractor={(item) => item}
+        itemLayoutAnimation={LinearTransition.springify()
+          .stiffness(100)
+          .damping(15)}
+        renderItem={({ item }) => (
           <Chip
             size="sm"
             variant="tonal"
@@ -36,11 +40,11 @@ export const QuickSearchInput = ({
               setSearch(item)
               addToHistory(item)
             }}
-            key={index}
             iconRight={
               <Icon
                 variant="tonal"
                 name="X"
+                hitSlop={20}
                 onPress={() => deleteFromHistory(item)}
                 size={18}
               />
@@ -49,8 +53,11 @@ export const QuickSearchInput = ({
           >
             {item}
           </Chip>
-        ))}
-      </ScrollView>
+        )}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerClassName="flex-row gap-2 dark:bg-black bg-zinc-100 py-2"
+      />
     </View>
   )
 }

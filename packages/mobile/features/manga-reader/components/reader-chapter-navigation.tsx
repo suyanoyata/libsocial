@@ -35,7 +35,7 @@ export const ReaderChapterNavigation = ({
       {previousChapter && (
         <Button
           iconLeft={
-            <Icon name="ChevronLeft" strokeWidth={3} className="text-white" />
+            <Icon name="ChevronLeft" strokeWidth={3} variant="accent" />
           }
           variant="accent"
           onPress={() =>
@@ -55,7 +55,7 @@ export const ReaderChapterNavigation = ({
       {nextChapter && (
         <Button
           iconRight={
-            <Icon name="ChevronRight" strokeWidth={3} className="text-white" />
+            <Icon name="ChevronRight" strokeWidth={3} variant="accent" />
           }
           variant="accent"
           onPress={() => {

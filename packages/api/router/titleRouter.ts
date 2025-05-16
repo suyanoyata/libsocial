@@ -3,9 +3,12 @@ import { AppRouter, t } from "~/lib/trpc";
 
 import { z } from "zod";
 
-import { animeService, mangaService } from "~/services";
+import { animeService, ChapterService, mangaService } from "~/services";
 import { relationService } from "~/services/relation-service";
-import { createRelationSchema } from "~/types/zod";
+import { AnimeSchema, createRelationSchema, MangaSchema } from "~/types/zod";
+import { throwable } from "~/lib/utils";
+import { api } from "~/lib/axios";
+import { queryFields } from "~/const/query-fields";
 
 type RouterOutput = inferRouterOutputs<AppRouter>["titles"];
 
@@ -41,10 +44,69 @@ export const titleRouter = t.router({
       .input(z.object({ slug_url: z.string(), siteId: z.string() }))
       .query(async ({ input }) => {
         if (input.siteId == "5") {
-          return await animeService.getAnime(input.slug_url);
+          const { data, error } = await throwable(
+            animeService.getAnime(input.slug_url)
+          );
+
+          if (error?.code == "NOT_FOUND") {
+            const anime = await api.get(
+              `/anime/${input.slug_url}?${queryFields.anime}`
+            );
+
+            const { data, error } = await throwable(() =>
+              AnimeSchema.parse(anime.data.data)
+            );
+
+            if (error) {
+              throw new TRPCError(error);
+            }
+
+            const newAnime = await animeService.createAnime(data!);
+
+            await animeService.createEpisodesFromRemote(input.slug_url);
+
+            return newAnime;
+          }
+
+          if (error) {
+            throw new TRPCError(error);
+          }
+
+          return data;
         }
 
-        return await mangaService.getManga(input.slug_url);
+        const { data, error } = await throwable(
+          mangaService.getManga(input.slug_url)
+        );
+
+        if (error?.code == "NOT_FOUND") {
+          const manga = await api.get(
+            `/manga/${input.slug_url}?${queryFields.manga}`
+          );
+
+          const { data, error } = await throwable(() =>
+            MangaSchema.parse(manga.data.data)
+          );
+
+          if (error) {
+            throw new TRPCError(error);
+          }
+
+          const newManga = await mangaService.createManga(data!);
+
+          await ChapterService.createChaptersFromRemote(input.slug_url);
+
+          return newManga;
+        }
+
+        if (!data) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "This content was not found",
+          });
+        }
+
+        return data;
       }),
   },
 });

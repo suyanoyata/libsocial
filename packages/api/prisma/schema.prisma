@@ -59,6 +59,7 @@ model Related {
 
   @@unique([manga_slug, relatedMangaSlug])
   @@unique([anime_slug, relatedAnimeSlug])
+  @@map("related")
 }
 
 model Background {

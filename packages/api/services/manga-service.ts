@@ -9,24 +9,32 @@ import { Logger } from "~/lib/logger";
 import { pageLimit } from "~/const/db";
 import { translate } from "~/services/translate.service";
 import { CatalogSearchFormData } from "~/types/zod";
+import { TRPCError } from "@trpc/server";
 
 const MangaLogger = new Logger("MangaService");
 
 class Service {
   public async getManga(slug_url: string) {
-    const data = await db.manga.findFirstOrThrow({
-      where: {
-        slug_url,
-        model: "manga",
-      },
-      include: {
-        cover: true,
-        genres: true,
-        items_count: true,
-        ageRestriction: true,
-        background: true,
-      },
-    });
+    const data = await db.manga
+      .findFirstOrThrow({
+        where: {
+          slug_url,
+          model: "manga",
+        },
+        include: {
+          cover: true,
+          genres: true,
+          items_count: true,
+          ageRestriction: true,
+          background: true,
+        },
+      })
+      .catch(() => {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "This content was not found",
+        });
+      });
 
     return data;
   }
@@ -210,7 +218,7 @@ class Service {
       meta: {
         current_page: params.cursor,
         per_page: pageLimit,
-        has_next_page: nextPageData > 1,
+        has_next_page: nextPageData > 0,
       },
     };
   }

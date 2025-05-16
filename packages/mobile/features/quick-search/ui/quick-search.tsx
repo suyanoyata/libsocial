@@ -17,6 +17,8 @@ import { QuickSearchContent } from "@/features/quick-search/components/quick-sea
 
 import withBubble from "@/components/ui/withBubble"
 
+import { useAnimatedKeyboard, useAnimatedStyle } from "react-native-reanimated"
+
 export const QuickSearchUI = () => {
   const [_search, setSearch] = useState("")
   const [search] = useDebounce(_search, 650)
@@ -25,13 +27,20 @@ export const QuickSearchUI = () => {
 
   const SearchIcon = withBubble(Search)
 
+  const keyboard = useAnimatedKeyboard()
+
+  const kbStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: -keyboard.height.value / 3 }],
+  }))
+
   return (
     <View className="px-2 flex-1">
       <QuickSearchInput search={_search} setSearch={setSearch} />
       {!_search && (
         <FadeView
           withExit
-          className="absolute items-center justify-center flex-1 top-1/2 w-full"
+          className="absolute items-center justify-center flex-1 top-[45%] w-full"
+          style={[kbStyle]}
         >
           <SearchIcon />
           <Text className="text-secondary text-sm mt-2">
@@ -49,6 +58,7 @@ export const QuickSearchUI = () => {
           <FadeView
             withEnter
             className="absolute items-center justify-center flex-1 top-[45%] w-full"
+            style={[kbStyle]}
           >
             <SearchIcon />
             <Text className="text-muted mt-2">

@@ -4,34 +4,40 @@ import { db } from "~/lib/db";
 import { api } from "~/lib/axios";
 import { Logger } from "~/lib/logger";
 
-import { Anime as AnimeModel } from "~/lib/prisma";
-
 import {
   Anime,
   AnimeEpisode,
   AnimeEpisodeSchema,
   CatalogSearchFormData,
 } from "~/types/zod";
-import { PaginatedResponse } from "~/types/zod/paginated-response";
 
 import { z } from "zod";
 import { translate } from "~/services/translate.service";
+
+import { TRPCError } from "@trpc/server";
 
 const AnimeLogger = new Logger("AnimeService");
 
 class Service {
   public async getAnime(slug_url: string) {
-    const data = await db.anime.findFirstOrThrow({
-      where: {
-        slug_url,
-      },
-      include: {
-        cover: true,
-        genres: true,
-        ageRestriction: true,
-        background: true,
-      },
-    });
+    const data = await db.anime
+      .findFirstOrThrow({
+        where: {
+          slug_url,
+        },
+        include: {
+          cover: true,
+          genres: true,
+          ageRestriction: true,
+          background: true,
+        },
+      })
+      .catch(() => {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "This content was not found",
+        });
+      });
 
     return {
       ...data,

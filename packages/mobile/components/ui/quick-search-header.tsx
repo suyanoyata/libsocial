@@ -2,6 +2,7 @@ import { DeviceEventEmitter, View } from "react-native"
 
 import { Button } from "@/components/ui/button"
 import { BackButton } from "@/components/ui/back-button"
+import { Icon } from "@/components/icon"
 
 export const QuickSearchHeader = () => {
   return (
@@ -17,8 +18,10 @@ export const QuickSearchHeader = () => {
           DeviceEventEmitter.emit("title-info-navigate")
         }}
         textClassName="text-white"
-        iconRight="ChevronRight"
-        variant="ghost"
+        iconRight={
+          <Icon name="ChevronRight" variant="link" className="text-white" />
+        }
+        variant="link"
       >
         Learn More
       </Button>
