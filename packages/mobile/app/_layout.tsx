@@ -13,12 +13,10 @@ import { defaultConfig } from "@tamagui/config/v4"
 
 import { useFonts } from "expo-font"
 import {
-  setUpdateURLAndRequestHeadersOverride,
   addUpdatesStateChangeListener,
   checkForUpdateAsync,
   fetchUpdateAsync,
   reloadAsync,
-  isEnabled,
 } from "expo-updates"
 
 import { useCallback, useEffect, useState } from "react"
@@ -55,23 +53,13 @@ import { TRPCQueryProvider } from "@/providers/trpc-provider"
 
 import { useSession } from "@/lib/auth"
 
-import Svg, { Circle, Rect } from "react-native-svg"
 import { cssInterop } from "react-native-css-interop"
+import { queryClient } from "@/lib/trpc"
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.error,
   strict: false,
 })
-
-if (isEnabled) {
-  setUpdateURLAndRequestHeadersOverride({
-    updateUrl: "https://u.expo.dev/531f523a-eb44-4472-9cf4-fa2e3db53424",
-    requestHeaders: {
-      "expo-channel-name": "production",
-      "expo-platform": Platform.select({ ios: "ios", default: "android" }),
-    },
-  })
-}
 
 // globalThis.__DEV__ = false
 
@@ -124,7 +112,7 @@ export default function RootLayout() {
     addUpdatesStateChangeListener(async (listener) => {
       if (listener.context.isUpdatePending && !updating) {
         setUpdating(true)
-        // queryClient.clear()
+        queryClient.clear()
         await reloadAsync()
       }
     })

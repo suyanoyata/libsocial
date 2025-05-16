@@ -26,7 +26,7 @@ export const ReaderImage = memo(
         onInteractionStart={() => setFocused(true)}
         onResetAnimationEnd={() => setFocused(false)}
         style={{ zIndex: focused ? 10 : 5, paddingBottom }}
-        isPanEnabled={focused}
+        isPanEnabled={true}
       >
         <FastImage
           resizeMode="contain"
@@ -42,5 +42,5 @@ export const ReaderImage = memo(
       </Zoomable>
     )
   },
-  (prevProps, nextProps) => prevProps.url === nextProps.url,
+  (prevProps, nextProps) => prevProps.url === nextProps.url
 )

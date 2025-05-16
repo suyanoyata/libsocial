@@ -2,15 +2,17 @@
   "expo": {
     "name": "libsocial",
     "slug": "libsocial",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "libsocial",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "runtimeVersion": "1.0.7",
+    "runtimeVersion": {
+      "policy": "fingerprint"
+    },
     "ios": {
-      "buildNumber": "7",
+      "buildNumber": "1",
       "supportsTablet": true,
       "bundleIdentifier": "rory.libsocial"
     },
@@ -58,7 +60,10 @@
     },
     "updates": {
       "url": "https://u.expo.dev/531f523a-eb44-4472-9cf4-fa2e3db53424",
-      "channel": "production"
+      "channel": "production",
+      "requestHeaders": {
+        "expo-channel-name": "production"
+      }
     }
   }
 }
