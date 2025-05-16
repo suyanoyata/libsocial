@@ -116,18 +116,14 @@ class Service {
   private async createMangaBookmarkWithChapter(
     data: CreateBookmarkData & { userId: User["id"] }
   ) {
-    const chapter = await db.chapter
-      .findFirstOrThrow({
-        where: {
-          manga: {
-            slug_url: data.slug_url,
-          },
-          item_number: data.chapterIndex,
+    const chapter = await db.chapter.findFirst({
+      where: {
+        manga: {
+          slug_url: data.slug_url,
         },
-      })
-      .catch(() => {
-        throw "Chapter not found";
-      });
+        item_number: data.chapterIndex,
+      },
+    });
 
     return await db.bookmark.create({
       data: {
@@ -135,7 +131,7 @@ class Service {
         userId: data.userId,
         mark: data.name,
         mangaSlug_url: data.slug_url,
-        chapterId: chapter.id,
+        chapterId: chapter ? chapter.id : undefined,
       },
     });
   }

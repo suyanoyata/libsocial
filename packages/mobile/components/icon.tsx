@@ -5,8 +5,6 @@ import _FontAwesomeIcon from "react-native-vector-icons/FontAwesome6"
 import _FeatherIcon from "react-native-vector-icons/Feather"
 import { icons, LucideProps } from "lucide-react-native"
 
-import { cssInterop } from "nativewind"
-
 import { useMemo } from "react"
 import { withIconCss } from "@/lib/icons-fix"
 

@@ -1,5 +1,6 @@
+import { Icon as _Icon } from "@/components/icon"
 import { cn } from "@/lib/utils"
-import { Loader, LucideProps } from "lucide-react-native"
+import { LucideProps } from "lucide-react-native"
 import { useEffect } from "react"
 import Animated, {
   cancelAnimation,
@@ -33,14 +34,16 @@ export const ActivityIndicator = ({ className, ...props }: LucideProps) => {
     return () => cancelAnimation(rotation)
   }, [])
 
-  const Icon = Animated.createAnimatedComponent(Loader)
+  const Icon = Animated.createAnimatedComponent(_Icon)
 
   return (
+    // @ts-ignore
     <Icon
+      {...props}
+      name="Loader"
       style={[animatedStyles]}
       className={cn("text-muted", className)}
       strokeWidth={2.6}
-      {...props}
     />
   )
 }

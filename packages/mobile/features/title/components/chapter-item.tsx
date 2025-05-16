@@ -28,6 +28,7 @@ import { BookmarkEvents } from "@/features/bookmark/const/bookmark-events"
 
 import type { Chapter as ChapterType } from "api/router/chaptersRouter"
 import { trpc } from "@/lib/trpc"
+import { useBookmarkAPI } from "@/features/bookmark/api/use-bookmark-api"
 
 export const Chapter = memo(
   ({
@@ -47,6 +48,8 @@ export const Chapter = memo(
     )
 
     const client = useQueryClient()
+
+    const { data } = useBookmarkAPI({ slug_url, type: "manga" })
 
     const {
       get: getLastReadChapter,
@@ -68,14 +71,14 @@ export const Chapter = memo(
       lastRead && lastRead.lastReadChapter - 1 == index
 
     useEffect(() => {
-      if (isCurrentLastReadChapter) {
+      if (isCurrentLastReadChapter && data?.chapterId != chapter.id) {
         DeviceEventEmitter.emit(BookmarkEvents.UPDATE_READ_BOOKMARK, {
           slug_url,
           type: "manga",
           lastReadChapter: chapter.item_number,
         })
       }
-    }, [isCurrentLastReadChapter])
+    }, [isCurrentLastReadChapter, chapter])
 
     useFocusEffect(readCallback)
     useLayoutEffect(readCallback, [index])

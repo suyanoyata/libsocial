@@ -8,11 +8,11 @@ import { t } from "@/lib/trpc/trpc-client"
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 10,
+      staleTime: 1000 * 60 * 5,
       refetchOnMount: true,
       refetchInterval: 1000 * 60 * 5,
       retry: 1,
-      gcTime: 1000 * 60 * 5,
+      gcTime: Infinity,
     },
   },
 })

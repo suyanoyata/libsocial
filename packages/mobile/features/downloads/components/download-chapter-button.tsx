@@ -57,7 +57,7 @@ export const DownloadChapterButton = ({
       const total = chapterData.pages.length
 
       if (total == 0) {
-        throw new Error("No pages in this chapter")
+        throw new Error("No images found for this chapter.")
       }
 
       const folderName = `v${chapter.volume}-c${chapter.number}`
@@ -140,6 +140,7 @@ export const DownloadChapterButton = ({
         return `Volume ${data.chapter.volume} Chapter ${data.chapter.number} has been downloaded`
       },
       error: (e) => {
+        const error = e as { message: string }
         bottom.value = withTiming(-3, { duration: 500 })
 
         if (__DEV__) {
@@ -148,7 +149,7 @@ export const DownloadChapterButton = ({
 
         notificationAsync(NotificationFeedbackType.Error)
 
-        return `Something went wrong, try again later`
+        return error.message ?? "Something went wrong, try again"
       },
     })
 

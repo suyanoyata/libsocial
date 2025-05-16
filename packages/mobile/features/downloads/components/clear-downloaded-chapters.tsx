@@ -1,5 +1,6 @@
 import { Icon } from "@/components/icon"
 import { useDownloads } from "@/features/downloads/store/use-downloads"
+import { router } from "expo-router"
 import { Alert, Pressable } from "react-native"
 
 export const ClearDownloadedChapters = () => {
@@ -18,11 +19,12 @@ export const ClearDownloadedChapters = () => {
         {
           text: "Delete",
           onPress: () => {
+            router.back()
             clear()
           },
           style: "destructive",
         },
-      ],
+      ]
     )
   }
 
@@ -30,7 +32,7 @@ export const ClearDownloadedChapters = () => {
 
   return (
     <Pressable onPress={deleteEverything}>
-      <Icon name="Trash2" className="text-secondary" />
+      <Icon name="Trash2" className="text-red-500" />
     </Pressable>
   )
 }

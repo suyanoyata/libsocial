@@ -128,7 +128,7 @@ export const AnimePlayer = () => {
           player={player}
           style={{
             width: width - 12,
-            height: (width - 16) / 1.77777,
+            height: (width - 12) / 1.77777,
           }}
         />
       </Animated.View>

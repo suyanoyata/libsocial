@@ -36,12 +36,13 @@ export const BookmarkEventsProvider = ({ children }: BookmarkEventsProps) => {
         const bookmark = client.getQueryData(
           trpc.bookmarks.get.queryKey({
             slug_url: data.slug_url,
+            type: "manga",
           })
         )
 
         if (!bookmark) return
 
-        t.bookmarks.update.mutate({
+        await t.bookmarks.update.mutate({
           id: bookmark.id,
           chapterIndex: data.lastReadChapter,
         })
@@ -49,6 +50,7 @@ export const BookmarkEventsProvider = ({ children }: BookmarkEventsProps) => {
         client.invalidateQueries({
           queryKey: trpc.bookmarks.list.queryKey(),
         })
+
         client.invalidateQueries({
           queryKey: trpc.bookmarks.get.queryKey({ slug_url: data.slug_url }),
         })
@@ -61,18 +63,25 @@ export const BookmarkEventsProvider = ({ children }: BookmarkEventsProps) => {
         const bookmark = client.getQueryData(
           trpc.bookmarks.get.queryKey({
             slug_url: data.slug_url,
+            type: "anime",
           })
         )
 
         if (!bookmark) return
 
-        t.bookmarks.update.mutate({ id: bookmark.id, episodeIndex: data.index })
+        await t.bookmarks.update.mutate({
+          id: bookmark.id,
+          episodeIndex: data.index,
+        })
 
         client.invalidateQueries({
           queryKey: trpc.bookmarks.list.queryKey(),
         })
+
         client.invalidateQueries({
-          queryKey: trpc.bookmarks.get.queryKey({ slug_url: data.slug_url }),
+          queryKey: trpc.bookmarks.get.queryKey({
+            slug_url: data.slug_url,
+          }),
         })
       }
     )

@@ -3,7 +3,6 @@ import { Icon } from "@/components/icon"
 
 import { useBookmarkAPI } from "@/features/bookmark/api/use-bookmark-api"
 
-import { cn } from "@/lib/utils"
 import { useState } from "react"
 import { BookmarkCreateSelectUI } from "@/features/bookmark/ui/bookmark-create-select"
 import { ActivityIndicator } from "@/components/ui/activity-indicator"

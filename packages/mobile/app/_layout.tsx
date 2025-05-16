@@ -36,7 +36,7 @@ import { enableFreeze, enableScreens } from "react-native-screens"
 
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 
-import { Toaster } from "sonner-native"
+import { Toaster as _Toaster } from "sonner-native"
 import { BackButton } from "@/components/ui/back-button"
 
 import { StatusBar } from "expo-status-bar"
@@ -103,6 +103,8 @@ const config = createTamagui({
     body: systemFont,
   },
 })
+
+const Toaster = cssInterop(_Toaster, { className: { target: "style" } })
 
 SplashScreen.preventAutoHideAsync()
 
@@ -214,6 +216,7 @@ export default function RootLayout() {
         </View>
       </TRPCQueryProvider>
       <Toaster
+        className="dark:bg-zinc-950 bg-zinc-100"
         offset={Platform.select({ ios: 30, android: 20 })}
         theme="system"
         position="bottom-center"

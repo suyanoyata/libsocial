@@ -5,6 +5,7 @@ import { Text } from "@/components/ui/text"
 import {
   memo,
   useCallback,
+  useEffect,
   useLayoutEffect,
   useMemo,
   useState,
@@ -22,6 +23,7 @@ import { Icon } from "@/components/icon"
 import { BookmarkEvents } from "@/features/bookmark/const/bookmark-events"
 
 import type { Episode as EpisodeType } from "api/router/episodesRouter"
+import { useBookmarkAPI } from "@/features/bookmark/api/use-bookmark-api"
 
 export const Episode = memo(
   ({
@@ -44,6 +46,8 @@ export const Episode = memo(
 
     const title = get(slug_url)
 
+    const { data: bookmark } = useBookmarkAPI({ slug_url, type: "anime" })
+
     const isLastWatchedEpisode = useMemo(() => {
       return get(slug_url)?.lastWatchedEpisode == index
     }, [title])
@@ -55,6 +59,15 @@ export const Episode = memo(
 
     useFocusEffect(watchCallback)
     useLayoutEffect(watchCallback, [index])
+
+    useEffect(() => {
+      if (isLastWatchedEpisode && bookmark?.episodeId !== episode.id) {
+        DeviceEventEmitter.emit(BookmarkEvents.UPDATE_WATCH_BOOKMARK, {
+          slug_url,
+          index,
+        })
+      }
+    }, [isLastWatchedEpisode])
 
     const addCallback = useCallback(() => {
       add(queryClient, slug_url, index)
@@ -70,7 +83,6 @@ export const Episode = memo(
           if (episode && episode.lastWatchedEpisode < index) {
             DeviceEventEmitter.emit(BookmarkEvents.UPDATE_WATCH_BOOKMARK, {
               slug_url,
-              type: "anime",
               index,
             })
           }
@@ -117,7 +129,12 @@ export const Episode = memo(
         >
           {isLastWatchedEpisode ? (
             <Animated.View entering={BounceIn.duration(500)}>
-              <Icon name="Bookmark" size={20} fill="text-red-500" />
+              <Icon
+                name="Bookmark"
+                size={20}
+                className="text-red-500"
+                fill="text-red-500"
+              />
             </Animated.View>
           ) : (
             <Icon
