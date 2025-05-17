@@ -27,6 +27,7 @@ import { BaseTitle } from "@/features/shared/types/title"
 
 import { trpc } from "@/lib/trpc"
 import { QuickSearchItem } from "api/router/searchRouter"
+import { DismissKeyboardView } from "@/components/ui/dismiss-keyboard-view"
 
 const Comp = ({
   slug_url,
@@ -145,26 +146,24 @@ export default function TitleRelationsAdd() {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View
-        className="mx-2 mt-2 flex-1 gap-3"
-        style={{ paddingBottom: bottom }}
-      >
-        <TextInput
-          clearButtonMode="always"
-          value={_search}
-          onChangeText={setSearch}
-          placeholder="Search for title"
-          className="w-full mt-2"
-        />
-        <Comp
-          _search={_search}
-          search={search}
-          slug_url={slug_url}
-          response={response}
-          isPending={isFetching}
-        />
-      </View>
-    </TouchableWithoutFeedback>
+    <DismissKeyboardView
+      className="mx-2 mt-2 flex-1 gap-3"
+      style={{ paddingBottom: bottom }}
+    >
+      <TextInput
+        clearButtonMode="always"
+        value={_search}
+        onChangeText={setSearch}
+        placeholder="Search for title"
+        className="w-full mt-2"
+      />
+      <Comp
+        _search={_search}
+        search={search}
+        slug_url={slug_url}
+        response={response}
+        isPending={isFetching}
+      />
+    </DismissKeyboardView>
   )
 }
