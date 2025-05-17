@@ -9,9 +9,15 @@ import Animated, { FadeIn } from "react-native-reanimated"
 
 import { router } from "expo-router"
 
-import type { TitleRelatedItem } from "api/router/titleRouter"
+import type { TitleRelatedItem, TitleSimilarItem } from "api/router/titleRouter"
 
-export const TitleRelationsCard = ({ item }: { item: TitleRelatedItem }) => {
+export const TitleAssociationCard = ({
+  type = "related",
+  item,
+}: {
+  type?: "related" | "similar"
+  item: TitleRelatedItem | TitleSimilarItem
+}) => {
   if (!item.media) return null
 
   return (
@@ -39,7 +45,8 @@ export const TitleRelationsCard = ({ item }: { item: TitleRelatedItem }) => {
         />
         <View className="flex-1 ml-2 my-2">
           <Text className="text-sm dark:text-violet-300 text-violet-400 font-medium">
-            {i18n.t(`related.${item.reason}`)}
+            {/* @ts-ignore */}
+            {i18n.t(`${type}.${item.reason}`)}
           </Text>
           <Text
             className="text-secondary text-base font-semibold"

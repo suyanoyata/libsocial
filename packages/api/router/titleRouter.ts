@@ -4,8 +4,13 @@ import { AppRouter, t } from "~/lib/trpc";
 import { z } from "zod";
 
 import { animeService, ChapterService, mangaService } from "~/services";
-import { relationService } from "~/services/relation-service";
-import { AnimeSchema, createRelationSchema, MangaSchema } from "~/types/zod";
+import { associationService } from "~/services/association-service";
+import {
+  AnimeSchema,
+  createRelationSchema,
+  createSimilarSchema,
+  MangaSchema,
+} from "~/types/zod";
 import { throwable } from "~/lib/utils";
 import { api } from "~/lib/axios";
 import { queryFields } from "~/const/query-fields";
@@ -24,7 +29,7 @@ export const titleRouter = t.router({
     list: t.procedure
       .input(z.object({ slug_url: z.string() }))
       .query(async ({ input, ctx }) => {
-        return await relationService.getRelations(ctx.type, input.slug_url);
+        return await associationService.getRelations(ctx.type, input.slug_url);
       }),
     add: t.protected
       .input(createRelationSchema)
@@ -36,7 +41,26 @@ export const titleRouter = t.router({
           });
         }
 
-        return await relationService.addRelatedTitle(input);
+        return await associationService.addRelatedTitle(input);
+      }),
+  },
+  similar: {
+    list: t.procedure
+      .input(z.object({ slug_url: z.string() }))
+      .query(async ({ input, ctx }) => {
+        return await associationService.getSimilar(ctx.type, input.slug_url);
+      }),
+    add: t.protected
+      .input(createSimilarSchema)
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user.isAnonymous) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Anonymous users cannot add similar titles",
+          });
+        }
+
+        return await associationService.addSimilarTitle(input);
       }),
   },
   get: {
@@ -111,5 +135,6 @@ export const titleRouter = t.router({
   },
 });
 
-export type TitleRelatedItem = RouterOutput["relations"]["list"][0];
+export type TitleRelatedItem = RouterOutput["relations"]["list"][number];
+export type TitleSimilarItem = RouterOutput["similar"]["list"][number];
 export type Title = RouterOutput["get"]["title"];

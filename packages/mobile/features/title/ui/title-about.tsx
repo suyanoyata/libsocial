@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Genres } from "@/features/title/components/genres"
 import { TitleSummary } from "@/features/title/components/title-summary"
 
-import { TitleRelations } from "@/features/similar/ui/title-relations"
+import { TitleSimilar } from "@/features/association/ui/title-similar"
+import { TitleRelations } from "@/features/association/ui/title-relations"
 import { CreateBookmarkTrigger } from "@/features/bookmark/components/create-bookmark-trigger"
 
 import type { Title } from "api/router/titleRouter"
@@ -57,11 +58,8 @@ export const TitleAbout = ({ data }: { data: Title }) => {
       </View>
       <TitleSummary>{data.summary}</TitleSummary>
       <Genres genres={data.genres} />
-      <TitleRelations
-        label="Related"
-        slug_url={data.slug_url}
-        site={data.site}
-      />
+      <TitleRelations slug_url={data.slug_url} site={data.site} />
+      <TitleSimilar slug_url={data.slug_url} site={data.site} />
     </View>
   )
 }

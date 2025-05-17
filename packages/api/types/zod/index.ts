@@ -3,7 +3,7 @@ import { z } from "zod";
 export * from "~/types/zod/chapter-controller-validation";
 export * from "~/types/zod/manga";
 export * from "~/types/zod/anime";
-export * from "~/types/zod/relations";
+export * from "~/types/zod/associations";
 
 export const catalogSearchSchema = z
   .object({

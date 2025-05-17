@@ -3,5 +3,9 @@
     "prequel": "Prequel",
     "sequel": "Sequel",
     "spinoff": "Spin-Off"
+  },
+  "similar": {
+    "genres": "Genres",
+    "script": "Script"
   }
 }

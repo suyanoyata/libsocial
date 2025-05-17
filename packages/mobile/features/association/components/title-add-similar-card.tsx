@@ -13,19 +13,19 @@ import { useMemo } from "react"
 
 import { Icon } from "@/components/icon"
 
-import { BaseTitle } from "@/features/shared/types/title"
+import { useCreateSimilar } from "@/features/association/lib/create-similar"
 
-import { useCreateRelation } from "@/features/similar/lib/create-relation"
+import type { QuickSearchItem } from "api/router/searchRouter"
 
-const relationReasons = ["sequel", "prequel", "spinoff"]
+const relationReasons = ["genres", "script"]
 
-export const RelationAddTitle = ({
-  slug_url,
+export const AssociationCard = ({
   data,
+  slug_url,
   disabled,
 }: {
+  data: QuickSearchItem
   slug_url: string
-  data: BaseTitle
   disabled?: boolean
 }) => {
   const { width } = useWindowDimensions()
@@ -35,7 +35,7 @@ export const RelationAddTitle = ({
     [data.genres, width]
   )
 
-  const { mutate, isPending } = useCreateRelation({ slug_url, data })
+  const { mutate, isPending } = useCreateSimilar({ slug_url, data })
 
   if (disabled) return null
 
@@ -70,9 +70,9 @@ export const RelationAddTitle = ({
               slug_url,
               // @ts-ignore
               type: data.model,
-              related: {
+              similar: {
                 slug_url: data.slug_url,
-                reason: relationReasons[value.nativeEvent.index] as "prequel",
+                reason: relationReasons[value.nativeEvent.index] as "genres",
               },
             })
           }}
@@ -80,7 +80,7 @@ export const RelationAddTitle = ({
           disableShadow
           actions={relationReasons.map((relation) => ({
             // @ts-ignore
-            title: i18n.t(`related.${relation}`),
+            title: i18n.t(`similar.${relation}`),
           }))}
         >
           <Button variant="tonal" size="sm" hitSlop={15}>

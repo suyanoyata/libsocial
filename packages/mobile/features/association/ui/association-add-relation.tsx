@@ -1,4 +1,4 @@
-import { Keyboard, TouchableWithoutFeedback, View } from "react-native"
+import { View } from "react-native"
 import Animated, {
   FadeIn,
   FadeOut,
@@ -21,13 +21,13 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { useTitleInfo } from "@/features/title/api/use-title-info"
 import { useQuickSearch } from "@/features/quick-search/api/use-quick-search"
 
-import { RelationAddTitle } from "@/features/similar/components/relations-relation-add-title"
-
-import { BaseTitle } from "@/features/shared/types/title"
+import { AssociationCard } from "@/features/association/components/title-add-relation-card"
 
 import { trpc } from "@/lib/trpc"
-import { QuickSearchItem } from "api/router/searchRouter"
+
 import { DismissKeyboardView } from "@/components/ui/dismiss-keyboard-view"
+
+import type { QuickSearchItem } from "api/router/searchRouter"
 
 const Comp = ({
   slug_url,
@@ -48,8 +48,8 @@ const Comp = ({
     transform: [{ translateY: -keyboard.height.value / 2.5 }],
   }))
 
-  const renderItem = ({ item }: { item: BaseTitle }) => (
-    <RelationAddTitle
+  const renderItem = ({ item }: { item: QuickSearchItem }) => (
+    <AssociationCard
       slug_url={slug_url}
       disabled={item.slug_url == slug_url}
       data={item}
@@ -101,10 +101,13 @@ const Comp = ({
   )
 }
 
-export default function TitleRelationsAdd() {
+export default function AssociationAddRelation() {
   const route = useRoute()
 
-  const { slug_url, site } = route.params as { slug_url: string; site: string }
+  const { slug_url, site } = route.params as {
+    slug_url: string
+    site: string
+  }
 
   const { setOptions } = useNavigation()
 
