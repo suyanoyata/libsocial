@@ -26,7 +26,7 @@ export const QuickSearchFetching = ({
         className="absolute items-center justify-center flex-1 top-1/2 w-full"
         style={[kbStyle]}
       >
-        <ActivityIndicator />
+        <ActivityIndicator lottie />
       </FadeView>
     )
   }

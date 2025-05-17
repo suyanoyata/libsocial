@@ -9,6 +9,7 @@ import { episodesRouter } from "~/router/episodesRouter";
 import { chaptersRouter } from "~/router/chaptersRouter";
 import { bookmarkRouter } from "~/router/bookmarkRouter";
 import { constantsRouter } from "~/router/constantsRouter";
+import { clientErrorRouter } from "~/router/clientErrorRouter";
 
 export const appRouter = t.router({
   titles: titleRouter,
@@ -18,6 +19,7 @@ export const appRouter = t.router({
   chapters: chaptersRouter,
   bookmarks: bookmarkRouter,
   constants: constantsRouter,
+  error: clientErrorRouter,
 });
 
 export type RouterOutput = inferRouterOutputs<typeof appRouter>;

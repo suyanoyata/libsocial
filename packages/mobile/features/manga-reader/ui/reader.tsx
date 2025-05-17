@@ -31,6 +31,25 @@ import { useReaderScrollTo } from "@/features/manga-reader/hooks/use-reader-scro
 import { ActivityIndicator } from "@/components/ui/activity-indicator"
 import { cssInterop } from "nativewind"
 import { FullscreenError } from "@/components/ui/fullscreen-error"
+import { Lottie } from "@/components/ui/lottie"
+
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated"
+
+const ChapterDownloading = () => {
+  return (
+    <Animated.View
+      entering={FadeIn}
+      exiting={FadeOut}
+      className="flex-1 items-center justify-center"
+    >
+      <BackButton />
+      <Lottie source={require("@/assets/emojis/loading-emoji.json")} />
+      <Text className="text-muted mt-2">
+        Chapter is downloading, hang on...
+      </Text>
+    </Animated.View>
+  )
+}
 
 export const MangaReaderUI = () => {
   const MenuView = useMemo(
@@ -80,28 +99,10 @@ export const MangaReaderUI = () => {
 
   const { flatListRef, scroll } = useReaderScrollTo(slug_url, chapterIndex)
 
-  const { data, refetch, isFetching, isError } = useChapter(
+  const { data, refetch, isFetching, isError, error } = useChapter(
     slug_url,
     chapters && chapters[chapterIndex]
   )
-
-  useEffect(() => {
-    let timeoutId: NodeJS.Timeout | number | null = null
-
-    if (isError) return
-
-    if (!isFetching && data && data.pages.length == 0) {
-      timeoutId = setTimeout(() => {
-        refetch()
-      }, 500)
-    }
-
-    return () => {
-      if (timeoutId) {
-        clearTimeout(timeoutId)
-      }
-    }
-  }, [data, isFetching, isError])
 
   useEffect(() => {
     if (!title || !chapters) return
@@ -137,14 +138,20 @@ export const MangaReaderUI = () => {
     return data && currentPage / data?.pages.length > threshold
   }, [data, currentPage])
 
+  const windowSize = useMemo(() => {
+    return data?.pages ? data.pages.length / 4 : 21
+  }, [data?.pages])
+
   useEffect(() => {
     if (shouldDownloadNextChapter) {
       preloadNextChapter(client, slug_url, nextChapter)
     }
   }, [shouldDownloadNextChapter])
 
-  if (isError) {
-    return <FullscreenError>Chapter is licensed or not found</FullscreenError>
+  if (isError && error.data && error.data.code != "CONFLICT") {
+    return (
+      <FullscreenError fadeIn>Chapter is licensed or not found</FullscreenError>
+    )
   }
 
   if (!chapters || !title) {
@@ -156,17 +163,7 @@ export const MangaReaderUI = () => {
   }
 
   if (data && data.pages.length == 0) {
-    return (
-      <View className="flex-1 items-center justify-center">
-        <BackButton />
-        <ActivityIndicator />
-        {__DEV__ && (
-          <Text className="text-muted mt-2">
-            Chapter is downloading, hang on...
-          </Text>
-        )}
-      </View>
-    )
+    return <ChapterDownloading />
   }
 
   if (!data) {
@@ -213,6 +210,8 @@ export const MangaReaderUI = () => {
         </MenuView>
       )}
       <FlatList
+        onRefresh={refetch}
+        refreshing={false}
         ref={flatListRef}
         viewabilityConfig={{
           minimumViewTime: 3,
@@ -228,7 +227,8 @@ export const MangaReaderUI = () => {
         onMomentumScrollEnd={(event) =>
           setOffset(event.nativeEvent.contentOffset.y)
         }
-        maxToRenderPerBatch={6}
+        maxToRenderPerBatch={windowSize}
+        windowSize={windowSize}
         initialNumToRender={5}
         stickyHeaderIndices={[0]}
         stickyHeaderHiddenOnScroll

@@ -3,6 +3,8 @@ import { t } from "~/lib/trpc";
 import { animeService, mangaService } from "~/services";
 import { catalogSearchSchema } from "~/types/zod";
 
+import type { RouterOutput } from "~/router";
+
 export const searchRouter = t.router({
   quick: t.procedure.input(catalogSearchSchema).query(async ({ input }) => {
     // const remote = false;
@@ -35,3 +37,5 @@ export const searchRouter = t.router({
     });
   }),
 });
+
+export type QuickSearchItem = RouterOutput["search"]["quick"]["data"][number];

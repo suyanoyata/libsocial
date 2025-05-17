@@ -1,11 +1,16 @@
-import { FlatList, View } from "react-native"
-import Animated, { FadeIn } from "react-native-reanimated"
+import { Keyboard, TouchableWithoutFeedback, View } from "react-native"
+import Animated, {
+  FadeIn,
+  FadeOut,
+  useAnimatedKeyboard,
+  useAnimatedStyle,
+} from "react-native-reanimated"
 
 import { Text } from "@/components/ui/text"
 import { TextInput } from "@/components/ui/text-input"
 import { ActivityIndicator } from "@/components/ui/activity-indicator"
 
-import { memo, useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 
 import { useNavigation } from "expo-router"
 import useDebounce from "@/hooks/use-debounce"
@@ -20,8 +25,80 @@ import { RelationAddTitle } from "@/features/similar/components/relations-relati
 
 import { BaseTitle } from "@/features/shared/types/title"
 
-import { RelationsResponse } from "@/features/title/types/title-relations-type"
 import { trpc } from "@/lib/trpc"
+import { QuickSearchItem } from "api/router/searchRouter"
+
+const Comp = ({
+  slug_url,
+  _search,
+  search,
+  response,
+  isPending,
+}: {
+  slug_url: string
+  _search: string
+  search: string
+  response?: QuickSearchItem[]
+  isPending: boolean
+}) => {
+  const keyboard = useAnimatedKeyboard()
+
+  const kbStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: -keyboard.height.value / 2.5 }],
+  }))
+
+  const renderItem = ({ item }: { item: BaseTitle }) => (
+    <RelationAddTitle
+      slug_url={slug_url}
+      disabled={item.slug_url == slug_url}
+      data={item}
+    />
+  )
+
+  if (_search != search || isPending) {
+    return (
+      <Animated.View
+        entering={FadeIn}
+        exiting={FadeOut}
+        className="flex-1 items-center justify-center"
+        style={[kbStyle]}
+      >
+        <ActivityIndicator lottie />
+      </Animated.View>
+    )
+  }
+
+  if (search.length == 0) {
+    return (
+      <Animated.View
+        style={[kbStyle]}
+        className="flex-1 items-center justify-center"
+      >
+        <Text className="text-muted">Type something in search</Text>
+      </Animated.View>
+    )
+  }
+
+  if (response && response.length != 0) {
+    return (
+      <Animated.FlatList
+        entering={FadeIn}
+        data={response}
+        renderItem={renderItem}
+      />
+    )
+  }
+
+  return (
+    <Animated.View
+      style={[kbStyle]}
+      entering={FadeIn}
+      className="flex-1 items-center justify-center"
+    >
+      <Text className="text-muted">Can't find anything for your search</Text>
+    </Animated.View>
+  )
+}
 
 export default function TitleRelationsAdd() {
   const route = useRoute()
@@ -41,21 +118,13 @@ export default function TitleRelationsAdd() {
   const [_search, setSearch] = useState("")
   const [search] = useDebounce(_search, 500)
 
-  const { data: searchData, isPending } = useQuickSearch(search)
+  const { data: searchData, isFetching } = useQuickSearch(search)
 
   useEffect(() => {
     setOptions({
       title: data?.eng_name ?? data?.name,
     })
   }, [data])
-
-  const renderItem = ({ item }: { item: BaseTitle }) => (
-    <RelationAddTitle
-      slug_url={slug_url}
-      disabled={item.slug_url == data?.slug_url}
-      data={item}
-    />
-  )
 
   const response = useMemo(() => {
     return searchData?.data.filter(
@@ -67,40 +136,6 @@ export default function TitleRelationsAdd() {
     )
   }, [searchData])
 
-  const Comp = memo(() => {
-    if (search.length == 0) {
-      return (
-        <View className="flex-1 items-center justify-center">
-          <Text className="text-muted">Type something in search</Text>
-        </View>
-      )
-    }
-
-    if (_search != search || isPending) {
-      return (
-        <View className="flex-1 items-center justify-center">
-          <ActivityIndicator />
-        </View>
-      )
-    }
-
-    if (response && response.length != 0) {
-      return (
-        <Animated.View entering={FadeIn} className="flex-1">
-          <FlatList data={response} renderItem={renderItem} />
-        </Animated.View>
-      )
-    } else {
-      return (
-        <View className="flex-1 items-center justify-center">
-          <Text className="text-muted">
-            Can't find anything for your search
-          </Text>
-        </View>
-      )
-    }
-  })
-
   if (!data) {
     return (
       <View className="items-center justify-center flex-1">
@@ -110,15 +145,26 @@ export default function TitleRelationsAdd() {
   }
 
   return (
-    <View className="mx-2 mt-2 flex-1 gap-3" style={{ paddingBottom: bottom }}>
-      <TextInput
-        clearButtonMode="always"
-        value={_search}
-        onChangeText={setSearch}
-        placeholder="Search for title"
-        className="w-full mt-2"
-      />
-      <Comp />
-    </View>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View
+        className="mx-2 mt-2 flex-1 gap-3"
+        style={{ paddingBottom: bottom }}
+      >
+        <TextInput
+          clearButtonMode="always"
+          value={_search}
+          onChangeText={setSearch}
+          placeholder="Search for title"
+          className="w-full mt-2"
+        />
+        <Comp
+          _search={_search}
+          search={search}
+          slug_url={slug_url}
+          response={response}
+          isPending={isFetching}
+        />
+      </View>
+    </TouchableWithoutFeedback>
   )
 }

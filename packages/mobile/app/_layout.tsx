@@ -8,6 +8,8 @@ import {
   ThemeProvider,
 } from "@react-navigation/native"
 
+import ErrorBoundary from "react-native-error-boundary"
+
 import { createFont, createTamagui, TamaguiProvider } from "@tamagui/core"
 import { defaultConfig } from "@tamagui/config/v4"
 
@@ -55,6 +57,7 @@ import { useSession } from "@/lib/auth"
 
 import { cssInterop } from "react-native-css-interop"
 import { queryClient } from "@/lib/trpc"
+import { ErrorBoundaryComponent } from "@/components/ui/error-boundary-component"
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.error,
@@ -155,50 +158,52 @@ export default function RootLayout() {
         <View className="bg-primary flex-1">
           <TamaguiProvider config={config}>
             <ThemeProvider value={isDark ? DarkTheme : DefaultTheme}>
-              <BookmarkEventsProvider>
-                <BottomSheetModalProvider>
-                  <Stack
-                    screenOptions={{
-                      headerShown: true,
-                      header: () => <BackButton />,
-                    }}
-                  >
-                    <Stack.Screen
-                      name="(tabs)"
-                      options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                      options={{
-                        presentation: "modal",
-                        headerShown: false,
-                      }}
-                      name="(modals)"
-                    />
-                    <Stack.Screen
-                      name="title-info"
-                      options={{
-                        headerShown: false,
-                      }}
-                    />
-                    <Stack.Screen
-                      name="manga-reader"
-                      options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                      name="downloaded-reader"
-                      options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                      name="downloads"
-                      options={{
-                        title: "Downloads",
+              <ErrorBoundary FallbackComponent={ErrorBoundaryComponent}>
+                <BookmarkEventsProvider>
+                  <BottomSheetModalProvider>
+                    <Stack
+                      screenOptions={{
                         headerShown: true,
-                        header: (props) => <DownloadsIcon {...props} />,
+                        header: () => <BackButton />,
                       }}
-                    />
-                  </Stack>
-                </BottomSheetModalProvider>
-              </BookmarkEventsProvider>
+                    >
+                      <Stack.Screen
+                        name="(tabs)"
+                        options={{ headerShown: false }}
+                      />
+                      <Stack.Screen
+                        options={{
+                          presentation: "modal",
+                          headerShown: false,
+                        }}
+                        name="(modals)"
+                      />
+                      <Stack.Screen
+                        name="title-info"
+                        options={{
+                          headerShown: false,
+                        }}
+                      />
+                      <Stack.Screen
+                        name="manga-reader"
+                        options={{ headerShown: false }}
+                      />
+                      <Stack.Screen
+                        name="downloaded-reader"
+                        options={{ headerShown: false }}
+                      />
+                      <Stack.Screen
+                        name="downloads"
+                        options={{
+                          title: "Downloads",
+                          headerShown: true,
+                          header: (props) => <DownloadsIcon {...props} />,
+                        }}
+                      />
+                    </Stack>
+                  </BottomSheetModalProvider>
+                </BookmarkEventsProvider>
+              </ErrorBoundary>
             </ThemeProvider>
           </TamaguiProvider>
         </View>

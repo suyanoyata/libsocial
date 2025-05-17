@@ -23,6 +23,11 @@ export const chaptersRouter = t.router({
 
     const chapter = await ChapterService.getChapter(input);
 
+    // This should speed up response time
+    if (chapter.pages.length != 0 && chapter.pages.length >= chapter.count) {
+      return chapter;
+    }
+
     const id = (await axios.get(Mangadex.search(manga.eng_name!))).data.data[0]
       .id;
 

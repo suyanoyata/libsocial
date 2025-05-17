@@ -33,7 +33,6 @@ export const db = new PrismaClient({
     },
     chapter: {
       manga_id: true,
-      count: true,
     },
     mangaPage: {
       chapterId: true,
