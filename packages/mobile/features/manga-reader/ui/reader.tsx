@@ -99,7 +99,7 @@ export const MangaReaderUI = () => {
 
   const { flatListRef, scroll } = useReaderScrollTo(slug_url, chapterIndex)
 
-  const { data, refetch, isFetching, isError, error } = useChapter(
+  const { data, refetch, isError, error } = useChapter(
     slug_url,
     chapters && chapters[chapterIndex]
   )
@@ -147,12 +147,6 @@ export const MangaReaderUI = () => {
       preloadNextChapter(client, slug_url, nextChapter)
     }
   }, [shouldDownloadNextChapter])
-
-  if (isError && error.data && error.data.code != "CONFLICT") {
-    return (
-      <FullscreenError fadeIn>Chapter is licensed or not found</FullscreenError>
-    )
-  }
 
   if (!chapters || !title) {
     return (
