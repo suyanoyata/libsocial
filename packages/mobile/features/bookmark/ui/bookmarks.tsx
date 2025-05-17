@@ -20,7 +20,7 @@ import { capitalize } from "@/lib/utils"
 
 import { useQuery } from "@tanstack/react-query"
 import { trpc } from "@/lib/trpc"
-import { BookmarkListItem } from "api/router/bookmarkRouter"
+import type { BookmarkListItem } from "api/router/bookmarkRouter"
 
 function Bookmarks() {
   const { isPending } = useSession()
