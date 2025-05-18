@@ -16,16 +16,17 @@ import { Icon } from "@/components/icon"
 import { useCreateSimilar } from "@/features/association/lib/create-similar"
 
 import type { QuickSearchItem } from "api/router/searchRouter"
+import type { Title } from "api/router/titleRouter"
 
 const relationReasons = ["genres", "script"]
 
 export const AssociationCard = ({
   data,
-  slug_url,
+  title,
   disabled,
 }: {
   data: QuickSearchItem
-  slug_url: string
+  title: Title
   disabled?: boolean
 }) => {
   const { width } = useWindowDimensions()
@@ -35,7 +36,10 @@ export const AssociationCard = ({
     [data.genres, width]
   )
 
-  const { mutate, isPending } = useCreateSimilar({ slug_url, data })
+  const { mutate, isPending } = useCreateSimilar({
+    slug_url: title.slug_url,
+    data,
+  })
 
   if (disabled) return null
 
@@ -67,11 +71,13 @@ export const AssociationCard = ({
           }}
           onPress={(value) => {
             mutate({
-              slug_url,
-              // @ts-ignore
-              type: data.model,
+              title: {
+                slug_url: title.slug_url,
+                type: title.model,
+              },
               similar: {
                 slug_url: data.slug_url,
+                type: data.model,
                 reason: relationReasons[value.nativeEvent.index] as "genres",
               },
             })

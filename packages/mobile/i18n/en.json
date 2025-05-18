@@ -2,7 +2,9 @@
   "related": {
     "prequel": "Prequel",
     "sequel": "Sequel",
-    "spinoff": "Spin-Off"
+    "spinoff": "Spin-Off",
+    "adaptation": "Adaptation",
+    "original": "Original"
   },
   "similar": {
     "genres": "Genres",

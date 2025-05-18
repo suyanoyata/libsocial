@@ -8,16 +8,16 @@ class Service {
   public async addRelatedTitle(data: CreateRelationData) {
     const [title, related] = await db
       .$transaction([
-        db[data.type as "manga"].findFirstOrThrow({
+        db[data.title.type as "manga"].findFirstOrThrow({
           where: {
-            slug_url: data.slug_url,
-            site: data.type == "manga" ? 1 : 5,
+            slug_url: data.title.slug_url,
+            site: data.title.type == "manga" ? 1 : 5,
           },
         }),
-        db[data.type as "manga"].findFirstOrThrow({
+        db[data.related.type as "manga"].findFirstOrThrow({
           where: {
             slug_url: data.related.slug_url,
-            site: data.type == "manga" ? 1 : 5,
+            site: data.related.type == "manga" ? 1 : 5,
           },
         }),
       ])
@@ -28,7 +28,8 @@ class Service {
         });
       });
 
-    const modelName = data.type.charAt(0).toUpperCase() + data.type.slice(1);
+    const modelName =
+      data.related.type.charAt(0).toUpperCase() + data.related.type.slice(1);
 
     await db.association.create({
       data: {
@@ -38,7 +39,7 @@ class Service {
             slug_url: related.slug_url,
           },
         },
-        [data.type]: {
+        [data.title.type]: {
           connect: {
             slug_url: title.slug_url,
           },
@@ -46,7 +47,7 @@ class Service {
       },
     });
 
-    if (data.type == "manga") {
+    if (data.related.type == "manga") {
       return await mangaService.getManga(related.slug_url);
     } else {
       return await animeService.getAnime(related.slug_url);
@@ -56,27 +57,28 @@ class Service {
   public async addSimilarTitle(data: CreateSimilarData) {
     const [title, similar] = await db
       .$transaction([
-        db[data.type as "manga"].findFirstOrThrow({
+        db[data.title.type as "manga"].findFirstOrThrow({
           where: {
-            slug_url: data.slug_url,
-            site: data.type == "manga" ? 1 : 5,
+            slug_url: data.title.slug_url,
+            site: data.title.type == "manga" ? 1 : 5,
           },
         }),
-        db[data.type as "manga"].findFirstOrThrow({
+        db[data.similar.type as "manga"].findFirstOrThrow({
           where: {
             slug_url: data.similar.slug_url,
-            site: data.type == "manga" ? 1 : 5,
+            site: data.similar.type == "manga" ? 1 : 5,
           },
         }),
       ])
       .catch(() => {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Title or related title not found",
+          message: "Title or similar title not found",
         });
       });
 
-    const modelName = data.type.charAt(0).toUpperCase() + data.type.slice(1);
+    const modelName =
+      data.similar.type.charAt(0).toUpperCase() + data.similar.type.slice(1);
 
     await db.association.create({
       data: {
@@ -86,7 +88,7 @@ class Service {
             slug_url: similar.slug_url,
           },
         },
-        [data.type]: {
+        [data.title.type]: {
           connect: {
             slug_url: title.slug_url,
           },
@@ -94,7 +96,7 @@ class Service {
       },
     });
 
-    if (data.type == "manga") {
+    if (data.similar.type == "manga") {
       return await mangaService.getManga(similar.slug_url);
     } else {
       return await animeService.getAnime(similar.slug_url);

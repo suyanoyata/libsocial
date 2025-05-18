@@ -1,22 +1,34 @@
 import { z } from "zod";
 
-const relationReasonSchema = z.enum(["prequel", "sequel", "spinoff"]);
+const relationReasonSchema = z.enum([
+  "prequel",
+  "sequel",
+  "spinoff",
+  "adaptation",
+  "original",
+]);
 const similarReasonSchema = z.enum(["genres", "script"]);
 
 export const createRelationSchema = z.object({
-  slug_url: z.string(),
-  type: z.enum(["anime", "manga"]),
+  title: z.object({
+    slug_url: z.string(),
+    type: z.enum(["anime", "manga"]),
+  }),
   related: z.object({
     slug_url: z.string(),
+    type: z.enum(["anime", "manga"]),
     reason: relationReasonSchema,
   }),
 });
 
 export const createSimilarSchema = z.object({
-  slug_url: z.string(),
-  type: z.enum(["anime", "manga"]),
+  title: z.object({
+    slug_url: z.string(),
+    type: z.enum(["anime", "manga"]),
+  }),
   similar: z.object({
     slug_url: z.string(),
+    type: z.enum(["anime", "manga"]),
     reason: similarReasonSchema,
   }),
 });

@@ -16,16 +16,23 @@ import { Icon } from "@/components/icon"
 import { useCreateRelation } from "@/features/association/lib/create-relation"
 
 import type { QuickSearchItem } from "api/router/searchRouter"
+import type { Title } from "api/router/titleRouter"
 
-const relationReasons = ["sequel", "prequel", "spinoff"]
+const relationReasons = [
+  "sequel",
+  "prequel",
+  "spinoff",
+  "adaptation",
+  "original",
+]
 
 export const AssociationCard = ({
   data,
-  slug_url,
+  title,
   disabled,
 }: {
   data: QuickSearchItem
-  slug_url: string
+  title: Title
   disabled?: boolean
 }) => {
   const { width } = useWindowDimensions()
@@ -35,7 +42,10 @@ export const AssociationCard = ({
     [data.genres, width]
   )
 
-  const { mutate, isPending } = useCreateRelation({ slug_url, data })
+  const { mutate, isPending } = useCreateRelation({
+    slug_url: title.slug_url,
+    data,
+  })
 
   if (disabled) return null
 
@@ -67,12 +77,14 @@ export const AssociationCard = ({
           }}
           onPress={(value) => {
             mutate({
-              slug_url,
-              // @ts-ignore
-              type: data.model,
+              title: {
+                slug_url: title.slug_url,
+                type: title.model,
+              },
               related: {
                 slug_url: data.slug_url,
                 reason: relationReasons[value.nativeEvent.index] as "prequel",
+                type: data.model,
               },
             })
           }}

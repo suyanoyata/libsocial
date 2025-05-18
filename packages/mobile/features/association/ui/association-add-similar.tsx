@@ -28,15 +28,16 @@ import { trpc } from "@/lib/trpc"
 import { DismissKeyboardView } from "@/components/ui/dismiss-keyboard-view"
 
 import type { QuickSearchItem } from "api/router/searchRouter"
+import type { Title } from "api/router/titleRouter"
 
 const Comp = ({
-  slug_url,
+  title,
   _search,
   search,
   response,
   isPending,
 }: {
-  slug_url: string
+  title: Title
   _search: string
   search: string
   response?: QuickSearchItem[]
@@ -50,8 +51,8 @@ const Comp = ({
 
   const renderItem = ({ item }: { item: QuickSearchItem }) => (
     <AssociationCard
-      slug_url={slug_url}
-      disabled={item.slug_url == slug_url}
+      title={title}
+      disabled={item.slug_url == title.slug_url}
       data={item}
     />
   )
@@ -161,7 +162,7 @@ export default function AssociationAddSimilar() {
       <Comp
         _search={_search}
         search={search}
-        slug_url={slug_url}
+        title={data}
         response={response}
         isPending={isFetching}
       />

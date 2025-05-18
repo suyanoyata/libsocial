@@ -249,6 +249,8 @@ enum RelatedReason {
   sequel
   prequel
   spinoff
+  adaptation
+  original
 }
 
 model User {
