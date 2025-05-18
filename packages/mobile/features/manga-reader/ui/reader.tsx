@@ -223,6 +223,12 @@ export const MangaReaderUI = () => {
             setCurrentPage(event.changed[0].index)
           }
         }}
+        onScrollToIndexFailed={({ index }) => {
+          flatListRef.current?.scrollToIndex({
+            index: index / 1.5,
+            animated: true,
+          })
+        }}
         keyExtractor={keyExtractor}
         onMomentumScrollEnd={(event) =>
           setOffset(event.nativeEvent.contentOffset.y)

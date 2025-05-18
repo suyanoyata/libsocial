@@ -97,7 +97,7 @@ export const DownloadCard = ({ item }: { item: DownloadedChapter }) => {
                   )
 
                   toast.success(
-                    `Chapter ${item.chapter.number} deleted from ${item.title.name}`
+                    `Chapter ${item.chapter.number} deleted from ${item.title.eng_name}`
                   )
                 }}
                 name="Trash2"

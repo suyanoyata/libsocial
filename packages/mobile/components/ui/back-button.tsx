@@ -39,10 +39,10 @@ export const BackButton = ({
       style={{ marginTop: marginTop(), zIndex: 999 }}
       {...props}
     >
-      <View className="flex-row gap-1 items-center z-20">
+      <View className="flex-row gap-1 items-center z-20 h-7">
         <Icon
           name="ChevronLeft"
-          className={cn("text-primary", props.iconClassName)}
+          className={cn("text-primary size-9 -mr-1", props.iconClassName)}
           strokeWidth={2.25}
         />
         <Text

@@ -30,20 +30,13 @@ export default function Downloads() {
 
   if (items.length == 0) {
     return (
-      <View className="items-center justify-center flex-1 px-8 gap-2 absolute top-0 left-0 h-screen">
+      <View className="items-center justify-center w-full px-8 gap-4 absolute top-0 left-0 h-screen">
         <Lottie
           source={require("@/assets/lottie/duck.json")}
-          className="size-28"
+          className="size-32"
         />
-        <Text className="text-secondary text-center text-xl font-semibold">
+        <Text className="text-secondary text-center text-lg font-semibold w-full">
           You don't have any downloaded chapters
-        </Text>
-        <Text className="text-muted text-center text-base font-medium leading-7">
-          To download them go to any manga chapters and press on{" "}
-          <View className="h-4">
-            <Icon name="Download" variant="tonal" size={20} strokeWidth={3} />
-          </View>{" "}
-          icon.
         </Text>
       </View>
     )

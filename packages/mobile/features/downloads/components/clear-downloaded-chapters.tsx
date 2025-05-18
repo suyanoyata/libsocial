@@ -1,7 +1,11 @@
 import { Icon } from "@/components/icon"
-import { useDownloads } from "@/features/downloads/store/use-downloads"
+
 import { router } from "expo-router"
-import { Alert, Pressable } from "react-native"
+
+import { Alert, Pressable as _Pressable } from "react-native"
+
+import { useDownloads } from "@/features/downloads/store/use-downloads"
+import Animated, { FadeIn } from "react-native-reanimated"
 
 export const ClearDownloadedChapters = () => {
   const clear = useDownloads((state) => state.clear)
@@ -30,8 +34,10 @@ export const ClearDownloadedChapters = () => {
 
   if (count == 0) return
 
+  const Pressable = Animated.createAnimatedComponent(_Pressable)
+
   return (
-    <Pressable onPress={deleteEverything}>
+    <Pressable entering={FadeIn} onPress={deleteEverything}>
       <Icon name="Trash2" className="text-red-500" />
     </Pressable>
   )
