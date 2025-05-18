@@ -11,7 +11,10 @@ export const useBookmarkAPI = (query: {
 
   return useQuery(
     trpc.bookmarks.get.queryOptions(query, {
+      refetchOnMount: false,
+      refetchInterval: false,
       enabled: !!data,
+      retry: false,
     })
   )
 }

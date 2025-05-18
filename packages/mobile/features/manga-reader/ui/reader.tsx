@@ -43,7 +43,7 @@ const ChapterDownloading = () => {
       className="flex-1 items-center justify-center"
     >
       <BackButton />
-      <Lottie source={require("@/assets/emojis/loading-emoji.json")} />
+      <Lottie source={require("@/assets/lottie/loading-emoji.json")} />
       <Text className="text-muted mt-2">
         Chapter is downloading, hang on...
       </Text>
@@ -147,6 +147,12 @@ export const MangaReaderUI = () => {
       preloadNextChapter(client, slug_url, nextChapter)
     }
   }, [shouldDownloadNextChapter])
+
+  if (isError && error.data) {
+    return (
+      <FullscreenError fadeIn>Chapter is licensed or not found</FullscreenError>
+    )
+  }
 
   if (!chapters || !title) {
     return (

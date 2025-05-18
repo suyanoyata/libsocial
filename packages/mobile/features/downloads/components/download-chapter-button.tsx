@@ -22,6 +22,7 @@ import { handleFolderCreate } from "@/features/downloads/lib/handle-folder-creat
 import { ActivityIndicator } from "@/components/ui/activity-indicator"
 import { notificationAsync, NotificationFeedbackType } from "expo-haptics"
 import { Icon } from "@/components/icon"
+import { Lottie } from "@/components/ui/lottie"
 
 export const DownloadChapterButton = ({
   slug_url,
@@ -44,7 +45,7 @@ export const DownloadChapterButton = ({
     bottom: bottom.value,
   }))
 
-  const { isPending, mutateAsync } = useMutation({
+  const { isPending, mutate } = useMutation({
     mutationKey: ["download-chapter", chapter.id],
     mutationFn: async () => {
       progress.value = 0
@@ -123,37 +124,59 @@ export const DownloadChapterButton = ({
 
       return { localFiles: downloadResponse, title, chapter: chapterData }
     },
+    onSuccess: (data) => {
+      bottom.value = withTiming(-3, { duration: 500 })
+
+      if (data?.message) {
+        return toast.success(data.message)
+      }
+
+      toast.success(`Downloaded`, {
+        styles: {
+          toastContent: {
+            alignItems: "center",
+          },
+        },
+        icon: (
+          <Lottie
+            source={require("@/assets/lottie/download-animation.json")}
+            className="size-8"
+            loop={false}
+          />
+        ),
+        duration: 2000,
+        id: toastId,
+      })
+
+      notificationAsync(NotificationFeedbackType.Success)
+
+      return `Volume ${data.chapter!.volume} Chapter ${
+        data.chapter!.number
+      } has been downloaded`
+    },
+    onError: (e) => {
+      const error = e as { message: string }
+      bottom.value = withTiming(-3, { duration: 500 })
+
+      if (__DEV__) {
+        console.log(e)
+      }
+
+      notificationAsync(NotificationFeedbackType.Error)
+
+      return toast.error(error.message ?? "Something went wrong, try again", {
+        id: toastId,
+      })
+    },
   })
 
   const downloadChapter = () => {
-    const toastId = toast.promise(mutateAsync(), {
-      loading: `Download requested...`,
-      success: (data) => {
-        if (data?.message) {
-          return data.message
-        }
-
-        bottom.value = withTiming(-3, { duration: 500 })
-
-        notificationAsync(NotificationFeedbackType.Success)
-
-        return `Volume ${data.chapter.volume} Chapter ${data.chapter.number} has been downloaded`
-      },
-      error: (e) => {
-        const error = e as { message: string }
-        bottom.value = withTiming(-3, { duration: 500 })
-
-        if (__DEV__) {
-          console.log(e)
-        }
-
-        notificationAsync(NotificationFeedbackType.Error)
-
-        return error.message ?? "Something went wrong, try again"
-      },
-    })
-
-    setToastId(toastId)
+    setToastId(
+      toast.loading("Download requested...", {
+        duration: Infinity,
+      })
+    )
+    mutate()
   }
 
   const isChapterDownloaded = isDownloaded(

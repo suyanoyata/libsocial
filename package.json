@@ -9,6 +9,8 @@
     "production": "concurrently -n 'api,mobile', -c '#007755,#2f6da3', 'cd packages/api && bun dev' 'cd packages/mobile && bun start'",
     "api": "cd packages/api && bun run dev",
     "mobile": "cd packages/mobile && bun start",
+    "update": "cd packages/mobile && bun run update",
+    "update-minor": "cd packages/mobile && bun run update-minor",
     "postinstall": "prisma generate --schema=packages/api/prisma/schema.prisma"
   },
   "workspaces": [

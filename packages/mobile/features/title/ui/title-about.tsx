@@ -47,7 +47,7 @@ export const TitleAbout = ({ data }: { data: Title }) => {
               disabled={data.isLicensed}
               size={18}
               filled
-              variant="accent"
+              variant={data?.isLicensed ? "destructive" : "accent"}
             />
           }
           variant={data?.isLicensed ? "destructive" : "accent"}

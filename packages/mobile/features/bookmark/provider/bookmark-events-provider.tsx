@@ -1,13 +1,15 @@
-import { DeviceEventEmitter } from "react-native"
+import { DeviceEventEmitter, Platform } from "react-native"
 
 import { useEffect } from "react"
 import { useQueryClient } from "@tanstack/react-query"
 
 import { BookmarkEvents } from "@/features/bookmark/const/bookmark-events"
-import { Bookmark } from "@/features/bookmark/types/bookmark"
 
 import { trpc } from "@/lib/trpc"
 import { t } from "@/lib/trpc/trpc-client"
+
+// dev
+import { useSyncQueriesExternal } from "react-query-external-sync"
 
 interface BookmarkEventsProps {
   children?: React.ReactNode
@@ -15,6 +17,15 @@ interface BookmarkEventsProps {
 
 export const BookmarkEventsProvider = ({ children }: BookmarkEventsProps) => {
   const client = useQueryClient()
+
+  useSyncQueriesExternal({
+    queryClient: client,
+    socketURL: "http://192.168.50.48:42831",
+    deviceName: Platform?.OS || "web",
+    platform: Platform?.OS || "web",
+    deviceId: Platform?.OS || "web",
+    enableLogs: false,
+  })
 
   useEffect(() => {
     DeviceEventEmitter.addListener(

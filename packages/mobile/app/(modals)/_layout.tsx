@@ -21,10 +21,20 @@ export default function ModalLayout() {
       }}
     >
       <Stack.Screen
-        name="relations-add-title"
+        name="association-add-relation"
         options={{
           headerShown: true,
           title: "Add relation",
+          header: (props) => (
+            <Header showBackButton className="my-1" {...props} />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="association-add-similar"
+        options={{
+          headerShown: true,
+          title: "Add similar",
           header: (props) => (
             <Header showBackButton className="my-1" {...props} />
           ),

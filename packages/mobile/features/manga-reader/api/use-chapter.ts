@@ -9,7 +9,7 @@ export const useChapter = (slug_url: string, chapter?: Chapter) => {
       { slug_url, ...chapter! },
       {
         enabled: !!chapter?.number && !!chapter?.volume && !!slug_url,
-        retry: 1,
+        retry: false,
         refetchInterval(query) {
           if (query.state.error) {
             return false

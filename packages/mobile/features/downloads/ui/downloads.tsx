@@ -9,6 +9,7 @@ import {
 import { DownloadCard } from "@/features/downloads/components/download-card"
 import { Icon } from "@/components/icon"
 import { useMemo } from "react"
+import { Lottie } from "@/components/ui/lottie"
 
 export default function Downloads() {
   const { items } = useDownloads()
@@ -29,17 +30,18 @@ export default function Downloads() {
 
   if (items.length == 0) {
     return (
-      <View className="items-center justify-center flex-1">
-        <Text className="text-muted text-center mx-3 leading-7">
-          You don't have any downloaded chapters. To download them go to any
-          manga chapters and press on{" "}
+      <View className="items-center justify-center flex-1 px-8 gap-2 absolute top-0 left-0 h-screen">
+        <Lottie
+          source={require("@/assets/lottie/duck.json")}
+          className="size-28"
+        />
+        <Text className="text-secondary text-center text-xl font-semibold">
+          You don't have any downloaded chapters
+        </Text>
+        <Text className="text-muted text-center text-base font-medium leading-7">
+          To download them go to any manga chapters and press on{" "}
           <View className="h-4">
-            <Icon
-              name="Download"
-              className="text-secondary"
-              size={20}
-              strokeWidth={3}
-            />
+            <Icon name="Download" variant="tonal" size={20} strokeWidth={3} />
           </View>{" "}
           icon.
         </Text>

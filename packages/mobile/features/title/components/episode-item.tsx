@@ -23,7 +23,6 @@ import { Icon } from "@/components/icon"
 import { BookmarkEvents } from "@/features/bookmark/const/bookmark-events"
 
 import type { Episode as EpisodeType } from "api/router/episodesRouter"
-import { useBookmarkAPI } from "@/features/bookmark/api/use-bookmark-api"
 
 export const Episode = memo(
   ({
@@ -46,8 +45,6 @@ export const Episode = memo(
 
     const title = get(slug_url)
 
-    const { data: bookmark } = useBookmarkAPI({ slug_url, type: "anime" })
-
     const isLastWatchedEpisode = useMemo(() => {
       return get(slug_url)?.lastWatchedEpisode == index
     }, [title])
@@ -59,15 +56,6 @@ export const Episode = memo(
 
     useFocusEffect(watchCallback)
     useLayoutEffect(watchCallback, [index])
-
-    useEffect(() => {
-      if (isLastWatchedEpisode && bookmark?.episodeId !== episode.id) {
-        DeviceEventEmitter.emit(BookmarkEvents.UPDATE_WATCH_BOOKMARK, {
-          slug_url,
-          index,
-        })
-      }
-    }, [isLastWatchedEpisode])
 
     const addCallback = useCallback(() => {
       add(queryClient, slug_url, index)

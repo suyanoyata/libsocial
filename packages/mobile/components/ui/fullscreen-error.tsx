@@ -36,7 +36,7 @@ export const FullscreenError = ({
     >
       {shouldDisplayBack && <BackButton />}
       <Lottie
-        source={require("@/assets/emojis/sick-emoji.json")}
+        source={require("@/assets/lottie/sick-emoji.json")}
         className={cn("size-24", iconClassName)}
         autoPlay
         loop

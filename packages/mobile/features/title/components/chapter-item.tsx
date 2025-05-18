@@ -24,11 +24,8 @@ import { useQueryClient } from "@tanstack/react-query"
 
 import { Icon } from "@/components/icon"
 
-import { BookmarkEvents } from "@/features/bookmark/const/bookmark-events"
-
 import type { Chapter as ChapterType } from "api/router/chaptersRouter"
 import { trpc } from "@/lib/trpc"
-import { useBookmarkAPI } from "@/features/bookmark/api/use-bookmark-api"
 
 export const Chapter = memo(
   ({
@@ -49,8 +46,6 @@ export const Chapter = memo(
 
     const client = useQueryClient()
 
-    const { data } = useBookmarkAPI({ slug_url, type: "manga" })
-
     const {
       get: getLastReadChapter,
       updateLastReadChapter,
@@ -69,16 +64,6 @@ export const Chapter = memo(
 
     const isCurrentLastReadChapter =
       lastRead && lastRead.lastReadChapter - 1 == index
-
-    useEffect(() => {
-      if (isCurrentLastReadChapter && data?.chapterId != chapter.id) {
-        DeviceEventEmitter.emit(BookmarkEvents.UPDATE_READ_BOOKMARK, {
-          slug_url,
-          type: "manga",
-          lastReadChapter: chapter.item_number,
-        })
-      }
-    }, [isCurrentLastReadChapter, chapter])
 
     useFocusEffect(readCallback)
     useLayoutEffect(readCallback, [index])

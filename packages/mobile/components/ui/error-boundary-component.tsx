@@ -30,7 +30,7 @@ export const ErrorBoundaryComponent = ({ error }: { error: Error }) => {
 
   return (
     <View className="flex-1 items-center justify-center px-8 gap-2">
-      <Lottie source={require("@/assets/emojis/sick-emoji.json")} />
+      <Lottie source={require("@/assets/lottie/sick-emoji.json")} />
       <Text className="text-secondary text-center font-bold text-xl">
         The app just crashed
       </Text>

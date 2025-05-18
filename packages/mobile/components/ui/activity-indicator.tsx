@@ -49,7 +49,7 @@ export const ActivityIndicator = ({
     return (
       <Lottie
         className={cn("size-24", className)}
-        source={require("@/assets/emojis/search-emoji.json")}
+        source={require("@/assets/lottie/search-emoji.json")}
       />
     )
   }

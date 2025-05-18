@@ -1,4 +1,4 @@
-import { ScrollView, TextInput, View } from "react-native"
+import { TextInput, View } from "react-native"
 
 import { useQuickSearchHistory } from "@/features/quick-search/hooks/use-quick-search-history"
 import { Icon } from "@/components/icon"
