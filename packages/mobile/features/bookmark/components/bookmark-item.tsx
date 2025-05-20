@@ -81,7 +81,7 @@ export const BookmarkItem = memo(
                 },
               })
             }}
-            className="mb-2 mx-2 bg-muted-darken active:opacity-90 overflow-hidden rounded-lg flex-row"
+            className="mb-2 mx-2 bg-muted active:opacity-90 overflow-hidden rounded-lg flex-row"
           >
             <FastImage
               source={{ uri: bookmark.media.cover.default }}

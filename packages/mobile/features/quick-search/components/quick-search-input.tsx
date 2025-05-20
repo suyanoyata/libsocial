@@ -1,9 +1,10 @@
-import { TextInput, View } from "react-native"
+import { View } from "react-native"
 
 import { useQuickSearchHistory } from "@/features/quick-search/hooks/use-quick-search-history"
 import { Icon } from "@/components/icon"
 import { Chip as _Chip } from "@/components/ui/chip"
 import Animated, { LinearTransition } from "react-native-reanimated"
+import { TextInput } from "@/components/ui/text-input"
 
 export const QuickSearchInput = ({
   search,
@@ -19,8 +20,7 @@ export const QuickSearchInput = ({
   return (
     <View className="px-2">
       <TextInput
-        clearButtonMode="always"
-        className="bg-muted-darken px-2 py-2.5 mt-2 rounded-md placeholder:text-secondary text-secondary font-medium"
+        className="mt-2"
         placeholder="Start searching..."
         value={search}
         onEndEditing={() => addToHistory(search.trim())}

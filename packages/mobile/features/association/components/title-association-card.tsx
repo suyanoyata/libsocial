@@ -32,7 +32,7 @@ export const TitleAssociationCard = ({
             },
           })
         }
-        className="w-[310px] h-[140px] bg-muted-darken rounded-lg flex-row overflow-hidden"
+        className="w-[310px] h-[140px] bg-muted rounded-lg flex-row overflow-hidden"
       >
         <FastImage
           source={{

@@ -20,7 +20,7 @@ const buttonVariants = cva(
         ghost:
           "bg-transparent active:bg-violet-100 dark:active:bg-violet-400/20",
         tonal:
-          "bg-violet-200 dark:bg-violet-950 active:bg-violet-100 dark:active:bg-violet-900",
+          "bg-violet-100 dark:bg-violet-950 active:bg-violet-100 dark:active:bg-violet-900",
       },
       size: {
         default: "py-3",

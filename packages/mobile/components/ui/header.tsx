@@ -33,7 +33,7 @@ export const Header = (props: Options) => {
       {props.showBackButton && (
         <View
           style={{ paddingTop: Platform.select({ ios: 8, android: top - 8 }) }}
-          className="absolute top-0 left-0"
+          className="absolute top-0 -left-2"
         >
           <BackButton
             iconClassName="text-secondary"

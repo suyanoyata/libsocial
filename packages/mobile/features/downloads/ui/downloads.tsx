@@ -7,7 +7,6 @@ import {
 } from "@/features/downloads/store/use-downloads"
 
 import { DownloadCard } from "@/features/downloads/components/download-card"
-import { Icon } from "@/components/icon"
 import { useMemo } from "react"
 import { Lottie } from "@/components/ui/lottie"
 

@@ -1,5 +1,3 @@
-import { FlashList } from "@shopify/flash-list"
-
 import { useEffect, useRef, useState } from "react"
 import { RefreshControl, useWindowDimensions, View } from "react-native"
 import { useFilterStore } from "@/features/catalog/store/use-filter-store"
@@ -11,8 +9,6 @@ import { BaseTitle } from "@/features/shared/types/title"
 
 import { useCatalogAPI } from "@/features/catalog/api/use-catalog-api"
 
-import { getItemStyle } from "@/features/catalog/lib/item-position-align"
-
 import { FetchingNextPageCards } from "@/features/catalog/components/catalog-fetching-cards"
 import { CatalogHeader } from "@/features/catalog/components/catalog-header"
 import { CatalogTitleCard } from "@/features/catalog/components/catalog-title-card"
@@ -20,6 +16,8 @@ import { ActivityIndicator } from "@/components/ui/activity-indicator"
 import { Text } from "@/components/ui/text"
 import withBubble from "@/components/ui/withBubble"
 import { Icon } from "@/components/icon"
+import { FlatList } from "react-native-gesture-handler"
+import { Lottie } from "@/components/ui/lottie"
 
 const Comp = () => {
   const { search, genres } = useFilterStore()
@@ -32,12 +30,8 @@ const Comp = () => {
     fetchNextPage,
     isRefetching,
     refetch,
+    error,
   } = useCatalogAPI(query)
-
-  const { width, height } = useWindowDimensions()
-  const { catalogColumns, setCatalogImageWidth } = useProperties()
-
-  const ref = useRef<View>(null)
 
   const data =
     _data?.pages.reduce<BaseTitle[]>(
@@ -45,21 +39,8 @@ const Comp = () => {
       []
     ) ?? []
 
-  useEffect(() => {
-    ref.current?.measure((x, y, width) => {
-      setCatalogImageWidth(width)
-    })
-  }, [ref.current])
-
-  const renderItem = ({ item, index }: { item: BaseTitle; index: number }) => (
-    <View
-      ref={ref}
-      style={{
-        ...getItemStyle(index, catalogColumns),
-      }}
-    >
-      <CatalogTitleCard title={item} />
-    </View>
+  const renderItem = ({ item }: { item: BaseTitle }) => (
+    <CatalogTitleCard title={item} />
   )
 
   const keyExtractor = (item: BaseTitle) => item.slug_url
@@ -68,6 +49,17 @@ const Comp = () => {
     return (
       <View className="flex-1 items-center justify-center">
         <ActivityIndicator lottie />
+      </View>
+    )
+  }
+
+  if (error?.message == "Network request failed") {
+    return (
+      <View className="flex-1 items-center justify-center gap-2">
+        <Lottie source={require("@/assets/lottie/duck.json")} />
+        <Text className="text-primary text-xl font-semibold">
+          No connection with server
+        </Text>
       </View>
     )
   }
@@ -100,28 +92,20 @@ const Comp = () => {
   }
 
   return (
-    <FlashList
+    <FlatList
       className="pb-safe"
       refreshControl={
         <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
       }
+      contentContainerClassName="flex-row flex-wrap justify-between mx-2"
       removeClippedSubviews
       data={data}
       onEndReachedThreshold={0.8}
       onEndReached={() => fetchNextPage()}
-      estimatedListSize={{
-        width,
-        height,
-      }}
       keyExtractor={keyExtractor}
-      drawDistance={height * 6}
-      numColumns={catalogColumns}
-      estimatedItemSize={190}
       renderItem={renderItem}
       ListFooterComponent={
-        <FetchingNextPageCards
-          isFetching={isFetchingNextPage && !!_data && _data.pages.length >= 10}
-        />
+        <FetchingNextPageCards isFetching={isFetchingNextPage} />
       }
     />
   )

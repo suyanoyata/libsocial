@@ -39,9 +39,10 @@ export const DownloadCard = ({ item }: { item: DownloadedChapter }) => {
     <Sheet open={open} onOpenChange={setOpen}>
       <Pressable
         onPress={() => setOpen(true)}
-        className="bg-muted-darken active:opacity-90 overflow-hidden rounded-lg flex-row mx-2"
+        className="bg-muted active:opacity-90 overflow-hidden rounded-lg flex-row mx-2"
       >
         <TransitionedImage
+          className="rounded-none"
           width={120}
           height={160}
           source={{ uri: item.title.cover.default }}

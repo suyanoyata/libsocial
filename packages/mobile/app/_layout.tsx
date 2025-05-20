@@ -95,6 +95,14 @@ const config = createTamagui({
   },
 })
 
+const LightTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: "#ffffff",
+  },
+}
+
 const Toaster = cssInterop(_Toaster, { className: { target: "style" } })
 
 SplashScreen.preventAutoHideAsync()
@@ -155,58 +163,56 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <TRPCQueryProvider>
-        <View className="bg-primary flex-1">
-          <TamaguiProvider config={config}>
-            <ThemeProvider value={isDark ? DarkTheme : DefaultTheme}>
-              <ErrorBoundary FallbackComponent={ErrorBoundaryComponent}>
-                <BookmarkEventsProvider>
-                  <BottomSheetModalProvider>
-                    <Stack
-                      screenOptions={{
-                        headerShown: true,
-                        header: () => <BackButton />,
+        <TamaguiProvider config={config}>
+          <ThemeProvider value={isDark ? DarkTheme : LightTheme}>
+            <ErrorBoundary FallbackComponent={ErrorBoundaryComponent}>
+              <BookmarkEventsProvider>
+                <BottomSheetModalProvider>
+                  <Stack
+                    screenOptions={{
+                      headerShown: true,
+                      header: () => <BackButton />,
+                    }}
+                  >
+                    <Stack.Screen
+                      name="(tabs)"
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                      options={{
+                        presentation: "modal",
+                        headerShown: false,
                       }}
-                    >
-                      <Stack.Screen
-                        name="(tabs)"
-                        options={{ headerShown: false }}
-                      />
-                      <Stack.Screen
-                        options={{
-                          presentation: "modal",
-                          headerShown: false,
-                        }}
-                        name="(modals)"
-                      />
-                      <Stack.Screen
-                        name="title-info"
-                        options={{
-                          headerShown: false,
-                        }}
-                      />
-                      <Stack.Screen
-                        name="manga-reader"
-                        options={{ headerShown: false }}
-                      />
-                      <Stack.Screen
-                        name="downloaded-reader"
-                        options={{ headerShown: false }}
-                      />
-                      <Stack.Screen
-                        name="downloads"
-                        options={{
-                          title: "Downloads",
-                          headerShown: true,
-                          header: (props) => <DownloadsIcon {...props} />,
-                        }}
-                      />
-                    </Stack>
-                  </BottomSheetModalProvider>
-                </BookmarkEventsProvider>
-              </ErrorBoundary>
-            </ThemeProvider>
-          </TamaguiProvider>
-        </View>
+                      name="(modals)"
+                    />
+                    <Stack.Screen
+                      name="title-info"
+                      options={{
+                        headerShown: false,
+                      }}
+                    />
+                    <Stack.Screen
+                      name="manga-reader"
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                      name="downloaded-reader"
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                      name="downloads"
+                      options={{
+                        title: "Downloads",
+                        headerShown: true,
+                        header: (props) => <DownloadsIcon {...props} />,
+                      }}
+                    />
+                  </Stack>
+                </BottomSheetModalProvider>
+              </BookmarkEventsProvider>
+            </ErrorBoundary>
+          </ThemeProvider>
+        </TamaguiProvider>
       </TRPCQueryProvider>
       <Toaster
         className="dark:bg-zinc-950 bg-zinc-100"

@@ -18,12 +18,12 @@ export const Profile = () => {
 
   if (!data) {
     return (
-      <View className="bg-muted-darken rounded-2xl p-2 py-3 mt-3">
+      <View className="bg-muted rounded-2xl p-2 py-3 mt-3">
         <Text className="text-3xl text-secondary font-extrabold mb-2">
           Sign In with
         </Text>
-        <View className="items-center flex-row gap-2">
-          <SignInDiscord />
+        <View className="items-center w-full flex-row gap-2">
+          <SignInDiscord className="flex-1" />
           <SignInAnonymous className="flex-1" />
         </View>
       </View>
@@ -43,7 +43,7 @@ export const Profile = () => {
           </Alert>
         </View>
       )}
-      <View className="bg-muted-darken rounded-2xl px-4 py-3 mt-3 active:bg-muted flex-row items-center gap-2">
+      <View className="bg-muted rounded-2xl px-4 py-3 mt-3 active:bg-muted flex-row items-center gap-2">
         {data.user.image && (
           <FastImage
             style={{ width: 36, height: 36, borderRadius: 999 }}

@@ -102,6 +102,7 @@ export const DownloadChapterButton = ({
               (completed / total) * 100
             )}%)`,
             {
+              duration: Infinity,
               id: toastId,
             }
           )
@@ -140,7 +141,7 @@ export const DownloadChapterButton = ({
         icon: (
           <Lottie
             source={require("@/assets/lottie/download-animation.json")}
-            className="size-8"
+            className="size-6 scale-150 dark:invert"
             loop={false}
           />
         ),
@@ -167,6 +168,9 @@ export const DownloadChapterButton = ({
       return toast.error(error.message ?? "Something went wrong, try again", {
         id: toastId,
       })
+    },
+    onSettled: () => {
+      setToastId(0)
     },
   })
 

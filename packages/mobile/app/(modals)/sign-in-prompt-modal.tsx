@@ -63,18 +63,27 @@ export default function SignInPromptModal() {
       <Text className="text-muted text-xl font-bold my-2">
         If you choose to sign in anonymously, you'll miss out on
       </Text>
-      <Benefit
-        data={{
-          heading: "Adding related titles",
-          text: "Sign in to help community adding related titles.",
-        }}
-        icon="HandHelping"
-      />
+      <View className="gap-6">
+        <Benefit
+          data={{
+            heading: "Adding related titles",
+            text: "Sign in to help community adding related titles.",
+          }}
+          icon="HandHelping"
+        />
+        <Benefit
+          data={{
+            heading: "Adding similar titles",
+            text: "Sign in to help community adding similar titles.",
+          }}
+          icon="HeartHandshake"
+        />
+      </View>
       <View
-        className="mt-auto flex-row gap-2"
+        className="mt-auto flex-row gap-2 w-full"
         style={{ paddingBottom: bottom }}
       >
-        <SignInDiscord fun={() => router.back()} />
+        <SignInDiscord className="flex-1" fun={() => router.back()} />
         <SignInAnonymous className="flex-1" fun={() => router.back()} />
       </View>
     </View>

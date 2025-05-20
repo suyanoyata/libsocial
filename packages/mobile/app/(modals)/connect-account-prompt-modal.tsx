@@ -17,7 +17,7 @@ export default function ConnectAccountPrompt() {
       <Text className="text-muted text-center font-medium mb-auto">
         This feature is not available for anonymous users
       </Text>
-      <SignInDiscord fun={() => router.back()} />
+      <SignInDiscord className="w-full" fun={() => router.back()} />
     </View>
   )
 }

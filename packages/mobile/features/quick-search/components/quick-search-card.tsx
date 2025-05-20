@@ -15,7 +15,7 @@ export const QuickSearchCard = ({ item }: { item: BaseTitle }) => {
 
   const genres = useMemo(
     () => item.genres.slice(0, width / 140),
-    [item.genres, width],
+    [item.genres, width]
   )
 
   return (
@@ -26,7 +26,7 @@ export const QuickSearchCard = ({ item }: { item: BaseTitle }) => {
           params: { slug_url: item.slug_url, site: item.site },
         })
       }}
-      className="mb-2 mx-2 bg-muted-darken active:opacity-90 overflow-hidden rounded-lg flex-row"
+      className="mb-2 mx-2 bg-muted active:opacity-90 overflow-hidden rounded-lg flex-row"
     >
       <FastImage
         source={{ uri: item.cover.default }}

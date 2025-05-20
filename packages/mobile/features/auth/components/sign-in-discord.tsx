@@ -7,7 +7,13 @@ import { useMutation } from "@tanstack/react-query"
 
 import { toast } from "sonner-native"
 
-export const SignInDiscord = ({ fun }: { fun?: () => void }) => {
+export const SignInDiscord = ({
+  fun,
+  className,
+}: {
+  fun?: () => void
+  className?: string
+}) => {
   const { data: session } = useSession()
 
   const { mutate, isPending } = useMutation({
@@ -43,6 +49,8 @@ export const SignInDiscord = ({ fun }: { fun?: () => void }) => {
     <Button
       onPress={mutate}
       variant="accent"
+      className={className}
+      textClassName="line-clamp-1"
       iconLeft={
         !isPending ? (
           <FontAwesomeIcon

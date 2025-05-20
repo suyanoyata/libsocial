@@ -28,8 +28,8 @@ export default function BookmarksView() {
         <Text className="text-muted text-center font-medium">
           This feature is available only for signed in users
         </Text>
-        <View className="flex-row gap-2 mt-auto mb-4 mx-2">
-          <SignInDiscord />
+        <View className="flex-row gap-2 w-full mt-auto mb-4 px-2">
+          <SignInDiscord className="flex-1" />
           <SignInAnonymous className="flex-1" />
         </View>
       </View>

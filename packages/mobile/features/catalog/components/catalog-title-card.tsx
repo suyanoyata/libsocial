@@ -6,13 +6,11 @@ import { BaseTitle } from "@/features/shared/types/title"
 
 import { TransitionedImage } from "@/features/shared/components/transitioned-image"
 import { Pressable } from "react-native"
-import { useProperties } from "@/store/use-properties"
 import { memo } from "react"
 import { withImpact } from "@/lib/utils"
 
 export const CatalogTitleCard = memo(
   ({ title }: { title: BaseTitle }) => {
-    const { catalogImageWidth } = useProperties()
     return (
       <Pressable
         onPress={() => {
@@ -26,12 +24,12 @@ export const CatalogTitleCard = memo(
             })
           )
         }}
-        className="w-full my-1 p-2"
+        className="my-2.5 w-[120px]"
       >
         <TransitionedImage
           source={{ uri: title.cover.default }}
-          height={(catalogImageWidth + 2) * 1.36}
-          width={catalogImageWidth - 14}
+          height={180}
+          width={120}
           recycleId={title.id}
         />
         <Text

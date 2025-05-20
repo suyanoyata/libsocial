@@ -7,6 +7,7 @@ import { PulseView } from "@/components/ui/pulse-view"
 
 import { TitleCardPlaceholder } from "@/features/home/components/title-card-placeholder"
 import { getItemStyle } from "@/features/catalog/lib/item-position-align"
+import { FlatList } from "react-native-gesture-handler"
 
 export const FetchingNextPageCards = ({
   isFetching,
@@ -17,6 +18,18 @@ export const FetchingNextPageCards = ({
   const { catalogColumns } = useProperties()
 
   if (!isFetching) return null
+
+  return (
+    <PulseView>
+      <FlatList
+        contentContainerClassName="flex-row flex-wrap justify-between"
+        removeClippedSubviews
+        data={Array.from({ length: 60 })}
+        onEndReachedThreshold={0.8}
+        renderItem={({ index }: { index: number }) => <TitleCardPlaceholder />}
+      />
+    </PulseView>
+  )
 
   return (
     <PulseView className="flex-1 mt-0 mx-2">

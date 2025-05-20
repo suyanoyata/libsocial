@@ -51,7 +51,9 @@ export default function TabsLayout() {
             </Text>
           )
         },
-        tabBarButton: (props) => <Pressable className="gap-2" {...props} />,
+        tabBarButton: (props) => (
+          <Pressable className="gap-2 pt-2.5" {...props} />
+        ),
         headerShown: false,
       }}
     >

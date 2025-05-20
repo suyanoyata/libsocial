@@ -1,4 +1,4 @@
-import { TextInput, View } from "react-native"
+import { View } from "react-native"
 
 import { Button } from "@/components/ui/button"
 
@@ -8,6 +8,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 import { router } from "expo-router"
 import { Icon } from "@/components/icon"
+import { TextInput } from "@/components/ui/text-input"
 
 export const CatalogHeader = () => {
   const { top } = useSafeAreaInsets()
@@ -15,37 +16,21 @@ export const CatalogHeader = () => {
   const { setSearch } = useFilterStore()
 
   return (
-    <View
-      style={{ paddingTop: top + 4, paddingBottom: 10 }}
-      className="bg-accent-darken px-2 flex-row"
-    >
-      <View className="bg-accent px-4 py-2 h-10 items-center flex-row font-medium rounded-md flex-1">
-        <TextInput
-          onChangeText={setSearch}
-          placeholderTextColor="#a1a1aa"
-          placeholder="Search..."
-          className="text-muted placeholder:text-muted font-medium flex-1 pl-5"
-        />
-        <Icon
-          name="Search"
-          className="text-muted absolute left-1.5"
-          size={20}
-        />
-      </View>
-      <Button
-        variant="ghost"
-        className="rounded-full ml-2 active:bg-white/20"
+    <View className="relative h-12 m-2 mb-3 mt-safe-offset-2">
+      <TextInput
+        showClearButton={false}
+        className="absolute w-full top-0 left-0 pr-8"
+        onChangeText={setSearch}
+        placeholder="Search..."
+      />
+      <Icon
         onPress={() => {
           router.push("/catalog-filters-view")
         }}
-      >
-        <Icon
-          name="Funnel"
-          className="text-muted"
-          size={16}
-          strokeWidth={2.5}
-        />
-      </Button>
+        name="Funnel"
+        className="text-muted absolute right-6 top-3.5 size-5"
+        strokeWidth={2.5}
+      />
     </View>
   )
 }
