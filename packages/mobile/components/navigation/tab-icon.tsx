@@ -34,7 +34,7 @@ export const TabIcon = ({
       })
       impactAsync(ImpactFeedbackStyle.Soft)
     } else {
-      width.value = 40
+      width.value = 50
     }
   }, [width, isFocused])
 
@@ -51,11 +51,11 @@ export const TabIcon = ({
         )}
       />
       <Animated.View
-        style={[animatedStyle]}
         className={cn(
           "absolute h-10",
-          focused && "bg-violet-100 dark:bg-violet-400/50 rounded-full p-2 px-6"
+          focused && "bg-violet-100 dark:bg-violet-400/50 rounded-full p-2"
         )}
+        style={[animatedStyle]}
       />
     </View>
   )
