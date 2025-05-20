@@ -8,7 +8,7 @@ export const t = createTRPCClient<AppRouter>({
   links: [
     httpBatchLink({
       transformer: SuperJSON,
-      url: "https://libsocial-api.vercel.app/api/trpc",
+      url: `${process.env.EXPO_PUBLIC_API_URL}/api/trpc`,
       headers() {
         return {
           siteId: useProperties.getState().siteId,
