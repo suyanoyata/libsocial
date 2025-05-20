@@ -56,7 +56,7 @@ export const QuickSearchInput = ({
         )}
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerClassName="flex-row gap-2 dark:bg-black bg-zinc-100 py-2"
+        contentContainerClassName="flex-row gap-2 bg-primary py-2"
       />
     </View>
   )

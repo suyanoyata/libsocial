@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { RefreshControl, useWindowDimensions, View } from "react-native"
+import { useWindowDimensions, View, FlatList as _FlatList } from "react-native"
 import { useFilterStore } from "@/features/catalog/store/use-filter-store"
 import useDebounce from "@/hooks/use-debounce"
 
@@ -13,11 +13,15 @@ import { FetchingNextPageCards } from "@/features/catalog/components/catalog-fet
 import { CatalogHeader } from "@/features/catalog/components/catalog-header"
 import { CatalogTitleCard } from "@/features/catalog/components/catalog-title-card"
 import { ActivityIndicator } from "@/components/ui/activity-indicator"
+
 import { Text } from "@/components/ui/text"
-import withBubble from "@/components/ui/withBubble"
 import { Icon } from "@/components/icon"
-import { FlatList } from "react-native-gesture-handler"
 import { Lottie } from "@/components/ui/lottie"
+
+import withBubble from "@/components/ui/withBubble"
+import { withRefreshable } from "@/components/ui/with-refreshable"
+
+const FlatList = withRefreshable(_FlatList<BaseTitle>)
 
 const Comp = () => {
   const { search, genres } = useFilterStore()
@@ -93,10 +97,9 @@ const Comp = () => {
 
   return (
     <FlatList
+      isRefreshing={isRefetching}
+      onRefresh={refetch}
       className="pb-safe"
-      refreshControl={
-        <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
-      }
       contentContainerClassName="flex-row flex-wrap justify-between mx-2"
       removeClippedSubviews
       data={data}

@@ -1,15 +1,8 @@
 import { Icon } from "@/components/icon"
 import { cn } from "@/lib/utils"
-import { useIsFocused } from "@react-navigation/native"
-import { impactAsync, ImpactFeedbackStyle } from "expo-haptics"
-import { useEffect } from "react"
 import { View } from "react-native"
-import Animated, {
-  Easing,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated"
+
+import { MotiView } from "moti"
 
 export const TabIcon = ({
   icon,
@@ -18,31 +11,13 @@ export const TabIcon = ({
   icon: string
   focused: boolean
 }) => {
-  const isFocused = useIsFocused()
-
-  const width = useSharedValue(0)
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    width: width.value,
-  }))
-
-  useEffect(() => {
-    if (isFocused) {
-      width.value = withTiming(70, {
-        duration: 150,
-        easing: Easing.inOut(Easing.ease),
-      })
-      impactAsync(ImpactFeedbackStyle.Soft)
-    } else {
-      width.value = 50
-    }
-  }, [width, isFocused])
-
   return (
     <View className="relative items-center justify-center">
       <Icon
         size={20}
         name={icon}
+        strokeWidth={focused ? 0 : 2}
+        fill={cn(focused && "text-violet-600 dark:text-violet-300")}
         className={cn(
           "z-10",
           focused
@@ -50,12 +25,17 @@ export const TabIcon = ({
             : "dark:text-zinc-600 text-zinc-400"
         )}
       />
-      <Animated.View
+      <MotiView
+        from={{ width: 40 }}
+        animate={{ width: focused ? 65 : 40 }}
+        transition={{
+          type: "timing",
+          duration: 200,
+        }}
         className={cn(
           "absolute h-10",
           focused && "bg-violet-100 dark:bg-violet-400/50 rounded-full p-2"
         )}
-        style={[animatedStyle]}
       />
     </View>
   )

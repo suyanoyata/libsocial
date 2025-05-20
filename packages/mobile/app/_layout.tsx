@@ -29,7 +29,6 @@ import {
   LogBox,
   Platform,
   useColorScheme,
-  View,
 } from "react-native"
 
 import { enableFreeze, enableScreens } from "react-native-screens"

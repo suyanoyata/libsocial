@@ -1,4 +1,4 @@
-import { FlatList, RefreshControl, View } from "react-native"
+import { FlatList as _FlatList, View } from "react-native"
 
 import { useSession } from "@/lib/auth"
 
@@ -14,13 +14,18 @@ import { Icon } from "@/components/icon"
 
 import ContextMenu from "react-native-context-menu-view"
 
-import withBubble from "@/components/ui/withBubble"
 import { memo, useState } from "react"
 import { capitalize } from "@/lib/utils"
 
 import { useQuery } from "@tanstack/react-query"
 import { trpc } from "@/lib/trpc"
 import type { BookmarkListItem } from "api/router/bookmarkRouter"
+
+import withBubble from "@/components/ui/withBubble"
+import { withRefreshable } from "@/components/ui/with-refreshable"
+
+const FlatList = withRefreshable(_FlatList<BookmarkListItem>)
+const Bookmark = withBubble(Icon)
 
 function Bookmarks() {
   const { isPending } = useSession()
@@ -32,8 +37,6 @@ function Bookmarks() {
     isPending: isBookmarksPending,
     refetch,
   } = useQuery(trpc.bookmarks.list.queryOptions(filter))
-
-  const Bookmark = withBubble(Icon)
 
   const renderItem = ({ item: bookmark }: { item: BookmarkListItem }) => (
     <BookmarkItem bookmark={bookmark} />
@@ -69,11 +72,11 @@ function Bookmarks() {
     return (
       <FlatList
         data={bookmarks}
-        refreshControl={
-          <RefreshControl refreshing={false} onRefresh={refetch} />
-        }
+        isRefreshing={isBookmarksPending}
+        onRefresh={refetch}
         keyExtractor={(item) => String(item.id)}
         renderItem={renderItem}
+        refreshControlClassName="top-4"
         contentContainerClassName="gap-2 mx-2"
         className="flex-1"
       />

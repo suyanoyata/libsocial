@@ -17,6 +17,7 @@ import { Text } from "@/components/ui/text"
 import { TabIcon } from "@/components/navigation/tab-icon"
 import { HomeTabIcon } from "@/components/navigation/home-icon"
 import { useProperties } from "@/store/use-properties"
+import { TabBar } from "@/components/navigation/tab-bar"
 
 export default function TabsLayout() {
   useGenresConstants()
@@ -28,9 +29,10 @@ export default function TabsLayout() {
 
   return (
     <Tabs
+      tabBar={(props) => <TabBar {...props} />}
       screenOptions={{
         header: (props) => <Header {...props} />,
-        lazy: true,
+        lazy: false,
         sceneStyle: {
           marginTop: top,
         },
@@ -51,9 +53,6 @@ export default function TabsLayout() {
             </Text>
           )
         },
-        tabBarButton: (props) => (
-          <Pressable className="gap-2 pt-2.5" {...props} />
-        ),
         headerShown: false,
       }}
     >

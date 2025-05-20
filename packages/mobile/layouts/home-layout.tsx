@@ -1,6 +1,6 @@
 import { router } from "expo-router"
 
-import { Pressable, RefreshControl, ScrollView, View } from "react-native"
+import { Pressable, ScrollView as _ScrollView, View } from "react-native"
 
 import { useQuery } from "@tanstack/react-query"
 import { trpc } from "@/lib/trpc"
@@ -9,6 +9,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 import { withImpact } from "@/lib/utils"
 import { TextInput } from "@/components/ui/text-input"
+import { withRefreshable } from "@/components/ui/with-refreshable"
+
+const ScrollView = withRefreshable(_ScrollView)
 
 export const HomeLayout = ({ children }: { children?: React.ReactNode }) => {
   const { top } = useSafeAreaInsets()
@@ -27,9 +30,8 @@ export const HomeLayout = ({ children }: { children?: React.ReactNode }) => {
         onPress={() => withImpact(() => router.push("/quick-search"))}
       />
       <ScrollView
-        refreshControl={
-          <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
-        }
+        isRefreshing={isRefetching}
+        onRefresh={refetch}
         className="flex-1 pt-2"
       >
         {children}
