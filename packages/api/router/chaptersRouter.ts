@@ -28,8 +28,18 @@ export const chaptersRouter = t.router({
       return chapter;
     }
 
-    const id = (await axios.get(Mangadex.search(manga.eng_name!))).data.data[0]
-      .id;
+    const {
+      data: { data },
+    } = await axios.get(Mangadex.search(manga.name!));
+
+    if (data.length == 0) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Content is licensed or not found.",
+      });
+    }
+
+    const id = data[0].id;
 
     const {
       data: { data: _mangadexChapters },
@@ -41,11 +51,13 @@ export const chaptersRouter = t.router({
           volume: string;
           chapter: string;
           translatedLanguage: string;
+          externalUrl: string | null;
         };
       }) =>
         mangadexChapter.attributes.volume == input.volume &&
         mangadexChapter.attributes.chapter == input.number &&
-        mangadexChapter.attributes.translatedLanguage == "en"
+        mangadexChapter.attributes.translatedLanguage == "en" &&
+        mangadexChapter.attributes.externalUrl == null
     );
 
     if (!mangadexChapter) {

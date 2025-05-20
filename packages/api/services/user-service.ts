@@ -20,6 +20,15 @@ class Service {
     discordId: string,
     avatarId: string
   ) {
+    if (avatarId == null) {
+      return await db.user.update({
+        where: { email },
+        data: {
+          image: null,
+        },
+      });
+    }
+
     return await db.user.update({
       where: { email },
       data: {
