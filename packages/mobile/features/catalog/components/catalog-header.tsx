@@ -1,18 +1,12 @@
 import { View } from "react-native"
 
-import { Button } from "@/components/ui/button"
-
 import { useFilterStore } from "@/features/catalog/store/use-filter-store"
-
-import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 import { router } from "expo-router"
 import { Icon } from "@/components/icon"
 import { TextInput } from "@/components/ui/text-input"
 
 export const CatalogHeader = () => {
-  const { top } = useSafeAreaInsets()
-
   const { setSearch } = useFilterStore()
 
   return (

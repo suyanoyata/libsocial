@@ -100,7 +100,7 @@ const Comp = () => {
       isRefreshing={isRefetching}
       onRefresh={refetch}
       className="pb-safe"
-      contentContainerClassName="flex-row flex-wrap justify-between mx-2"
+      contentContainerClassName="flex-row flex-wrap justify-start gap-2 mx-2"
       removeClippedSubviews
       data={data}
       onEndReachedThreshold={0.8}

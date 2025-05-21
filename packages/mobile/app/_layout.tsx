@@ -10,26 +10,13 @@ import {
 
 import ErrorBoundary from "react-native-error-boundary"
 
-import { createFont, createTamagui, TamaguiProvider } from "@tamagui/core"
-import { defaultConfig } from "@tamagui/config/v4"
+import { TamaguiProvider } from "@tamagui/core"
 
 import { useFonts } from "expo-font"
-import {
-  addUpdatesStateChangeListener,
-  checkForUpdateAsync,
-  fetchUpdateAsync,
-  reloadAsync,
-} from "expo-updates"
 
-import { useCallback, useEffect, useState } from "react"
+import { useEffect } from "react"
 
-import {
-  Appearance,
-  AppState,
-  LogBox,
-  Platform,
-  useColorScheme,
-} from "react-native"
+import { Appearance, LogBox, Platform, useColorScheme } from "react-native"
 
 import { enableFreeze, enableScreens } from "react-native-screens"
 
@@ -55,8 +42,9 @@ import { TRPCQueryProvider } from "@/providers/trpc-provider"
 import { useSession } from "@/lib/auth"
 
 import { cssInterop } from "react-native-css-interop"
-import { queryClient } from "@/lib/trpc"
 import { ErrorBoundaryComponent } from "@/components/ui/error-boundary-component"
+import { UpdateProvider } from "@/providers/update-provider"
+import { config } from "@/lib/ui/tamagui-config"
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.error,
@@ -73,26 +61,6 @@ Appearance.addChangeListener(({ colorScheme }) =>
 
 enableFreeze()
 enableScreens()
-
-const systemFont = createFont({
-  family: "SF-Regular",
-  size: {},
-  face: {
-    300: { normal: "SF-Light" },
-    500: { normal: "SF-Medium" },
-    600: { normal: "SF-SemiBold" },
-    700: { normal: "SF-Bold" },
-    800: { normal: "SF-Heavy" },
-  },
-})
-
-const config = createTamagui({
-  ...defaultConfig,
-  fonts: {
-    heading: systemFont,
-    body: systemFont,
-  },
-})
 
 const LightTheme = {
   ...DefaultTheme,
@@ -116,22 +84,6 @@ export default function RootLayout() {
     "SF-Heavy": require("../assets/fonts/SFUIText-Heavy.ttf"),
   })
 
-  const [updating, setUpdating] = useState(false)
-
-  useEffect(() => {
-    addUpdatesStateChangeListener(async (listener) => {
-      if (listener.context.isUpdatePending && !updating) {
-        setUpdating(true)
-        queryClient.clear()
-        await reloadAsync()
-      }
-    })
-
-    return () => {
-      setUpdating(false)
-    }
-  }, [])
-
   const { isPending } = useSession()
 
   useEffect(() => {
@@ -140,78 +92,63 @@ export default function RootLayout() {
     }
   }, [loaded, isPending])
 
-  const focusCallback = useCallback(async (event: string) => {
-    if (event == "background" || (event == "active" && !updating)) {
-      const update = await checkForUpdateAsync()
-
-      if (!update.isAvailable) return
-
-      setUpdating(true)
-      await fetchUpdateAsync()
-      await reloadAsync()
-      setUpdating(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    AppState.addEventListener("change", focusCallback)
-  }, [])
-
   const isDark = useColorScheme() === "dark"
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <TRPCQueryProvider>
-        <TamaguiProvider config={config}>
-          <ThemeProvider value={isDark ? DarkTheme : LightTheme}>
-            <ErrorBoundary FallbackComponent={ErrorBoundaryComponent}>
-              <BookmarkEventsProvider>
-                <BottomSheetModalProvider>
-                  <Stack
-                    screenOptions={{
-                      headerShown: true,
-                      header: () => <BackButton />,
-                    }}
-                  >
-                    <Stack.Screen
-                      name="(tabs)"
-                      options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                      options={{
-                        presentation: "modal",
-                        headerShown: false,
-                      }}
-                      name="(modals)"
-                    />
-                    <Stack.Screen
-                      name="title-info"
-                      options={{
-                        headerShown: false,
-                      }}
-                    />
-                    <Stack.Screen
-                      name="manga-reader"
-                      options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                      name="downloaded-reader"
-                      options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                      name="downloads"
-                      options={{
-                        title: "Downloads",
+        <UpdateProvider>
+          <TamaguiProvider config={config}>
+            <ThemeProvider value={isDark ? DarkTheme : LightTheme}>
+              <ErrorBoundary FallbackComponent={ErrorBoundaryComponent}>
+                <BookmarkEventsProvider>
+                  <BottomSheetModalProvider>
+                    <Stack
+                      screenOptions={{
                         headerShown: true,
-                        header: (props) => <DownloadsIcon {...props} />,
+                        header: () => <BackButton />,
                       }}
-                    />
-                  </Stack>
-                </BottomSheetModalProvider>
-              </BookmarkEventsProvider>
-            </ErrorBoundary>
-          </ThemeProvider>
-        </TamaguiProvider>
+                    >
+                      <Stack.Screen
+                        name="(tabs)"
+                        options={{ headerShown: false }}
+                      />
+                      <Stack.Screen
+                        options={{
+                          presentation: "modal",
+                          headerShown: false,
+                        }}
+                        name="(modals)"
+                      />
+                      <Stack.Screen
+                        name="title-info"
+                        options={{
+                          headerShown: false,
+                        }}
+                      />
+                      <Stack.Screen
+                        name="manga-reader"
+                        options={{ headerShown: false }}
+                      />
+                      <Stack.Screen
+                        name="downloaded-reader"
+                        options={{ headerShown: false }}
+                      />
+                      <Stack.Screen
+                        name="downloads"
+                        options={{
+                          title: "Downloads",
+                          headerShown: true,
+                          header: (props) => <DownloadsIcon {...props} />,
+                        }}
+                      />
+                    </Stack>
+                  </BottomSheetModalProvider>
+                </BookmarkEventsProvider>
+              </ErrorBoundary>
+            </ThemeProvider>
+          </TamaguiProvider>
+        </UpdateProvider>
       </TRPCQueryProvider>
       <Toaster
         className="dark:bg-zinc-950 bg-zinc-100"
