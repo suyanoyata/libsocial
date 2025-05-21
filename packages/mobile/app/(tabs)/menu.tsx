@@ -2,6 +2,7 @@ import { ActionMenuOption } from "@/components/ui/action-menu-option"
 
 import { Text } from "@/components/ui/text"
 import { Profile } from "@/features/auth/ui/profile"
+import { mmkv } from "@/lib/storage"
 
 import { useQueryClient } from "@tanstack/react-query"
 
@@ -20,7 +21,10 @@ export default function Menu() {
         buttonVariant="destructive"
         note="This will clear all previous network requests, such as catalog, search results data and so on... Your downloaded chapters, search and reading history will remain."
         actionText="Clear"
-        action={() => queryClient.clear()}
+        action={() => {
+          mmkv.delete("libsocial.client.cache")
+          queryClient.clear()
+        }}
       >
         Clear network caches
       </ActionMenuOption>

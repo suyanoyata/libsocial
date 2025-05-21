@@ -1,9 +1,9 @@
 "use client"
 
-import { queryClient } from "@/lib/trpc"
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client"
 
 import { clientPersister } from "@/lib/persistent-query-storage"
+import { queryClient } from "@/lib/query-client"
 
 export const TRPCQueryProvider = ({
   children,

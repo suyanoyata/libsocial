@@ -1,21 +1,21 @@
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister"
-import { MMKV } from "react-native-mmkv"
 
-const storage = new MMKV()
+import { mmkv } from "@/lib/storage"
 
 const clientStorage = {
   setItem: (key: string, value: string) => {
-    storage.set(key, value)
+    mmkv.set(key, value)
   },
   getItem: (key: string) => {
-    const value = storage.getString(key)
+    const value = mmkv.getString(key)
     return value === undefined ? null : value
   },
   removeItem: (key: string) => {
-    storage.delete(key)
+    mmkv.delete(key)
   },
 }
 
 export const clientPersister = createSyncStoragePersister({
   storage: clientStorage,
+  key: "libsocial.client.cache",
 })

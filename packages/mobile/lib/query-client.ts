@@ -8,6 +8,8 @@ export const queryClient = new QueryClient({
       refetchInterval: 1000 * 60 * 5,
       retry: 1,
       gcTime: 1000 * 60 * 5,
+      structuralSharing: false,
+      notifyOnChangeProps: ['data', 'error', 'isLoading', 'isPending', 'status'],
     },
   },
 })
