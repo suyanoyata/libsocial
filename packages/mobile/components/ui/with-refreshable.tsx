@@ -1,11 +1,9 @@
-import { Lottie } from "@/components/ui/lottie"
 import { View } from "react-native"
-import { forwardRef, memo, useEffect } from "react"
+import { forwardRef, useEffect } from "react"
 import Animated, {
   Extrapolation,
   interpolate,
   runOnJS,
-  scrollTo,
   useAnimatedProps,
   useAnimatedRef,
   useAnimatedScrollHandler,
@@ -14,6 +12,9 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated"
 import { cn } from "@/lib/utils"
+import { impactAsync, ImpactFeedbackStyle } from "expo-haptics"
+
+import { Lottie } from "@/components/ui/lottie"
 
 type RefreshControlProps = {
   isRefreshing: boolean
@@ -21,6 +22,8 @@ type RefreshControlProps = {
   refreshControlClassName?: string
   children?: React.ReactNode
 }
+
+const impact = (type: ImpactFeedbackStyle) => impactAsync(type)
 
 export function withRefreshable<T extends React.ComponentType<any>>(
   WrappedComponent: T
@@ -36,39 +39,29 @@ export function withRefreshable<T extends React.ComponentType<any>>(
       ref
     ) => {
       const pos = useSharedValue(0)
-      const refreshing = useSharedValue(0)
-      const didCallRefresh = useSharedValue(false)
-
+      const refreshing = useSharedValue(isRefreshing ? 1 : 0)
+      const reach = useSharedValue(false)
       const animatedRef = useAnimatedRef<any>()
+
+      useEffect(() => {
+        refreshing.value = withTiming(isRefreshing ? 1 : 0, { duration: 300 })
+      }, [isRefreshing, refreshing, animatedRef])
 
       const scrollHandler = useAnimatedScrollHandler({
         onScroll: (event) => {
           pos.value = event.contentOffset.y
-        },
-        onEndDrag: (event) => {
-          if (
-            event.contentOffset.y < -100 &&
-            !refreshing.value &&
-            !didCallRefresh.value
-          ) {
-            refreshing.value = 1
-            didCallRefresh.value = true
-            runOnJS(onRefresh)()
+
+          if (event.contentOffset.y < -100) {
+            if (!reach.value) {
+              runOnJS(impact)(ImpactFeedbackStyle.Medium)
+              runOnJS(onRefresh)()
+            }
+            reach.value = true
+          } else {
+            reach.value = false
           }
         },
       })
-
-      useEffect(() => {
-        if (!isRefreshing) {
-          refreshing.value = withTiming(0, { duration: 300 }, () => {
-            didCallRefresh.value = false
-          })
-
-          scrollTo(animatedRef, 0, 0, true)
-        } else {
-          refreshing.value = withTiming(1, { duration: 300 })
-        }
-      }, [isRefreshing])
 
       const refreshIconStyles = useAnimatedStyle(() => {
         const overscroll = -pos.value
@@ -130,5 +123,5 @@ export function withRefreshable<T extends React.ComponentType<any>>(
     }
   )
 
-  return memo(ComponentWithRefresh)
+  return ComponentWithRefresh
 }
