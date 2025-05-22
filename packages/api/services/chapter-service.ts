@@ -20,6 +20,8 @@ import { FileController } from "~/lib/fs";
 import { MangadexChapterData } from "~/types/mangadex-chapter";
 import { TRPCError } from "@trpc/server";
 
+import { posthog } from "~/lib/posthog";
+
 class Service {
   private ChapterServiceLogger = new Logger("ChapterService");
 
@@ -40,6 +42,32 @@ class Service {
         slug_url,
       },
     });
+
+    const shouldDisplayEmpty = await posthog.isFeatureEnabled(
+      "SHOULD_DISPLAY_EMPTY_CONTENT",
+      "api",
+      {
+        personProperties: {
+          slug_url,
+          type: "manga",
+        },
+      }
+    );
+
+    if (shouldDisplayEmpty) {
+      const chapters = await db.chapter.findMany({
+        where: {
+          manga_id: manga.id,
+        },
+        orderBy: {
+          item_number: "asc",
+        },
+      });
+
+      return chapters.map((chapter) => ({
+        ...chapter,
+      }));
+    }
 
     const chapters = await db.chapter.findMany({
       where: {

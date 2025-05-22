@@ -1,4 +1,5 @@
 import { db } from "~/lib/db";
+import { posthog } from "~/lib/posthog";
 
 class Service {
   public async getEpisodes(slug_url: string) {
@@ -8,6 +9,30 @@ class Service {
         slug_url,
       },
     });
+
+    const shouldDisplayEmpty = await posthog.isFeatureEnabled(
+      "SHOULD_DISPLAY_EMPTY_CONTENT",
+      "api",
+      {
+        personProperties: {
+          slug_url,
+          type: "anime",
+        },
+      }
+    );
+
+    if (shouldDisplayEmpty) {
+      const anime = await db.episode.findMany({
+        where: {
+          slug_url,
+        },
+        orderBy: {
+          item_number: "asc",
+        },
+      });
+
+      return anime;
+    }
 
     const anime = await db.episode.findMany({
       where: {

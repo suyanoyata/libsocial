@@ -40,25 +40,34 @@ model Genre {
   @@map("genre")
 }
 
-model Related {
+model Association {
   id Int @id @default(autoincrement())
 
-  reason RelatedReason
+  relatedReason RelatedReason?
+  similarReason SimilarReason?
 
-  anime Anime? @relation("base anime", fields: [anime_slug], references: [slug_url])
-  manga Manga? @relation("base manga", fields: [manga_slug], references: [slug_url])
-
-  relatedAnime Anime? @relation("related-to-anime", fields: [relatedAnimeSlug], references: [slug_url])
-  relatedManga Manga? @relation("related-to-manga", fields: [relatedMangaSlug], references: [slug_url])
-
+  anime      Anime?  @relation("base anime", fields: [anime_slug], references: [slug_url], map: "association_slug_url_base_anime_fkey")
   anime_slug String?
+
+  manga      Manga?  @relation("base manga", fields: [manga_slug], references: [slug_url], map: "association_slug_url_base_manga_fkey")
   manga_slug String?
 
-  relatedAnimeSlug String?
-  relatedMangaSlug String?
+  relatedAnime  Anime?  @relation("related-to-anime", fields: [related_anime], references: [slug_url], map: "association_slug_url_related_to_anime_fkey")
+  related_anime String?
 
-  @@unique([manga_slug, relatedMangaSlug])
-  @@unique([anime_slug, relatedAnimeSlug])
+  relatedManga  Manga?  @relation("related-to-manga", fields: [related_manga], references: [slug_url], map: "association_slug_url_related_to_manga_fkey")
+  related_manga String?
+
+  similarAnime  Anime?  @relation("similar-to-anime", fields: [similar_anime], references: [slug_url], map: "association_slug_url_similar_to_anime_fkey")
+  similar_anime String?
+  similarManga  Manga?  @relation("similar-to-manga", fields: [similar_manga], references: [slug_url], map: "association_slug_url_similar_to_manga_fkey")
+  similar_manga String?
+
+  @@unique([manga_slug, related_manga])
+  @@unique([anime_slug, related_anime])
+  @@unique([manga_slug, similar_manga])
+  @@unique([anime_slug, similar_anime])
+  @@map("association")
 }
 
 model Background {
@@ -91,9 +100,12 @@ model Anime {
 
   Episode Episode[]
 
-  relatedFrom Related[]  @relation("base anime")
-  relatedTo   Related[]  @relation("related-to-anime")
-  Bookmark    Bookmark[]
+  associationFrom Association[] @relation("base anime")
+
+  relatedTo Association[] @relation("related-to-anime")
+  similarTo Association[] @relation("similar-to-anime")
+
+  Bookmark Bookmark[]
 
   @@map("anime")
 }
@@ -139,9 +151,12 @@ model Manga {
 
   Chapter Chapter[]
 
-  relatedFrom Related[]  @relation("base manga")
-  relatedTo   Related[]  @relation("related-to-manga")
-  Bookmark    Bookmark[]
+  associationFrom Association[] @relation("base manga")
+
+  relatedTo Association[] @relation("related-to-manga")
+  similarTo Association[] @relation("similar-to-manga")
+
+  Bookmark Bookmark[]
 
   @@map("manga")
 }
@@ -234,6 +249,8 @@ enum RelatedReason {
   sequel
   prequel
   spinoff
+  adaptation
+  original
 }
 
 model User {
