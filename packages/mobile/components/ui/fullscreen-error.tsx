@@ -10,6 +10,7 @@ import { LottieViewProps } from "lottie-react-native"
 import { cn } from "@/lib/utils"
 
 interface FullscreenErrorProps extends Omit<LottieViewProps, "source"> {
+  source?: string
   className?: string
   iconClassName?: string
   children?: React.ReactNode | string
@@ -19,6 +20,7 @@ interface FullscreenErrorProps extends Omit<LottieViewProps, "source"> {
 
 export const FullscreenError = ({
   fadeIn,
+  source,
   className,
   iconClassName,
   children = "This content is not available",
@@ -36,7 +38,7 @@ export const FullscreenError = ({
     >
       {shouldDisplayBack && <BackButton />}
       <Lottie
-        source={require("@/assets/lottie/sick-emoji.json")}
+        source={source ?? require("@/assets/lottie/sick-emoji.json")}
         className={cn("size-24", iconClassName)}
         autoPlay
         loop
@@ -45,7 +47,7 @@ export const FullscreenError = ({
       {asChild ? (
         children
       ) : (
-        <Text className="text-secondary text-base font-medium mt-2">
+        <Text className="text-secondary text-base font-medium mt-4">
           {children}
         </Text>
       )}

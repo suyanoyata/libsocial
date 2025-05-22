@@ -29,8 +29,12 @@ export const TabIcon = ({
         from={{ width: 40 }}
         animate={{ width: focused ? 65 : 40 }}
         transition={{
-          type: "timing",
-          duration: 200,
+          type: "spring",
+          clamp: {
+            min: 1,
+            max: 15,
+          },
+          stiffness: 200,
         }}
         className={cn(
           "absolute h-10",

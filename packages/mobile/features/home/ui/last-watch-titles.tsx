@@ -23,14 +23,14 @@ export const LastWatchTitles = () => {
 
   const visibleItems = useMemo(
     () => lastWatchItems.filter((i) => i.hide == false),
-    [lastWatchItems],
+    [lastWatchItems]
   )
 
   if (visibleItems.length == 0 || siteId != "5") return null
 
   return (
-    <Animated.View entering={FadeIn} className="mx-2">
-      <View className="flex-row items-center justify-between mt-3">
+    <Animated.View entering={FadeIn}>
+      <View className="flex-row items-center justify-between mx-2 mt-3">
         <Text className="recent-viewed-title">You've stopped at</Text>
         <Button
           size="sm"
@@ -41,7 +41,7 @@ export const LastWatchTitles = () => {
           Clear all
         </Button>
       </View>
-      <View className="flex-row mt-4">
+      <View className="flex-row mx-2 mt-4">
         <FlatList
           contentContainerClassName="gap-4"
           showsHorizontalScrollIndicator={false}

@@ -42,6 +42,19 @@ export const TitleEpisodes = ({ slug_url }: { slug_url: string }) => {
     )
   }
 
+  if (data.length == 0) {
+    return (
+      <FullscreenError
+        source={require("@/assets/lottie/duck.json")}
+        className="absolute top-0 left-0 h-[90%] w-full"
+        fadeIn
+        shouldDisplayBack={false}
+      >
+        No episodes were uploaded yet
+      </FullscreenError>
+    )
+  }
+
   return (
     <ContentCollectionView
       renderItem={renderItem}
