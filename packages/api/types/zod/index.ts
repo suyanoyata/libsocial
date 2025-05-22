@@ -5,18 +5,19 @@ export * from "~/types/zod/manga";
 export * from "~/types/zod/anime";
 export * from "~/types/zod/associations";
 
+export const header = z.object({
+  _s: z.string(),
+});
+
 export const catalogSearchSchema = z
   .object({
     q: z.string().optional(),
     genres: z.array(z.number()).optional(),
     cursor: z.coerce.number().optional().default(1),
-    siteId: z.string().optional().default("1"),
   })
-  .transform((val) => {
-    return {
-      ...val,
-      type: val.siteId == "1" ? "manga" : "anime",
-    };
-  });
+  .merge(header);
 
-export type CatalogSearchFormData = z.infer<typeof catalogSearchSchema>;
+export type CatalogSearchFormData = Omit<
+  z.infer<typeof catalogSearchSchema>,
+  "_s"
+>;

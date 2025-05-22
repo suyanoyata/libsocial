@@ -5,8 +5,8 @@ import { animeService, mangaService } from "~/services";
 import { catalogSearchSchema } from "~/types/zod";
 
 export const catalogRouter = t.router({
-  list: t.procedure.input(catalogSearchSchema).query(async ({ input, ctx }) => {
-    if (input.type == "anime") {
+  list: t.procedure.input(catalogSearchSchema).query(async ({ ctx, input }) => {
+    if (ctx.type == "anime") {
       return await animeService.getAnimeWithQueries(input);
     }
 

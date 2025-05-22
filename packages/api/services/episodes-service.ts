@@ -12,6 +12,9 @@ class Service {
     const anime = await db.episode.findMany({
       where: {
         slug_url,
+        source: {
+          not: null,
+        },
       },
       orderBy: {
         item_number: "asc",

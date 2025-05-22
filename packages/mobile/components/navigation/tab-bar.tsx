@@ -32,6 +32,7 @@ export const TabBar = ({ state, descriptors }: BottomTabBarProps) => {
           key={route.key}
           onPress={() => {
             router.push(
+              // @ts-ignore
               route.name == "index" ? `/(tabs)` : `/(tabs)/${route.name}`
             )
           }}

@@ -20,6 +20,12 @@ class Service {
     discordId: string,
     avatarId: string
   ) {
+    const userExists = await db.user.findUnique({
+      where: { email },
+    });
+
+    if (!userExists) return;
+
     if (avatarId == null) {
       return await db.user.update({
         where: { email },

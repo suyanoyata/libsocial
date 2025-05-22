@@ -14,7 +14,7 @@ export const useCatalogAPI = (query: string) => {
       {
         q: query,
         genres,
-        siteId,
+        _s: siteId,
       },
       {
         staleTime: 1000 * 60 * 1,

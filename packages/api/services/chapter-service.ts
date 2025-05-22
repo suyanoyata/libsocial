@@ -44,6 +44,13 @@ class Service {
     const chapters = await db.chapter.findMany({
       where: {
         manga_id: manga.id,
+        pages: {
+          some: {
+            url: {
+              not: undefined,
+            },
+          },
+        },
       },
       orderBy: {
         item_number: "asc",

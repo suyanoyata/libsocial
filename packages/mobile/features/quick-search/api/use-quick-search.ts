@@ -8,7 +8,7 @@ export const useQuickSearch = (q: string) => {
 
   return useQuery(
     trpc.search.quick.queryOptions(
-      { q, siteId },
+      { q, _s: siteId },
       {
         trpc: { abortOnUnmount: true },
         enabled: !!q,

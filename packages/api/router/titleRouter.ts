@@ -65,9 +65,9 @@ export const titleRouter = t.router({
   },
   get: {
     title: t.procedure
-      .input(z.object({ slug_url: z.string(), siteId: z.string() }))
-      .query(async ({ input }) => {
-        if (input.siteId == "5") {
+      .input(z.object({ slug_url: z.string() }))
+      .query(async ({ ctx, input }) => {
+        if (ctx.type == "anime") {
           const { data, error } = await throwable(
             animeService.getAnime(input.slug_url)
           );
