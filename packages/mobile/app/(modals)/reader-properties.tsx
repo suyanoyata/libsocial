@@ -58,12 +58,11 @@ export default function ReaderProperties() {
           <Slider.TrackActive style={{ backgroundColor: styles.active }} />
         </Slider.Track>
         <Slider.Thumb
-          style={{
-            backgroundColor: "white",
-          }}
           size="$1"
+          style={{ backgroundColor: "#fff" }}
           circular
-          borderWidth={0}
+          borderWidth={2}
+          borderColor={styles.active}
           index={0}
         />
       </Slider>

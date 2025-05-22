@@ -3,6 +3,8 @@ import { create } from "zustand"
 import { createJSONStorage, persist } from "zustand/middleware"
 
 export interface ApplicationProperties {
+  celluar: boolean
+  setCelluar: (celluar: boolean) => void
   siteId: string
   setSiteId: (value: string) => void
   showReaderScrollbar: boolean
@@ -20,6 +22,8 @@ export interface ApplicationProperties {
 export const useProperties = create<ApplicationProperties>()(
   persist(
     (set) => ({
+      celluar: false,
+      setCelluar: (celluar) => set({ celluar }),
       siteId: "1",
       setSiteId: (siteId) => set({ siteId }),
       showReaderScrollbar: false,
@@ -39,6 +43,6 @@ export const useProperties = create<ApplicationProperties>()(
     {
       name: "libsocial.client.properties",
       storage: createJSONStorage(() => zustandStorage),
-    },
-  ),
+    }
+  )
 )

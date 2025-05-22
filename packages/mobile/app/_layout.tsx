@@ -45,6 +45,8 @@ import { cssInterop } from "react-native-css-interop"
 import { ErrorBoundaryComponent } from "@/components/ui/error-boundary-component"
 import { UpdateProvider } from "@/providers/update-provider"
 import { config } from "@/lib/ui/tamagui-config"
+import { addNetworkStateListener, NetworkStateType } from "expo-network"
+import { useProperties } from "@/store/use-properties"
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.error,
@@ -86,11 +88,21 @@ export default function RootLayout() {
 
   const { isPending } = useSession()
 
+  const { setCelluar } = useProperties()
+
   useEffect(() => {
     if (loaded && !isPending) {
       SplashScreen.hideAsync()
     }
   }, [loaded, isPending])
+
+  useEffect(() => {
+    const sub = addNetworkStateListener((state) => {
+      setCelluar(state.type == NetworkStateType.CELLULAR)
+    })
+
+    return () => sub.remove()
+  }, [])
 
   const isDark = useColorScheme() === "dark"
 

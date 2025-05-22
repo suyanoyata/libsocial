@@ -18,7 +18,14 @@ import { ActivityIndicator } from "@/components/ui/activity-indicator"
 
 import { FullscreenError } from "@/components/ui/fullscreen-error"
 
+import { trpc } from "@/lib/trpc"
+import { useQueryClient } from "@tanstack/react-query"
+
+import { useProperties } from "@/store/use-properties"
+
 export default function TitleInfo() {
+  const client = useQueryClient()
+
   const router = useRoute()
 
   const [shouldRender, setShouldRender] = useState(false)
@@ -35,6 +42,8 @@ export default function TitleInfo() {
 
   const { data } = useTitleInfo(slug_url, site)
 
+  const celluar = useProperties((state) => state.celluar)
+
   useEffect(() => {
     if (!withDelay && data) {
       setShouldRender(true)
@@ -46,6 +55,18 @@ export default function TitleInfo() {
       }, 500)
     }
   }, [withDelay, data])
+
+  useEffect(() => {
+    if (celluar) return
+
+    if (!data) return
+
+    if (data.model == "manga") {
+      client.prefetchQuery(trpc.chapters.list.queryOptions(data.slug_url))
+    } else {
+      client.prefetchQuery(trpc.episodes.list.queryOptions(data.slug_url))
+    }
+  }, [data])
 
   if (error) {
     return <FullscreenError />
