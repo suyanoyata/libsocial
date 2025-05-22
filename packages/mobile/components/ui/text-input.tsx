@@ -36,11 +36,9 @@ export const TextInput = ({
           "placeholder:text-secondary text-primary px-5 pl-10 font-medium"
         )}
       />
-      <_Icon
-        name="Search"
-        className="z-20 absolute left-3 top-3 text-muted"
-        strokeWidth={2.8}
-      />
+      <View className="z-20 p-3.5 absolute left-0 top-0">
+        <_Icon name="Search" className="text-muted" strokeWidth={2.8} />
+      </View>
       {showClearButton && props.value && props.value.length > 0 && (
         <Icon
           entering={FadeIn}

@@ -17,7 +17,6 @@ import { impactAsync, ImpactFeedbackStyle } from "expo-haptics"
 import { Lottie } from "@/components/ui/lottie"
 
 type RefreshControlProps = {
-  isRefreshing: boolean
   onRefresh: () => void
   refreshControlClassName?: string
   children?: React.ReactNode
@@ -35,17 +34,18 @@ export function withRefreshable<T extends React.ComponentType<any>>(
     React.ComponentProps<T> & RefreshControlProps
   >(
     (
-      { isRefreshing, onRefresh, children, refreshControlClassName, ...rest },
+      { _isRefreshing, onRefresh, children, refreshControlClassName, ...rest },
       ref
     ) => {
       const pos = useSharedValue(0)
-      const refreshing = useSharedValue(isRefreshing ? 1 : 0)
+      // const refreshing = useSharedValue(isRefreshing ? 1 : 0)
+      const refreshing = useSharedValue(0)
       const reach = useSharedValue(false)
       const animatedRef = useAnimatedRef<any>()
 
-      useEffect(() => {
-        refreshing.value = withTiming(isRefreshing ? 1 : 0, { duration: 300 })
-      }, [isRefreshing, refreshing, animatedRef])
+      // useEffect(() => {
+      //   refreshing.value = withTiming(isRefreshing ? 1 : 0, { duration: 300 })
+      // }, [isRefreshing, refreshing, animatedRef])
 
       const scrollHandler = useAnimatedScrollHandler({
         onScroll: (event) => {

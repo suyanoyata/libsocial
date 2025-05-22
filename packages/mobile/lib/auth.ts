@@ -11,10 +11,14 @@ export const {
   signOut,
   linkSocial,
   getCookie,
+  getSession,
   ...authClient
 } = createAuthClient({
   baseURL: process.env.EXPO_PUBLIC_API_URL,
   scheme: "libsocial",
+  fetchOptions: {
+    throw: true,
+  },
   plugins: [
     anonymousClient(),
     expoClient({

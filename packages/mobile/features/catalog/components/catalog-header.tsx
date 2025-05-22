@@ -1,4 +1,4 @@
-import { View } from "react-native"
+import { Pressable, View } from "react-native"
 
 import { useFilterStore } from "@/features/catalog/store/use-filter-store"
 
@@ -17,14 +17,15 @@ export const CatalogHeader = () => {
         onChangeText={setSearch}
         placeholder="Search..."
       />
-      <Icon
+      <Pressable
         onPress={() => {
           router.push("/catalog-filters-view")
         }}
-        name="Funnel"
-        className="text-muted absolute right-6 top-3.5 size-5"
-        strokeWidth={2.5}
-      />
+        hitSlop={20}
+        className="z-30 p-6 absolute right-3 top-0 size-5 justify-center items-center"
+      >
+        <Icon name="Funnel" className="text-muted size-5" strokeWidth={2.5} />
+      </Pressable>
     </View>
   )
 }

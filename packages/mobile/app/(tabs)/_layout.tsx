@@ -105,26 +105,9 @@ export default function TabsLayout() {
         options={{
           title: "Profile",
           headerShown: true,
-          tabBarIcon: ({ focused }) =>
-            data?.user.image ? (
-              <View
-                className={cn(
-                  "size-10 rounded-full overflow-hidden items-center justify-center",
-                  focused && "bg-violet-600 dark:bg-violet-300"
-                )}
-              >
-                <FastImage
-                  source={{ uri: data.user.image }}
-                  style={{
-                    borderRadius: 999,
-                    height: 32,
-                    width: 32,
-                  }}
-                />
-              </View>
-            ) : (
-              <TabIcon icon="User" focused={focused} />
-            ),
+          tabBarIcon: ({ focused }) => (
+            <TabIcon icon="User" focused={focused} />
+          ),
         }}
       />
     </Tabs>

@@ -72,7 +72,6 @@ function Bookmarks() {
     return (
       <FlatList
         data={bookmarks}
-        isRefreshing={isBookmarksPending}
         onRefresh={refetch}
         keyExtractor={(item) => String(item.id)}
         renderItem={renderItem}
@@ -99,14 +98,14 @@ function Bookmarks() {
         }}
         actions={[
           { title: "All" },
-          { title: "Planned" },
           { title: "Ongoing" },
+          { title: "Planned" },
           { title: "Finished" },
           {
-            title: "Dropped",
+            title: "Favorite",
           },
           {
-            title: "Favorite",
+            title: "Dropped",
           },
         ]}
       >

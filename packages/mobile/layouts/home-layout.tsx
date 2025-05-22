@@ -29,11 +29,7 @@ export const HomeLayout = ({ children }: { children?: React.ReactNode }) => {
         style={{ height: 64 + top }}
         onPress={() => withImpact(() => router.push("/quick-search"))}
       />
-      <ScrollView
-        isRefreshing={isRefetching}
-        onRefresh={refetch}
-        className="flex-1 pt-2"
-      >
+      <ScrollView onRefresh={refetch} className="flex-1 pt-2">
         {children}
       </ScrollView>
     </View>

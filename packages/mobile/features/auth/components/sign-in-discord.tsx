@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@/components/icon"
 import { ActivityIndicator } from "@/components/ui/activity-indicator"
 import { Button } from "@/components/ui/button"
-import { signIn, useSession } from "@/lib/auth"
+import { getSession, signIn, useSession } from "@/lib/auth"
 import { withSuccessImpact } from "@/lib/utils"
 import { useMutation } from "@tanstack/react-query"
 
@@ -31,7 +31,9 @@ export const SignInDiscord = ({
         fun()
       }
 
-      setTimeout(() => {
+      const { user } = await getSession()
+
+      if (!user.isAnonymous) {
         const title = session?.user.isAnonymous
           ? "You've linked your Discord account"
           : "Signed in with Discord"
@@ -41,7 +43,7 @@ export const SignInDiscord = ({
             duration: 2000,
           })
         )
-      }, 500)
+      }
     },
   })
 

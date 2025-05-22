@@ -97,7 +97,6 @@ const Comp = () => {
 
   return (
     <FlatList
-      isRefreshing={isRefetching}
       onRefresh={refetch}
       className="pb-safe"
       contentContainerClassName="flex-row flex-wrap justify-start gap-2 mx-2"
