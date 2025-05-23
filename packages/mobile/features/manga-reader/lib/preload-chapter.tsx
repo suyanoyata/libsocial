@@ -5,6 +5,7 @@ import FastImage from "@d11/react-native-fast-image"
 import { Chapter } from "@/features/shared/types/chapter"
 import { trpc } from "@/lib/trpc"
 import { t } from "@/lib/trpc/trpc-client"
+import { useProperties } from "@/store/use-properties"
 
 export const preloadNextChapter = async (
   client: QueryClient,
@@ -19,7 +20,7 @@ export const preloadNextChapter = async (
     })
   )
 
-  if (didLoadNextChapter) return
+  if (didLoadNextChapter || useProperties.getState().celluar) return
 
   if (nextChapter?.volume && nextChapter?.number) {
     const data = await t.chapters.get.query({

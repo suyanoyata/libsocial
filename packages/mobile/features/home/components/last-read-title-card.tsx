@@ -10,6 +10,7 @@ import { LastReadItem, useReadingTracker } from "@/store/use-reading-tracker"
 
 import { Icon } from "@/components/icon"
 import Animated, {
+  cancelAnimation,
   interpolate,
   useAnimatedStyle,
   useSharedValue,
@@ -26,23 +27,24 @@ export const LastReadTitleCard = ({ item }: { item: LastReadItem }) => {
 
   const progress = useSharedValue(0)
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    width: `${interpolate(progress.value, [0, 1], [0, 100])}%`,
-  }))
+  const animatedStyle = useAnimatedStyle(
+    () => ({
+      width: `${interpolate(progress.value, [0, 1], [0, 100])}%`,
+    }),
+    []
+  )
 
   useEffect(() => {
-    const id = setTimeout(() => {
-      progress.value = withSpring(item.lastReadChapter / item.overallChapters, {
-        mass: 3,
-        damping: 100,
-        stiffness: 180,
-      })
-    }, 200)
+    progress.value = withSpring(item.lastReadChapter / item.overallChapters, {
+      mass: 2,
+      damping: 50,
+      stiffness: 100,
+    })
 
     return () => {
-      clearTimeout(id)
+      cancelAnimation(progress)
     }
-  }, [item])
+  }, [item.lastReadChapter, item.overallChapters])
 
   if (item.hide) return null
 
