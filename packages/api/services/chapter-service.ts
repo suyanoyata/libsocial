@@ -21,6 +21,7 @@ import { MangadexChapterData } from "~/types/mangadex-chapter";
 import { TRPCError } from "@trpc/server";
 
 import { posthog } from "~/lib/posthog";
+import { Chapter } from "~/lib/prisma";
 
 class Service {
   private ChapterServiceLogger = new Logger("ChapterService");
@@ -173,7 +174,11 @@ class Service {
     return chapter?.pages.length || 0;
   }
 
-  public async downloadChapter(chapterId: string, chapterHash: string) {
+  public async downloadChapter(
+    slug_url: string,
+    chapterId: string,
+    chapterHash: string
+  ) {
     const {
       data: {
         chapter: { data: chapterData, hash: mangadexHash },
@@ -202,16 +207,16 @@ class Service {
 
     const base = chapterBaseUrl;
 
-    const { error } = await supabase().storage.getBucket(chapterId);
+    const { error } = await supabase().storage.getBucket(slug_url);
 
     const { data: supabaseFileList, error: supabaseFileListError } =
-      await supabase().storage.from(chapterId).list();
+      await supabase().storage.from(slug_url).list(`${chapterId}/`);
 
     const mangadexFileList = chapterData;
 
     if (error || supabaseFileListError) {
       await supabase()
-        .storage.createBucket(chapterId, {
+        .storage.createBucket(slug_url, {
           public: true,
           allowedMimeTypes: ["image/*"],
         })
@@ -235,8 +240,8 @@ class Service {
       const res = await Promise.all(
         supabaseFileList.map(async (file) => {
           const { data } = await supabase()
-            .storage.from(chapterId)
-            .download(file.name);
+            .storage.from(slug_url)
+            .download(`${chapterId}/${file.name}`);
 
           const bytes = await data!.bytes();
 
@@ -253,8 +258,9 @@ class Service {
           return {
             chapterId: Number(chapterId),
             image: file.name,
-            url: supabase().storage.from(chapterId).getPublicUrl(file.name).data
-              .publicUrl,
+            url: supabase()
+              .storage.from(slug_url)
+              .getPublicUrl(`${chapterId}/${file.name}`).data.publicUrl,
             ratio,
           };
         })
@@ -305,8 +311,8 @@ class Service {
         }
 
         await supabase()
-          .storage.from(chapterId)
-          .upload(image, file)
+          .storage.from(slug_url)
+          .upload(`${chapterId}/${image}`, file)
           .catch((e) => {
             console.error("error while uploading", e);
           });
@@ -316,8 +322,9 @@ class Service {
             data: {
               chapterId: Number(chapterId),
               image,
-              url: supabase().storage.from(chapterId).getPublicUrl(image).data
-                .publicUrl,
+              url: supabase()
+                .storage.from(slug_url)
+                .getPublicUrl(`${chapterId}/${image}`).data.publicUrl,
               ratio: parseFloat(
                 (dimensions.width / dimensions.height).toFixed(4)
               ),
@@ -330,6 +337,34 @@ class Service {
     ]);
 
     return "downloaded";
+  }
+
+  public async deleteChapter(chapterId: Chapter["id"]) {
+    await db.chapter
+      .findFirstOrThrow({
+        where: {
+          id: chapterId,
+        },
+      })
+      .catch(() => {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Chapter was not found",
+        });
+      });
+
+    await Promise.all([
+      supabase().storage.deleteBucket(String(chapterId)),
+      db.chapter.update({
+        where: { id: chapterId },
+        data: { count: 0 },
+      }),
+      db.mangaPage.deleteMany({
+        where: {
+          chapterId,
+        },
+      }),
+    ]);
   }
 }
 

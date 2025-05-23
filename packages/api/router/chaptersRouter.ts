@@ -56,8 +56,8 @@ export const chaptersRouter = t.router({
       }) =>
         mangadexChapter.attributes.volume == input.volume &&
         mangadexChapter.attributes.chapter == input.number &&
-        mangadexChapter.attributes.translatedLanguage == "en" &&
-        mangadexChapter.attributes.externalUrl == null
+        mangadexChapter.attributes.translatedLanguage == "en"
+      // && mangadexChapter.attributes.externalUrl == null
     );
 
     if (!mangadexChapter) {
@@ -72,7 +72,11 @@ export const chaptersRouter = t.router({
     }
 
     const { error: downloadError } = await throwable(
-      ChapterService.downloadChapter(String(chapter.id), mangadexChapter.id)
+      ChapterService.downloadChapter(
+        input.slug_url,
+        String(chapter.id),
+        mangadexChapter.id
+      )
     );
 
     if (downloadError) {
