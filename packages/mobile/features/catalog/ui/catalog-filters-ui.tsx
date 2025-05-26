@@ -28,7 +28,11 @@ const GenreRender = memo(
     }, [checked, item.id, removeGenre, addGenre])
 
     return (
-      <Pressable onPress={handlePress} className="flex-row items-center gap-2">
+      <Pressable
+        hitSlop={8}
+        onPress={handlePress}
+        className="flex-row items-center gap-2"
+      >
         <Checkbox checked={checked} />
         <Text className="text-secondary font-medium text-base">
           {item.name}
@@ -64,7 +68,7 @@ export const CatalogGenresFilter = () => {
             offset: index * 23,
           })}
           contentContainerStyle={{
-            gap: 8,
+            gap: 16,
             paddingBottom: bottom + 4,
           }}
           removeClippedSubviews

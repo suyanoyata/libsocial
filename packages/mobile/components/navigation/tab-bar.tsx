@@ -29,6 +29,7 @@ export const TabBar = ({ state, descriptors }: BottomTabBarProps) => {
     >
       {state.routes.map((route, index) => (
         <Pressable
+          hitSlop={17}
           key={route.key}
           onPress={() => {
             router.push(

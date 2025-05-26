@@ -15,7 +15,7 @@ const ScrollView = withRefreshable(_ScrollView)
 
 export const HomeLayout = ({ children }: { children?: React.ReactNode }) => {
   const { top } = useSafeAreaInsets()
-  const { isRefetching, refetch } = useQuery(trpc.titles.popular.queryOptions())
+  const { refetch } = useQuery(trpc.titles.popular.queryOptions())
 
   return (
     <View className="flex-1 mt-safe-offset-2">
@@ -26,7 +26,6 @@ export const HomeLayout = ({ children }: { children?: React.ReactNode }) => {
       />
       <Pressable
         className="flex-1 absolute top-0 left-0 h-14 w-full z-30"
-        style={{ height: 64 + top }}
         onPress={() => withImpact(() => router.push("/quick-search"))}
       />
       <ScrollView onRefresh={refetch} className="flex-1 pt-2">

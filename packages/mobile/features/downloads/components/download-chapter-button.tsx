@@ -192,6 +192,7 @@ export const DownloadChapterButton = ({
   return (
     <>
       <Pressable
+        hitSlop={15}
         disabled={isPending || isChapterDownloaded}
         className="ml-auto"
         onPress={downloadChapter}
