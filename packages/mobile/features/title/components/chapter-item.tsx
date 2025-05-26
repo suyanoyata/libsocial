@@ -69,31 +69,33 @@ export const Chapter = memo(
     useLayoutEffect(readCallback, [index])
 
     const changeCallback = useCallback(() => {
+      if (!getLastReadChapter(slug_url)) {
+        const data = client.getQueryData(
+          trpc.titles.get.title.queryKey({ slug_url })
+        )
+        const chapters = client.getQueryData(
+          trpc.chapters.list.queryKey(slug_url)
+        )
+
+        if (!data || !chapters) return
+
+        addItem({
+          slug_url,
+          title: data.eng_name ?? data.name,
+          lastReadChapter: index,
+          overallChapters: chapters.length,
+          site: 1,
+          scrollTo: 0,
+          cover: data.cover,
+        })
+      }
+
       if (!read) {
-        if (!getLastReadChapter(slug_url)) {
-          const data = client.getQueryData(
-            trpc.titles.get.title.queryKey({ slug_url })
-          )
-          const chapters = client.getQueryData(
-            trpc.chapters.list.queryKey(slug_url)
-          )
-
-          if (!data || !chapters) return
-
-          addItem({
-            slug_url,
-            title: data.eng_name ?? data.name,
-            lastReadChapter: index,
-            overallChapters: chapters.length,
-            site: 1,
-            scrollTo: 0,
-            cover: data.cover,
-          })
-        }
         add(slug_url, index)
       } else {
         remove(slug_url, index)
       }
+
       updateLastReadChapter(slug_url, biggest(getReadChapters(slug_url)!))
 
       actionToast(
@@ -114,7 +116,6 @@ export const Chapter = memo(
           if (isPending) return
           router.back()
           setRead(true)
-
           startTransition(() => {
             withImpact(() =>
               router.navigate({
@@ -130,7 +131,7 @@ export const Chapter = memo(
         className="content-list-view-item relative overflow-hidden"
       >
         <Pressable
-          hitSlop={10}
+          hitSlop={14}
           onPress={() => {
             setRead((prev) => !prev)
 

@@ -4,9 +4,6 @@ import { trpc } from "@/lib/trpc"
 
 export const useTitleInfo = (slug_url: string, site: string) => {
   return useQuery(
-    trpc.titles.get.title.queryOptions(
-      { slug_url, siteId: site },
-      { enabled: !!slug_url }
-    )
+    trpc.titles.get.title.queryOptions({ slug_url }, { enabled: !!slug_url })
   )
 }
