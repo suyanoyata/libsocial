@@ -32,7 +32,6 @@ const Comp = () => {
     isPending,
     isFetchingNextPage,
     fetchNextPage,
-    isRefetching,
     refetch,
     error,
   } = useCatalogAPI(query)
@@ -99,7 +98,7 @@ const Comp = () => {
     <FlatList
       onRefresh={refetch}
       className="pb-safe"
-      contentContainerClassName="flex-row flex-wrap justify-start gap-2 mx-2"
+      contentContainerClassName="flex-row flex-wrap justify-evenly gap-2 mx-2"
       removeClippedSubviews
       data={data}
       onEndReachedThreshold={0.8}

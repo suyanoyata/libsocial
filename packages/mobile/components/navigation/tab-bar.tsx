@@ -23,7 +23,7 @@ export const TabBar = ({ state, descriptors }: BottomTabBarProps) => {
   return (
     <View
       className={cn(
-        "flex-row w-full pb-safe justify-around pt-4"
+        "flex-row w-full pb-safe justify-around pt-4 android:pb-safe-offset-2"
         // "bg-accent"
       )}
     >
@@ -43,7 +43,7 @@ export const TabBar = ({ state, descriptors }: BottomTabBarProps) => {
           })}
           <Text
             className={cn(
-              "mt-4 text-xs font-semibold text-muted",
+              "mt-4 text-xs font-semibold text-muted w-full",
               focusedIndex === index && "text-accent"
             )}
           >

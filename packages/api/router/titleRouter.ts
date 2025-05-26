@@ -138,3 +138,4 @@ export const titleRouter = t.router({
 export type TitleRelatedItem = RouterOutput["relations"]["list"][number];
 export type TitleSimilarItem = RouterOutput["similar"]["list"][number];
 export type Title = RouterOutput["get"]["title"];
+export type PopularTitle = RouterOutput["popular"]["data"][number];

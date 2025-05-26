@@ -22,19 +22,13 @@ export const Header = (props: Options) => {
 
   return (
     <View
-      style={{
-        paddingTop: Platform.select({ ios: 8, android: top - 8 }),
-      }}
       className={cn(
-        "relative items-center justify-center flex-row mx-3",
+        "relative items-center justify-center flex-row mx-3 my-2",
         props.className
       )}
     >
       {props.showBackButton && (
-        <View
-          style={{ paddingTop: Platform.select({ ios: 8, android: top - 8 }) }}
-          className="absolute top-0 -left-2"
-        >
+        <View className="absolute top-0 -left-2">
           <BackButton
             iconClassName="text-secondary"
             textClassName="text-secondary font-semibold"
@@ -49,12 +43,7 @@ export const Header = (props: Options) => {
         {props.options.title ?? props.route.name}
       </Text>
       {props.headerRight && (
-        <View
-          style={{ paddingTop: Platform.select({ ios: 8, android: top - 8 }) }}
-          className="absolute right-3"
-        >
-          {props.headerRight}
-        </View>
+        <View className="absolute right-3 top-0">{props.headerRight}</View>
       )}
     </View>
   )

@@ -36,7 +36,9 @@ export const FullscreenError = ({
       entering={fadeIn ? FadeIn : undefined}
       className={cn("items-center justify-center flex-1", className)}
     >
-      {shouldDisplayBack && <BackButton />}
+      {shouldDisplayBack && (
+        <BackButton className="android:top-safe android:left-2 android:absolute" />
+      )}
       <Lottie
         source={source ?? require("@/assets/lottie/sick-emoji.json")}
         className={cn("size-24", iconClassName)}

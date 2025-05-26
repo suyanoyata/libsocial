@@ -1,4 +1,3 @@
-import { Pressable, View } from "react-native"
 import { router, Tabs } from "expo-router"
 
 import { Header } from "@/components/ui/header"
@@ -8,8 +7,6 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { useGenresConstants } from "@/features/shared/api/use-filter-constants"
 
 import { cn } from "@/lib/utils"
-
-import FastImage from "@d11/react-native-fast-image"
 
 import { Icon } from "@/components/icon"
 import { Text } from "@/components/ui/text"
@@ -22,8 +19,6 @@ import { TabBar } from "@/components/navigation/tab-bar"
 export default function TabsLayout() {
   useGenresConstants()
   const { top } = useSafeAreaInsets()
-
-  const { data } = useSession()
 
   const { siteId } = useProperties()
 

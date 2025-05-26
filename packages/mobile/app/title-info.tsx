@@ -75,7 +75,8 @@ export default function TitleInfo() {
   if (!data) {
     return (
       <View className="items-center justify-center flex-1">
-        <BackButton />
+        <BackButton className="android:top-safe android:left-2 android:absolute ios:hidden" />
+        <BackButton className="android:hidden" />
         <ActivityIndicator />
       </View>
     )
@@ -85,7 +86,11 @@ export default function TitleInfo() {
 
   return (
     <FadeView withEnter className="flex-1">
-      <BackButton iconClassName="text-white" textClassName="text-white" />
+      <BackButton
+        className="android:top-safe android:left-2 android:absolute"
+        iconClassName="text-white"
+        textClassName="text-white"
+      />
       <ScrollView showsVerticalScrollIndicator={false}>
         <ImageBackground
           source={{ uri: data.background.url }}

@@ -14,7 +14,7 @@ export default function ModalLayout() {
         headerShown: true,
         headerBackButtonDisplayMode: "minimal",
         header: () => (
-          <View className="mt-4 mx-2">
+          <View className="mt-4 mx-2 android:mt-safe">
             <BackButton position="static" />
           </View>
         ),

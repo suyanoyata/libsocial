@@ -16,6 +16,7 @@ type BackButtonProps = ViewStyle & {
 }
 
 export const BackButton = ({
+  className,
   position = "absolute",
   ...props
 }: BackButtonProps) => {
@@ -34,7 +35,7 @@ export const BackButton = ({
       href="../"
       className={cn(
         position == "absolute" && "absolute top-2 left-2",
-        props.className
+        className
       )}
       style={{ marginTop: marginTop(), zIndex: 999 }}
       {...props}

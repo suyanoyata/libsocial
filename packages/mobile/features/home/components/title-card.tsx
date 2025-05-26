@@ -1,5 +1,4 @@
 import { Link } from "expo-router"
-import FastImage from "@d11/react-native-fast-image"
 
 import { View } from "react-native"
 

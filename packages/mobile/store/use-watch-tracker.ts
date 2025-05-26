@@ -41,7 +41,7 @@ export const useWatchTracker = create<WatchTrackerStore>()(
       add: (client, slug_url, index) => {
         set((state) => {
           const title = client.getQueryData(
-            trpc.titles.get.title.queryKey({ slug_url, siteId: "5" })
+            trpc.titles.get.title.queryKey({ slug_url })
           )
 
           const episodes = client.getQueryData(
