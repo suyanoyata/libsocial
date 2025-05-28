@@ -1,11 +1,10 @@
+import FastImage from "@d11/react-native-fast-image"
+import { View } from "react-native"
 import { useAnimeStore } from "@/features/anime-player/context/anime-context"
 
 import { useTitleInfo } from "@/features/title/api/use-title-info"
 
-import FastImage from "@d11/react-native-fast-image"
 import { Text } from "@/components/ui/text"
-
-import { View } from "react-native"
 
 export const AnimeHeaderInfo = () => {
   const { slug_url } = useAnimeStore()
@@ -20,10 +19,10 @@ export const AnimeHeaderInfo = () => {
         style={{
           width: 60,
           height: 90,
-          borderRadius: 8,
+          borderRadius: 8
         }}
         source={{
-          uri: data.cover.default,
+          uri: data.cover.thumbnail
         }}
       />
       <View className="flex-1">

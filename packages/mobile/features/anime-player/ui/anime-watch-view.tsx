@@ -1,5 +1,7 @@
-import { ActivityIndicator } from "@/components/ui/activity-indicator"
-import { FullscreenError } from "@/components/ui/fullscreen-error"
+import { useRoute } from "@react-navigation/native"
+import { useQueryClient } from "@tanstack/react-query"
+import { useEffect, useMemo } from "react"
+import { DeviceEventEmitter, SafeAreaView, View } from "react-native"
 import { AnimeEpisodeSwitcher } from "@/features/anime-player/components/anime-episode-switcher"
 import { AnimeHeaderInfo } from "@/features/anime-player/components/anime-header-info"
 import { AnimePlayer } from "@/features/anime-player/components/anime-player"
@@ -9,12 +11,10 @@ import { AnimeRouteSchema } from "@/features/anime-player/types/anime-route-para
 import { BookmarkEvents } from "@/features/bookmark/const/bookmark-events"
 
 import { useTitleInfo } from "@/features/title/api/use-title-info"
-import { useWatchTracker } from "@/store/use-watch-tracker"
-import { useRoute } from "@react-navigation/native"
-import { useQueryClient } from "@tanstack/react-query"
-import { useEffect, useMemo } from "react"
 
-import { DeviceEventEmitter, SafeAreaView, View } from "react-native"
+import { ActivityIndicator } from "@/components/ui/activity-indicator"
+import { FullscreenError } from "@/components/ui/fullscreen-error"
+import { useWatchTracker } from "@/store/use-watch-tracker"
 
 export const AnimeWatchView = () => {
   const route = useRoute()
@@ -39,13 +39,10 @@ export const AnimeWatchView = () => {
     if (data) {
       const localTitle = get(data.slug_url)
 
-      if (
-        localTitle &&
-        localTitle?.lastWatchedEpisode - 1 < selectedEpisodeIndex
-      ) {
+      if (localTitle && localTitle?.lastWatchedEpisode - 1 < selectedEpisodeIndex) {
         DeviceEventEmitter.emit(BookmarkEvents.UPDATE_WATCH_BOOKMARK, {
           slug_url: data.slug_url,
-          index: selectedEpisodeIndex,
+          index: selectedEpisodeIndex
         })
       }
 

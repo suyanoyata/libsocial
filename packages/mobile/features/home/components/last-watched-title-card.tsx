@@ -4,16 +4,16 @@ import { router } from "expo-router"
 import { useEffect, useMemo } from "react"
 import { View, Pressable } from "react-native"
 
-import { Text } from "@/components/ui/text"
-
-import { LastWatchItem, useWatchTracker } from "@/store/use-watch-tracker"
-import { Icon } from "@/components/icon"
 import Animated, {
   interpolate,
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
+  withSpring
 } from "react-native-reanimated"
+import { Icon } from "@/components/icon"
+import { Text } from "@/components/ui/text"
+
+import { LastWatchItem, useWatchTracker } from "@/store/use-watch-tracker"
 
 export const LastWatchedTitleCard = ({ item }: { item: LastWatchItem }) => {
   const { hide } = useWatchTracker()
@@ -26,19 +26,16 @@ export const LastWatchedTitleCard = ({ item }: { item: LastWatchItem }) => {
   const progress = useSharedValue(0)
 
   const animatedStyle = useAnimatedStyle(() => ({
-    width: `${interpolate(progress.value, [0, 1], [0, 100])}%`,
+    width: `${interpolate(progress.value, [0, 1], [0, 100])}%`
   }))
 
   useEffect(() => {
     const id = setTimeout(() => {
-      progress.value = withSpring(
-        item.lastWatchedEpisode / item.overallEpisodes,
-        {
-          mass: 3,
-          damping: 100,
-          stiffness: 180,
-        }
-      )
+      progress.value = withSpring(item.lastWatchedEpisode / item.overallEpisodes, {
+        mass: 3,
+        damping: 100,
+        stiffness: 180
+      })
     }, 200)
 
     return () => {
@@ -56,8 +53,8 @@ export const LastWatchedTitleCard = ({ item }: { item: LastWatchItem }) => {
           params: {
             slug_url: item.slug_url,
             site: "5",
-            withDelay: allEpisodesWatched ? undefined : "1",
-          },
+            withDelay: allEpisodesWatched ? undefined : "1"
+          }
         })
         // if (!allEpisodesWatched) {
         //   router.push({
@@ -81,7 +78,7 @@ export const LastWatchedTitleCard = ({ item }: { item: LastWatchItem }) => {
         <Icon name="X" className="text-zinc-400" strokeWidth={2.2} size={20} />
       </Pressable>
       <FastImage
-        source={{ uri: item.cover.default }}
+        source={{ uri: item.cover.thumbnail }}
         style={{ width: 100, height: 140 }}
       />
       <View className="p-2 flex-1">
@@ -96,9 +93,7 @@ export const LastWatchedTitleCard = ({ item }: { item: LastWatchItem }) => {
             />
           </View>
         ) : (
-          <Text className="recent-viewed-card-note">
-            You've watched all episodes
-          </Text>
+          <Text className="recent-viewed-card-note">You've watched all episodes</Text>
         )}
       </View>
     </Pressable>

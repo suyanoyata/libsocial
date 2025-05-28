@@ -1,23 +1,15 @@
+import { router } from "expo-router"
+import { useMemo, useState } from "react"
 import { Pressable, View } from "react-native"
+import { toast } from "sonner-native"
+import { DownloadedChapter, useDownloads } from "@/features/downloads/store/use-downloads"
+import { TransitionedImage } from "@/features/shared/components/transitioned-image"
+import { Icon } from "@/components/icon"
+import { ContentCollectionView } from "@/components/ui/content-collection-view"
+import { Sheet, SheetContent } from "@/components/ui/sheet"
 import { Text } from "@/components/ui/text"
 
-import { TransitionedImage } from "@/features/shared/components/transitioned-image"
-import { Sheet, SheetContent } from "@/components/ui/sheet"
-
-import { router } from "expo-router"
-
-import {
-  DownloadedChapter,
-  useDownloads,
-} from "@/features/downloads/store/use-downloads"
-import { useMemo, useState } from "react"
-import { ContentCollectionView } from "@/components/ui/content-collection-view"
-
-import { Icon } from "@/components/icon"
-
 import { withSuccessImpact } from "@/lib/utils"
-
-import { toast } from "sonner-native"
 
 export const DownloadCard = ({ item }: { item: DownloadedChapter }) => {
   const deleteChapter = useDownloads((state) => state.deleteChapter)
@@ -45,7 +37,7 @@ export const DownloadCard = ({ item }: { item: DownloadedChapter }) => {
           className="rounded-none"
           width={120}
           height={160}
-          source={{ uri: item.title.cover.default }}
+          source={{ uri: item.title.cover.thumbnail }}
         />
         <View className="p-2 flex-1 relative">
           <Text className="text-primary font-medium text-base">
@@ -78,8 +70,8 @@ export const DownloadCard = ({ item }: { item: DownloadedChapter }) => {
                   params: {
                     slug_url: item.title.slug_url,
                     volume: item.chapter.volume,
-                    chapter: item.chapter.number,
-                  },
+                    chapter: item.chapter.number
+                  }
                 })
               }}
               className="h-11 mt-2 justify-between rounded-lg px-4 dark:bg-zinc-900 bg-zinc-100 items-center flex-row"

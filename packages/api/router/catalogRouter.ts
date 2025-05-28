@@ -1,4 +1,5 @@
 import { t } from "~/lib/trpc";
+import { RouterOutput } from "~/router";
 
 import { animeService, mangaService } from "~/services";
 
@@ -13,3 +14,5 @@ export const catalogRouter = t.router({
     return await mangaService.getMangaWithQueries(input);
   }),
 });
+
+export type CatalogItem = RouterOutput["catalog"]["list"]["data"][number];

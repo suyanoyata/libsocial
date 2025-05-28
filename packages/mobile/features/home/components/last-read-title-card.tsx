@@ -4,18 +4,17 @@ import { router } from "expo-router"
 import { useEffect, useMemo } from "react"
 import { View, Pressable } from "react-native"
 
-import { Text } from "@/components/ui/text"
-
-import { LastReadItem, useReadingTracker } from "@/store/use-reading-tracker"
-
-import { Icon } from "@/components/icon"
 import Animated, {
   cancelAnimation,
   interpolate,
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
+  withSpring
 } from "react-native-reanimated"
+import { Icon } from "@/components/icon"
+import { Text } from "@/components/ui/text"
+
+import { LastReadItem, useReadingTracker } from "@/store/use-reading-tracker"
 
 export const LastReadTitleCard = ({ item }: { item: LastReadItem }) => {
   const { removeItem } = useReadingTracker()
@@ -29,7 +28,7 @@ export const LastReadTitleCard = ({ item }: { item: LastReadItem }) => {
 
   const animatedStyle = useAnimatedStyle(
     () => ({
-      width: `${interpolate(progress.value, [0, 1], [0, 100])}%`,
+      width: `${interpolate(progress.value, [0, 1], [0, 100])}%`
     }),
     []
   )
@@ -38,7 +37,7 @@ export const LastReadTitleCard = ({ item }: { item: LastReadItem }) => {
     progress.value = withSpring(item.lastReadChapter / item.overallChapters, {
       mass: 2,
       damping: 50,
-      stiffness: 100,
+      stiffness: 100
     })
 
     return () => {
@@ -56,16 +55,16 @@ export const LastReadTitleCard = ({ item }: { item: LastReadItem }) => {
           params: {
             slug_url: item.slug_url,
             site: item.site,
-            withDelay: allChaptersRead ? undefined : "1",
-          },
+            withDelay: allChaptersRead ? undefined : "1"
+          }
         })
         if (!allChaptersRead) {
           router.push({
             pathname: "/manga-reader",
             params: {
               slug_url: item.slug_url,
-              index: String(item.lastReadChapter - 1),
-            },
+              index: String(item.lastReadChapter - 1)
+            }
           })
         }
       }}
@@ -81,7 +80,7 @@ export const LastReadTitleCard = ({ item }: { item: LastReadItem }) => {
         <Icon name="X" className="text-zinc-400" strokeWidth={2.2} size={20} />
       </Pressable>
       <FastImage
-        source={{ uri: item.cover.default }}
+        source={{ uri: item.cover.thumbnail }}
         style={{ width: 100, height: 140 }}
       />
       <View className="p-2 flex-1">
@@ -96,9 +95,7 @@ export const LastReadTitleCard = ({ item }: { item: LastReadItem }) => {
             />
           </View>
         ) : (
-          <Text className="recent-viewed-card-note">
-            You've read all chapters
-          </Text>
+          <Text className="recent-viewed-card-note">You've read all chapters</Text>
         )}
       </View>
     </Pressable>

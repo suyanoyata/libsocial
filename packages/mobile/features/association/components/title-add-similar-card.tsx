@@ -1,29 +1,24 @@
-import { Text } from "@/components/ui/text"
-import { Button } from "@/components/ui/button"
-import { ActivityIndicator } from "@/components/ui/activity-indicator"
-import { Genres } from "@/features/title/components/genres"
-
-import { Pressable, useWindowDimensions, View } from "react-native"
-import MenuView from "react-native-context-menu-view"
 import FastImage from "@d11/react-native-fast-image"
-
-import i18n from "@/i18n"
-
-import { useMemo } from "react"
-
-import { Icon } from "@/components/icon"
-
-import { useCreateSimilar } from "@/features/association/lib/create-similar"
 
 import type { QuickSearchItem } from "api/router/searchRouter"
 import type { Title } from "api/router/titleRouter"
+import { useMemo } from "react"
+import { Pressable, useWindowDimensions, View } from "react-native"
+import MenuView from "react-native-context-menu-view"
+import { useCreateSimilar } from "@/features/association/lib/create-similar"
+import { Genres } from "@/features/title/components/genres"
+import { Icon } from "@/components/icon"
+import { ActivityIndicator } from "@/components/ui/activity-indicator"
+import { Button } from "@/components/ui/button"
+import { Text } from "@/components/ui/text"
+import i18n from "@/i18n"
 
 const relationReasons = ["genres", "script"]
 
 export const AssociationCard = ({
   data,
   title,
-  disabled,
+  disabled
 }: {
   data: QuickSearchItem
   title: Title
@@ -31,14 +26,11 @@ export const AssociationCard = ({
 }) => {
   const { width } = useWindowDimensions()
 
-  const genres = useMemo(
-    () => data.genres.slice(0, width / 140),
-    [data.genres, width]
-  )
+  const genres = useMemo(() => data.genres.slice(0, width / 140), [data.genres, width])
 
   const { mutate, isPending } = useCreateSimilar({
     slug_url: title.slug_url,
-    data,
+    data
   })
 
   if (disabled) return null
@@ -49,7 +41,7 @@ export const AssociationCard = ({
       className="mb-2 mx-2 bg-muted-darken overflow-hidden rounded-lg flex-row disabled:opacity-60 disabled:pointer-events-none"
     >
       <FastImage
-        source={{ uri: data.cover.default }}
+        source={{ uri: data.cover.thumbnail }}
         style={{ width: 120, height: 160 }}
       />
       <View className="p-2 flex-1 relative">
@@ -67,26 +59,26 @@ export const AssociationCard = ({
             marginTop: "auto",
             position: "absolute",
             bottom: 4,
-            right: 4,
+            right: 4
           }}
           onPress={(value) => {
             mutate({
               title: {
                 slug_url: title.slug_url,
-                type: title.model,
+                type: title.model
               },
               similar: {
                 slug_url: data.slug_url,
                 type: data.model,
-                reason: relationReasons[value.nativeEvent.index] as "genres",
-              },
+                reason: relationReasons[value.nativeEvent.index] as "genres"
+              }
             })
           }}
           dropdownMenuMode
           disableShadow
           actions={relationReasons.map((relation) => ({
             // @ts-ignore
-            title: i18n.t(`similar.${relation}`),
+            title: i18n.t(`similar.${relation}`)
           }))}
         >
           <Button variant="tonal" size="sm" hitSlop={15}>

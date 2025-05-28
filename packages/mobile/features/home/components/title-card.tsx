@@ -1,37 +1,32 @@
+import type { PopularTitle } from "api/router/titleRouter"
+import { impactAsync, ImpactFeedbackStyle } from "expo-haptics"
 import { Link } from "expo-router"
 
 import { View } from "react-native"
 
+import { TransitionedImage } from "@/features/shared/components/transitioned-image"
 import { Text } from "@/components/ui/text"
 
-import { BaseTitle } from "@/features/shared/types/title"
-import { impactAsync, ImpactFeedbackStyle } from "expo-haptics"
-
-import { TransitionedImage } from "@/features/shared/components/transitioned-image"
-
-export const TitleCard = ({ title }: { title: Omit<BaseTitle, "genres"> }) => {
+export const TitleCard = ({ title }: { title: Omit<PopularTitle, "genres"> }) => {
   return (
     <Link
       href={{
         pathname: "/title-info",
         params: {
           slug_url: title.slug_url,
-          site: title.site,
-        },
+          site: title.site
+        }
       }}
       onPress={() => impactAsync(ImpactFeedbackStyle.Soft)}
       className="w-[120px]"
     >
       <View>
         <TransitionedImage
-          source={{ uri: title.cover.default }}
+          source={{ uri: title.cover.thumbnail }}
           width={115}
           height={180}
         />
-        <Text
-          className="text-sm mt-1 font-medium text-secondary"
-          numberOfLines={2}
-        >
+        <Text className="text-sm mt-1 font-medium text-secondary" numberOfLines={2}>
           {title.eng_name != "" ? title.eng_name : title.name}
         </Text>
       </View>

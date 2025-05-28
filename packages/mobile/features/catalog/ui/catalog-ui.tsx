@@ -1,27 +1,25 @@
+import type { CatalogItem } from "api/router/catalogRouter"
 import { useEffect, useRef, useState } from "react"
 import { useWindowDimensions, View, FlatList as _FlatList } from "react-native"
-import { useFilterStore } from "@/features/catalog/store/use-filter-store"
-import useDebounce from "@/hooks/use-debounce"
-
-import { useProperties } from "@/store/use-properties"
-
-import { BaseTitle } from "@/features/shared/types/title"
 
 import { useCatalogAPI } from "@/features/catalog/api/use-catalog-api"
 
 import { FetchingNextPageCards } from "@/features/catalog/components/catalog-fetching-cards"
 import { CatalogHeader } from "@/features/catalog/components/catalog-header"
 import { CatalogTitleCard } from "@/features/catalog/components/catalog-title-card"
+import { useFilterStore } from "@/features/catalog/store/use-filter-store"
+import { Icon } from "@/components/icon"
 import { ActivityIndicator } from "@/components/ui/activity-indicator"
 
-import { Text } from "@/components/ui/text"
-import { Icon } from "@/components/icon"
 import { Lottie } from "@/components/ui/lottie"
+import { Text } from "@/components/ui/text"
 
-import withBubble from "@/components/ui/withBubble"
 import { withRefreshable } from "@/components/ui/with-refreshable"
+import withBubble from "@/components/ui/withBubble"
+import useDebounce from "@/hooks/use-debounce"
+import { useProperties } from "@/store/use-properties"
 
-const FlatList = withRefreshable(_FlatList<BaseTitle>)
+const FlatList = withRefreshable(_FlatList<CatalogItem>)
 
 const Comp = () => {
   const { search, genres } = useFilterStore()
@@ -33,20 +31,17 @@ const Comp = () => {
     isFetchingNextPage,
     fetchNextPage,
     refetch,
-    error,
+    error
   } = useCatalogAPI(query)
 
   const data =
-    _data?.pages.reduce<BaseTitle[]>(
-      (acc, curr) => acc.concat(curr.data),
-      []
-    ) ?? []
+    _data?.pages.reduce<CatalogItem[]>((acc, curr) => acc.concat(curr.data), []) ?? []
 
-  const renderItem = ({ item }: { item: BaseTitle }) => (
+  const renderItem = ({ item }: { item: CatalogItem }) => (
     <CatalogTitleCard title={item} />
   )
 
-  const keyExtractor = (item: BaseTitle) => item.slug_url
+  const keyExtractor = (item: CatalogItem) => item.slug_url
 
   if (isPending) {
     return (
@@ -86,9 +81,7 @@ const Comp = () => {
     return (
       <View className="flex-1 items-center justify-center gap-1.5">
         <BubbleIcon name="Unplug" />
-        <Text className="text-primary text-xl font-bold">
-          No results found.
-        </Text>
+        <Text className="text-primary text-xl font-bold">No results found.</Text>
         <Text className="text-muted text-center">{message()}</Text>
       </View>
     )
@@ -105,9 +98,7 @@ const Comp = () => {
       onEndReached={() => fetchNextPage()}
       keyExtractor={keyExtractor}
       renderItem={renderItem}
-      ListFooterComponent={
-        <FetchingNextPageCards isFetching={isFetchingNextPage} />
-      }
+      ListFooterComponent={<FetchingNextPageCards isFetching={isFetchingNextPage} />}
     />
   )
 }
@@ -116,8 +107,7 @@ export const Catalog = () => {
   const [initialRender, setInitialRender] = useState(true)
 
   const { width, height } = useWindowDimensions()
-  const { catalogColumns, setCatalogColumns, setCatalogImageWidth } =
-    useProperties()
+  const { catalogColumns, setCatalogColumns, setCatalogImageWidth } = useProperties()
 
   const containerWidth = 130
 
@@ -136,15 +126,14 @@ export const Catalog = () => {
     })
   }, [ref.current])
 
-  if (Math.floor(width / containerWidth) != catalogColumns || initialRender)
-    return null
+  if (Math.floor(width / containerWidth) != catalogColumns || initialRender) return null
 
   return (
     <View style={{ flex: 1 }}>
       <CatalogHeader />
       <View
         style={{
-          height,
+          height
         }}
         className="flex-1 overflow-hidden rounded-sm"
       >

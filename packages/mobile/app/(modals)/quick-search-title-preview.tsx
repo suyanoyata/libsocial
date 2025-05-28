@@ -1,24 +1,15 @@
-import { FadeView } from "@/components/ui/fade-view"
-import { Text } from "@/components/ui/text"
-
+import FastImage from "@d11/react-native-fast-image"
+import { useRoute } from "@react-navigation/native"
+import { BlurView } from "expo-blur"
+import { router } from "expo-router"
+import { useEffect } from "react"
+import { DeviceEventEmitter, ImageBackground, ScrollView, View } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { useTitleInfo } from "@/features/title/api/use-title-info"
-import { useRoute } from "@react-navigation/native"
-
-import { BlurView } from "expo-blur"
-import FastImage from "@d11/react-native-fast-image"
-
-import {
-  DeviceEventEmitter,
-  ImageBackground,
-  ScrollView,
-  View,
-} from "react-native"
-
-import { TitleSummary } from "@/features/title/components/title-summary"
 import { Genres } from "@/features/title/components/genres"
-import { useEffect } from "react"
-import { router } from "expo-router"
+import { TitleSummary } from "@/features/title/components/title-summary"
+import { FadeView } from "@/components/ui/fade-view"
+import { Text } from "@/components/ui/text"
 
 export default function QuickSearchTitlePreview() {
   const route = useRoute()
@@ -31,7 +22,7 @@ export default function QuickSearchTitlePreview() {
     DeviceEventEmitter.addListener("title-info-navigate", (event) => {
       router.replace({
         pathname: "/title-info",
-        params: { slug_url, site },
+        params: { slug_url, site }
       })
     })
 
@@ -42,7 +33,7 @@ export default function QuickSearchTitlePreview() {
     <ScrollView
       className="bg-primary flex-1"
       style={{
-        paddingBottom: bottom + 8,
+        paddingBottom: bottom + 8
       }}
     >
       {data && (
@@ -53,7 +44,7 @@ export default function QuickSearchTitlePreview() {
               style={{
                 height: 280,
                 paddingTop: 50,
-                position: "relative",
+                position: "relative"
               }}
             >
               <BlurView
@@ -64,16 +55,16 @@ export default function QuickSearchTitlePreview() {
                   position: "absolute",
                   top: 0,
                   left: 0,
-                  backgroundColor: "rgba(0,0,0,0.7)",
+                  backgroundColor: "rgba(0,0,0,0.7)"
                 }}
               />
               <View className="mx-auto flex-row">
                 <FastImage
-                  source={{ uri: data.cover.default }}
+                  source={{ uri: data.cover.thumbnail }}
                   style={{
                     borderRadius: 8,
                     height: 220,
-                    width: 140,
+                    width: 140
                   }}
                 />
               </View>
