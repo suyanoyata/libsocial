@@ -23,6 +23,7 @@ const FlatList = withRefreshable(_FlatList<CatalogItem>)
 
 const Comp = () => {
   const { search, genres } = useFilterStore()
+
   const [query] = useDebounce(search, 500)
 
   const {
@@ -91,7 +92,7 @@ const Comp = () => {
     <FlatList
       onRefresh={refetch}
       className="pb-safe"
-      contentContainerClassName="flex-row flex-wrap justify-evenly gap-2 mx-2"
+      contentContainerClassName="flex-row flex-wrap justify-start gap-2 mx-2"
       removeClippedSubviews
       data={data}
       onEndReachedThreshold={0.8}

@@ -38,7 +38,7 @@ export const AssociationCard = ({
   return (
     <Pressable
       disabled={disabled}
-      className="mb-2 mx-2 bg-muted-darken overflow-hidden rounded-lg flex-row disabled:opacity-60 disabled:pointer-events-none"
+      className="mb-2 mx-2 bg-muted overflow-hidden rounded-lg flex-row disabled:opacity-60 disabled:pointer-events-none"
     >
       <FastImage
         source={{ uri: data.cover.thumbnail }}

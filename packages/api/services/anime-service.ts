@@ -59,7 +59,12 @@ class Service {
 
     const {
       data: { data: _data }
-    } = await axios.get(`https://api.jikan.moe/v4/anime?q=${data.eng_name}`)
+    } = await axios.get(`https://api.jikan.moe/v4/anime?q=${data.eng_name}`).catch(() => {
+      throw new TRPCError({
+        code: "CONFLICT",
+        message: "Couldn't fetch poster from jikan API"
+      })
+    })
 
     if (_data.length == 0) {
       throw new TRPCError({

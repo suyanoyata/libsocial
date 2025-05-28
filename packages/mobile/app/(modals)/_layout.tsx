@@ -3,8 +3,8 @@ import { Stack } from "expo-router"
 import { View } from "react-native"
 
 import { BackButton } from "@/components/ui/back-button"
-import { QuickSearchHeader } from "@/components/ui/quick-search-header"
 import { Header } from "@/components/ui/header"
+import { QuickSearchHeader } from "@/components/ui/quick-search-header"
 
 // Provided here screens will be non-modal unless it's first in stack
 export default function ModalLayout() {
@@ -14,10 +14,10 @@ export default function ModalLayout() {
         headerShown: true,
         headerBackButtonDisplayMode: "minimal",
         header: () => (
-          <View className="mt-4 mx-2 android:mt-safe">
+          <View className="ios:mt-4 mx-2 android:mt-safe">
             <BackButton position="static" />
           </View>
-        ),
+        )
       }}
     >
       <Stack.Screen
@@ -26,8 +26,8 @@ export default function ModalLayout() {
           headerShown: true,
           title: "Add relation",
           header: (props) => (
-            <Header showBackButton className="my-1" {...props} />
-          ),
+            <Header showBackButton className="my-1 ios:mt-4" {...props} />
+          )
         }}
       />
       <Stack.Screen
@@ -36,15 +36,15 @@ export default function ModalLayout() {
           headerShown: true,
           title: "Add similar",
           header: (props) => (
-            <Header showBackButton className="my-1" {...props} />
-          ),
+            <Header showBackButton className="my-1 ios:mt-4" {...props} />
+          )
         }}
       />
       <Stack.Screen
         name="quick-search-title-preview"
         options={{
           headerShown: true,
-          header: () => <QuickSearchHeader />,
+          header: () => <QuickSearchHeader />
         }}
       />
     </Stack>
