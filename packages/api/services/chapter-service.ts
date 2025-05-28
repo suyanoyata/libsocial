@@ -1,27 +1,23 @@
+import { TRPCError } from "@trpc/server";
+import axios from "axios";
+import { imageDimensionsFromData } from "image-dimensions";
+import { api } from "~/lib/axios";
 import { db } from "~/lib/db";
 
-import { api } from "~/lib/axios";
+import { FileController } from "~/lib/fs";
 import { Logger } from "~/lib/logger";
+import { posthog } from "~/lib/posthog";
+import { Chapter } from "~/lib/prisma";
 import { supabase } from "~/lib/supabase";
 
+import { mangaService } from "~/services/manga-service";
+
+import { MangadexChapterData } from "~/types/mangadex-chapter";
 import {
   MangaBaseChapterSchema,
   MangaGetChapter,
   RemoteChapter,
 } from "~/types/zod/chapter";
-
-import { mangaService } from "~/services/manga-service";
-
-import axios from "axios";
-
-import { imageDimensionsFromData } from "image-dimensions";
-
-import { FileController } from "~/lib/fs";
-import { MangadexChapterData } from "~/types/mangadex-chapter";
-import { TRPCError } from "@trpc/server";
-
-import { posthog } from "~/lib/posthog";
-import { Chapter } from "~/lib/prisma";
 
 class Service {
   private ChapterServiceLogger = new Logger("ChapterService");
@@ -33,7 +29,7 @@ class Service {
       MangaBaseChapterSchema.parse({
         ...chapter,
         created_at: new Date(chapter.branches[0].created_at),
-      })
+      }),
     );
   }
 
@@ -52,7 +48,7 @@ class Service {
           slug_url,
           type: "manga",
         },
-      }
+      },
     );
 
     if (shouldDisplayEmpty) {
@@ -177,7 +173,7 @@ class Service {
   public async downloadChapter(
     slug_url: string,
     chapterId: string,
-    chapterHash: string
+    chapterHash: string,
   ) {
     const {
       data: {
@@ -185,12 +181,12 @@ class Service {
         baseUrl: chapterBaseUrl,
       },
     } = await axios.get<MangadexChapterData>(
-      `https://api.mangadex.org/at-home/server/${chapterHash}`
+      `https://api.mangadex.org/at-home/server/${chapterHash}`,
     );
 
     if (chapterData.length == 0) {
       this.ChapterServiceLogger.error(
-        `Most likely ${chapterId} chapter is licensed or not found, aborting...`
+        `Most likely ${chapterId} chapter is licensed or not found, aborting...`,
       );
 
       throw new Error("Chapter is licensed or not found");
@@ -252,7 +248,7 @@ class Service {
           }
 
           const ratio = parseFloat(
-            (dimensions.width / dimensions.height).toFixed(4)
+            (dimensions.width / dimensions.height).toFixed(4),
           );
 
           return {
@@ -263,7 +259,7 @@ class Service {
               .getPublicUrl(`${chapterId}/${file.name}`).data.publicUrl,
             ratio,
           };
-        })
+        }),
       );
 
       return await db.mangaPage.createMany({
@@ -288,7 +284,7 @@ class Service {
             const extension = image.split(".").pop();
             await fileController.writeFile(
               `${index + 1 <= 9 ? "0" : ""}${index + 1}.${extension}`,
-              file
+              file,
             );
           }
         }),
@@ -296,7 +292,7 @@ class Service {
     }
 
     this.ChapterServiceLogger.log(
-      `uploading ${filesToUpload.length}/${chapterData.length}`
+      `uploading ${filesToUpload.length}/${chapterData.length}`,
     );
 
     await Promise.all([
@@ -326,7 +322,7 @@ class Service {
                 .storage.from(slug_url)
                 .getPublicUrl(`${chapterId}/${image}`).data.publicUrl,
               ratio: parseFloat(
-                (dimensions.width / dimensions.height).toFixed(4)
+                (dimensions.width / dimensions.height).toFixed(4),
               ),
             },
           })

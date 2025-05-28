@@ -1,16 +1,12 @@
-import { ContentCollectionView } from "@/components/ui/content-collection-view"
-import { Chapter } from "@/features/title/components/chapter-item"
-
-import { useChapters } from "@/features/title/api/use-chapters"
+import type { Chapter as ChapterType } from "api/router/chaptersRouter"
 import { useMemo, useState } from "react"
-
-import { ActivityIndicator } from "@/components/ui/activity-indicator"
-
 import { View } from "react-native"
+import { useChapters } from "@/features/title/api/use-chapters"
+import { Chapter } from "@/features/title/components/chapter-item"
+import { ActivityIndicator } from "@/components/ui/activity-indicator"
+import { ContentCollectionView } from "@/components/ui/content-collection-view"
 
 import { FullscreenError } from "@/components/ui/fullscreen-error"
-
-import type { Chapter as ChapterType } from "api/router/chaptersRouter"
 
 export const TitleChapters = ({ slug_url }: { slug_url: string }) => {
   const { data, isPending, isError } = useChapters(slug_url)

@@ -1,20 +1,17 @@
 import { router, Tabs } from "expo-router"
 
-import { Header } from "@/components/ui/header"
-
-import { useSession } from "@/lib/auth"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { useGenresConstants } from "@/features/shared/api/use-filter-constants"
 
-import { cn } from "@/lib/utils"
-
 import { Icon } from "@/components/icon"
-import { Text } from "@/components/ui/text"
 
-import { TabIcon } from "@/components/navigation/tab-icon"
 import { HomeTabIcon } from "@/components/navigation/home-icon"
-import { useProperties } from "@/store/use-properties"
 import { TabBar } from "@/components/navigation/tab-bar"
+import { TabIcon } from "@/components/navigation/tab-icon"
+import { Header } from "@/components/ui/header"
+import { Text } from "@/components/ui/text"
+import { cn } from "@/lib/utils"
+import { useProperties } from "@/store/use-properties"
 
 export default function TabsLayout() {
   useGenresConstants()
@@ -26,15 +23,16 @@ export default function TabsLayout() {
     <Tabs
       tabBar={(props) => <TabBar {...props} />}
       screenOptions={{
+        animation: "fade",
         header: (props) => <Header {...props} />,
         lazy: false,
         sceneStyle: {
-          marginTop: top,
+          marginTop: top
         },
         tabBarStyle: {
           paddingTop: 2,
           backgroundColor: "#00000000",
-          borderTopWidth: 0,
+          borderTopWidth: 0
         },
         tabBarLabel: ({ focused, children }) => {
           return (
@@ -48,7 +46,7 @@ export default function TabsLayout() {
             </Text>
           )
         },
-        headerShown: false,
+        headerShown: false
       }}
     >
       <Tabs.Screen
@@ -56,7 +54,7 @@ export default function TabsLayout() {
         options={{
           sceneStyle: {},
           title: "Home",
-          tabBarIcon: ({ focused }) => <HomeTabIcon focused={focused} />,
+          tabBarIcon: ({ focused }) => <HomeTabIcon focused={focused} />
         }}
       />
       <Tabs.Screen
@@ -64,9 +62,7 @@ export default function TabsLayout() {
         options={{
           title: "Catalog",
           sceneStyle: {},
-          tabBarIcon: ({ focused }) => (
-            <TabIcon icon="LayoutGrid" focused={focused} />
-          ),
+          tabBarIcon: ({ focused }) => <TabIcon icon="LayoutGrid" focused={focused} />
         }}
       />
       <Tabs.Screen
@@ -90,9 +86,7 @@ export default function TabsLayout() {
             />
           ),
           headerShown: true,
-          tabBarIcon: ({ focused }) => (
-            <TabIcon icon="Bookmark" focused={focused} />
-          ),
+          tabBarIcon: ({ focused }) => <TabIcon icon="Bookmark" focused={focused} />
         }}
       />
       <Tabs.Screen
@@ -100,9 +94,7 @@ export default function TabsLayout() {
         options={{
           title: "Profile",
           headerShown: true,
-          tabBarIcon: ({ focused }) => (
-            <TabIcon icon="User" focused={focused} />
-          ),
+          tabBarIcon: ({ focused }) => <TabIcon icon="User" focused={focused} />
         }}
       />
     </Tabs>

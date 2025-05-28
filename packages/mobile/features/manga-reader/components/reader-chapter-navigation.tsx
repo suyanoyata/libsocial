@@ -1,20 +1,20 @@
 import { useRoute } from "@react-navigation/native"
+import { useQueryClient } from "@tanstack/react-query"
+import { router } from "expo-router"
+import { View } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
-import { View } from "react-native"
-import { router } from "expo-router"
-
-import { Button } from "@/components/ui/button"
 
 import { Chapter } from "@/features/shared/types/chapter"
 import { Icon } from "@/components/icon"
+import { Button } from "@/components/ui/button"
 
-import { useQueryClient } from "@tanstack/react-query"
+
 import { trpc } from "@/lib/trpc"
 
 export const ReaderChapterNavigation = ({
   chapters,
-  chapterIndex,
+  chapterIndex
 }: {
   chapters: Chapter[]
   chapterIndex: number
@@ -34,17 +34,15 @@ export const ReaderChapterNavigation = ({
     <View className="flex-row m-2 gap-2" style={{ paddingBottom: bottom }}>
       {previousChapter && (
         <Button
-          iconLeft={
-            <Icon name="ChevronLeft" strokeWidth={3} variant="accent" />
-          }
+          iconLeft={<Icon name="ChevronLeft" strokeWidth={3} variant="accent" />}
           variant="accent"
           onPress={() =>
             router.replace({
               pathname: "/manga-reader",
               params: {
                 slug_url,
-                index: chapterIndex - 1,
-              },
+                index: chapterIndex - 1
+              }
             })
           }
           className="flex-1"
@@ -54,21 +52,19 @@ export const ReaderChapterNavigation = ({
       )}
       {nextChapter && (
         <Button
-          iconRight={
-            <Icon name="ChevronRight" strokeWidth={3} variant="accent" />
-          }
+          iconRight={<Icon name="ChevronRight" strokeWidth={3} variant="accent" />}
           variant="accent"
           onPress={() => {
             client.invalidateQueries({
-              queryKey: trpc.bookmarks.list.queryKey(),
+              queryKey: trpc.bookmarks.list.queryKey()
             })
 
             router.replace({
               pathname: "/manga-reader",
               params: {
                 slug_url,
-                index: chapterIndex + 1,
-              },
+                index: chapterIndex + 1
+              }
             })
           }}
           className="flex-1"

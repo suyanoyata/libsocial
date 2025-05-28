@@ -1,13 +1,12 @@
-import { useInfiniteQuery } from "@tanstack/react-query"
+import { useInfiniteQuery } from "@tanstack/react-query";
 
-import { useFilterStore } from "@/features/catalog/store/use-filter-store"
-import { useProperties } from "@/store/use-properties"
-
-import { trpc } from "@/lib/trpc"
+import { useFilterStore } from "@/features/catalog/store/use-filter-store";
+import { trpc } from "@/lib/trpc";
+import { useProperties } from "@/store/use-properties";
 
 export const useCatalogAPI = (query: string) => {
-  const { genres } = useFilterStore()
-  const { siteId } = useProperties()
+  const { genres } = useFilterStore();
+  const { siteId } = useProperties();
 
   return useInfiniteQuery(
     trpc.catalog.list.infiniteQueryOptions(
@@ -20,11 +19,11 @@ export const useCatalogAPI = (query: string) => {
         staleTime: 1000 * 60 * 1,
         getNextPageParam: (lastPage) => {
           if (lastPage.meta.has_next_page) {
-            return lastPage.meta.current_page + 1
+            return lastPage.meta.current_page + 1;
           }
-          return undefined
+          return undefined;
         },
-      }
-    )
-  )
-}
+      },
+    ),
+  );
+};

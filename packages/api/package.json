@@ -7,7 +7,6 @@
     "dev": "bun run --hot index.ts"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
     "@prisma/client": "^6.7.0",
     "@supabase/supabase-js": "^2.48.1",
     "@types/bun": "^1.2.4",
@@ -15,8 +14,6 @@
     "axios": "^1.7.9",
     "chalk": "^5.4.1",
     "deepl-node": "^1.16.0",
-    "eslint": "^9",
-    "eslint-config-next": "15.1.7",
     "hono": "^4.7.2",
     "image-dimensions": "^2.3.0",
     "prisma": "^6.7.0",

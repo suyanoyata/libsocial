@@ -1,37 +1,32 @@
-import { DeviceEventEmitter, Pressable } from "react-native"
-import { Text } from "@/components/ui/text"
-import Animated, { BounceIn } from "react-native-reanimated"
-
-import { DownloadChapterButton } from "@/features/downloads/components/download-chapter-button"
-
+import { useQueryClient } from "@tanstack/react-query"
+import type { Chapter as ChapterType } from "api/router/chaptersRouter"
 import { router, useFocusEffect } from "expo-router"
 import {
   memo,
   useCallback,
-  useEffect,
   useLayoutEffect,
   useMemo,
   useState,
-  useTransition,
+  useTransition
 } from "react"
-
-import { biggest, withImpact } from "@/lib/utils"
+import { Pressable } from "react-native"
+import Animated, { BounceIn } from "react-native-reanimated"
+import { DownloadChapterButton } from "@/features/downloads/components/download-chapter-button"
 import { actionToast } from "@/features/title/lib/action-toast"
+import { Icon } from "@/components/icon"
+import { Text } from "@/components/ui/text"
+
+import { trpc } from "@/lib/trpc"
+import { biggest, withImpact } from "@/lib/utils"
 
 import { useTitleReadChapter } from "@/store/use-chapters-tracker"
 import { useReadingTracker } from "@/store/use-reading-tracker"
-import { useQueryClient } from "@tanstack/react-query"
-
-import { Icon } from "@/components/icon"
-
-import type { Chapter as ChapterType } from "api/router/chaptersRouter"
-import { trpc } from "@/lib/trpc"
 
 export const Chapter = memo(
   ({
     slug_url,
     index,
-    chapter,
+    chapter
   }: {
     slug_url: string
     index: number
@@ -40,16 +35,14 @@ export const Chapter = memo(
     const get = useTitleReadChapter((state) => state.get)
     const add = useTitleReadChapter((state) => state.add)
     const remove = useTitleReadChapter((state) => state.remove)
-    const getReadChapters = useTitleReadChapter(
-      (state) => state.getReadChapters
-    )
+    const getReadChapters = useTitleReadChapter((state) => state.getReadChapters)
 
     const client = useQueryClient()
 
     const {
       get: getLastReadChapter,
       updateLastReadChapter,
-      addItem,
+      addItem
     } = useReadingTracker()
 
     const lastRead = getLastReadChapter(slug_url)
@@ -62,20 +55,15 @@ export const Chapter = memo(
       setRead(get(slug_url, index))
     }, [index])
 
-    const isCurrentLastReadChapter =
-      lastRead && lastRead.lastReadChapter - 1 == index
+    const isCurrentLastReadChapter = lastRead && lastRead.lastReadChapter - 1 == index
 
     useFocusEffect(readCallback)
     useLayoutEffect(readCallback, [index])
 
     const changeCallback = useCallback(() => {
       if (!getLastReadChapter(slug_url)) {
-        const data = client.getQueryData(
-          trpc.titles.get.title.queryKey({ slug_url })
-        )
-        const chapters = client.getQueryData(
-          trpc.chapters.list.queryKey(slug_url)
-        )
+        const data = client.getQueryData(trpc.titles.get.title.queryKey({ slug_url }))
+        const chapters = client.getQueryData(trpc.chapters.list.queryKey(slug_url))
 
         if (!data || !chapters) return
 
@@ -86,7 +74,7 @@ export const Chapter = memo(
           overallChapters: chapters.length,
           site: 1,
           scrollTo: 0,
-          cover: data.cover,
+          cover: data.cover
         })
       }
 
@@ -122,8 +110,8 @@ export const Chapter = memo(
                 pathname: "/manga-reader",
                 params: {
                   slug_url,
-                  index,
-                },
+                  index
+                }
               })
             )
           })
@@ -148,12 +136,7 @@ export const Chapter = memo(
               />
             </Animated.View>
           ) : (
-            <Icon
-              name={ReadIcon}
-              strokeWidth={2.8}
-              className="text-zinc-500"
-              size={20}
-            />
+            <Icon name={ReadIcon} strokeWidth={2.8} className="text-zinc-500" size={20} />
           )}
         </Pressable>
         <Text className="text-secondary font-medium">

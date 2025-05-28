@@ -1,41 +1,36 @@
+import { useRoute } from "@react-navigation/native"
+import { useQuery } from "@tanstack/react-query"
+import type { QuickSearchItem } from "api/router/searchRouter"
+import type { Title } from "api/router/titleRouter"
+import { useNavigation } from "expo-router"
+import { useEffect, useMemo, useState } from "react"
 import { View } from "react-native"
 import Animated, {
   FadeIn,
   FadeOut,
   useAnimatedKeyboard,
-  useAnimatedStyle,
+  useAnimatedStyle
 } from "react-native-reanimated"
 
+import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { AssociationCard } from "@/features/association/components/title-add-similar-card"
+import { useQuickSearch } from "@/features/quick-search/api/use-quick-search"
+import { useTitleInfo } from "@/features/title/api/use-title-info"
+import { ActivityIndicator } from "@/components/ui/activity-indicator"
+import { DismissKeyboardView } from "@/components/ui/dismiss-keyboard-view"
 import { Text } from "@/components/ui/text"
 import { TextInput } from "@/components/ui/text-input"
-import { ActivityIndicator } from "@/components/ui/activity-indicator"
 
-import { useEffect, useMemo, useState } from "react"
-
-import { useNavigation } from "expo-router"
 import useDebounce from "@/hooks/use-debounce"
 
-import { useQuery } from "@tanstack/react-query"
-import { useRoute } from "@react-navigation/native"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { useTitleInfo } from "@/features/title/api/use-title-info"
-import { useQuickSearch } from "@/features/quick-search/api/use-quick-search"
-
-import { AssociationCard } from "@/features/association/components/title-add-similar-card"
-
 import { trpc } from "@/lib/trpc"
-
-import { DismissKeyboardView } from "@/components/ui/dismiss-keyboard-view"
-
-import type { QuickSearchItem } from "api/router/searchRouter"
-import type { Title } from "api/router/titleRouter"
 
 const Comp = ({
   title,
   _search,
   search,
   response,
-  isPending,
+  isPending
 }: {
   title: Title
   _search: string
@@ -46,7 +41,7 @@ const Comp = ({
   const keyboard = useAnimatedKeyboard()
 
   const kbStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: -keyboard.height.value / 2.5 }],
+    transform: [{ translateY: -keyboard.height.value / 2.5 }]
   }))
 
   const renderItem = ({ item }: { item: QuickSearchItem }) => (
@@ -72,23 +67,14 @@ const Comp = ({
 
   if (search.length == 0) {
     return (
-      <Animated.View
-        style={[kbStyle]}
-        className="flex-1 items-center justify-center"
-      >
+      <Animated.View style={[kbStyle]} className="flex-1 items-center justify-center">
         <Text className="text-muted">Type something in search</Text>
       </Animated.View>
     )
   }
 
   if (response && response.length != 0) {
-    return (
-      <Animated.FlatList
-        entering={FadeIn}
-        data={response}
-        renderItem={renderItem}
-      />
-    )
+    return <Animated.FlatList entering={FadeIn} data={response} renderItem={renderItem} />
   }
 
   return (
@@ -114,9 +100,7 @@ export default function AssociationAddSimilar() {
 
   const { data } = useTitleInfo(slug_url, site)
 
-  const { data: similars } = useQuery(
-    trpc.titles.similar.list.queryOptions({ slug_url })
-  )
+  const { data: similars } = useQuery(trpc.titles.similar.list.queryOptions({ slug_url }))
 
   const { bottom } = useSafeAreaInsets()
 
@@ -127,7 +111,7 @@ export default function AssociationAddSimilar() {
 
   useEffect(() => {
     setOptions({
-      title: data?.eng_name ?? data?.name,
+      title: data?.eng_name ?? data?.name
     })
   }, [data])
 

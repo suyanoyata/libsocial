@@ -1,4 +1,4 @@
-import { Chalk } from "chalk";
+import { Chalk } from "chalk"
 
 export class Logger {
   /**
@@ -14,11 +14,14 @@ export class Logger {
       "%c %c %s ",
       "",
       `background: ${color}; color: black; font-weight: bold; border-radius: 5px;`,
-      title,
-    ];
+      title
+    ]
   }
 
-  constructor(public name: string, public color: string = "white") {}
+  constructor(
+    public name: string,
+    public color: string = "white"
+  ) {}
 
   private _log(
     level: "log" | "error" | "warn" | "info" | "debug",
@@ -27,12 +30,9 @@ export class Logger {
     customFmt = ""
   ) {
     if (typeof window == "undefined") {
-      const chalk = new Chalk({ level: 3 });
+      const chalk = new Chalk({ level: 3 })
 
-      return console[level](
-        `${chalk.bgHex(levelColor).bold("Server")} ${chalk.bgHex(levelColor).bold(this.name)}`,
-        ...args
-      );
+      return console[level](chalk.bold(`Server::${this.name}`), ...args)
     }
 
     console[level](
@@ -41,30 +41,30 @@ export class Logger {
       "",
       `background: ${this.color}; color: black; font-weight: bold; border-radius: 5px;`,
       ...args
-    );
+    )
   }
 
   public log(...args: unknown[]) {
-    this._log("log", "#a6d189", args);
+    this._log("log", "#a6d189", args)
   }
 
   public info(...args: unknown[]) {
-    this._log("info", "#a6d189", args);
+    this._log("info", "#a6d189", args)
   }
 
   public error(...args: unknown[]) {
-    this._log("error", "red", args);
+    this._log("error", "red", args)
   }
 
   public errorCustomFmt(fmt: string, ...args: unknown[]) {
-    this._log("error", "#e78284", args, fmt);
+    this._log("error", "#e78284", args, fmt)
   }
 
   public warn(...args: unknown[]) {
-    this._log("warn", "#e5c890", args);
+    this._log("warn", "#e5c890", args)
   }
 
   public debug(...args: unknown[]) {
-    this._log("debug", "#eebebe", args);
+    this._log("debug", "#eebebe", args)
   }
 }

@@ -1,18 +1,19 @@
+import { useMemo } from "react"
 import { View, ScrollView } from "react-native"
-
-import { Text } from "@/components/ui/text"
 
 import Animated, { FadeIn } from "react-native-reanimated"
 
-import { Button } from "@/components/ui/button"
 import { LastReadTitleCard } from "@/features/home/components/last-read-title-card"
+import { Button } from "@/components/ui/button"
+import { Text } from "@/components/ui/text"
 
-import { useMemo } from "react"
-import { useReadingTracker } from "@/store/use-reading-tracker"
+import { useTitleReadChapter } from "@/store/use-chapters-tracker"
 import { useProperties } from "@/store/use-properties"
+import { useReadingTracker } from "@/store/use-reading-tracker"
 
 export const LastReadTitles = () => {
   const { lastReadItems, reset } = useReadingTracker()
+  const resetChapters = useTitleReadChapter((state) => state.reset)
 
   const { siteId } = useProperties()
 
@@ -29,7 +30,10 @@ export const LastReadTitles = () => {
         <Text className="recent-viewed-title">You've stopped at</Text>
         <Button
           size="sm"
-          onPress={() => reset()}
+          onPress={() => {
+            resetChapters()
+            reset()
+          }}
           iconLeft="Trash2"
           variant="destructive"
         >

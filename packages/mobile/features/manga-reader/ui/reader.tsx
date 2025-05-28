@@ -1,39 +1,30 @@
-import { FadeView } from "@/components/ui/fade-view"
-
-import { ReaderChapterNavigation } from "@/features/manga-reader/components/reader-chapter-navigation"
-import { ReaderHeader } from "@/features/manga-reader/components/reader-header"
-
 import { useRoute } from "@react-navigation/native"
-import { FlatList, useWindowDimensions, View } from "react-native"
-
-import { useReadingTracker } from "@/store/use-reading-tracker"
-
-import { useEffect, useMemo, useState } from "react"
-
-import { useTitleReadChapter } from "@/store/use-chapters-tracker"
-import { useProperties } from "@/store/use-properties"
-
-import { useChapter } from "@/features/manga-reader/api/use-chapter"
-import { useTitleInfo } from "@/features/title/api/use-title-info"
-import { useChapters } from "@/features/title/api/use-chapters"
-
-import { Text } from "@/components/ui/text"
-import _MenuView from "react-native-context-menu-view"
-
-import { preloadNextChapter } from "@/features/manga-reader/lib/preload-chapter"
-import { BackButton } from "@/components/ui/back-button"
-
-import { ReaderImage } from "@/features/manga-reader/components/reader-image"
 
 import { useQueryClient } from "@tanstack/react-query"
-import { useDeferredRender } from "@/hooks/use-deferred-render"
-import { useReaderScrollTo } from "@/features/manga-reader/hooks/use-reader-scroll-to"
-import { ActivityIndicator } from "@/components/ui/activity-indicator"
 import { cssInterop } from "nativewind"
-import { FullscreenError } from "@/components/ui/fullscreen-error"
-import { Lottie } from "@/components/ui/lottie"
+import { useEffect, useMemo, useState } from "react"
+import { FlatList, useWindowDimensions, View } from "react-native"
+import _MenuView from "react-native-context-menu-view"
 
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated"
+import { useChapter } from "@/features/manga-reader/api/use-chapter"
+import { ReaderChapterNavigation } from "@/features/manga-reader/components/reader-chapter-navigation"
+import { ReaderHeader } from "@/features/manga-reader/components/reader-header"
+import { ReaderImage } from "@/features/manga-reader/components/reader-image"
+import { useReaderScrollTo } from "@/features/manga-reader/hooks/use-reader-scroll-to"
+import { preloadNextChapter } from "@/features/manga-reader/lib/preload-chapter"
+import { useChapters } from "@/features/title/api/use-chapters"
+import { useTitleInfo } from "@/features/title/api/use-title-info"
+import { ActivityIndicator } from "@/components/ui/activity-indicator"
+import { BackButton } from "@/components/ui/back-button"
+import { FadeView } from "@/components/ui/fade-view"
+import { FullscreenError } from "@/components/ui/fullscreen-error"
+import { Lottie } from "@/components/ui/lottie"
+import { Text } from "@/components/ui/text"
+import { useDeferredRender } from "@/hooks/use-deferred-render"
+import { useTitleReadChapter } from "@/store/use-chapters-tracker"
+import { useProperties } from "@/store/use-properties"
+import { useReadingTracker } from "@/store/use-reading-tracker"
 
 const ChapterDownloading = () => {
   return (
@@ -44,28 +35,22 @@ const ChapterDownloading = () => {
     >
       <BackButton />
       <Lottie source={require("@/assets/lottie/loading-emoji.json")} />
-      <Text className="text-muted mt-2">
-        Chapter is downloading, hang on...
-      </Text>
+      <Text className="text-muted mt-2">Chapter is downloading, hang on...</Text>
     </Animated.View>
   )
 }
 
-export const MangaReaderUI = () => {
-  const MenuView = useMemo(
-    () =>
-      cssInterop(_MenuView, {
-        className: {
-          target: "style",
-          nativeStyleToProp: {
-            // @ts-ignore
-            bottom: true,
-          },
-        },
-      }),
-    []
-  )
+const MenuView = cssInterop(_MenuView, {
+  className: {
+    target: "style",
+    nativeStyleToProp: {
+      // @ts-ignore
+      bottom: true
+    }
+  }
+})
 
+export const MangaReaderUI = () => {
   const route = useRoute()
 
   const { width, height } = useWindowDimensions()
@@ -113,10 +98,10 @@ export const MangaReaderUI = () => {
       lastReadChapter: chapterIndex,
       overallChapters: chapters.length,
       cover: {
-        default: title.cover.default,
+        thumbnail: title.cover.thumbnail
       },
       site: Number(title.site),
-      scrollTo: offset,
+      scrollTo: offset
     })
   }, [slug_url, title, data, offset])
 
@@ -149,9 +134,7 @@ export const MangaReaderUI = () => {
   }, [shouldDownloadNextChapter])
 
   if (isError && error.data) {
-    return (
-      <FullscreenError fadeIn>Chapter is licensed or not found</FullscreenError>
-    )
+    return <FullscreenError fadeIn>Chapter is licensed or not found</FullscreenError>
   }
 
   if (!chapters || !title) {
@@ -178,28 +161,25 @@ export const MangaReaderUI = () => {
   if (!shouldRender) return null
 
   return (
-    <FadeView
-      withEnter
-      className="flex-1 items-center justify-center bg-primary"
-    >
+    <FadeView withEnter className="flex-1 items-center justify-center bg-primary">
       {readerDisplayCurrentPage && (
         <MenuView
           dropdownMenuMode
           onPress={(event) =>
             flatListRef.current?.scrollToIndex({
               index: event.nativeEvent.index,
-              animated: true,
+              animated: true
             })
           }
           style={{
             position: "absolute",
             left: 16,
-            zIndex: 20,
+            zIndex: 20
           }}
           className="bottom-safe"
           actions={data.pages.map((_, index) => ({
             id: index.toString(),
-            title: `${index + 1} / ${data.pages.length}`,
+            title: `${index + 1} / ${data.pages.length}`
           }))}
         >
           <View className="bg-zinc-900/70 p-3 py-1.5 rounded-full">
@@ -216,7 +196,7 @@ export const MangaReaderUI = () => {
         viewabilityConfig={{
           minimumViewTime: 3,
           waitForInteraction: false,
-          viewAreaCoveragePercentThreshold: 0.4,
+          viewAreaCoveragePercentThreshold: 0.4
         }}
         onViewableItemsChanged={(event) => {
           if (event.changed[0].index && event.changed[0].isViewable) {
@@ -226,27 +206,20 @@ export const MangaReaderUI = () => {
         onScrollToIndexFailed={({ index }) => {
           flatListRef.current?.scrollToIndex({
             index: index / 1.5,
-            animated: true,
+            animated: true
           })
         }}
         keyExtractor={keyExtractor}
-        onMomentumScrollEnd={(event) =>
-          setOffset(event.nativeEvent.contentOffset.y)
-        }
+        onMomentumScrollEnd={(event) => setOffset(event.nativeEvent.contentOffset.y)}
         maxToRenderPerBatch={windowSize}
         windowSize={windowSize}
         initialNumToRender={5}
         stickyHeaderIndices={[0]}
         stickyHeaderHiddenOnScroll
         showsVerticalScrollIndicator={showReaderScrollbar}
-        ListHeaderComponent={() => (
-          <ReaderHeader chapter={data} title={title} />
-        )}
+        ListHeaderComponent={() => <ReaderHeader chapter={data} title={title} />}
         ListFooterComponent={() => (
-          <ReaderChapterNavigation
-            chapterIndex={chapterIndex}
-            chapters={chapters}
-          />
+          <ReaderChapterNavigation chapterIndex={chapterIndex} chapters={chapters} />
         )}
         style={{ width, height }}
         data={data.pages}

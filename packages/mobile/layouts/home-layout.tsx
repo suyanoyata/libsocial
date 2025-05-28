@@ -1,21 +1,18 @@
-import { router } from "expo-router"
+import { useQuery } from "@tanstack/react-query";
+import { router } from "expo-router";
 
-import { Pressable, ScrollView as _ScrollView, View } from "react-native"
+import { Pressable, ScrollView as _ScrollView, View } from "react-native";
 
-import { useQuery } from "@tanstack/react-query"
-import { trpc } from "@/lib/trpc"
+import { TextInput } from "@/components/ui/text-input";
+import { withRefreshable } from "@/components/ui/with-refreshable";
+import { trpc } from "@/lib/trpc";
 
-import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { withImpact } from "@/lib/utils";
 
-import { withImpact } from "@/lib/utils"
-import { TextInput } from "@/components/ui/text-input"
-import { withRefreshable } from "@/components/ui/with-refreshable"
-
-const ScrollView = withRefreshable(_ScrollView)
+const ScrollView = withRefreshable(_ScrollView);
 
 export const HomeLayout = ({ children }: { children?: React.ReactNode }) => {
-  const { top } = useSafeAreaInsets()
-  const { refetch } = useQuery(trpc.titles.popular.queryOptions())
+  const { refetch } = useQuery(trpc.titles.popular.queryOptions());
 
   return (
     <View className="flex-1 mt-safe-offset-2">
@@ -32,5 +29,5 @@ export const HomeLayout = ({ children }: { children?: React.ReactNode }) => {
         {children}
       </ScrollView>
     </View>
-  )
-}
+  );
+};

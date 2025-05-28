@@ -1,6 +1,6 @@
-import { zustandStorage } from "@/lib/persistent-zustand-storage"
 import { create } from "zustand"
 import { createJSONStorage, persist } from "zustand/middleware"
+import { zustandStorage } from "@/lib/persistent-zustand-storage"
 
 export type TitleReadChapter = {
   slug_url: string
@@ -13,6 +13,7 @@ export interface TitleReadChapterProperties {
   getReadChapters: (slug_url: string) => number[] | undefined
   get: (slug_url: string, chapterIndex: number) => boolean
   remove: (slug_url: string, chapterIndex: number) => void
+  reset: () => void
 }
 
 export const useTitleReadChapter = create<TitleReadChapterProperties>()(
@@ -23,7 +24,7 @@ export const useTitleReadChapter = create<TitleReadChapterProperties>()(
       add: (slug_url: string, chapterIndex: number) =>
         set((state) => {
           const exists = state.titleReadChapters.find(
-            (value) => value.slug_url == slug_url,
+            (value) => value.slug_url == slug_url
           )
 
           if (!exists) {
@@ -32,16 +33,16 @@ export const useTitleReadChapter = create<TitleReadChapterProperties>()(
                 ...state.titleReadChapters,
                 {
                   slug_url,
-                  chapters: [chapterIndex],
-                },
-              ],
+                  chapters: [chapterIndex]
+                }
+              ]
             }
           }
 
           if (exists.chapters.includes(chapterIndex)) return state
 
           const filtered = state.titleReadChapters.filter(
-            (value) => value.slug_url !== slug_url,
+            (value) => value.slug_url !== slug_url
           )
 
           return {
@@ -49,9 +50,9 @@ export const useTitleReadChapter = create<TitleReadChapterProperties>()(
               ...filtered,
               {
                 slug_url,
-                chapters: [...exists.chapters, chapterIndex],
-              },
-            ],
+                chapters: [...exists.chapters, chapterIndex]
+              }
+            ]
           }
         }),
 
@@ -70,38 +71,41 @@ export const useTitleReadChapter = create<TitleReadChapterProperties>()(
         return item?.chapters.includes(chapterIndex) ?? false
       },
 
+      reset: () => {
+        zustandStorage.removeItem("libsocial.client.title-storage"),
+          set(() => ({ titleReadChapters: [] }))
+      },
+
       remove: (slug_url, chapterIndex) =>
         set((state) => {
           const exists = state.titleReadChapters.find(
-            (value) => value.slug_url == slug_url,
+            (value) => value.slug_url == slug_url
           )
 
           if (exists) {
             const filtered = state.titleReadChapters.filter(
-              (value) => value.slug_url !== slug_url,
+              (value) => value.slug_url !== slug_url
             )
 
-            const chapters = exists.chapters.filter(
-              (index) => index !== chapterIndex,
-            )
+            const chapters = exists.chapters.filter((index) => index !== chapterIndex)
 
             return {
               titleReadChapters: [
                 ...filtered,
                 {
                   slug_url,
-                  chapters,
-                },
-              ],
+                  chapters
+                }
+              ]
             }
           }
 
           return state
-        }),
+        })
     }),
     {
       name: "libsocial.client.chapter-tracker-storage",
-      storage: createJSONStorage(() => zustandStorage),
-    },
-  ),
+      storage: createJSONStorage(() => zustandStorage)
+    }
+  )
 )

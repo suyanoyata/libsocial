@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
-import { trpc } from "@/lib/trpc"
-
 import { Chapter } from "@/features/shared/types/chapter"
+import { trpc } from "@/lib/trpc"
 
 export const useChapter = (slug_url: string, chapter?: Chapter) => {
   return useQuery(
@@ -30,7 +29,7 @@ export const useChapter = (slug_url: string, chapter?: Chapter) => {
           }
 
           return false
-        },
+        }
       }
     )
   )

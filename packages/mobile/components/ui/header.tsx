@@ -1,9 +1,8 @@
-import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { View } from "react-native"
 
-import { Platform, View } from "react-native"
+import { BackButton } from "@/components/ui/back-button"
 import { Text } from "@/components/ui/text"
 import { cn } from "@/lib/utils"
-import { BackButton } from "@/components/ui/back-button"
 
 type Options = {
   showBackButton?: boolean
@@ -18,8 +17,6 @@ type Options = {
 }
 
 export const Header = (props: Options) => {
-  const { top } = useSafeAreaInsets()
-
   return (
     <View
       className={cn(
