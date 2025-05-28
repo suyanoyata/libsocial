@@ -1,15 +1,14 @@
-import { Manga, RelatedReason } from "~/lib/prisma";
-
-import { Item } from "~/types/zod/manga";
-import { PaginatedResponse } from "~/types/zod/paginated-response";
-
+import { TRPCError } from "@trpc/server";
+import axios from "axios";
+import { Mangadex } from "~/const/api";
+import { pageLimit } from "~/const/db";
 import { db } from "~/lib/db";
 import { Logger } from "~/lib/logger";
 
-import { pageLimit } from "~/const/db";
 import { translate } from "~/services/translate.service";
+import { UploadService } from "~/services/upload-service";
 import { CatalogSearchFormData } from "~/types/zod";
-import { TRPCError } from "@trpc/server";
+import { Item } from "~/types/zod/manga";
 
 const MangaLogger = new Logger("MangaService");
 
@@ -40,6 +39,52 @@ class Service {
   }
 
   public async createManga(data: Item) {
+    const {
+      data: { data: _mangaData },
+    } = await axios.get(Mangadex.search(data.name!));
+
+    if (_mangaData.length == 0) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Content is licensed or not found.",
+      });
+    }
+
+    const {
+      data: { data: mangaData },
+    } = await axios.get<{
+      data: {
+        id: string;
+        relationships: {
+          attributes: {
+            fileName: string;
+          };
+          type: string;
+        }[];
+      };
+    }>(Mangadex.manga(_mangaData[0].id));
+
+    const cover = mangaData.relationships.find(
+      (attr) => attr.type == "cover_art",
+    );
+
+    if (!cover) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Couldn't find cover for this title",
+      });
+    }
+
+    const _thumbnail = `https://mangadex.org/covers/${mangaData.id}/${cover.attributes.fileName}.256.jpg`;
+    const _poster = `https://mangadex.org/covers/${mangaData.id}/${cover.attributes.fileName}.512.jpg`;
+
+    const uploadService = new UploadService(data.slug_url);
+
+    await uploadService.create();
+
+    await uploadService.upload("thumbnail", _thumbnail);
+    await uploadService.upload("poster", _poster);
+
     const eng_name = data.eng_name ?? data.name;
     const summary = await translate(data.summary!);
 
@@ -50,8 +95,8 @@ class Service {
             where: { id: genre.id },
             update: {},
             create: genre,
-          })
-      )
+          }),
+      ),
     );
 
     await db.manga
@@ -66,7 +111,8 @@ class Service {
           summary,
           cover: {
             create: {
-              ...data.cover,
+              default: uploadService.get("poster"),
+              thumbnail: uploadService.get("thumbnail"),
             },
           },
           ageRestriction: {

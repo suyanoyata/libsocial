@@ -88,11 +88,11 @@ model Anime {
   otherNames     String[]
   summary        String?
   model          ModelName
-  cover          Cover          @relation(fields: [coverId], references: [id])
+  cover          Cover          @relation(fields: [coverId], references: [id], onDelete: Cascade)
   ageRestriction AgeRestriction @relation(fields: [ageRestrictionId], references: [id])
   site           Int
   genres         Genre[]
-  background     Background     @relation(fields: [backgroundId], references: [id])
+  background     Background     @relation(fields: [backgroundId], references: [id], onDelete: Cascade)
 
   coverId          Int
   ageRestrictionId Int
@@ -136,12 +136,12 @@ model Manga {
   otherNames     String[]
   summary        String?
   model          ModelName
-  cover          Cover          @relation(fields: [coverId], references: [id])
+  cover          Cover          @relation(fields: [coverId], references: [id], onDelete: Cascade)
   ageRestriction AgeRestriction @relation(fields: [ageRestrictionId], references: [id])
   items_count    ItemsCount     @relation(fields: [itemsCountId], references: [id])
   site           Int
   genres         Genre[]
-  background     Background     @relation(fields: [backgroundId], references: [id])
+  background     Background     @relation(fields: [backgroundId], references: [id], onDelete: Cascade)
   isLicensed     Boolean        @default(false)
 
   coverId          Int
