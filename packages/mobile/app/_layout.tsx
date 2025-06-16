@@ -1,56 +1,40 @@
 import "../global.css"
 import "react-native-gesture-handler"
 
-import { SplashScreen, Stack } from "expo-router"
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native"
-
-import ErrorBoundary from "react-native-error-boundary"
-
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet"
+import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native"
 import { TamaguiProvider } from "@tamagui/core"
-
 import { useFonts } from "expo-font"
-
-import { useEffect } from "react"
-
-import { Appearance, LogBox, Platform, useColorScheme } from "react-native"
-
-import { enableFreeze, enableScreens } from "react-native-screens"
-
-import { GestureHandlerRootView } from "react-native-gesture-handler"
-
-import { Toaster as _Toaster } from "sonner-native"
-import { BackButton } from "@/components/ui/back-button"
+import { addNetworkStateListener, NetworkStateType } from "expo-network"
+import { SplashScreen, Stack } from "expo-router"
 
 import { StatusBar } from "expo-status-bar"
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet"
-
+import { useEffect } from "react"
+import { Appearance, LogBox, Platform, useColorScheme } from "react-native"
+import { cssInterop } from "react-native-css-interop"
 import { systemColorScheme } from "react-native-css-interop/dist/runtime/native/appearance-observables"
+import ErrorBoundary from "react-native-error-boundary"
+
+import { GestureHandlerRootView } from "react-native-gesture-handler"
+import { configureReanimatedLogger, ReanimatedLogLevel } from "react-native-reanimated"
+import { enableFreeze, enableScreens } from "react-native-screens"
+
+import { Toaster as _Toaster } from "sonner-native"
 import { BookmarkEventsProvider } from "@/features/bookmark/provider/bookmark-events-provider"
-
-import {
-  configureReanimatedLogger,
-  ReanimatedLogLevel,
-} from "react-native-reanimated"
 import { DownloadsIcon } from "@/components/navigation/downloads-icon"
+import { BackButton } from "@/components/ui/back-button"
 
+import { ErrorBoundaryComponent } from "@/components/ui/error-boundary-component"
+import { useSession } from "@/lib/auth"
+import { config } from "@/lib/ui/tamagui-config"
 import { TRPCQueryProvider } from "@/providers/trpc-provider"
 
-import { useSession } from "@/lib/auth"
-
-import { cssInterop } from "react-native-css-interop"
-import { ErrorBoundaryComponent } from "@/components/ui/error-boundary-component"
 import { UpdateProvider } from "@/providers/update-provider"
-import { config } from "@/lib/ui/tamagui-config"
-import { addNetworkStateListener, NetworkStateType } from "expo-network"
 import { useProperties } from "@/store/use-properties"
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.error,
-  strict: false,
+  strict: false
 })
 
 // globalThis.__DEV__ = false
@@ -68,8 +52,8 @@ const LightTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    background: "#ffffff",
-  },
+    background: "#ffffff"
+  }
 }
 
 const Toaster = cssInterop(_Toaster, { className: { target: "style" } })
@@ -83,7 +67,7 @@ export default function RootLayout() {
     "SF-Medium": require("../assets/fonts/SFUIText-Medium.ttf"),
     "SF-SemiBold": require("../assets/fonts/SFUIText-Semibold.ttf"),
     "SF-Bold": require("../assets/fonts/SFUIText-Bold.ttf"),
-    "SF-Heavy": require("../assets/fonts/SFUIText-Heavy.ttf"),
+    "SF-Heavy": require("../assets/fonts/SFUIText-Heavy.ttf")
   })
 
   const { isPending } = useSession()
@@ -118,24 +102,21 @@ export default function RootLayout() {
                     <Stack
                       screenOptions={{
                         headerShown: true,
-                        header: () => <BackButton />,
+                        header: () => <BackButton />
                       }}
                     >
-                      <Stack.Screen
-                        name="(tabs)"
-                        options={{ headerShown: false }}
-                      />
+                      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                       <Stack.Screen
                         options={{
                           presentation: "modal",
-                          headerShown: false,
+                          headerShown: false
                         }}
                         name="(modals)"
                       />
                       <Stack.Screen
                         name="title-info"
                         options={{
-                          headerShown: false,
+                          headerShown: false
                         }}
                       />
                       <Stack.Screen
@@ -151,7 +132,7 @@ export default function RootLayout() {
                         options={{
                           title: "Downloads",
                           headerShown: true,
-                          header: (props) => <DownloadsIcon {...props} />,
+                          header: (props) => <DownloadsIcon {...props} />
                         }}
                       />
                     </Stack>

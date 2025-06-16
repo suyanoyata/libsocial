@@ -1,14 +1,12 @@
+import { useBottomSheet } from "@gorhom/bottom-sheet"
+import { useMutation } from "@tanstack/react-query"
+import { useState } from "react"
 import { DeviceEventEmitter } from "react-native"
+import { toast } from "sonner-native"
 import { BookmarkEvents } from "@/features/bookmark/const/bookmark-events"
 
-import { useMutation } from "@tanstack/react-query"
-import { toast } from "sonner-native"
-import { useState } from "react"
-import { withErrorImpact, withSuccessImpact } from "@/lib/utils"
-
 import { trpc } from "@/lib/trpc"
-
-import { useBottomSheet } from "@gorhom/bottom-sheet"
+import { withErrorImpact, withSuccessImpact } from "@/lib/utils"
 
 export const useBookmarkCreate = () => {
   const [id, setId] = useState<string | number>(0)
@@ -28,10 +26,10 @@ export const useBookmarkCreate = () => {
       onError: () => {
         withErrorImpact(() =>
           toast.error("Failed to create bookmark", {
-            id,
+            id
           })
         )
-      },
+      }
     })
   )
 }

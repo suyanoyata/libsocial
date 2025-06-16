@@ -1,12 +1,12 @@
+import { router } from "expo-router"
 import { Button } from "@/components/ui/button"
 
-import { router } from "expo-router"
 import { useSession } from "@/lib/auth"
 
 export const AddAssociationButton = ({
   site,
   slug_url,
-  type = "relation",
+  type = "relation"
 }: {
   site: number
   slug_url: string
@@ -19,13 +19,13 @@ export const AddAssociationButton = ({
       onPress={() => {
         if (!data) {
           return router.push({
-            pathname: "/sign-in-prompt-modal",
+            pathname: "/sign-in-prompt-modal"
           })
         }
 
         if (data.user.isAnonymous) {
           return router.push({
-            pathname: "/connect-account-prompt-modal",
+            pathname: "/connect-account-prompt-modal"
           })
         }
 
@@ -34,8 +34,8 @@ export const AddAssociationButton = ({
             pathname: "/association-add-similar",
             params: {
               slug_url,
-              site,
-            },
+              site
+            }
           })
         }
 
@@ -43,8 +43,8 @@ export const AddAssociationButton = ({
           pathname: "/association-add-relation",
           params: {
             slug_url,
-            site,
-          },
+            site
+          }
         })
       }}
       variant="ghost"

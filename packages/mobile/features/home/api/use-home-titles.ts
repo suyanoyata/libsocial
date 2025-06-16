@@ -3,9 +3,5 @@ import { useQuery } from "@tanstack/react-query"
 import { trpc } from "@/lib/trpc"
 
 export const useHomeTitles = () => {
-  return useQuery(
-    trpc.titles.popular.queryOptions(undefined, {
-      staleTime: 60 * 60 * 5,
-    })
-  )
+  return useQuery(trpc.titles.popular.queryOptions())
 }

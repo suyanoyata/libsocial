@@ -1,5 +1,5 @@
-import { trpc } from "@/lib/trpc"
 import { useQuery } from "@tanstack/react-query"
+import { trpc } from "@/lib/trpc"
 
 import { useProperties } from "@/store/use-properties"
 
@@ -11,7 +11,7 @@ export const useQuickSearch = (q: string) => {
       { q, _s: siteId },
       {
         trpc: { abortOnUnmount: true },
-        enabled: !!q,
+        enabled: !!q
       }
     )
   )

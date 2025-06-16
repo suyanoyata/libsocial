@@ -1,6 +1,6 @@
-import { zustandStorage } from "@/lib/persistent-zustand-storage"
 import { create } from "zustand"
 import { createJSONStorage, persist } from "zustand/middleware"
+import { zustandStorage } from "@/lib/persistent-zustand-storage"
 
 export interface ApplicationProperties {
   celluar: boolean
@@ -32,17 +32,15 @@ export const useProperties = create<ApplicationProperties>()(
       catalogImageWidth: 0,
       setCatalogImageWidth: (catalogImageWidth) => set({ catalogImageWidth }),
       catalogColumns: 3,
-      setShowReaderScrollbar: (showReaderScrollbar) =>
-        set({ showReaderScrollbar }),
-      setReaderImagePadding: (readerImagePadding) =>
-        set({ readerImagePadding }),
+      setShowReaderScrollbar: (showReaderScrollbar) => set({ showReaderScrollbar }),
+      setReaderImagePadding: (readerImagePadding) => set({ readerImagePadding }),
       setReaderDisplayCurrentPage: (readerDisplayCurrentPage) =>
         set({ readerDisplayCurrentPage }),
-      setCatalogColumns: (catalogColumns) => set({ catalogColumns }),
+      setCatalogColumns: (catalogColumns) => set({ catalogColumns })
     }),
     {
       name: "libsocial.client.properties",
-      storage: createJSONStorage(() => zustandStorage),
+      storage: createJSONStorage(() => zustandStorage)
     }
   )
 )

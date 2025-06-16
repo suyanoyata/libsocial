@@ -1,13 +1,12 @@
-import { useState } from "react"
 import { useMutation } from "@tanstack/react-query"
+import { useState } from "react"
 
 import { DeviceEventEmitter } from "react-native"
 
+import { toast } from "sonner-native"
 import { BookmarkEvents } from "@/features/bookmark/const/bookmark-events"
 
 import { trpc } from "@/lib/trpc"
-
-import { toast } from "sonner-native"
 
 import { withErrorImpact, withSuccessImpact } from "@/lib/utils"
 
@@ -21,17 +20,17 @@ export const useBookmarkUpdate = (slug_url?: string) => {
         DeviceEventEmitter.emit(BookmarkEvents.CREATE_BOOKMARK, slug_url)
         withSuccessImpact(() =>
           toast.success("Bookmark updated", {
-            id: toastId,
+            id: toastId
           })
         )
       },
       onError: () => {
         withErrorImpact(() =>
           toast.error("Couldn't update bookmark", {
-            id: toastId,
+            id: toastId
           })
         )
-      },
+      }
     })
   )
 }
