@@ -98,7 +98,7 @@ export default function TitleInfo() {
             height: 320,
             paddingTop: Platform.OS == "ios" ? top + 40 : 60,
             position: "relative",
-            overflow: "hidden",
+            overflow: "hidden"
           }}
         >
           <BlurView
@@ -110,7 +110,7 @@ export default function TitleInfo() {
               zIndex: 1,
               top: 0,
               left: 0,
-              backgroundColor: "rgba(0,0,0,0.7)",
+              backgroundColor: "rgba(0,0,0,0.7)"
             }}
           />
           <View className="mx-auto flex-row z-10">
@@ -119,7 +119,7 @@ export default function TitleInfo() {
               style={{
                 borderRadius: 8,
                 height: 220,
-                width: 140,
+                width: 140
               }}
             />
           </View>

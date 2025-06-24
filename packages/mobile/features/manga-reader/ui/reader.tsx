@@ -204,6 +204,7 @@ export const MangaReaderUI = () => {
           }
         }}
         onScrollToIndexFailed={({ index }) => {
+          console.warn("Failed to scroll to index:", index)
           flatListRef.current?.scrollToIndex({
             index: index / 1.5,
             animated: true

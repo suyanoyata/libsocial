@@ -1,13 +1,14 @@
-import { PulseView } from "@/components/ui/pulse-view"
+import { FlashList } from "@shopify/flash-list"
+import { useQuery } from "@tanstack/react-query"
+
+import type { PopularTitle } from "api/router/titleRouter"
 
 import { TitleCard } from "@/features/home/components/title-card"
 import { TitleCardPlaceholder } from "@/features/home/components/title-card-placeholder"
 
-import { trpc } from "@/lib/trpc"
-import { useQuery } from "@tanstack/react-query"
+import { PulseView } from "@/components/ui/pulse-view"
 
-import type { PopularTitle } from "api/router/titleRouter"
-import { FlashList } from "@shopify/flash-list"
+import { trpc } from "@/lib/trpc"
 
 export const PopularTitles = () => {
   const { data } = useQuery(trpc.titles.popular.queryOptions())
@@ -29,7 +30,7 @@ export const PopularTitles = () => {
       }
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={{
-        paddingHorizontal: 8,
+        paddingHorizontal: 8
       }}
     />
   )

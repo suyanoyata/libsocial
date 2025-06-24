@@ -65,8 +65,6 @@ export const titleRouter = t.router({
         if (ctx.type == "anime") {
           const { data, error } = await throwable(animeService.getAnime(input.slug_url))
 
-          console.log("start")
-
           if (error?.code == "NOT_FOUND") {
             const anime = await api
               .get(`/anime/${input.slug_url}?${queryFields.anime}`)

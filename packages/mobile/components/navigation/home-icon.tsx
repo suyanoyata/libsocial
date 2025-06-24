@@ -1,13 +1,12 @@
+import { useQueryClient } from "@tanstack/react-query"
+import { useCallback } from "react"
 import { useColorScheme, View } from "react-native"
 import ContextMenu from "react-native-context-menu-view"
-
-import { useCallback } from "react"
-import { useProperties } from "@/store/use-properties"
-import { useQueryClient } from "@tanstack/react-query"
 
 import { TabIcon } from "@/components/navigation/tab-icon"
 
 import { trpc } from "@/lib/trpc"
+import { useProperties } from "@/store/use-properties"
 
 export const HomeTabIcon = ({ focused }: { focused: boolean }) => {
   const isDark = useColorScheme() === "dark"
@@ -20,12 +19,12 @@ export const HomeTabIcon = ({ focused }: { focused: boolean }) => {
     (event: string) => {
       if (event === siteId) return
 
-      queryClient.invalidateQueries({
-        queryKey: trpc.titles.popular.queryKey(),
+      queryClient.resetQueries({
+        queryKey: trpc.titles.popular.queryKey()
       })
 
       queryClient.invalidateQueries({
-        queryKey: trpc.bookmarks.list.queryKey(),
+        queryKey: trpc.bookmarks.list.queryKey()
       })
 
       setSiteId(event)
@@ -41,13 +40,13 @@ export const HomeTabIcon = ({ focused }: { focused: boolean }) => {
         {
           title: "Manga",
           systemIcon: "bookmark.fill",
-          iconColor: isDark ? "white" : "black",
+          iconColor: isDark ? "white" : "black"
         },
         {
           title: "Anime",
           systemIcon: "play.fill",
-          iconColor: isDark ? "white" : "black",
-        },
+          iconColor: isDark ? "white" : "black"
+        }
       ]}
       onPress={(value) => {
         if (value.nativeEvent.index == 1) {

@@ -46,21 +46,21 @@ model Association {
   relatedReason RelatedReason?
   similarReason SimilarReason?
 
-  anime      Anime?  @relation("base anime", fields: [anime_slug], references: [slug_url], map: "association_slug_url_base_anime_fkey")
+  anime      Anime?  @relation("base anime", fields: [anime_slug], references: [slug_url], onDelete: Cascade, map: "association_slug_url_base_anime_fkey")
   anime_slug String?
 
-  manga      Manga?  @relation("base manga", fields: [manga_slug], references: [slug_url], map: "association_slug_url_base_manga_fkey")
+  manga      Manga?  @relation("base manga", fields: [manga_slug], references: [slug_url], onDelete: Cascade, map: "association_slug_url_base_manga_fkey")
   manga_slug String?
 
-  relatedAnime  Anime?  @relation("related-to-anime", fields: [related_anime], references: [slug_url], map: "association_slug_url_related_to_anime_fkey")
+  relatedAnime  Anime?  @relation("related-to-anime", fields: [related_anime], references: [slug_url], onDelete: Cascade, map: "association_slug_url_related_to_anime_fkey")
   related_anime String?
 
-  relatedManga  Manga?  @relation("related-to-manga", fields: [related_manga], references: [slug_url], map: "association_slug_url_related_to_manga_fkey")
+  relatedManga  Manga?  @relation("related-to-manga", fields: [related_manga], references: [slug_url], onDelete: Cascade, map: "association_slug_url_related_to_manga_fkey")
   related_manga String?
 
-  similarAnime  Anime?  @relation("similar-to-anime", fields: [similar_anime], references: [slug_url], map: "association_slug_url_similar_to_anime_fkey")
+  similarAnime  Anime?  @relation("similar-to-anime", fields: [similar_anime], references: [slug_url], onDelete: Cascade, map: "association_slug_url_similar_to_anime_fkey")
   similar_anime String?
-  similarManga  Manga?  @relation("similar-to-manga", fields: [similar_manga], references: [slug_url], map: "association_slug_url_similar_to_manga_fkey")
+  similarManga  Manga?  @relation("similar-to-manga", fields: [similar_manga], references: [slug_url], onDelete: Cascade, map: "association_slug_url_similar_to_manga_fkey")
   similar_manga String?
 
   @@unique([manga_slug, related_manga])
@@ -88,11 +88,11 @@ model Anime {
   otherNames     String[]
   summary        String?
   model          ModelName
-  cover          Cover          @relation(fields: [coverId], references: [id])
+  cover          Cover          @relation(fields: [coverId], references: [id], onDelete: Cascade)
   ageRestriction AgeRestriction @relation(fields: [ageRestrictionId], references: [id])
   site           Int
   genres         Genre[]
-  background     Background     @relation(fields: [backgroundId], references: [id])
+  background     Background     @relation(fields: [backgroundId], references: [id], onDelete: Cascade)
 
   coverId          Int
   ageRestrictionId Int
@@ -136,12 +136,12 @@ model Manga {
   otherNames     String[]
   summary        String?
   model          ModelName
-  cover          Cover          @relation(fields: [coverId], references: [id])
+  cover          Cover          @relation(fields: [coverId], references: [id], onDelete: Cascade)
   ageRestriction AgeRestriction @relation(fields: [ageRestrictionId], references: [id])
   items_count    ItemsCount     @relation(fields: [itemsCountId], references: [id])
   site           Int
   genres         Genre[]
-  background     Background     @relation(fields: [backgroundId], references: [id])
+  background     Background     @relation(fields: [backgroundId], references: [id], onDelete: Cascade)
   isLicensed     Boolean        @default(false)
 
   coverId          Int
@@ -183,7 +183,7 @@ model Chapter {
   pages            MangaPage[]
   count            Int         @default(0)
 
-  manga    Manga      @relation(fields: [manga_id], references: [id])
+  manga    Manga      @relation(fields: [manga_id], references: [id], onDelete: Cascade)
   Bookmark Bookmark[]
 
   @@map("chapter")
@@ -196,7 +196,7 @@ model MangaPage {
   url        String
   ratio      Float
 
-  Chapter   Chapter @relation(fields: [chapterId], references: [id])
+  Chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
   chapterId Int
 
   @@unique([image, chapterId])
